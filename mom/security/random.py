@@ -62,7 +62,7 @@ try:
         return os.urandom(count)
 except AttributeError:
     try:
-        urandom_device = open("/dev/urandom", "rb")
+        __urandom_device__ = open("/dev/urandom", "rb")
         def generate_random_bytes(count):
             """
             Generates a random byte string with ``count`` bytes.
@@ -72,7 +72,7 @@ except AttributeError:
             :returns:
                 Random byte string.
             """
-            return urandom_device.read(count)
+            return __urandom_device__.read(count)
     except IOError:
         #Else get Win32 CryptoAPI PRNG
         try:

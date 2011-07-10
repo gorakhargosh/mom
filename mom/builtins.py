@@ -75,7 +75,7 @@ from __future__ import absolute_import
 import sys
 import math
 
-from mom._builtins import _BytesType, _UnicodeType, _BasestringType
+from mom._builtins import bytes_type, unicode_type, basestring_type
 
 
 def is_python3():
@@ -93,8 +93,8 @@ def is_python3():
 # up a lot of code. The transition between Python 2.x and 3.x
 # simply does not allow us to use "str", so we're forced to use
 # ``bytes`` and ``unicode`` instead of the usual ``str`` calls.
-bytes = _BytesType
-unicode = _UnicodeType
+bytes = bytes_type
+unicode = unicode_type
 
 
 def bin(num, prefix="0b"):
@@ -118,49 +118,49 @@ def bin(num, prefix="0b"):
     return prefix + bit_string
 
 
-def _bin_lookup(num, prefix="0b"):
-    """
-    Converts a long value to its binary representation based on a lookup table.
-
-    Alternative implementation of :func:``bin``.
-
-    :param num:
-        Long value.
-    :param prefix:
-        The prefix to use for the bitstring. Default "0b" to mimic Python
-        builtin ``bin()``.
-    :returns:
-        Bit string.
-    """
-    prefix = prefix or ""
-    bit_string = ''
-    lookup = {'0':'000','1':'001','2':'010','3':'011',
-              '4':'100','5':'101','6':'110','7':'111'}
-    for c in oct(num)[1:]:
-        bit_string += lookup[c]
-    return prefix + bit_string
-
-
-def _bin_recursive(num, prefix="0b"):
-    """
-    Converts a long value to its binary representation recursively.
-
-    Alternative implementation of :func:``bin``.
-
-    :param num:
-        Long value.
-    :param prefix:
-        The prefix to use for the bitstring. Default "0b" to mimic Python
-        builtin ``bin()``.
-    :returns:
-        Bit string.
-    """
-    prefix = prefix or ""
-    if num <= 1:
-        bitstring = bytes(num)
-    else:
-        bitstring = _bin_recursive(num >> 1) + bytes(num & 1)
-    return prefix + bitstring
+#def _bin_lookup(num, prefix="0b"):
+#    """
+#    Converts a long value to its binary representation based on a lookup table.
+#
+#    Alternative implementation of :func:``bin``.
+#
+#    :param num:
+#        Long value.
+#    :param prefix:
+#        The prefix to use for the bitstring. Default "0b" to mimic Python
+#        builtin ``bin()``.
+#    :returns:
+#        Bit string.
+#    """
+#    prefix = prefix or ""
+#    bit_string = ''
+#    lookup = {'0':'000', '1':'001', '2':'010', '3':'011',
+#              '4':'100', '5':'101', '6':'110', '7':'111'}
+#    for c in oct(num)[1:]:
+#        bit_string += lookup[c]
+#    return prefix + bit_string
+#
+#
+#def _bin_recursive(num, prefix="0b"):
+#    """
+#    Converts a long value to its binary representation recursively.
+#
+#    Alternative implementation of :func:``bin``.
+#
+#    :param num:
+#        Long value.
+#    :param prefix:
+#        The prefix to use for the bitstring. Default "0b" to mimic Python
+#        builtin ``bin()``.
+#    :returns:
+#        Bit string.
+#    """
+#    prefix = prefix or ""
+#    if num <= 1:
+#        bitstring = bytes(num)
+#    else:
+#        bitstring = _bin_recursive(num >> 1) + bytes(num & 1)
+#    return prefix + bitstring
 
 
 def hex(num, prefix="0x"):
@@ -242,7 +242,7 @@ def is_unicode(obj):
     :returns:
         ``True`` if ``value`` is a Unicode string; ``False`` otherwise.
     """
-    return isinstance(obj, _UnicodeType)
+    return isinstance(obj, unicode_type)
 
 
 def is_bytes(obj):
@@ -254,7 +254,7 @@ def is_bytes(obj):
     :returns:
         ``True`` if ``value`` is a byte string; ``False`` otherwise.
     """
-    return isinstance(obj, _BytesType)
+    return isinstance(obj, bytes_type)
 
 
 def is_bytes_or_unicode(obj):
@@ -267,7 +267,7 @@ def is_bytes_or_unicode(obj):
     :returns:
         ``True`` if ``value`` is a string; ``False`` otherwise.
     """
-    return isinstance(obj, _BasestringType)
+    return isinstance(obj, basestring_type)
 
 
 def unicode_to_utf8(obj):

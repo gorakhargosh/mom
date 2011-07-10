@@ -15,6 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+:module: mom.security.rsa.keys
+:synopsis:Implements abstract classes for keys.
+"""
+
 from __future__ import absolute_import
 
 from mom.codec import long_to_bytes, bytes_to_long

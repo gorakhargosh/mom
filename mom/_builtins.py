@@ -26,17 +26,17 @@ Should not be used in public code. Use the wrappers in mom.
 from __future__ import absolute_import
 
 try:
-    _BytesType = bytes
-except Exception:
-    _BytesType = str
+    bytes_type = bytes
+except NameError:
+    bytes_type = str
 
 try:
     # Not Python3
-    _UnicodeType = unicode
-    _BasestringType = basestring
-except Exception:
+    unicode_type = unicode
+    basestring_type = basestring
+except NameError:
     # Python3.
-    _UnicodeType = str
-    _BasestringType = (str, bytes)
+    unicode_type = str
+    basestring_type = (str, bytes)
 
 

@@ -72,7 +72,7 @@ from mom._types.bytearray import \
 
 try:
     # Check whether we have reduce as a built-in.
-    reduce_test = reduce((lambda num1, num2: num1 + num2), [1, 2, 3, 4])
+    __reduce_test__ = reduce((lambda num1, num2: num1 + num2), [1, 2, 3, 4])
 except NameError:
     # Python 3k
     from functools import reduce
@@ -256,14 +256,14 @@ def hex_to_long(encoded):
     encoded = encoded.lower()  # Hex string
     if encoded[:2] == "0x":
         encoded = encoded[2:]
-    for c in encoded:  # Hex character
+    for character in encoded:  # Hex character
         num *= 16
-        if "0" <= c <= "9":
-            num += ord(c) - ord("0")
-        elif "a" <= c <= "f":
-            num += ord(c) - ord("a") + 10
+        if "0" <= character <= "9":
+            num += ord(character) - ord("0")
+        elif "a" <= character <= "f":
+            num += ord(character) - ord("a") + 10
         else:
-            raise ValueError(c)
+            raise ValueError(character)
     return num
 
 

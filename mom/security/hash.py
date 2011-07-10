@@ -42,7 +42,7 @@ HMAC-SHA-1 digests
 from __future__ import absolute_import
 
 import hmac
-from hashlib import sha1, md5
+import hashlib
 from mom.codec import bytes_to_base64, bytes_to_hex
 
 
@@ -55,7 +55,7 @@ def sha1_digest(*inputs):
     :returns:
         A byte string containing the SHA-1 message digest.
     """
-    hash_func = sha1()
+    hash_func = hashlib.sha1()
     for i in inputs:
         hash_func.update(i)
     return hash_func.digest()
@@ -96,7 +96,7 @@ def md5_digest(*inputs):
     :returns:
         A byte string containing the MD5 message digest.
     """
-    hash_func = md5()
+    hash_func = hashlib.md5()
     for i in inputs:
         hash_func.update(i)
     return hash_func.digest()
@@ -139,7 +139,7 @@ def hmac_sha1_digest(key, data):
     :returns:
         HMAC SHA-1 Digest.
     """
-    return hmac.new(key, data, sha1).digest()
+    return hmac.new(key, data, hashlib.sha1).digest()
 
 
 def hmac_sha1_base64_digest(key, data):

@@ -16,6 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+:module: mom
+:synopsis: Mother of all our Python projects.
+"""
+
 from mom import codec, security, builtins, decorators, math
 
 __all__ = [

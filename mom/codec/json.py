@@ -28,7 +28,6 @@
 
 from __future__ import absolute_import
 from mom.builtins import to_unicode_recursively, bytes_to_unicode
-from mom.codec._json import json_dumps, json_loads
 
 try:
     # Built-in JSON library.

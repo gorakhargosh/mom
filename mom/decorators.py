@@ -45,4 +45,3 @@ def deprecated(func):
         return func(*args, **kwargs)
     return new_func
 
-
