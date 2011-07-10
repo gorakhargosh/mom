@@ -17,7 +17,7 @@
 # limitations under the License.
 
 """
-:module: mom.types.bytearray
+:module: mom._types.bytearray
 :synopsis: Byte arrays.
 
 Creation and manipulation

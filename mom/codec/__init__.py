@@ -19,7 +19,7 @@
 
 """
 :module: mom.codec
-:synopsis: Many different types of common encode/decode functions.
+:synopsis: Many different _types of common encode/decode functions.
 
 Hexadecimal, base-64, binary, and decimal are byte string encodings.
 ``bytearray`` is an array of bytes. This module contains codecs for
@@ -62,7 +62,7 @@ converting between long, hex, base64, decimal, binary, mpi, and bytearray.
 import struct
 import binascii
 from mom.builtins import bytes, hex, bin, byte_count, bit_count
-from mom.types.bytearray import \
+from mom._types.bytearray import \
     bytearray_concat, \
     bytearray_create_zeros, \
     bytes_to_bytearray, \

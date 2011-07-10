@@ -46,7 +46,7 @@ Python 3.x
 * ``unicode`` has been removed
 
 This module adds portable support for all three versions
-of Python. It introduces these portable types that you can use
+of Python. It introduces these portable _types that you can use
 in your code:
 
 * ``bytes`` where you need byte strings.

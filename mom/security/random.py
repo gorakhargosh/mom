@@ -38,7 +38,7 @@ from __future__ import absolute_import
 
 import os
 from mom.builtins import byte_count, bit_count
-from mom.types.bytearray import \
+from mom._types.bytearray import \
     bytearray_to_long, bytes_to_bytearray
 from mom.codec import \
     bytes_to_bin, \
