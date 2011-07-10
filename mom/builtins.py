@@ -61,7 +61,6 @@ Type detection
 .. autofunction:: unicode
 .. autofunction:: bin
 .. autofunction:: hex
-.. autofunction:: str
 .. autofunction:: byte_count
 .. autofunction:: bit_count
 .. autofunction:: is_python3
@@ -89,39 +88,13 @@ def is_python3():
     return sys.version_info[0] == 3
 
 
-#def bytes(obj):
-#    """
-#    Converts an object value to a byte string.
-#
-#    :param obj:
-#        The object.
-#    :returns:
-#        A byte string representing the object.
-#    """
-#    return _BytesType(obj)
-
-
-#def unicode(obj):
-#    """
-#    Converts a Python object to a unicode string.
-#
-#    :param obj:
-#        The object
-#    :returns:
-#        Unicode string.
-#    """
-#    return _UnicodeType(obj)
-
+# This is probably a bad idea, because we're flipping
+# built-in types. In order to use these types, you'll need to clean
+# up a lot of code. The transition between Python 2.x and 3.x
+# simply does not allow us to use "str", so we're forced to use
+# ``bytes`` and ``unicode`` instead of the usual ``str`` calls.
 bytes = _BytesType
 unicode = _UnicodeType
-
-
-def str(_):
-    """
-    Reminds the developer to use ``bytes()`` or ``unicode()``.
-    """
-    raise TypeError("Please avoid using ``str()`` in your code. "\
-                    "Use ``bytes()`` or ``unicode()`` instead.")
 
 
 def bin(num, prefix="0b"):
