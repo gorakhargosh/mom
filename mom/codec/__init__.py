@@ -59,16 +59,7 @@ converting between long, hex, base64, decimal, binary, mpi, and bytearray.
 .. autofunction:: long_to_mpi
 """
 
-import struct
 import binascii
-from mom.builtins import bytes, hex, bin, long_byte_count, long_bit_length
-from mom._types.bytearray import \
-    bytearray_concat, \
-    bytearray_create_zeros, \
-    bytes_to_bytearray, \
-    bytearray_to_bytes, \
-    long_to_bytearray, \
-    bytearray_to_long
 
 try:
     # Check whether we have reduce as a built-in.
@@ -76,6 +67,8 @@ try:
 except NameError:
     # Python 3k
     from functools import reduce
+
+from mom.builtins import bytes, hex, bin, long_byte_count, long_bit_length
 
 
 def base64_decode(encoded):
@@ -211,6 +204,8 @@ def base64_to_bytearray(encoded):
     :returns:
         Byte array.
     """
+    from mom._types.bytearray import bytes_to_bytearray
+
     return bytes_to_bytearray(base64_decode(encoded))
 
 
@@ -223,6 +218,8 @@ def bytearray_to_base64(byte_array):
     :returns:
         Base-64 encoded byte array without newlines.
     """
+    from mom._types.bytearray import bytearray_to_bytes
+
     return base64_encode(bytearray_to_bytes(byte_array))
 
 
@@ -310,6 +307,8 @@ def long_to_bytes(num, blocksize=0):
     :returns:
         Byte string.
     """
+    import struct
+
     # after much testing, this algorithm was deemed to be the fastest
     s = ''
     num = long(num)
@@ -346,6 +345,8 @@ def bytes_to_long(byte_string):
     :returns:
         Long.
     """
+    import struct
+
     acc = 0L
     unpack = struct.unpack
     length = len(byte_string)
@@ -391,6 +392,9 @@ def mpi_to_long(mpi_byte_string):
     :returns:
         Long value.
     """
+    from mom._types.bytearray import \
+        bytes_to_bytearray, bytearray_to_long
+
     #Make sure this is a positive number
     assert (ord(mpi_byte_string[4]) & 0x80) == 0
 
@@ -407,6 +411,10 @@ def long_to_mpi(num):
     :returns:
         OpenSSL-format MPI Bignum byte string.
     """
+    from mom._types.bytearray import \
+        long_to_bytearray, bytearray_concat, \
+        bytearray_to_bytes, bytearray_create_zeros
+
     byte_array = long_to_bytearray(num)
     ext = 0
     #If the high-order bit is going to be set,

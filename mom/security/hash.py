@@ -41,7 +41,6 @@ HMAC-SHA-1 digests
 
 from __future__ import absolute_import
 
-import hmac
 import hashlib
 from mom.codec import bytes_to_base64, bytes_to_hex
 
@@ -139,6 +138,8 @@ def hmac_sha1_digest(key, data):
     :returns:
         HMAC SHA-1 Digest.
     """
+    import hmac
+
     return hmac.new(key, data, hashlib.sha1).digest()
 
 

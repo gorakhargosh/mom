@@ -18,8 +18,6 @@ Miscellaneous
 
 from __future__ import absolute_import
 
-import time
-import textwrap
 from functools import partial
 from mom.codec import base64_decode, base64_encode
 
@@ -48,6 +46,8 @@ def cert_time_to_seconds(cert_time):
     :returns:
         Python time value.
     """
+    import time
+
     return time.mktime(time.strptime(cert_time, "%b %d %H:%M:%S %Y GMT"))
 
 
@@ -92,6 +92,8 @@ def der_to_pem(der_cert_bytes, pem_header, pem_footer):
         The PEM footer to use.
     """
     # Does what base64.b64encode without the `altchars` argument does.
+    import textwrap
+
     encoded = base64_encode(der_cert_bytes)
     return (pem_header + '\n' +
             textwrap.fill(encoded, 64) + '\n' +

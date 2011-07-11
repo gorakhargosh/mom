@@ -37,7 +37,6 @@ Primes
 
 from __future__ import absolute_import
 
-import math
 from mom.security.random import generate_random_long
 
 __all__ = [
@@ -203,6 +202,8 @@ def make_prime_sieve(size):
     :returns:
         Prime sieve.
     """
+    import math
+
     sieve = range(size)
     for count in range(2, int(math.sqrt(size))):
         if not sieve[count]:
