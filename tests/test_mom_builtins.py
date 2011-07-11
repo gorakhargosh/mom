@@ -166,9 +166,11 @@ class Test_is_bytes_or_unicode(unittest2.TestCase):
 class Test_to_utf8_if_unicode(unittest2.TestCase):
     def test_encodes_unicode_strings(self):
         self.assertEqual(to_utf8_if_unicode(unicode_string), utf8_bytes)
+        self.assertTrue(is_bytes(to_utf8_if_unicode(unicode_string)))
 
     def test_does_not_encode_else_to_utf8(self):
         self.assertEqual(to_utf8_if_unicode(utf8_bytes), utf8_bytes)
+        self.assertTrue(is_bytes(to_utf8_if_unicode(utf8_bytes)))
         self.assertEqual(to_utf8_if_unicode(None), None)
         self.assertEqual(to_utf8_if_unicode(False), False)
         self.assertEqual(to_utf8_if_unicode(5), 5)
@@ -181,9 +183,11 @@ class Test_to_utf8_if_unicode(unittest2.TestCase):
 class Test_to_unicode_if_bytes(unittest2.TestCase):
     def test_encodes_bytes_to_unicode(self):
         self.assertEqual(to_unicode_if_bytes(utf8_bytes), unicode_string)
+        self.assertTrue(is_unicode(to_unicode_if_bytes(utf8_bytes)))
 
     def test_does_not_encode_else_to_unicode(self):
         self.assertEqual(to_unicode_if_bytes(unicode_string), unicode_string)
+        self.assertTrue(is_unicode(to_unicode_if_bytes(unicode_string)))
         self.assertEqual(to_unicode_if_bytes(None), None)
         self.assertEqual(to_unicode_if_bytes(False), False)
         self.assertEqual(to_unicode_if_bytes(5), 5)
@@ -193,12 +197,14 @@ class Test_to_unicode_if_bytes(unittest2.TestCase):
         self.assertEqual(to_unicode_if_bytes(object), object)
 
 
-class Test_to_unicode(unittest2.TestCase):
+class Test_bytes_to_unicode(unittest2.TestCase):
     def test_converts_bytes_to_unicode(self):
         self.assertEqual(bytes_to_unicode(utf8_bytes), unicode_string)
+        self.assertTrue(is_unicode(bytes_to_unicode(utf8_bytes)))
 
     def test_does_not_encode_unicode_and_None_to_unicode(self):
         self.assertEqual(bytes_to_unicode(unicode_string), unicode_string)
+        self.assertTrue(is_unicode(bytes_to_unicode(unicode_string)))
         self.assertEqual(bytes_to_unicode(None), None)
 
     def test_raises_error_when_not_string_or_None(self):
@@ -213,10 +219,12 @@ class Test_to_unicode(unittest2.TestCase):
 class Test_to_utf8(unittest2.TestCase):
     def test_encodes_only_unicode_to_utf8(self):
         self.assertEqual(unicode_to_utf8(unicode_string), utf8_bytes)
+        self.assertTrue(is_bytes(unicode_to_utf8(unicode_string)))
 
     def test_does_not_encode_bytes_or_None_to_utf8(self):
         self.assertEqual(unicode_to_utf8(None), None)
         self.assertEqual(unicode_to_utf8(utf8_bytes), utf8_bytes)
+        self.assertTrue(is_bytes(unicode_to_utf8(utf8_bytes)))
 
     def test_raises_error_when_not_string_or_None(self):
         self.assertRaises(AssertionError, unicode_to_utf8, 5)
