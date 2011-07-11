@@ -42,6 +42,7 @@ test:
 	@bin/coverage erase
 	@bin/coverage run bin/unit2 discover -v
 	@bin/coverage report -m
+	@echo "HTML report generated in the 'htmlcov' directory."
 	@bin/coverage html -d htmlcov
 
 lint:
