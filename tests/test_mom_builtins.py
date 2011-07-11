@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import unittest2
-from unittest2 import TestCase as BaseTestCase
 
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
@@ -20,7 +19,7 @@ utf8_bytes = '\xc2\xae'
 unicode_string = u'\u00ae'
 
 
-class Test_is_bytes(BaseTestCase):
+class Test_is_bytes(unittest2.TestCase):
     def test_accepts_bytes(self):
         self.assertTrue(is_bytes(random_bytes))
 
@@ -35,7 +34,7 @@ class Test_is_bytes(BaseTestCase):
         self.assertFalse(is_bytes(object))
 
 
-class Test_is_unicode(BaseTestCase):
+class Test_is_unicode(unittest2.TestCase):
 
     def test_accepts_unicode(self):
         self.assertTrue(is_unicode(unicode_string))
@@ -51,7 +50,7 @@ class Test_is_unicode(BaseTestCase):
         self.assertFalse(is_unicode(object))
 
 
-class Test_is_bytes_or_unicode(BaseTestCase):
+class Test_is_bytes_or_unicode(unittest2.TestCase):
     def test_accepts_any_string(self):
         self.assertTrue(is_bytes_or_unicode(random_bytes))
         self.assertTrue(is_bytes_or_unicode(unicode_string))
@@ -66,7 +65,7 @@ class Test_is_bytes_or_unicode(BaseTestCase):
         self.assertFalse(is_bytes_or_unicode(object))
 
 
-class Test_to_utf8_if_unicode(BaseTestCase):
+class Test_to_utf8_if_unicode(unittest2.TestCase):
     def test_encodes_unicode_strings(self):
         self.assertEqual(to_utf8_if_unicode(unicode_string), utf8_bytes)
 
@@ -81,7 +80,7 @@ class Test_to_utf8_if_unicode(BaseTestCase):
         self.assertEqual(to_utf8_if_unicode(object), object)
 
 
-class Test_to_unicode_if_bytes(BaseTestCase):
+class Test_to_unicode_if_bytes(unittest2.TestCase):
     def test_encodes_bytes_to_unicode(self):
         self.assertEqual(to_unicode_if_bytes(utf8_bytes), unicode_string)
 
@@ -96,7 +95,7 @@ class Test_to_unicode_if_bytes(BaseTestCase):
         self.assertEqual(to_unicode_if_bytes(object), object)
 
 
-class Test_to_unicode(BaseTestCase):
+class Test_to_unicode(unittest2.TestCase):
     def test_converts_bytes_to_unicode(self):
         self.assertEqual(bytes_to_unicode(utf8_bytes), unicode_string)
 
@@ -113,7 +112,7 @@ class Test_to_unicode(BaseTestCase):
         self.assertRaises(AssertionError, bytes_to_unicode, {})
         self.assertRaises(AssertionError, bytes_to_unicode, object)
 
-class Test_to_utf8(BaseTestCase):
+class Test_to_utf8(unittest2.TestCase):
     def test_encodes_only_unicode_to_utf8(self):
         self.assertEqual(unicode_to_utf8(unicode_string), utf8_bytes)
 
