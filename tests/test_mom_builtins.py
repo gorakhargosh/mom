@@ -17,7 +17,7 @@ from mom.builtins import \
     bytes_to_unicode, \
     bin, \
     hex, \
-    long_byte_count
+    long_byte_count, long_bit_length
 
 
 random_bytes = generate_random_bytes(100)
@@ -111,9 +111,42 @@ class Test_long_byte_count(unittest2.TestCase):
         self.assertEqual(long_byte_count(0), 0)
 
     def test_byte_count_correct(self):
-        numbers = [12, 1200, 120091, 123456789]
+        numbers = [-12, 12, 1200, 120091, 123456789]
         for num in numbers:
-            self.assertEqual(long_byte_count(num), int(math.ceil(len(bin(num, None)) / 8.0)))
+            if num < 0:
+                bit_length = len(bin(num, None)) - 1
+            else:
+                bit_length = len(bin(num, None))
+            count = int(math.ceil(bit_length / 8.0))
+            self.assertEqual(long_byte_count(num), count)
+
+    def test_raises_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, long_byte_count, None)
+        self.assertRaises(TypeError, long_byte_count, object)
+
+
+class Test_long_bit_length(unittest2.TestCase):
+    def test_bit_length_zero_if_zero(self):
+        self.assertEqual(long_bit_length(0), 0)
+
+    def test_bit_length_correct(self):
+        numbers = [
+            -12,
+            12,
+            1200,
+            120091,
+            123456789,
+        ]
+        for num in numbers:
+            if num < 0:
+                length = len(bin(num, None)) - 1
+            else:
+                length = len(bin(num, None))
+            self.assertEqual(long_bit_length(num), length)
+
+    def test_raises_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, long_bit_length, None)
+        self.assertRaises(TypeError, long_bit_length, object)
 
 
 

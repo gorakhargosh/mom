@@ -73,7 +73,6 @@ Type detection
 
 from __future__ import absolute_import
 
-import sys
 import math
 
 from mom._builtins import bytes_type, unicode_type, basestring_type
@@ -85,7 +84,6 @@ __all__ = [
     "hex",
     "long_byte_count",
     "long_bit_length",
-    "is_python3",
     "is_sequence",
     "is_unicode",
     "is_bytes",
@@ -348,16 +346,6 @@ def to_unicode_recursive(obj, encoding="utf-8"):
         return obj
 
 
-def is_python3():
-    """
-    Determines whether we're running on Python 3.
-
-    :returns:
-        ``True`` if we're using Python 3; ``False`` otherwise.
-    """
-    return sys.version_info[0] == 3
-
-
 def long_byte_count(num):
     """
     Number of bytes needed to represent a long integer.
@@ -380,7 +368,8 @@ def long_byte_count(num):
 #else:
 def long_bit_length(num):
     """
-    Number of bits needed to represent a long integer.
+    Number of bits needed to represent a long integer excluding any prefix
+    0 bits.
 
     :param num:
         Long value. If num is 0, then long_bit_length returns 0.
@@ -391,7 +380,9 @@ def long_bit_length(num):
         raise TypeError("NoneType' object cannot be interpreted as an index")
     if num == 0:
         return 0
-    hex_num = "%x" % num
+    if num < 0:
+        num = -num
+    hex_num = hex(num, None)
     return ((len(hex_num) - 1) * 4) + {
         '0':0, '1':1, '2':2, '3':2,
         '4':3, '5':3, '6':3, '7':3,
