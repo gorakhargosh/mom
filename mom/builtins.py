@@ -351,7 +351,7 @@ def long_byte_count(num):
     Number of bytes needed to represent a long integer.
 
     :param num:
-        Long value. If num is 0, then long_byte_count returns 0.
+        Long value. If num is 0, then :func:`long_byte_count` returns 0.
     :returns:
         The number of bytes in the long integer.
     """
@@ -372,7 +372,7 @@ def long_bit_length(num):
     0 bits.
 
     :param num:
-        Long value. If num is 0, then long_bit_length returns 0.
+        Long value. If num is 0, then :func:`long_bit_length` returns 0.
     :returns:
         Returns the number of bits in the long integer.
     """
