@@ -1,0 +1,9 @@
+include README
+include LICENSE
+include AUTHORS
+recursive-include mom *.py
+include docs/*.txt
+include docs/*.xml
+include docs/Makefile
+include docs/make.bat
+recursive-include docs/source *

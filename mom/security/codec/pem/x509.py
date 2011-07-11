@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+# Copyright (C) 2010 Google Inc.
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,6 +72,7 @@ class X509Certificate(object):
         """
         Extracts the RSA modulus and exponent from a RSA public key bit string.
 
+        :author: Arne Roomann-Kurrik     <kurrik@gmail.com>
         :param public_key_bitstring:
             ASN.1 public key bit string.
         :returns:
