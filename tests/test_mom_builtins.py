@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import unittest2
+import math
 
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
@@ -13,7 +16,8 @@ from mom.builtins import \
     unicode_to_utf8, \
     bytes_to_unicode, \
     bin, \
-    hex
+    hex, \
+    long_byte_count
 
 
 random_bytes = generate_random_bytes(100)
@@ -22,40 +26,56 @@ unicode_string = u'\u00ae'
 
 
 class Test_bin(unittest2.TestCase):
-    def test_binary_value(self):
+    def test_binary_0_1_and_minus_1(self):
         self.assertEqual(bin(0), '0b0')
         self.assertEqual(bin(1), '0b1')
+        self.assertEqual(bin(-1), '-0b1')
+
+    def test_binary_value(self):
         self.assertEqual(bin(12), '0b1100')
         self.assertEqual(bin(2**32), '0b100000000000000000000000000000000')
+
+    def test_binary_negative_value(self):
+        self.assertEqual(bin(-1200), '-0b10010110000')
 
     def test_binary_default_prefix(self):
         self.assertEqual(bin(0), '0b0')
         self.assertEqual(bin(1), '0b1')
         self.assertEqual(bin(12), '0b1100')
         self.assertEqual(bin(2**32), '0b100000000000000000000000000000000')
+        self.assertEqual(bin(-1200), '-0b10010110000')
 
     def test_binary_custom_prefix(self):
         self.assertEqual(bin(0, 'B'), 'B0')
         self.assertEqual(bin(1, 'B'), 'B1')
         self.assertEqual(bin(12, 'B'), 'B1100')
         self.assertEqual(bin(2**32, 'B'), 'B100000000000000000000000000000000')
+        self.assertEqual(bin(-1200, 'B'), '-B10010110000')
 
     def test_binary_no_prefix(self):
         self.assertEqual(bin(0, None), '0')
         self.assertEqual(bin(1, ''), '1')
         self.assertEqual(bin(12, None), '1100')
         self.assertEqual(bin(2**32, None), '100000000000000000000000000000000')
+        self.assertEqual(bin(-1200, None), '-10010110000')
 
     def test_raises_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, bin, None, None)
         self.assertRaises(TypeError, bin, "error")
+        self.assertRaises(TypeError, bin, 2.0)
 
 class Test_hex(unittest2.TestCase):
-    def test_hex_value(self):
+    def test_hex_0_1_and_minus_1(self):
         self.assertEqual(hex(0), '0x0')
         self.assertEqual(hex(1), '0x1')
+        self.assertEqual(hex(-1), '-0x1')
+
+    def test_hex_value(self):
         self.assertEqual(hex(12), '0xc')
         self.assertEqual(hex(2**32), '0x100000000')
+
+    def test_hex_negative_value(self):
+        self.assertEqual(hex(-1200), '-0x4b0')
 
     def test_hex_default_prefix(self):
         self.assertEqual(hex(0), '0x0')
@@ -81,6 +101,18 @@ class Test_hex(unittest2.TestCase):
     def test_raises_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, hex, None, None)
         self.assertRaises(TypeError, hex, "error")
+        self.assertRaises(TypeError, hex, 2.0)
+
+
+class Test_long_byte_count(unittest2.TestCase):
+    def test_byte_count_zero_if_zero(self):
+        self.assertEqual(long_byte_count(0), 0)
+
+    def test_byte_count_correct(self):
+        numbers = [12, 1200, 120091, 123456789]
+        for num in numbers:
+            self.assertEqual(long_byte_count(num), int(math.ceil(len(bin(num, None)) / 8.0)))
+
 
 
 class Test_is_bytes(unittest2.TestCase):

@@ -37,7 +37,7 @@ Type conversion
 from __future__ import absolute_import
 
 from array import array
-from mom.builtins import byte_count
+from mom.builtins import long_byte_count
 
 
 def bytearray_create(sequence):
@@ -131,11 +131,10 @@ def long_to_bytearray(num):
     :returns:
         Long.
     """
-    bytes_count = byte_count(num)
+    bytes_count = long_byte_count(num)
     byte_array = bytearray_create_zeros(bytes_count)
     for count in range(bytes_count - 1, -1, -1):
         byte_array[count] = int(num % 256)
         num >>= 8
     return byte_array
-
 

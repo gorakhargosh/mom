@@ -61,7 +61,7 @@ converting between long, hex, base64, decimal, binary, mpi, and bytearray.
 
 import struct
 import binascii
-from mom.builtins import bytes, hex, bin, byte_count, bit_count
+from mom.builtins import bytes, hex, bin, long_byte_count, long_bit_length
 from mom._types.bytearray import \
     bytearray_concat, \
     bytearray_create_zeros, \
@@ -411,9 +411,9 @@ def long_to_mpi(num):
     ext = 0
     #If the high-order bit is going to be set,
     #add an extra byte of zeros
-    if not (bit_count(num) & 0x7):
+    if not (long_bit_length(num) & 0x7):
         ext = 1
-    length = byte_count(num) + ext
+    length = long_byte_count(num) + ext
     byte_array = bytearray_concat(bytearray_create_zeros(4+ext), byte_array)
     byte_array[0] = (length >> 24) & 0xFF
     byte_array[1] = (length >> 16) & 0xFF

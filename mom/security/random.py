@@ -37,7 +37,7 @@ Strings
 from __future__ import absolute_import
 
 import os
-from mom.builtins import byte_count, bit_count
+from mom.builtins import long_byte_count, long_bit_length
 from mom._types.bytearray import \
     bytearray_to_long, bytes_to_bytearray
 from mom.codec import \
@@ -114,8 +114,8 @@ def generate_random_long(low, high):
     """
     if low >= high:
         raise ValueError("High must be greater than low.")
-    num_bits = bit_count(high)
-    num_bytes = byte_count(high)
+    num_bits = long_bit_length(high)
+    num_bytes = long_byte_count(high)
     last_bits = num_bits % 8
     while 1:
         byte_array = generate_random_bytearray(num_bytes)

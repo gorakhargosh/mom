@@ -61,8 +61,8 @@ Type detection
 .. autofunction:: unicode
 .. autofunction:: bin
 .. autofunction:: hex
-.. autofunction:: byte_count
-.. autofunction:: bit_count
+.. autofunction:: long_byte_count
+.. autofunction:: long_bit_length
 .. autofunction:: is_python3
 .. autofunction:: is_sequence
 .. autofunction:: is_unicode
@@ -82,8 +82,8 @@ __all__ = [
     "unicode",
     "bin",
     "hex",
-    "byte_count",
-    "bit_count",
+    "long_byte_count",
+    "long_bit_length",
     "is_python3",
     "is_sequence",
     "is_unicode",
@@ -121,6 +121,9 @@ def bin(num, prefix="0b"):
     if num is None:
         raise TypeError("NoneType' object cannot be interpreted as an index")
     prefix = prefix or ""
+    if num < 0:
+        num = -num
+        prefix = "-" + prefix
     bit_string = ''
     while num > 1:
         bit_string = bytes(num & 1) + bit_string
@@ -189,44 +192,15 @@ def hex(num, prefix="0x"):
     if num is None:
         raise TypeError("NoneType' object cannot be interpreted as an index")
     prefix = prefix or ""
+    if num < 0:
+        num = -num
+        prefix = "-" + prefix
+
+    # To ensure TypeError is raised when non integer is passed.
+    x = num & 1
+
     hex_num = "%x" % num
     return prefix + hex_num.lower()
-
-
-def byte_count(num):
-    """
-    Counts the number of bytes in a long integer.
-
-    :param num:
-        Long value.
-    :returns:
-        The number of bytes in the long integer.
-    """
-    if not num:
-        return 0
-    bits = bit_count(num)
-    return int(math.ceil(bits / 8.0))
-
-
-def bit_count(num):
-    """
-    Counts the number of bits in a long integer.
-
-    :param num:
-        Long value.
-    :returns:
-        Returns the number of bits in the long integer.
-    """
-    if not num:
-        return 0
-    hex_num = "%x" % num
-    return ((len(hex_num) - 1) * 4) + {
-        '0':0, '1':1, '2':2, '3':2,
-        '4':3, '5':3, '6':3, '7':3,
-        '8':4, '9':4, 'a':4, 'b':4,
-        'c':4, 'd':4, 'e':4, 'f':4,
-     }[hex_num[0]]
-    #return int(math.floor(math.log(n, 2))+1)
 
 
 def is_sequence(obj):
@@ -381,3 +355,46 @@ def is_python3():
         ``True`` if we're using Python 3; ``False`` otherwise.
     """
     return sys.version_info[0] == 3
+
+
+def long_byte_count(num):
+    """
+    Number of bytes needed to represent a long integer.
+
+    :param num:
+        Long value. If num is 0, then long_byte_count returns 0.
+    :returns:
+        The number of bytes in the long integer.
+    """
+    if num == 0:
+        return 0
+    bits = long_bit_length(num)
+    return int(math.ceil(bits / 8.0))
+
+
+#if getattr(long, 'bit_length'):
+#    # Use the python 2.7+ or 3.1+ built-in if available.
+#    def long_bit_length(num):
+#        return num.bit_length()
+#else:
+def long_bit_length(num):
+    """
+    Number of bits needed to represent a long integer.
+
+    :param num:
+        Long value. If num is 0, then long_bit_length returns 0.
+    :returns:
+        Returns the number of bits in the long integer.
+    """
+    if num is None:
+        raise TypeError("NoneType' object cannot be interpreted as an index")
+    if num == 0:
+        return 0
+    hex_num = "%x" % num
+    return ((len(hex_num) - 1) * 4) + {
+        '0':0, '1':1, '2':2, '3':2,
+        '4':3, '5':3, '6':3, '7':3,
+        '8':4, '9':4, 'a':4, 'b':4,
+        'c':4, 'd':4, 'e':4, 'f':4,
+     }[hex_num[0]]
+    #return int(math.floor(math.log(n, 2))+1)
