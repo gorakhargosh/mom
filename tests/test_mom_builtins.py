@@ -63,6 +63,7 @@ class Test_bin(unittest2.TestCase):
         self.assertRaises(TypeError, bin, None, None)
         self.assertRaises(TypeError, bin, "error")
         self.assertRaises(TypeError, bin, 2.0)
+        self.assertRaises(TypeError, bin, object)
 
 class Test_hex(unittest2.TestCase):
     def test_hex_0_1_and_minus_1(self):
@@ -102,6 +103,7 @@ class Test_hex(unittest2.TestCase):
         self.assertRaises(TypeError, hex, None, None)
         self.assertRaises(TypeError, hex, "error")
         self.assertRaises(TypeError, hex, 2.0)
+        self.assertRaises(TypeError, hex, object)
 
 
 class Test_long_byte_count(unittest2.TestCase):
