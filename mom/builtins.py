@@ -58,13 +58,10 @@ in your code:
 
 Type detection
 --------------
-.. autofunction:: bytes
-.. autofunction:: unicode
 .. autofunction:: bin
 .. autofunction:: hex
 .. autofunction:: long_byte_count
 .. autofunction:: long_bit_length
-.. autofunction:: is_python3
 .. autofunction:: is_sequence
 .. autofunction:: is_unicode
 .. autofunction:: is_bytes

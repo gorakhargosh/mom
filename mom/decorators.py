@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-:module: pyoauth.decorators
+:module: mom.decorators
 :synopsis: Decorators used throughout the library.
 
 .. autofunction:: deprecated
@@ -19,13 +19,13 @@ __all__ = [
 ]
 
 def deprecated(func):
-    """This is a decorator which can be used to mark functions
+    """
+    This is a decorator which can be used to mark functions
     as deprecated. It will result in a warning being emitted
     when the function is used.
 
-    ## Usage examples ##
+    Usage::
 
-    ::
         @deprecated
         def my_func():
             pass
@@ -37,9 +37,6 @@ def deprecated(func):
     """
     @functools.wraps(func)
     def new_func(*args, **kwargs):
-        """
-        Wrapper function.
-        """
         warnings.warn_explicit(
             "Call to deprecated function %(funcname)s." % {
                 'funcname': func.__name__,
