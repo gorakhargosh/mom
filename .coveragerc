@@ -12,5 +12,5 @@ omit =
 
 
 [html]
-director = htmlcov
+directory = htmlcov
 
