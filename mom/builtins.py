@@ -25,8 +25,7 @@
 ``bytes``, ``str``, ``unicode``, and ``basestring`` mean different
 things to Python 2.5, 2.6, and 3.x.
 
-Use the functions provided instead of the built-in equivalents wherever
-possible. Avoid using ``str``—use ``bytes`` or ``unicode`` instead.
+These are the original meanings of the types.
 
 Python 2.5
 
@@ -59,6 +58,12 @@ in your code:
   complications behind type checking therefore cleaning
   up the code base.
 
+Rules to follow:
+* Use ``bytes`` where you want byte strings.
+* Use ``str`` or ``unicode`` where you want Unicode strings.
+
+The meanings of these types have been changed to suit Python 3.
+
 Type detection
 --------------
 .. autofunction:: bin
@@ -72,8 +77,6 @@ Type detection
 """
 
 from __future__ import absolute_import
-
-import math
 
 from mom._builtins import bytes_type, unicode_type, basestring_type
 
@@ -96,13 +99,18 @@ __all__ = [
 ]
 
 
-# This is probably a bad idea, because we're flipping
-# built-in types. In order to use these types, you'll need to clean
-# up a lot of code. The transition between Python 2.x and 3.x
-# simply does not allow us to use "str", so we're forced to use
-# ``bytes`` and ``unicode`` instead of the usual ``str`` calls.
+# The transition from Python 2.x to 3.x is going to be one mess.
+# However, the use of these types should ease the pain.
+#
+# Types imported from this module have these meanings:
+#
+# * ``bytes`` = byte string (a sequence of bytes).
+# * ``unicode`` = Unicode string (for backward compatibility).
+# * ``str`` = Unicode string (what you should use when you need Unicode
+#    strings.)
 bytes = bytes_type
 unicode = unicode_type
+str = unicode_type
 
 
 def bin(num, prefix="0b"):
@@ -355,6 +363,8 @@ def long_byte_count(num):
     :returns:
         The number of bytes in the long integer.
     """
+    import math
+
     if num == 0:
         return 0
     bits = long_bit_length(num)
@@ -376,6 +386,7 @@ def long_bit_length(num):
     :returns:
         Returns the number of bits in the long integer.
     """
+    # import math
     if num is None:
         raise TypeError("NoneType' object cannot be interpreted as an index")
     if num == 0:
