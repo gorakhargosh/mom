@@ -5,8 +5,8 @@
 
 .. include:: global.rst.inc
 
-PyOAuth
-=======
+Mom
+===
 
 Mother of all our Python projects. Batteries for Python.
 
