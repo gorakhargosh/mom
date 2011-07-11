@@ -39,10 +39,10 @@ view-doc: doc
 
 test:
 	@echo "You will need Coverage 3.5 and unittest2 or higher for this to work."
-	@coverage erase
-	@coverage run -m unit2 discover -v
-	@coverage report -m
-	@coverage html -d htmlcov
+	@bin/coverage erase
+	@bin/coverage run bin/unit2 discover -v
+	@bin/coverage report -m
+	@bin/coverage html -d htmlcov
 
 lint:
 	@pylint $(PKG_NAME)
