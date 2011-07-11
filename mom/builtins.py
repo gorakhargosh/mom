@@ -29,18 +29,21 @@ Use the functions provided instead of the built-in equivalents wherever
 possible. Avoid using ``str``—use ``bytes`` or ``unicode`` instead.
 
 Python 2.5
+
 * ``bytes`` is not available.
 * ``str`` is a byte string.
 * ``unicode`` converts to unicode string.
 * ``basestring`` exists.
 
 Python 2.6
+
 * ``bytes`` is available and maps to str
 * ``str`` is a byte string.
 * ``unicode`` converts to unicode string
 * ``basestring`` exists.
 
 Python 3.x
+
 * ``bytes`` is available and does not map to ``str``.
 * ``str`` maps to the earlier ``unicode``, but ``unicode`` has been removed.
 * ``basestring`` has been removed.
