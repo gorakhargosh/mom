@@ -29,8 +29,8 @@ from __future__ import absolute_import
 from pyasn1.type import univ
 from pyasn1.codec.der import decoder, encoder
 from mom.builtins import bytes
-from mom.security.codec.asn1.x509 import SubjectPublicKeyInfo
 from mom.security.codec.asn1 import rsadsa
+from mom.security.codec.asn1.x509 import SubjectPublicKeyInfo
 from mom.security.codec.pem.x509 import X509Certificate
 from mom.security.codec.pem import \
     pem_to_der_public_key, \

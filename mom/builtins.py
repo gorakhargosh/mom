@@ -77,15 +77,24 @@ import math
 
 from mom._builtins import bytes_type, unicode_type, basestring_type
 
-
-def is_python3():
-    """
-    Determines whether we're running on Python 3.
-
-    :returns:
-        ``True`` if we're using Python 3; ``False`` otherwise.
-    """
-    return sys.version_info[0] == 3
+__all__ = [
+    "bytes",
+    "unicode",
+    "bin",
+    "hex",
+    "byte_count",
+    "bit_count",
+    "is_python3",
+    "is_sequence",
+    "is_unicode",
+    "is_bytes",
+    "is_bytes_or_unicode",
+    "unicode_to_utf8",
+    "bytes_to_unicode",
+    "to_utf8_if_unicode",
+    "to_unicode_if_bytes",
+    "to_unicode_recursive",
+]
 
 
 # This is probably a bad idea, because we're flipping
@@ -332,20 +341,39 @@ def to_unicode_if_bytes(obj, encoding="utf-8"):
     return bytes_to_unicode(obj, encoding) if is_bytes(obj) else obj
 
 
-def to_unicode_recursively(obj):
+def to_unicode_recursive(obj, encoding="utf-8"):
     """
     Walks a simple data structure, converting byte strings to unicode.
 
     Supports lists, tuples, and dictionaries.
+
+    :param obj:
+        The Python data structure to walk recursively looking for
+        byte strings.
+    :param encoding:
+        The encoding to use when decoding the byte string into Unicode.
+        Default UTF-8.
+    :returns:
+        obj with all the byte strings converted to Unicode strings.
     """
     if isinstance(obj, dict):
-        return dict((to_unicode_recursively(k),
-                     to_unicode_recursively(v)) for (k, v) in obj.iteritems())
+        return dict((to_unicode_recursive(k),
+                     to_unicode_recursive(v)) for (k, v) in obj.iteritems())
     elif isinstance(obj, list):
-        return list(to_unicode_recursively(i) for i in obj)
+        return list(to_unicode_recursive(i) for i in obj)
     elif isinstance(obj, tuple):
-        return tuple(to_unicode_recursively(i) for i in obj)
+        return tuple(to_unicode_recursive(i) for i in obj)
     elif is_bytes(obj):
-        return bytes_to_unicode(obj)
+        return bytes_to_unicode(obj, encoding=encoding)
     else:
         return obj
+
+
+def is_python3():
+    """
+    Determines whether we're running on Python 3.
+
+    :returns:
+        ``True`` if we're using Python 3; ``False`` otherwise.
+    """
+    return sys.version_info[0] == 3

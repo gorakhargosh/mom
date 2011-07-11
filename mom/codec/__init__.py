@@ -19,7 +19,7 @@
 
 """
 :module: mom.codec
-:synopsis: Many different _types of common encode/decode functions.
+:synopsis: Many different types of common encode/decode functions.
 
 Hexadecimal, base-64, binary, and decimal are byte string encodings.
 ``bytearray`` is an array of bytes. This module contains codecs for
@@ -273,7 +273,6 @@ def long_to_bin(num):
 
     :param num:
         Long value.
-
     :returns:
         Bit string.
     """

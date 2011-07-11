@@ -37,6 +37,10 @@ except ImportError:
     PublicKey = None
     raise NotImplementedError("RSA implementation not found.")
 
+__all__ = [
+    "parse_private_key",
+    "parse_public_key",
+]
 
 def parse_private_key(encoded_key, encoding="PEM"):
     """

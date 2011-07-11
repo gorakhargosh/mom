@@ -4,6 +4,8 @@
 """
 :module: pyoauth.decorators
 :synopsis: Decorators used throughout the library.
+
+.. autofunction:: deprecated
 """
 
 from __future__ import absolute_import
@@ -11,6 +13,10 @@ from __future__ import absolute_import
 import warnings
 import functools
 
+
+__all__ = [
+    "deprecated",
+]
 
 def deprecated(func):
     """This is a decorator which can be used to mark functions
