@@ -11,12 +11,76 @@ from mom.builtins import \
     to_utf8_if_unicode, \
     to_unicode_if_bytes, \
     unicode_to_utf8, \
-    bytes_to_unicode
+    bytes_to_unicode, \
+    bin, \
+    hex
 
 
 random_bytes = generate_random_bytes(100)
 utf8_bytes = '\xc2\xae'
 unicode_string = u'\u00ae'
+
+
+class Test_bin(unittest2.TestCase):
+    def test_binary_value(self):
+        self.assertEqual(bin(0), '0b0')
+        self.assertEqual(bin(1), '0b1')
+        self.assertEqual(bin(12), '0b1100')
+        self.assertEqual(bin(2**32), '0b100000000000000000000000000000000')
+
+    def test_binary_default_prefix(self):
+        self.assertEqual(bin(0), '0b0')
+        self.assertEqual(bin(1), '0b1')
+        self.assertEqual(bin(12), '0b1100')
+        self.assertEqual(bin(2**32), '0b100000000000000000000000000000000')
+
+    def test_binary_custom_prefix(self):
+        self.assertEqual(bin(0, 'B'), 'B0')
+        self.assertEqual(bin(1, 'B'), 'B1')
+        self.assertEqual(bin(12, 'B'), 'B1100')
+        self.assertEqual(bin(2**32, 'B'), 'B100000000000000000000000000000000')
+
+    def test_binary_no_prefix(self):
+        self.assertEqual(bin(0, None), '0')
+        self.assertEqual(bin(1, ''), '1')
+        self.assertEqual(bin(12, None), '1100')
+        self.assertEqual(bin(2**32, None), '100000000000000000000000000000000')
+
+    def test_raises_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, bin, None, None)
+        self.assertRaises(TypeError, bin, "error")
+
+class Test_hex(unittest2.TestCase):
+    def test_hex_value(self):
+        self.assertEqual(hex(0), '0x0')
+        self.assertEqual(hex(1), '0x1')
+        self.assertEqual(hex(12), '0xc')
+        self.assertEqual(hex(2**32), '0x100000000')
+
+    def test_hex_default_prefix(self):
+        self.assertEqual(hex(0), '0x0')
+        self.assertEqual(hex(1), '0x1')
+        self.assertEqual(hex(12), '0xc')
+        self.assertEqual(hex(2**32), '0x100000000')
+
+    def test_hex_custom_prefix(self):
+        self.assertEqual(hex(0, 'X'), 'X0')
+        self.assertEqual(hex(1, 'X'), 'X1')
+        self.assertEqual(hex(12, 'X'), 'Xc')
+        self.assertEqual(hex(2**32, 'X'), 'X100000000')
+
+    def test_hex_lower_case(self):
+        self.assertEqual(hex(12), '0xc')
+
+    def test_hex_no_prefix(self):
+        self.assertEqual(hex(0, None), '0')
+        self.assertEqual(hex(1, ''), '1')
+        self.assertEqual(hex(12, None), 'c')
+        self.assertEqual(hex(2**32, None), '100000000')
+
+    def test_raises_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, hex, None, None)
+        self.assertRaises(TypeError, hex, "error")
 
 
 class Test_is_bytes(unittest2.TestCase):

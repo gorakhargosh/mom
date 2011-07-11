@@ -40,7 +40,7 @@ view-doc: doc
 test:
 	@bin/coverage erase
 	@bin/coverage run bin/unit2 discover
-	@bin/coverage report -m
+	#@bin/coverage report -m
 	@bin/coverage html -d htmlcov
 
 lint:

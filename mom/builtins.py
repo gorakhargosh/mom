@@ -118,6 +118,8 @@ def bin(num, prefix="0b"):
     :returns:
         Bit string.
     """
+    if num is None:
+        raise TypeError("NoneType' object cannot be interpreted as an index")
     prefix = prefix or ""
     bit_string = ''
     while num > 1:
@@ -184,9 +186,11 @@ def hex(num, prefix="0x"):
     :returns:
         Hexadecimal string.
     """
+    if num is None:
+        raise TypeError("NoneType' object cannot be interpreted as an index")
     prefix = prefix or ""
     hex_num = "%x" % num
-    return prefix + hex_num
+    return prefix + hex_num.lower()
 
 
 def byte_count(num):
