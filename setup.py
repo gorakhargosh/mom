@@ -17,7 +17,7 @@ install_requires = [
     "pyasn1 >=0.0.13b",
 ]
 if sys.version_info < (2, 6, 0):
-    install_requires.append("simplejson >= 2.1.6")
+    install_requires.append("simplejson >=2.1.6")
 
 setup(
     name="mom",
