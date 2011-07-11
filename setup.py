@@ -8,7 +8,16 @@ code base to avoid duplication in multiple projects.
 More information at http://github.com/gorakhargosh/mom
 """
 
+import sys
+
 from setuptools import setup
+
+install_requires = [
+    "PyCrypto >=2.3",
+    "pyasn1 >=0.0.13b",
+]
+if sys.version_info < (2, 6, 0):
+    install_requires.append("simplejson >= 2.1.6")
 
 setup(
     name="mom",
@@ -23,11 +32,7 @@ setup(
     platforms="any",
     packages=["mom"],
     include_package_data=True,
-    install_requires=[
-        "PyCrypto >=2.3",
-        "pyasn1 >=0.0.13b",
-        # "simplejson",  # For python 2.5
-    ],
+    install_requires=install_requires,
     keywords=' '.join([
         "python",
         "utilities",
