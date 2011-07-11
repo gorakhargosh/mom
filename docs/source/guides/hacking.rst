@@ -51,7 +51,7 @@ The repository checkout contains a script called ``autobuild.sh``
 which you should run prior to making changes. It will detect changes to
 Python source code or restructuredText documentation files anywhere
 in the directory tree and rebuild sphinx_ documentation, run all tests using
-nose_, and generate coverage_ reports.
+unittest2, and generate coverage_ reports.
 
 Start it by issuing this command in the ``mom`` directory
 checked out earlier::

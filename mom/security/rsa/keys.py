@@ -18,7 +18,8 @@
 
 """
 :module: mom.security.rsa.keys
-:synopsis:Implements abstract classes for keys.
+:synopsis: Implements abstract classes for keys.
+
 """
 
 from __future__ import absolute_import
