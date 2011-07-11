@@ -362,7 +362,7 @@ def to_unicode_recursive(obj, encoding="utf-8"):
     """
     if isinstance(obj, dict):
         return dict((to_unicode_recursive(k),
-                     to_unicode_recursive(v)) for (k, v) in obj.iteritems())
+                     to_unicode_recursive(v)) for (k, v) in obj.items())
     elif isinstance(obj, list):
         return list(to_unicode_recursive(i) for i in obj)
     elif isinstance(obj, tuple):
