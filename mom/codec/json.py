@@ -27,6 +27,8 @@
 """
 
 from __future__ import absolute_import
+
+import logging
 from mom.builtins import bytes_to_unicode_recursive, bytes_to_unicode
 
 try:
@@ -36,11 +38,9 @@ try:
 
     def json_loads(value):
         """Wrapper to decode JSON."""
-        print("System json")
         return json.loads(value)
     def json_dumps(value):
         """Wrapper to encode JSON."""
-        print("System json")
         return json.dumps(value)
 except Exception:
     try:

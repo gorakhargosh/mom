@@ -118,6 +118,20 @@ bytes = bytes_type
 # str = unicode_type
 
 
+# Fake byte literal support:  In python 2.6+, you can say b"foo" to get
+# a byte literal (str in 2.x, bytes in 3.x).  There's no way to do this
+# in a way that supports 2.5, though, so we need a function wrapper
+# to convert our string literals.  b() should only be applied to literal
+# latin1 strings.  Once we drop support for 2.5, we can remove this function
+# and just use byte literals.
+if str is unicode:
+    def b(s):
+        return s.encode('latin1')
+else:
+    def b(s):
+        return s
+
+
 def bin(num, prefix="0b"):
     """
     Converts a long value to its binary representation.
