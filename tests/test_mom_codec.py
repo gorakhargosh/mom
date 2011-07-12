@@ -4,6 +4,7 @@
 from __future__ import absolute_import
 
 import unittest2
+from mom.builtins import b
 from mom.security.random import generate_random_bytes
 from mom.codec import \
     base64_encode, \
@@ -64,9 +65,9 @@ class Test_bytes_bin_codec(unittest2.TestCase):
         self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_2048)), random_bytes_2048)
         self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_len_4093)), random_bytes_len_4093)
 
-
 class Test_bytes_long_codec(unittest2.TestCase):
     def test_codec_identity(self):
+        self.assertEqual(long_to_bytes(bytes_to_long(b("\x00\x00\x00\x00"))), b("\x00"))
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_1024)), random_bytes_1024)
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_2048)), random_bytes_2048)
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_len_4093)), random_bytes_len_4093)
