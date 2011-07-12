@@ -27,7 +27,7 @@ Bytes and byte arrays
 
 Numbers
 -------
-.. autofunction:: generate_random_long
+.. autofunction:: generate_random_long_in_range
 
 Strings
 -------
@@ -99,9 +99,12 @@ except AttributeError:
                 raise NotImplementedError("What the fuck?! No PRNG available.")
 
 
-def generate_random_long(low, high):
+def generate_random_long_in_range(low, high):
     """
-    Generates a random long integer.
+    Generates a random long integer between low and high, not including
+    high.
+
+    The smaller the range, the lower the uniqueness.
 
     :param low:
         Low

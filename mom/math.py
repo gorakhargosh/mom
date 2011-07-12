@@ -37,7 +37,7 @@ Primes
 
 from __future__ import absolute_import
 
-from mom.security.random import generate_random_long
+from mom.security.random import generate_random_long_in_range
 
 __all__ = [
     "gcd",
@@ -253,7 +253,7 @@ def is_prime(num, iterations=5):
                 return False
             else:
                 v, i = pow_mod(v, 2, num), i+1
-        a = generate_random_long(2, num)
+        a = generate_random_long_in_range(2, num)
     return True
 
 
@@ -275,12 +275,12 @@ def generate_random_prime(bits):
     #29 % 30 and keep them there
     low = (2L ** (bits-1)) * 3/2
     high = 2L ** bits - 30
-    p = generate_random_long(low, high)
+    p = generate_random_long_in_range(low, high)
     p += 29 - (p % 30)
     while 1:
         p += 30
         if p >= high:
-            p = generate_random_long(low, high)
+            p = generate_random_long_in_range(low, high)
             p += 29 - (p % 30)
         if is_prime(p):
             return p
@@ -306,12 +306,12 @@ def generate_random_safe_prime(bits):
     #29 % 30 and keep them there
     low = (2 ** (bits-2)) * 3/2
     high = (2 ** (bits-1)) - 30
-    q = generate_random_long(low, high)
+    q = generate_random_long_in_range(low, high)
     q += 29 - (q % 30)
     while 1:
         q += 30
         if q >= high:
-            q = generate_random_long(low, high)
+            q = generate_random_long_in_range(low, high)
             q += 29 - (q % 30)
         #Ideas from Tom Wu's SRP code
         #Do trial division on p and q before Rabin-Miller

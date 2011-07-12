@@ -4,7 +4,7 @@
 import unittest2
 from mom.security.random import \
     generate_random_uint_string, \
-    generate_random_hex_string
+    generate_random_hex_string, generate_random_long_in_range
 
 
 class Test_generate_random_uint_string(unittest2.TestCase):
@@ -57,3 +57,12 @@ class Test_generate_random_hex_string(unittest2.TestCase):
     def test_is_string(self):
         self.assertTrue(isinstance(generate_random_hex_string(), bytes),
                     "Verification code is not a bytestring.")
+
+class Test_generate_random_long_in_range(unittest2.TestCase):
+    def test_range(self):
+        low, high = 1, 10
+        for x in range(1000):
+            value = generate_random_long_in_range(low, high)
+            self.assertTrue(value >= low and value < high)
+
+
