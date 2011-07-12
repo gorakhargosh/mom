@@ -9,12 +9,10 @@ from mom.security.random import generate_random_bytes
 from mom.codec import \
     base64_encode, \
     base64_decode, \
-    hex_to_bytes, \
-    bytes_to_hex, \
-    bytes_to_base64, \
-    base64_to_bytes,\
-    decimal_to_bytes, \
-    bytes_to_decimal, bytes_to_bin, bin_to_bytes, bytes_to_long, long_to_bytes
+    hex_decode, \
+    hex_encode, \
+    decimal_decode, \
+    decimal_encode, bin_encode, bin_decode, bytes_to_long, long_to_bytes
 
 
 # Generates a 1024-bit strength random byte string.
@@ -41,43 +39,29 @@ class Test_base64_codec(unittest2.TestCase):
         self.assertEqual(base64_decode(base64_encode(random_bytes_2048)), random_bytes_2048)
         self.assertEqual(base64_decode(base64_encode(random_bytes_len_4093)), random_bytes_len_4093)
 
-class Test_bytes_base64_codec(unittest2.TestCase):
-    def test_encodes_without_trailing_newline(self):
-        self.assertFalse(bytes_to_base64(zero_bytes).endswith("\n"))
-        self.assertFalse(bytes_to_base64(random_bytes_1024).endswith("\n"))
-        self.assertFalse(bytes_to_base64(random_bytes_2048).endswith("\n"))
-        self.assertFalse(bytes_to_base64(random_bytes_len_4093).endswith("\n"))
-
+class Test_hex_codec(unittest2.TestCase):
     def test_codec_identity(self):
         # Not zero-destructive
-        self.assertEqual(base64_to_bytes(bytes_to_base64(zero_bytes)), zero_bytes)
-        self.assertEqual(base64_to_bytes(bytes_to_base64(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(base64_to_bytes(bytes_to_base64(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(base64_to_bytes(bytes_to_base64(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(hex_decode(hex_encode(zero_bytes)), zero_bytes)
+        self.assertEqual(hex_decode(hex_encode(random_bytes_1024)), random_bytes_1024)
+        self.assertEqual(hex_decode(hex_encode(random_bytes_2048)), random_bytes_2048)
+        self.assertEqual(hex_decode(hex_encode(random_bytes_len_4093)), random_bytes_len_4093)
 
-
-class Test_bytes_hex_codec(unittest2.TestCase):
-    def test_codec_identity(self):
-        # Not zero-destructive
-        self.assertEqual(hex_to_bytes(bytes_to_hex(zero_bytes)), zero_bytes)
-        self.assertEqual(hex_to_bytes(bytes_to_hex(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(hex_to_bytes(bytes_to_hex(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(hex_to_bytes(bytes_to_hex(random_bytes_len_4093)), random_bytes_len_4093)
-
-class Test_bytes_decimal_codec(unittest2.TestCase):
+class Test_decimal_codec(unittest2.TestCase):
     def test_codec_identity(self):
         # TODO: DESTRUCTIVE behavior for zero bytes (not acceptable).
-        self.assertEqual(decimal_to_bytes(bytes_to_decimal(zero_bytes)), zero_bytes)
-        self.assertEqual(decimal_to_bytes(bytes_to_decimal(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(decimal_to_bytes(bytes_to_decimal(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(decimal_to_bytes(bytes_to_decimal(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(decimal_decode(decimal_encode(zero_bytes)), zero_bytes)
+        self.assertEqual(decimal_decode(decimal_encode(random_bytes_1024)), random_bytes_1024)
+        self.assertEqual(decimal_decode(decimal_encode(random_bytes_2048)), random_bytes_2048)
+        self.assertEqual(decimal_decode(decimal_encode(random_bytes_len_4093)), random_bytes_len_4093)
 
-class Test_bytes_bin_codec(unittest2.TestCase):
+class Test_bin_codec(unittest2.TestCase):
     def test_codec_identity(self):
-        self.assertEqual(bin_to_bytes(bytes_to_bin(zero_bytes)), zero_bytes)
-        self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(bin_decode(bin_encode(zero_bytes)), zero_bytes)
+        self.assertEqual(bin_decode(bin_encode(random_bytes_1024)), random_bytes_1024)
+        self.assertEqual(bin_decode(bin_encode(random_bytes_2048)), random_bytes_2048)
+        self.assertEqual(bin_decode(bin_encode(random_bytes_len_4093)), random_bytes_len_4093)
+
 
 class Test_bytes_long_codec(unittest2.TestCase):
     def test_codec_identity(self):

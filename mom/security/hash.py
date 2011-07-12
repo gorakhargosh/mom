@@ -42,7 +42,7 @@ HMAC-SHA-1 digests
 from __future__ import absolute_import
 
 import hashlib
-from mom.codec import bytes_to_base64, bytes_to_hex
+from mom.codec import base64_encode, hex_encode
 
 
 def sha1_digest(*inputs):
@@ -70,7 +70,7 @@ def sha1_hex_digest(*inputs):
     :returns:
         Hexadecimal representation of the SHA-1 digest.
     """
-    return bytes_to_hex(sha1_digest(*inputs))
+    return hex_encode(sha1_digest(*inputs))
 
 
 def sha1_base64_digest(*inputs):
@@ -83,7 +83,7 @@ def sha1_base64_digest(*inputs):
     :returns:
         Base-64-encoded SHA-1 digest.
     """
-    return bytes_to_base64(sha1_digest(*inputs))
+    return base64_encode(sha1_digest(*inputs))
 
 
 def md5_digest(*inputs):
@@ -111,7 +111,7 @@ def md5_hex_digest(*inputs):
     :returns:
         Hexadecimal representation of the MD5 digest.
     """
-    return bytes_to_hex(md5_digest(*inputs))
+    return hex_encode(md5_digest(*inputs))
 
 
 def md5_base64_digest(*inputs):
@@ -124,7 +124,7 @@ def md5_base64_digest(*inputs):
     :returns:
         Base-64-encoded MD5 digest.
     """
-    return bytes_to_base64(md5_digest(*inputs))
+    return base64_encode(md5_digest(*inputs))
 
 
 def hmac_sha1_digest(key, data):
@@ -154,5 +154,5 @@ def hmac_sha1_base64_digest(key, data):
     :returns:
         Base64-encoded HMAC SHA-1 signature.
     """
-    return bytes_to_base64(hmac_sha1_digest(key, data))
+    return base64_encode(hmac_sha1_digest(key, data))
 

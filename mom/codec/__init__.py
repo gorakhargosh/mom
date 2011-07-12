@@ -25,26 +25,26 @@ Hexadecimal, base-64, binary, and decimal are byte string encodings.
 ``bytearray`` is an array of bytes. This module contains codecs for
 converting between long, hex, base64, decimal, binary, mpi, and bytearray.
 
+Bytes base-encoding
+-------------------
 .. autofunction:: base64_decode
 .. autofunction:: base64_encode
+.. autofunction:: bin_encode
+.. autofunction:: bin_decode
+.. autofunction:: hex_encode
+.. autofunction:: hex_decode
+.. autofunction:: decimal_encode
+.. autofunction:: decimal_decode
 
+Bytearray encoding
+------------------
 .. autofunction:: base64_to_bytearray
 .. autofunction:: bytearray_to_base64
 
-.. autofunction:: bytes_to_hex
-.. autofunction:: hex_to_bytes
-
-.. autofunction:: bytes_to_base64
-.. autofunction:: base64_to_bytes
-
-.. autofunction:: bytes_to_decimal
-.. autofunction:: decimal_to_bytes
-
+Numerical base-encoding
+-----------------------
 .. autofunction:: bytes_to_long
 .. autofunction:: long_to_bytes
-
-.. autofunction:: bytes_to_bin
-.. autofunction:: bin_to_bytes
 
 .. autofunction:: base64_to_long
 .. autofunction:: long_to_base64
@@ -72,6 +72,8 @@ from mom.builtins import bytes, hex, bin, long_byte_count, long_bit_length
 from mom.itertools import group
 
 
+# Bytes base-encoding.
+
 def base64_decode(encoded):
     """
     Decodes a base-64 encoded string into a byte string.
@@ -96,7 +98,7 @@ def base64_encode(byte_string):
     return binascii.b2a_base64(byte_string)[:-1]
 
 
-def bytes_to_hex(byte_string):
+def hex_encode(byte_string):
     """
     Converts a byte string to its hex representation.
 
@@ -108,7 +110,7 @@ def bytes_to_hex(byte_string):
     return binascii.b2a_hex(byte_string)
 
 
-def hex_to_bytes(encoded):
+def hex_decode(encoded):
     """
     Converts a hex byte string to its byte representation.
 
@@ -120,32 +122,7 @@ def hex_to_bytes(encoded):
     return binascii.a2b_hex(encoded)
 
 
-def bytes_to_base64(byte_string):
-    """
-    Converts a byte string to its Base64 representation.
-    (Mostly for consistency.)
-
-    :param byte_string:
-        Byte string.
-    :returns:
-        Base64-encoded byte string.
-    """
-    return base64_encode(byte_string)
-
-
-def base64_to_bytes(encoded):
-    """
-    Decodes a base-64 encoded string into a byte string.
-
-    :param encoded:
-        Base-64 encoded byte string.
-    :returns:
-        byte string.
-    """
-    return base64_decode(encoded)
-
-
-def bytes_to_decimal(byte_string):
+def decimal_encode(byte_string):
     """
     Converts a byte string to its decimal representation.
 
@@ -154,11 +131,11 @@ def bytes_to_decimal(byte_string):
     :returns:
         Decimal-encoded byte string.
     """
-    return bytes(int(bytes_to_hex(byte_string), 16))
+    return bytes(int(hex_encode(byte_string), 16))
     #return bytes(bytes_to_long(byte_string))
 
 
-def decimal_to_bytes(encoded):
+def decimal_decode(encoded):
     """
     Converts a decimal encoded string to its byte representation.
 
@@ -170,6 +147,75 @@ def decimal_to_bytes(encoded):
     return long_to_bytes(long(encoded))
 
 
+_HEX_TO_BIN_LOOKUP = {
+    '0': '0000',
+    '1': '0001',
+    '2': '0010',
+    '3': '0011',
+    '4': '0100',
+    '5': '0101',
+    '6': '0110',
+    '7': '0111',
+    '8': '1000',
+    '9': '1001',
+    'a': '1010', 'A': '1010',
+    'b': '1011', 'B': '1011',
+    'c': '1100', 'C': '1100',
+    'd': '1101', 'D': '1101',
+    'e': '1110', 'E': '1110',
+    'f': '1111', 'F': '1111',
+}
+_BIN_TO_HEX_LOOKUP = {
+    '0000': '0',
+    '0001': '1',
+    '0010': '2',
+    '0011': '3',
+    '0100': '4',
+    '0101': '5',
+    '0110': '6',
+    '0111': '7',
+    '1000': '8',
+    '1001': '9',
+    '1010': 'a',
+    '1011': 'b',
+    '1100': 'c',
+    '1101': 'd',
+    '1110': 'e',
+    '1111': 'f',
+}
+
+def bin_encode(byte_string):
+    """
+    Converts a byte string to binary representation.
+
+    :param byte_string:
+        Byte string.
+    :returns:
+        Binary representation of the byte string.
+    """
+    return ''.join(_HEX_TO_BIN_LOOKUP[hex_char] for hex_char in hex_encode(byte_string))
+
+    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
+    #return long_to_bin(bytes_to_long(byte_string))
+
+
+def bin_decode(binary_string):
+    """
+    Converts a binary representation to bytes.
+
+    :param binary_string:
+        Binary representation.
+    :returns:
+        Byte string.
+    """
+    return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[byt]
+                              for byt in group(binary_string, 4)))
+
+    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
+    #return long_to_bytes(bin_to_long(binary))
+
+
+# Long base-encodings
 def long_to_base64(num):
     """
     Base-64 encodes a long.
@@ -358,80 +404,6 @@ def bytes_to_long(byte_string):
     for i in range(0, length, 4):
         acc = (acc << 32) + unpack('>I', byte_string[i:i+4])[0]
     return acc
-
-
-_HEX_TO_BIN_LOOKUP = {
-    '0': '0000',
-    '1': '0001',
-    '2': '0010',
-    '3': '0011',
-    '4': '0100',
-    '5': '0101',
-    '6': '0110',
-    '7': '0111',
-    '8': '1000',
-    '9': '1001',
-    'a': '1010', 'A': '1010',
-    'b': '1011', 'B': '1011',
-    'c': '1100', 'C': '1100',
-    'd': '1101', 'D': '1101',
-    'e': '1110', 'E': '1110',
-    'f': '1111', 'F': '1111',
-}
-_BIN_TO_HEX_LOOKUP = {
-    '0000': '0',
-    '0001': '1',
-    '0010': '2',
-    '0011': '3',
-    '0100': '4',
-    '0101': '5',
-    '0110': '6',
-    '0111': '7',
-    '1000': '8',
-    '1001': '9',
-    '1010': 'a',
-    '1011': 'b',
-    '1100': 'c',
-    '1101': 'd',
-    '1110': 'e',
-    '1111': 'f',
-}
-
-def bytes_to_bin(byte_string):
-    """
-    Converts a byte string to binary representation.
-
-    :param byte_string:
-        Byte string.
-    :returns:
-        Binary representation of the byte string.
-    """
-    hex_string = bytes_to_hex(byte_string)
-    bin_string = ''
-    for hex_char in hex_string:
-        bin_string += _HEX_TO_BIN_LOOKUP[hex_char]
-    return bin_string
-
-    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return long_to_bin(bytes_to_long(byte_string))
-
-
-def bin_to_bytes(binary_string):
-    """
-    Converts a binary representation to bytes.
-
-    :param binary_string:
-        Binary representation.
-    :returns:
-        Byte string.
-    """
-    hex_string = ''
-    for byt in group(binary_string, 4):
-        hex_string += _BIN_TO_HEX_LOOKUP[byt]
-    return hex_to_bytes(hex_string)
-
-    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return long_to_bytes(bin_to_long(binary))
 
 
 def mpi_to_long(mpi_byte_string):

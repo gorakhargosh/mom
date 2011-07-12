@@ -39,10 +39,10 @@ from __future__ import absolute_import
 
 import os
 from mom.codec import \
-    bytes_to_bin, \
-    bytes_to_base64, \
-    bytes_to_decimal, \
-    bytes_to_hex
+    bin_encode, \
+    base64_encode, \
+    decimal_encode, \
+    hex_encode
 
 
 try:
@@ -132,10 +132,10 @@ def generate_random_long_in_range(low, high):
 
 
 _BYTE_BASE_ENCODING_MAP = {
-    2:  bytes_to_bin,
-    10: bytes_to_decimal,
-    16: bytes_to_hex,
-    64: bytes_to_base64,
+    2:  bin_encode,
+    10: decimal_encode,
+    16: hex_encode,
+    64: base64_encode,
 }
 def generate_random_uint_string(bit_strength=64, base=10):
     """
@@ -180,5 +180,5 @@ def generate_random_hex_string(length=8):
         raise ValueError(
             "This function expects a positive even number "\
             "length: got length `%r`." % length)
-    return bytes_to_hex(generate_random_bytes(length/2))
+    return hex_encode(generate_random_bytes(length/2))
 
