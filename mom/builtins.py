@@ -69,6 +69,12 @@ Type detection
 .. autofunction:: is_unicode
 .. autofunction:: is_bytes
 .. autofunction:: is_bytes_or_unicode
+.. autofunction:: unicode_to_utf8
+.. autofunction:: bytes_to_unicode
+.. autofunction:: to_utf8_if_unicode
+.. autofunction:: to_unicode_if_bytes
+.. autofunction:: bytes_to_unicode_recursive
+.. autofunction:: unicode_to_utf8_recursive
 """
 
 from __future__ import absolute_import
@@ -90,7 +96,7 @@ __all__ = [
     "bytes_to_unicode",
     "to_utf8_if_unicode",
     "to_unicode_if_bytes",
-    "to_unicode_recursive",
+    "bytes_to_unicode_recursive",
 ]
 
 
@@ -327,7 +333,7 @@ def to_unicode_if_bytes(obj, encoding="utf-8"):
     return bytes_to_unicode(obj, encoding) if is_bytes(obj) else obj
 
 
-def to_unicode_recursive(obj, encoding="utf-8"):
+def bytes_to_unicode_recursive(obj, encoding="utf-8"):
     """
     Walks a simple data structure, converting byte strings to unicode.
 
@@ -343,14 +349,40 @@ def to_unicode_recursive(obj, encoding="utf-8"):
         obj with all the byte strings converted to Unicode strings.
     """
     if isinstance(obj, dict):
-        return dict((to_unicode_recursive(k),
-                     to_unicode_recursive(v)) for (k, v) in obj.items())
+        return dict((bytes_to_unicode_recursive(k),
+                     bytes_to_unicode_recursive(v)) for (k, v) in obj.items())
     elif isinstance(obj, list):
-        return list(to_unicode_recursive(i) for i in obj)
+        return list(bytes_to_unicode_recursive(i) for i in obj)
     elif isinstance(obj, tuple):
-        return tuple(to_unicode_recursive(i) for i in obj)
+        return tuple(bytes_to_unicode_recursive(i) for i in obj)
     elif is_bytes(obj):
         return bytes_to_unicode(obj, encoding=encoding)
+    else:
+        return obj
+
+
+def unicode_to_utf8_recursive(obj):
+    """
+    Walks a simple data structure, converting Unicode strings to UTF-8 encoded
+    byte strings.
+
+    Supports lists, tuples, and dictionaries.
+
+    :param obj:
+        The Python data structure to walk recursively looking for
+        Unicode strings.
+    :returns:
+        obj with all the Unicode strings converted to byte strings.
+    """
+    if isinstance(obj, dict):
+        return dict((unicode_to_utf8_recursive(k),
+                     unicode_to_utf8_recursive(v)) for (k, v) in obj.items())
+    elif isinstance(obj, list):
+        return list(unicode_to_utf8_recursive(i) for i in obj)
+    elif isinstance(obj, tuple):
+        return tuple(unicode_to_utf8_recursive(i) for i in obj)
+    elif is_unicode(obj):
+        return unicode_to_utf8(obj)
     else:
         return obj
 

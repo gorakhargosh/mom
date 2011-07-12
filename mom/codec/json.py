@@ -27,7 +27,7 @@
 """
 
 from __future__ import absolute_import
-from mom.builtins import to_unicode_recursive, bytes_to_unicode
+from mom.builtins import bytes_to_unicode_recursive, bytes_to_unicode
 
 try:
     # Built-in JSON library.
@@ -87,7 +87,7 @@ def encode(obj):
     :returns:
         JSON string.
     """
-    return json_dumps(to_unicode_recursive(obj)).replace("</", "<\\/")
+    return json_dumps(bytes_to_unicode_recursive(obj)).replace("</", "<\\/")
 
 # Alias
 object_to_json = encode
