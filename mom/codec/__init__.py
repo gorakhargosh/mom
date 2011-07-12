@@ -285,7 +285,7 @@ def bin_to_long(binary):
     :returns:
         Long value.
     """
-    return reduce((lambda first, second: (first << 1) + second), binary)
+    return reduce((lambda first, second: (int(first) << 1) + int(second)), binary)
 
 
 # Taken from PyCrypto "as is".

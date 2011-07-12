@@ -13,7 +13,7 @@ from mom.codec import \
     bytes_to_base64, \
     base64_to_bytes,\
     decimal_to_bytes, \
-    bytes_to_decimal, bytes_to_bin, bin_to_bytes
+    bytes_to_decimal, bytes_to_bin, bin_to_bytes, bytes_to_long, long_to_bytes
 
 
 # Generates a 1024-bit strength random byte string.
@@ -63,3 +63,10 @@ class Test_bytes_bin_codec(unittest2.TestCase):
         self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_1024)), random_bytes_1024)
         self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_2048)), random_bytes_2048)
         self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_4096)), random_bytes_4096)
+
+
+class Test_bytes_long_codec(unittest2.TestCase):
+    def test_codec_identity(self):
+        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_1024)), random_bytes_1024)
+        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_2048)), random_bytes_2048)
+        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_4096)), random_bytes_4096)
