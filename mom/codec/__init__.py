@@ -216,32 +216,7 @@ def bin_decode(binary_string):
     #return long_to_bytes(bin_to_long(binary))
 
 
-# Long base-encodings
-def long_to_base64(num):
-    """
-    Base-64 encodes a long.
-
-    :param num:
-        A long integer.
-    :returns:
-        Base-64 encoded byte string.
-    """
-    byte_string = long_to_bytes(num)
-    return base64_encode(byte_string)
-
-
-def base64_to_long(encoded):
-    """
-    Base-64 decodes a string into a long.
-
-    :param encoded:
-        The encoded byte string.
-    :returns:
-        Long value.
-    """
-    byte_string = base64_decode(encoded)
-    return bytes_to_long(byte_string)
-
+# Byte array base64 encoding.
 
 def base64_to_bytearray(encoded):
     """
@@ -269,6 +244,34 @@ def bytearray_to_base64(byte_array):
     from mom._types.bytearray import bytearray_to_bytes
 
     return base64_encode(bytearray_to_bytes(byte_array))
+
+
+
+# Long base-encodings
+def long_to_base64(num):
+    """
+    Base-64 encodes a long.
+
+    :param num:
+        A long integer.
+    :returns:
+        Base-64 encoded byte string.
+    """
+    byte_string = long_to_bytes(num)
+    return base64_encode(byte_string)
+
+
+def base64_to_long(encoded):
+    """
+    Base-64 decodes a string into a long.
+
+    :param encoded:
+        The encoded byte string.
+    :returns:
+        Long value.
+    """
+    byte_string = base64_decode(encoded)
+    return bytes_to_long(byte_string)
 
 
 def long_to_hex(num):
