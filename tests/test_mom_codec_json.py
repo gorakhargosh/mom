@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import unittest2
 from mom.builtins import unicode_to_utf8, b
 from mom.codec.json import encode, decode

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import unittest2
 from mom.security.random import \
     generate_random_uint_string, \
