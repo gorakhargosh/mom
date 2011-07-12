@@ -66,3 +66,6 @@ class Test_generate_random_long_in_range(unittest2.TestCase):
             self.assertTrue(value >= low and value < high)
 
 
+    def test_raises_ValueError_when_low_greater_than_high(self):
+        low, high = 4, 3
+        self.assertRaises(ValueError, generate_random_long_in_range, low, high)
