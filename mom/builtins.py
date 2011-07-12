@@ -213,11 +213,16 @@ def is_sequence(obj):
     """
     Determines whether the given value is a sequence.
 
+    Sets, lists, tuples, bytes, and strings are treated as sequence.
+    Dicts and other types will not be treated as sequence.
+
     :param obj:
         The value to test.
     :returns:
         ``True`` if the value is a sequence; ``False`` otherwise.
     """
+    if isinstance(obj, dict):
+        return False
     try:
         list(obj)
         return True

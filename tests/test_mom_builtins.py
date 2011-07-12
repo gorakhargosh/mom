@@ -17,7 +17,7 @@ from mom.builtins import \
     bytes_to_unicode, \
     bin, \
     hex, \
-    long_byte_count, long_bit_length
+    long_byte_count, long_bit_length, is_sequence
 
 
 random_bytes = generate_random_bytes(100)
@@ -268,6 +268,16 @@ class Test_to_utf8(unittest2.TestCase):
         self.assertRaises(AssertionError, unicode_to_utf8, {})
         self.assertRaises(AssertionError, unicode_to_utf8, object)
 
+
+class Test_is_sequence(unittest2.TestCase):
+    def test_detects_sequences(self):
+        self.assertTrue(is_sequence([1,]))
+        self.assertTrue(is_sequence((1,)))
+        self.assertTrue(is_sequence(""))
+        self.assertFalse(is_sequence({}))
+        self.assertFalse(is_sequence(dict()))
+        self.assertTrue(is_sequence(set([1, 2])))
+        self.assertTrue(is_sequence(frozenset([1, 2])))
 
 if __name__ == "__main__":
     unittest2.main()
