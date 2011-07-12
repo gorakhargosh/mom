@@ -74,7 +74,6 @@ class Test_bytes_decimal_codec(unittest2.TestCase):
 
 class Test_bytes_bin_codec(unittest2.TestCase):
     def test_codec_identity(self):
-        # TODO: DESTRUCTIVE behavior for zero bytes (not acceptable).
         self.assertEqual(bin_to_bytes(bytes_to_bin(zero_bytes)), zero_bytes)
         self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_1024)), random_bytes_1024)
         self.assertEqual(bin_to_bytes(bytes_to_bin(random_bytes_2048)), random_bytes_2048)

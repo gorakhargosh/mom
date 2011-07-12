@@ -69,6 +69,7 @@ except NameError:
     from functools import reduce
 
 from mom.builtins import bytes, hex, bin, long_byte_count, long_bit_length
+from mom.itertools import group
 
 
 def base64_decode(encoded):
@@ -153,8 +154,8 @@ def bytes_to_decimal(byte_string):
     :returns:
         Decimal-encoded byte string.
     """
-    #return bytes(int(bytes_to_hex(byte_string), 16))
-    return bytes(bytes_to_long(byte_string))
+    return bytes(int(bytes_to_hex(byte_string), 16))
+    #return bytes(bytes_to_long(byte_string))
 
 
 def decimal_to_bytes(encoded):
@@ -359,6 +360,43 @@ def bytes_to_long(byte_string):
     return acc
 
 
+_HEX_TO_BIN_LOOKUP = {
+    '0': '0000',
+    '1': '0001',
+    '2': '0010',
+    '3': '0011',
+    '4': '0100',
+    '5': '0101',
+    '6': '0110',
+    '7': '0111',
+    '8': '1000',
+    '9': '1001',
+    'a': '1010', 'A': '1010',
+    'b': '1011', 'B': '1011',
+    'c': '1100', 'C': '1100',
+    'd': '1101', 'D': '1101',
+    'e': '1110', 'E': '1110',
+    'f': '1111', 'F': '1111',
+}
+_BIN_TO_HEX_LOOKUP = {
+    '0000': '0',
+    '0001': '1',
+    '0010': '2',
+    '0011': '3',
+    '0100': '4',
+    '0101': '5',
+    '0110': '6',
+    '0111': '7',
+    '1000': '8',
+    '1001': '9',
+    '1010': 'a',
+    '1011': 'b',
+    '1100': 'c',
+    '1101': 'd',
+    '1110': 'e',
+    '1111': 'f',
+}
+
 def bytes_to_bin(byte_string):
     """
     Converts a byte string to binary representation.
@@ -368,19 +406,32 @@ def bytes_to_bin(byte_string):
     :returns:
         Binary representation of the byte string.
     """
-    return long_to_bin(bytes_to_long(byte_string))
+    hex_string = bytes_to_hex(byte_string)
+    bin_string = ''
+    for hex_char in hex_string:
+        bin_string += _HEX_TO_BIN_LOOKUP[hex_char]
+    return bin_string
+
+    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
+    #return long_to_bin(bytes_to_long(byte_string))
 
 
-def bin_to_bytes(binary):
+def bin_to_bytes(binary_string):
     """
     Converts a binary representation to bytes.
 
-    :param binary:
+    :param binary_string:
         Binary representation.
     :returns:
         Byte string.
     """
-    return long_to_bytes(bin_to_long(binary))
+    hex_string = ''
+    for byt in group(binary_string, 4):
+        hex_string += _BIN_TO_HEX_LOOKUP[byt]
+    return hex_to_bytes(hex_string)
+
+    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
+    #return long_to_bytes(bin_to_long(binary))
 
 
 def mpi_to_long(mpi_byte_string):
