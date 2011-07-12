@@ -274,10 +274,18 @@ class Test_is_sequence(unittest2.TestCase):
         self.assertTrue(is_sequence([1,]))
         self.assertTrue(is_sequence((1,)))
         self.assertTrue(is_sequence(""))
-        self.assertFalse(is_sequence({}))
-        self.assertFalse(is_sequence(dict()))
+        self.assertTrue(is_sequence({}))
+        self.assertTrue(is_sequence(dict()))
         self.assertTrue(is_sequence(set([1, 2])))
         self.assertTrue(is_sequence(frozenset([1, 2])))
+
+    def test_rejects_non_sequences(self):
+        self.assertFalse(is_sequence(False))
+        self.assertFalse(is_sequence(True))
+        self.assertFalse(is_sequence(None))
+        self.assertFalse(is_sequence(5))
+        self.assertFalse(is_sequence(Test_is_sequence))
+
 
 if __name__ == "__main__":
     unittest2.main()
