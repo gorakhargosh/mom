@@ -19,6 +19,20 @@
 """
 :module: mom
 :synopsis: Mother of all our Python projects.
+
+How many times have you noticed a ``utils`` subpackage or module?
+-----------------------------------------------------------------
+Yeah. There is a lot of code duplication that occurs throughout
+our Python-based projects and results in code that is harder
+to maintain in the long term. Not to mention all the duplicate
+test code and more maintenance. 
+
+Therefore, we have decided to move all those ``util`` modules and 
+subpackages to a central library, which we use throughout our projects. 
+If you have a ``utils`` module, chances are you're duplicating
+and wasting effort whereas instead you could use tested code
+provided by this library. If there's something not included in 
+this library and think it should, speak up.
 """
 
 from mom import codec, security, builtins, decorators, math
@@ -27,6 +41,7 @@ __all__ = [
     "codec",
     "security",
     "builtins",
+    "itertools",
     "decorators",
     "math",
 ]
