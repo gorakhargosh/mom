@@ -15,6 +15,7 @@ from mom.builtins import \
     to_unicode_if_bytes, \
     unicode_to_utf8, \
     bytes_to_unicode, \
+    b, \
     bin, \
     hex, \
     long_byte_count, long_bit_length, is_sequence, bytes_to_unicode_recursive, unicode_to_utf8_recursive
@@ -25,7 +26,7 @@ utf8_bytes = '\xc2\xae'
 unicode_string = u'\u00ae'
 utf8_bytes2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
 unicode_string2 = u'深入 Python'
-
+latin1_bytes = b("\xe9")
 
 class Test_bin(unittest2.TestCase):
     def test_binary_0_1_and_minus_1(self):
@@ -154,9 +155,11 @@ class Test_long_bit_length(unittest2.TestCase):
 
 class Test_is_bytes(unittest2.TestCase):
     def test_accepts_bytes(self):
+        # Must accept any type of bytes.
         self.assertTrue(is_bytes(random_bytes))
         self.assertTrue(is_bytes(utf8_bytes))
         self.assertTrue(is_bytes(utf8_bytes2))
+        self.assertTrue(is_bytes(latin1_bytes))
 
     def test_rejects_non_bytes(self):
         self.assertFalse(is_bytes(unicode_string))
@@ -282,6 +285,10 @@ class Test_bytes_to_unicode(unittest2.TestCase):
         self.assertRaises(AssertionError, bytes_to_unicode, {})
         self.assertRaises(AssertionError, bytes_to_unicode, object)
 
+    def test_raises_UnicodeDecodeError_when_latin1_bytes(self):
+        self.assertRaises(UnicodeDecodeError, bytes_to_unicode, latin1_bytes)
+
+
 class Test_unicode_to_utf8(unittest2.TestCase):
     def test_encodes_only_unicode_to_utf8(self):
         self.assertEqual(unicode_to_utf8(unicode_string), utf8_bytes)
@@ -295,6 +302,9 @@ class Test_unicode_to_utf8(unittest2.TestCase):
         self.assertEqual(unicode_to_utf8(utf8_bytes), utf8_bytes)
         self.assertTrue(is_bytes(unicode_to_utf8(utf8_bytes)))
 
+        self.assertEqual(unicode_to_utf8(latin1_bytes), latin1_bytes)
+        self.assertTrue(is_bytes(unicode_to_utf8(latin1_bytes)))
+
         self.assertEqual(unicode_to_utf8(utf8_bytes2), utf8_bytes2)
         self.assertTrue(is_bytes(unicode_to_utf8(utf8_bytes2)))
 
@@ -306,7 +316,6 @@ class Test_unicode_to_utf8(unittest2.TestCase):
         self.assertRaises(AssertionError, unicode_to_utf8, ())
         self.assertRaises(AssertionError, unicode_to_utf8, {})
         self.assertRaises(AssertionError, unicode_to_utf8, object)
-
 
 class Test_is_sequence(unittest2.TestCase):
     def test_detects_sequences(self):

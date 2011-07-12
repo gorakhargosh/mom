@@ -6,9 +6,9 @@ from mom.builtins import unicode_to_utf8, b
 from mom.codec.json import encode, decode
 
 
-class Test_json_decode(unittest2.TestCase):
-    def test_json_decode(self):
-        # json_decode accepts both bytes and unicode, but strings it returns
+class Test_decode(unittest2.TestCase):
+    def test_decode(self):
+        # decode accepts both bytes and unicode, but strings it returns
         # are always unicode.
         self.assertEqual(decode(b('"foo"')), u"foo")
         self.assertEqual(decode(u'"foo"'), u"foo")
@@ -17,8 +17,8 @@ class Test_json_decode(unittest2.TestCase):
         self.assertEqual(decode(unicode_to_utf8(u'"\u00e9"')), u"\u00e9")
 
 
-class Test_json_encode(unittest2.TestCase):
-    def test_json_encode(self):
+class Test_encode(unittest2.TestCase):
+    def test_encode(self):
         # json deals with strings, not bytes, but our encoding function should
         # accept bytes as well as long as they are utf8.
         self.assertEqual(decode(encode(u"\u00e9")), u"\u00e9")
