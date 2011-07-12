@@ -193,7 +193,8 @@ def bin_encode(byte_string):
     :returns:
         Binary representation of the byte string.
     """
-    return ''.join(_HEX_TO_BIN_LOOKUP[hex_char] for hex_char in hex_encode(byte_string))
+    return ''.join(_HEX_TO_BIN_LOOKUP[hex_char]
+                   for hex_char in hex_encode(byte_string))
 
     # Zero-bytes destructive. '\x00\x00' treated as '\x00'
     #return long_to_bin(bytes_to_long(byte_string))
