@@ -326,7 +326,7 @@ class Test_is_sequence(unittest2.TestCase):
         self.assertFalse(is_sequence(Test_is_sequence))
 
 
-class Test_to_unicode_recursive(unittest2.TestCase):
+class Test_bytes_to_unicode_recursive(unittest2.TestCase):
     def test_converts_all_bytes_to_unicode_recursively(self):
         p = dict(
             l=[utf8_bytes2, utf8_bytes],
@@ -344,8 +344,8 @@ class Test_to_unicode_recursive(unittest2.TestCase):
         )
         self.assertDictEqual(bytes_to_unicode_recursive(p), e)
 
-class Test_to_unicode_recursive(unittest2.TestCase):
-    def test_converts_all_bytes_to_unicode_recursively(self):
+class Test_unicode_to_utf8_recursive(unittest2.TestCase):
+    def test_converts_all_unicode_to_utf8_bytes_recursively(self):
         p = dict(
             l=[utf8_bytes2, utf8_bytes],
             t=(utf8_bytes2, utf8_bytes),
