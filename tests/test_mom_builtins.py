@@ -17,7 +17,7 @@ from mom.builtins import \
     bytes_to_unicode, \
     bin, \
     hex, \
-    long_byte_count, long_bit_length, is_sequence
+    long_byte_count, long_bit_length, is_sequence, to_unicode_recursive
 
 
 random_bytes = generate_random_bytes(100)
@@ -325,6 +325,24 @@ class Test_is_sequence(unittest2.TestCase):
         self.assertFalse(is_sequence(5))
         self.assertFalse(is_sequence(Test_is_sequence))
 
+
+class Test_to_unicode_recursive(unittest2.TestCase):
+    def test_converts_all_bytes_to_unicode_recursively(self):
+        p = dict(
+            l=[utf8_bytes2, utf8_bytes],
+            t=(utf8_bytes2, utf8_bytes),
+            d=dict(another=[utf8_bytes, utf8_bytes2]),
+            b=utf8_bytes,
+            n=None
+        )
+        e = dict(
+            l=[unicode_string2, unicode_string],
+            t=(unicode_string2, unicode_string),
+            d=dict(another=[unicode_string, unicode_string2]),
+            b=unicode_string,
+            n=None
+        )
+        self.assertDictEqual(to_unicode_recursive(p), e)
 
 if __name__ == "__main__":
     unittest2.main()
