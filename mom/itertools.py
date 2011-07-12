@@ -12,7 +12,9 @@ def group(sequence, chunk_size):
     :param chunk_size:
         The chunk size.
     :returns:
-        A list of sequences each of size ``chunk_size``.
+        Generates a list of sequences each of size ``chunk_size``.
     """
-    return [sequence[i:i+chunk_size]
-            for i in xrange(0, len(sequence), chunk_size)]
+    for i in xrange(0, len(sequence), chunk_size):
+        yield sequence[i:i+chunk_size]
+    #return [sequence[i:i+chunk_size]
+    #        for i in xrange(0, len(sequence), chunk_size)]
