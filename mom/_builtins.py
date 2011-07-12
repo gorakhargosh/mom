@@ -26,8 +26,10 @@ Should not be used in public code. Use the wrappers in mom.
 from __future__ import absolute_import
 
 try:
+    # Python 2.6 or higher.
     bytes_type = bytes
 except NameError:
+    # Python 2.5
     bytes_type = str
 
 try:

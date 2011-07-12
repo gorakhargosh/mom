@@ -22,6 +22,7 @@
 :module: mom.builtins
 :synopsis: Deals with a lot of cross-version issues.
 
+
 ``bytes``, ``str``, ``unicode``, and ``basestring`` mean different
 things to Python 2.5, 2.6, and 3.x.
 
@@ -48,19 +49,13 @@ Python 3.x
 * ``basestring`` has been removed.
 * ``unicode`` has been removed
 
-This module adds portable support for all three versions
-of Python. It introduces these portable _types that you can use
-in your code:
-
-* ``bytes`` where you need byte strings.
-* ``unicode`` where you need unicode strings
-* a few other utility functions that hide all the
-  complications behind type checking therefore cleaning
-  up the code base.
+This module introduces the 'bytes' type for Python 2.5 and adds a
+few utility functions that will continue to keep working as they should
+even when Python versions change.
 
 Rules to follow:
-* Use ``bytes`` where you want byte strings.
-* Use ``str`` or ``unicode`` where you want Unicode strings.
+* Use ``bytes`` where you want byte strings (binary data).
+* Use ``unicode`` where you want Unicode strings (unencoded text).
 
 The meanings of these types have been changed to suit Python 3.
 
@@ -99,18 +94,22 @@ __all__ = [
 ]
 
 
-# The transition from Python 2.x to 3.x is going to be one mess.
-# However, the use of these types should ease the pain.
+# Types and their meanings:
 #
-# Types imported from this module have these meanings:
-#
-# * ``bytes`` = byte string (a sequence of bytes).
-# * ``unicode`` = Unicode string (for backward compatibility).
-# * ``str`` = Unicode string (what you should use when you need Unicode
-#    strings.)
+# * ``bytes`` = bytes (binary data or a sequence of bytes).
+# * ``unicode`` = Unicode string or text (for backward compatibility, 2to3 converts these).
+
 bytes = bytes_type
-unicode = unicode_type
-str = unicode_type
+
+# We don't really need to define this type.
+# 2to3 will automatically convert it to Python 3-``str`` anyway.
+# unicode = unicode_type
+
+# Don't do this. This will break the 2to3 tool.
+# Avoid using str. Use ``bytes`` or ``unicode``. ``bytes`` will
+# prevail the transition and ``unicode`` can be translated automatically
+# by the 2to3 tool. ``str`` is a mind-mess.
+# str = unicode_type
 
 
 def bin(num, prefix="0b"):
@@ -126,7 +125,7 @@ def bin(num, prefix="0b"):
         Bit string.
     """
     if num is None:
-        raise TypeError("NoneType' object cannot be interpreted as an index")
+        raise TypeError("'NoneType' object cannot be interpreted as an index")
     prefix = prefix or ""
     if num < 0:
         num = -num
@@ -197,7 +196,7 @@ def hex(num, prefix="0x"):
         Hexadecimal string.
     """
     if num is None:
-        raise TypeError("NoneType' object cannot be interpreted as an index")
+        raise TypeError("'NoneType' object cannot be interpreted as an index")
     prefix = prefix or ""
     if num < 0:
         num = -num

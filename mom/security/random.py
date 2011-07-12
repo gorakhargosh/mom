@@ -38,9 +38,6 @@ Strings
 from __future__ import absolute_import
 
 import os
-from mom.builtins import long_byte_count, long_bit_length
-from mom._types.bytearray import \
-    bytearray_to_long, bytes_to_bytearray
 from mom.codec import \
     bytes_to_bin, \
     bytes_to_base64, \
@@ -113,13 +110,17 @@ def generate_random_long(low, high):
     :returns:
         Random long integer value.
     """
+    from mom.builtins import long_byte_count, long_bit_length
+    from mom._types.bytearray import \
+        bytearray_to_long, bytes_to_bytearray
+
     if low >= high:
         raise ValueError("High must be greater than low.")
     num_bits = long_bit_length(high)
     num_bytes = long_byte_count(high)
     last_bits = num_bits % 8
     while 1:
-        byte_array = generate_random_bytearray(num_bytes)
+        byte_array = bytes_to_bytearray(generate_random_bytes(num_bytes))
         if last_bits:
             byte_array[0] = byte_array[0] % (1 << last_bits)
         num = bytearray_to_long(byte_array)
@@ -178,14 +179,3 @@ def generate_random_hex_string(length=8):
             "length: got length `%r`." % length)
     return bytes_to_hex(generate_random_bytes(length/2))
 
-
-def generate_random_bytearray(count):
-    """
-    Generates a random byte array.
-
-    :param count:
-        The number of bytes.
-    :returns:
-        A random byte array.
-    """
-    return bytes_to_bytearray(generate_random_bytes(count))
