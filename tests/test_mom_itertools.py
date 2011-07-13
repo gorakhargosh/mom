@@ -9,8 +9,10 @@ from mom.itertools import group
 
 class Test_group(unittest2.TestCase):
     def test_valid_grouping(self):
-        self.assertEqual(list(group("aaaabbbbccccdddd", 4)), ["aaaa", "bbbb", "cccc", "dddd"])
-        self.assertEqual(list(group([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)), [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+        self.assertEqual(list(group("aaaabbbbccccdddd", 4)),
+                         ["aaaa", "bbbb", "cccc", "dddd"])
+        self.assertEqual(list(group([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)),
+                         [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
     def test_returns_generator_object(self):
         self.assertTrue("generator" in repr(type(group("aaaabbbb", 4))))
