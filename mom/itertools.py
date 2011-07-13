@@ -25,6 +25,12 @@ Tools useful for iterating over sequences.
 
 """
 
+try:
+    _RANGE = xrange
+except NameError:
+    _RANGE = range
+
+
 def group(sequence, chunk_size):
     """
     Splits a sequence into a list of sequences each of size specified by
@@ -37,11 +43,7 @@ def group(sequence, chunk_size):
     :returns:
         Generator of sequences each of size ``chunk_size``.
     """
-    try:
-        range_func = xrange
-    except NameError:
-        range_func = range
-    for i in range_func(0, len(sequence), chunk_size):
+    for i in _RANGE(0, len(sequence), chunk_size):
         yield sequence[i:i+chunk_size]
 
 
