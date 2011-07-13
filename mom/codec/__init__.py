@@ -38,36 +38,33 @@ Bytes base-encoding
 
 Bytearray encoding
 ------------------
-.. autofunction:: base64_to_bytearray
-.. autofunction:: bytearray_to_base64
+.. autofunction:: bytearray_base64_decode
+.. autofunction:: bytearray_base64_encode
 
 Numerical base-encoding
+-----------------------
+.. autofunction:: long_base64_decode
+.. autofunction:: long_base64_encode
+.. autofunction:: long_bin_decode
+.. autofunction:: long_bin_encode
+.. autofunction:: long_hex_decode
+.. autofunction:: long_hex_encode
+
+Number-bytes conversion
 -----------------------
 .. autofunction:: bytes_to_long
 .. autofunction:: long_to_bytes
 
-.. autofunction:: base64_to_long
-.. autofunction:: long_to_base64
-
-.. autofunction:: bin_to_long
-.. autofunction:: long_to_bin
-
-.. autofunction:: hex_to_long
-.. autofunction:: long_to_hex
-
+OpenSSL MPI Bignum conversion
+-----------------------------
 .. autofunction:: mpi_to_long
 .. autofunction:: long_to_mpi
 """
 
+
 import binascii
 
-try:
-    # Check whether we have reduce as a built-in.
-    __reduce_test__ = reduce((lambda num1, num2: num1 + num2), [1, 2, 3, 4])
-except NameError:
-    # Python 3k
-    from functools import reduce
-
+from mom._builtins import reduce
 from mom.builtins import bytes, hex, bin, long_byte_count, long_bit_length
 from mom.itertools import group
 
@@ -197,7 +194,7 @@ def bin_encode(byte_string):
                    for hex_char in hex_encode(byte_string))
 
     # Zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return long_to_bin(bytes_to_long(byte_string))
+    #return long_bin_encode(bytes_to_long(byte_string))
 
 
 def bin_decode(binary_string):
@@ -213,12 +210,12 @@ def bin_decode(binary_string):
                               for byt in group(binary_string, 4)))
 
     # Zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return long_to_bytes(bin_to_long(binary))
+    #return long_to_bytes(long_bin_decode(binary))
 
 
 # Byte array base64 encoding.
 
-def base64_to_bytearray(encoded):
+def bytearray_base64_decode(encoded):
     """
     Converts a base-64 encoded value into a byte array.
 
@@ -232,7 +229,7 @@ def base64_to_bytearray(encoded):
     return bytes_to_bytearray(base64_decode(encoded))
 
 
-def bytearray_to_base64(byte_array):
+def bytearray_base64_encode(byte_array):
     """
     Base-64 encodes a byte array.
 
@@ -248,7 +245,7 @@ def bytearray_to_base64(byte_array):
 
 
 # Long base-encodings
-def long_to_base64(num):
+def long_base64_encode(num):
     """
     Base-64 encodes a long.
 
@@ -261,7 +258,7 @@ def long_to_base64(num):
     return base64_encode(byte_string)
 
 
-def base64_to_long(encoded):
+def long_base64_decode(encoded):
     """
     Base-64 decodes a string into a long.
 
@@ -274,7 +271,7 @@ def base64_to_long(encoded):
     return bytes_to_long(byte_string)
 
 
-def long_to_hex(num):
+def long_hex_encode(num):
     """
     Converts a long value to its hexadecimal representation without prefix.
 
@@ -286,7 +283,7 @@ def long_to_hex(num):
     return hex(num, None)
 
 
-def hex_to_long(encoded):
+def long_hex_decode(encoded):
     """Convert a hex string to an integer.
 
     The hex string can be any length. It can start with an 0x, or not.
@@ -315,7 +312,7 @@ def hex_to_long(encoded):
     return num
 
 
-def long_to_bin(num):
+def long_bin_encode(num):
     """
     Converts a long value to its binary representation without prefix.
 
@@ -327,7 +324,7 @@ def long_to_bin(num):
     return bin(num, None)
 
 
-def bin_to_long(binary):
+def long_bin_decode(binary):
     """
     Converts a bit sequence to a long value.
 

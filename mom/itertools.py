@@ -25,11 +25,7 @@ Tools useful for iterating over sequences.
 
 """
 
-try:
-    _RANGE = xrange
-except NameError:
-    _RANGE = range
-
+from mom._builtins import _RANGE
 
 def group(sequence, chunk_size):
     """

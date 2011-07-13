@@ -79,7 +79,8 @@ Type detection
 
 from __future__ import absolute_import
 
-from mom._builtins import bytes_type, unicode_type, basestring_type
+from mom._builtins import \
+    byte_literal, bytes_type, unicode_type, basestring_type
 
 __all__ = [
     "bytes",
@@ -117,19 +118,8 @@ bytes = bytes_type
 # by the 2to3 tool. ``str`` is a mind-mess.
 # str = unicode_type
 
-
-# Fake byte literal support:  In python 2.6+, you can say b"foo" to get
-# a byte literal (str in 2.x, bytes in 3.x).  There's no way to do this
-# in a way that supports 2.5, though, so we need a function wrapper
-# to convert our string literals.  b() should only be applied to literal
-# latin1 strings.  Once we drop support for 2.5, we can remove this function
-# and just use byte literals.
-if str is unicode:
-    def b(s):
-        return s.encode('latin1')
-else:
-    def b(s):
-        return s
+# Fake byte literal support.
+b = byte_literal
 
 
 def bin(num, prefix="0b"):

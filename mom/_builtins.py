@@ -41,4 +41,29 @@ except NameError:
     unicode_type = str
     basestring_type = (str, bytes)
 
+try:
+    _RANGE = xrange
+except NameError:
+    _RANGE = range
 
+# Fake byte literal support:  In python 2.6+, you can say b"foo" to get
+# a byte literal (str in 2.x, bytes in 3.x).  There's no way to do this
+# in a way that supports 2.5, though, so we need a function wrapper
+# to convert our string literals.  b() should only be applied to literal
+# latin1 strings.  Once we drop support for 2.5, we can remove this function
+# and just use byte literals.
+if str is unicode:
+    def byte_literal(s):
+        return s.encode('latin1')
+else:
+    def byte_literal(s):
+        return s
+
+
+try:
+    # Check whether we have reduce as a built-in.
+    __reduce_test__ = reduce((lambda num1, num2: num1 + num2), [1, 2, 3, 4])
+except NameError:
+    # Python 3k
+    from functools import reduce
+reduce = reduce
