@@ -37,7 +37,11 @@ def group(sequence, chunk_size):
     :returns:
         Generator of sequences each of size ``chunk_size``.
     """
-    for i in xrange(0, len(sequence), chunk_size):
+    try:
+        range_func = xrange
+    except NameError:
+        range_func = range
+    for i in range_func(0, len(sequence), chunk_size):
         yield sequence[i:i+chunk_size]
 
 
