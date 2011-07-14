@@ -243,7 +243,6 @@ def bytearray_base64_encode(byte_array):
     return base64_encode(bytearray_to_bytes(byte_array))
 
 
-
 # Long base-encodings
 def long_base64_encode(num):
     """
@@ -268,6 +267,11 @@ def long_base64_decode(encoded):
         Long value.
     """
     byte_string = base64_decode(encoded)
+    if byte_string[0] == "-":
+        byte_string = byte_string[1:]
+        has_negative = True
+    else:
+        has_negative = False
     return bytes_to_long(byte_string)
 
 
@@ -297,6 +301,11 @@ def long_hex_decode(encoded):
     :returns:
         Long value.
     """
+    if encoded[0] == "-":
+        encoded = encoded[1:]
+        has_negative = True
+    else:
+        has_negative = False
     num = 0  # Resulting integer
     encoded = encoded.lower()  # Hex string
     if encoded[:2] == "0x":
@@ -309,7 +318,7 @@ def long_hex_decode(encoded):
             num += ord(character) - ord("a") + 10
         else:
             raise ValueError(character)
-    return num
+    return -long(num) if has_negative else long(num)
 
 
 def long_bin_encode(num):
@@ -324,16 +333,22 @@ def long_bin_encode(num):
     return bin(num, None)
 
 
-def long_bin_decode(binary):
+def long_bin_decode(encoded):
     """
     Converts a bit sequence to a long value.
 
-    :param binary:
+    :param encoded:
         Bit sequence.
     :returns:
         Long value.
     """
-    return reduce((lambda first, second: (int(first) << 1) + int(second)), binary)
+    if encoded[0] == "-":
+        encoded = encoded[1:]
+        has_negative = True
+    else:
+        has_negative = False
+    long_val = long(reduce((lambda first, second: (long(first) << 1) + long(second)), encoded))
+    return (-long_val) if has_negative else long_val
 
 
 # Taken from PyCrypto "as is".
