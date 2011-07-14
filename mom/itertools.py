@@ -29,14 +29,14 @@ from mom._builtins import _RANGE
 
 def chunks(sequence, size):
     """
-    Splits a sequence into a list of sequences each of specified size.
+    Splits a sequence into a list of sequences each of specified chunk size.
 
     :param sequence:
         The sequence to split.
     :param size:
-        The chunks size.
+        Chunk size.
     :returns:
-        Generator of sequences each of size ``chunk_size``.
+        Generator of sequences each of the specified chunk size.
     """
     for i in _RANGE(0, len(sequence), size):
         yield sequence[i:i+size]
