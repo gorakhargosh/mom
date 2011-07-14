@@ -13,7 +13,11 @@ from mom.codec import \
     hex_decode, \
     hex_encode, \
     decimal_decode, \
-    decimal_encode, bin_encode, bin_decode, bytes_to_long, long_to_bytes, long_bin_encode, long_bin_decode, long_hex_encode, long_hex_decode, long_base64_encode, long_base64_decode
+    decimal_encode, \
+    bin_encode, \
+    bin_decode, \
+    bytes_to_long, \
+    long_to_bytes
 
 
 # Generates a 1024-bit strength random byte string.
@@ -75,21 +79,3 @@ class Test_bytes_long_codec(unittest2.TestCase):
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_1024)), random_bytes_1024)
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_2048)), random_bytes_2048)
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_len_4093)), random_bytes_len_4093)
-
-class Test_long_bin_encode(unittest2.TestCase):
-    def test_codec_identify(self):
-        self.assertEqual(long_bin_decode(long_bin_encode(random_long_value)), random_long_value)
-        self.assertEqual(long_bin_decode(long_bin_encode(zero_long)), zero_long)
-        self.assertEqual(long_bin_decode(long_bin_encode(negative_long_value)), negative_long_value)
-
-class Test_long_hex_encode(unittest2.TestCase):
-    def test_codec_identify(self):
-        self.assertEqual(long_hex_decode(long_hex_encode(random_long_value)), random_long_value)
-        self.assertEqual(long_hex_decode(long_hex_encode(zero_long)), zero_long)
-        self.assertEqual(long_hex_decode(long_hex_encode(negative_long_value)), negative_long_value)
-
-class Test_long_base64_encode(unittest2.TestCase):
-    def test_codec_identify(self):
-        self.assertEqual(long_base64_decode(long_base64_encode(random_long_value)), random_long_value)
-        self.assertEqual(long_base64_decode(long_base64_encode(zero_long)), zero_long)
-        self.assertEqual(long_base64_decode(long_base64_encode(negative_long_value)), negative_long_value)

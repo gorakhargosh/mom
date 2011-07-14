@@ -41,15 +41,6 @@ Bytearray encoding
 .. autofunction:: bytearray_base64_decode
 .. autofunction:: bytearray_base64_encode
 
-Numerical base-encoding
------------------------
-.. autofunction:: long_base64_decode
-.. autofunction:: long_base64_encode
-.. autofunction:: long_bin_decode
-.. autofunction:: long_bin_encode
-.. autofunction:: long_hex_decode
-.. autofunction:: long_hex_encode
-
 Number-bytes conversion
 -----------------------
 .. autofunction:: bytes_to_long
@@ -243,105 +234,13 @@ def bytearray_base64_encode(byte_array):
     return base64_encode(bytearray_to_bytes(byte_array))
 
 
-# Long base-encodings
-def long_base64_encode(num):
-    """
-    Base-64 encodes a long.
-
-    :param num:
-        A long integer.
-    :returns:
-        Base-64 encoded byte string.
-    """
-    return base64_encode(str(num))
-
-
-def long_base64_decode(encoded):
-    """
-    Base-64 decodes a string into a long.
-
-    :param encoded:
-        The encoded byte string.
-    :returns:
-        Long value.
-    """
-    return long(base64_decode(encoded))
-
-
-def long_hex_encode(num):
-    """
-    Converts a long value to its hexadecimal representation without prefix.
-
-    :param num:
-        Long value.
-    :returns:
-        Hexadecimal string.
-    """
-    return hex(num, None)
-
-
-def long_hex_decode(encoded):
-    """Convert a hex string to an integer.
-
-    The hex string can be any length. It can start with an 0x, or not.
-    Unrecognized characters will raise a ValueError.
-
-    This function released into the public domain by it's author, Lion
-    Kimbro.
-
-    :param encoded:
-        Hexadecimal string.
-    :returns:
-        Long value.
-    """
-    if encoded[0] == "-":
-        encoded = encoded[1:]
-        has_negative = True
-    else:
-        has_negative = False
-    num = 0  # Resulting integer
-    encoded = encoded.lower()  # Hex string
-    if encoded[:2] == "0x":
-        encoded = encoded[2:]
-    for character in encoded:  # Hex character
-        num *= 16
-        if "0" <= character <= "9":
-            num += ord(character) - ord("0")
-        elif "a" <= character <= "f":
-            num += ord(character) - ord("a") + 10
-        else:
-            raise ValueError(character)
-    return -long(num) if has_negative else long(num)
-
-
-def long_bin_encode(num):
-    """
-    Converts a long value to its binary representation without prefix.
-
-    :param num:
-        Long value.
-    :returns:
-        Bit string.
-    """
-    return bin(num, None)
-
-
-def long_bin_decode(encoded):
-    """
-    Converts a bit sequence to a long value.
-
-    :param encoded:
-        Bit sequence.
-    :returns:
-        Long value.
-    """
-    if encoded[0] == "-":
-        encoded = encoded[1:]
-        has_negative = True
-    else:
-        has_negative = False
-    long_val = long(reduce((lambda first, second: (long(first) << 1) + long(second)), encoded))
-    return (-long_val) if has_negative else long_val
+#    if encoded[0] == "-":
+#        encoded = encoded[1:]
+#        has_negative = True
+#    else:
+#        has_negative = False
+#    long_val = long(reduce((lambda first, second: (long(first) << 1) + long(second)), encoded))
+#    return (-long_val) if has_negative else long_val
 
 
 # Taken from PyCrypto "as is".
