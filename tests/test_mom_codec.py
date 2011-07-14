@@ -58,7 +58,6 @@ class Test_hex_codec(unittest2.TestCase):
 
 class Test_decimal_codec(unittest2.TestCase):
     def test_codec_identity(self):
-        # TODO: DESTRUCTIVE behavior for zero bytes (not acceptable).
         self.assertEqual(decimal_decode(decimal_encode(zero_bytes)), zero_bytes)
         self.assertEqual(decimal_decode(decimal_encode(random_bytes_1024)), random_bytes_1024)
         self.assertEqual(decimal_decode(decimal_encode(random_bytes_2048)), random_bytes_2048)
