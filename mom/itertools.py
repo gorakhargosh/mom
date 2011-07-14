@@ -40,14 +40,14 @@ except ImportError:
             yield tuple(prod)
 
 
-def chunks(iterable, size):
+def chunks(size, iterable):
     """
     Splits an iterable into a list of iterables each of specified chunk size.
 
-    :param iterable:
-        The sequence to split.
     :param size:
         Chunk size.
+    :param iterable:
+        The iterable to split.
     :returns:
         Generator of sequences each of the specified chunk size.
     """

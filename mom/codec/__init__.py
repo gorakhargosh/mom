@@ -225,7 +225,7 @@ def bin_decode(binary_string):
         Byte string.
     """
     return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[byt]
-                              for byt in chunks(binary_string, 4)))
+                              for byt in chunks(4, binary_string)))
 
     # Zero-bytes destructive. '\x00\x00' treated as '\x00'
     #return long_to_bytes(long_bin_decode(binary))
