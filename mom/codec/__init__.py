@@ -120,11 +120,11 @@ def decimal_encode(byte_string):
     :returns:
         Decimal-encoded byte string.
     """
-#    total = 0L
+#    long_val = 0L
 #    multiplier = 1L
 #    for x in reversed(byte_string):
-#        total += multiplier * ord(x)
-#        multiplier *= 256
+#        long_val += multiplier * ord(x)
+#        multiplier *= 256     # multiplier <<= 8
     padding_count = 0
     for x in byte_string:
         if ord(x) > 0:
