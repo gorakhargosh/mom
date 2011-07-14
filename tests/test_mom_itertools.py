@@ -4,18 +4,18 @@
 from __future__ import absolute_import
 
 import unittest2
-from mom.itertools import group
+from mom.itertools import chunks
 
 
-class Test_group(unittest2.TestCase):
+class Test_chunks(unittest2.TestCase):
     def test_valid_grouping(self):
-        self.assertEqual(list(group("aaaabbbbccccdddd", 4)),
+        self.assertEqual(list(chunks("aaaabbbbccccdddd", 4)),
                          ["aaaa", "bbbb", "cccc", "dddd"])
-        self.assertEqual(list(group([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)),
+        self.assertEqual(list(chunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)),
                          [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
     def test_returns_generator_object(self):
-        self.assertTrue("generator" in repr(type(group("aaaabbbb", 4))))
+        self.assertTrue("generator" in repr(type(chunks("aaaabbbb", 4))))
 
     def test_odd_ball_grouping(self):
-        self.assertEqual(list(group("aaabb", 3)), ["aaa", "bb"])
+        self.assertEqual(list(chunks("aaabb", 3)), ["aaa", "bb"])

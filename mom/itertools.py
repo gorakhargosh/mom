@@ -21,25 +21,24 @@
 
 Tools useful for iterating over sequences.
 
-.. autofunction:: group
+.. autofunction:: chunks
 
 """
 
 from mom._builtins import _RANGE
 
-def group(sequence, chunk_size):
+def chunks(sequence, size):
     """
-    Splits a sequence into a list of sequences each of size specified by
-    ``chunk_size``.
+    Splits a sequence into a list of sequences each of specified size.
 
     :param sequence:
         The sequence to split.
-    :param chunk_size:
-        The chunk size.
+    :param size:
+        The chunks size.
     :returns:
         Generator of sequences each of size ``chunk_size``.
     """
-    for i in _RANGE(0, len(sequence), chunk_size):
-        yield sequence[i:i+chunk_size]
+    for i in _RANGE(0, len(sequence), size):
+        yield sequence[i:i+size]
 
 
