@@ -24,7 +24,8 @@ import random
 from mom._builtins import _RANGE
 
 try:
-    from itertools import product
+    from itertools import product as product_
+    product = product_
 except ImportError:
     # See: http://docs.python.org/library/itertools.html#itertools.product
     # The following code is equivalent, but the actual implementation does
