@@ -253,8 +253,7 @@ def long_base64_encode(num):
     :returns:
         Base-64 encoded byte string.
     """
-    byte_string = long_to_bytes(num)
-    return base64_encode(byte_string)
+    return base64_encode(str(num))
 
 
 def long_base64_decode(encoded):
@@ -266,13 +265,7 @@ def long_base64_decode(encoded):
     :returns:
         Long value.
     """
-    byte_string = base64_decode(encoded)
-    if byte_string[0] == "-":
-        byte_string = byte_string[1:]
-        has_negative = True
-    else:
-        has_negative = False
-    return bytes_to_long(byte_string)
+    return long(base64_decode(encoded))
 
 
 def long_hex_encode(num):
