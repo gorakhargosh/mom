@@ -113,26 +113,54 @@ def hex_decode(encoded):
 def decimal_encode(byte_string):
     """
     Converts a byte string to its decimal representation.
+    Prefixed zero-padding is preserved.
 
     :param byte_string:
         Byte string.
     :returns:
         Decimal-encoded byte string.
     """
-    return bytes(int(hex_encode(byte_string), 16))
-    #return bytes(bytes_to_long(byte_string))
+#    total = 0L
+#    multiplier = 1L
+#    for x in reversed(byte_string):
+#        total += multiplier * ord(x)
+#        multiplier *= 256
+    padding_count = 0
+    for x in byte_string:
+        if ord(x) > 0:
+            break
+        else:
+            padding_count += 1
+    zero_padding = "0" * padding_count
+    long_val = bytes_to_long(byte_string)
+    if long_val:
+        return zero_padding + bytes(long_val)
+    else:
+        return zero_padding
 
 
 def decimal_decode(encoded):
     """
-    Converts a decimal encoded string to its byte representation.
+    Converts a decimal-encoded string to its byte representation.
+    Prefixed zeros are converted to padded zero bytes.
 
     :param encoded:
         Decimal encoded string.
     :returns:
         Byte string.
     """
-    return long_to_bytes(long(encoded))
+    padding_count = 0
+    for x in encoded:
+        if x == "0":
+            padding_count += 1
+        else:
+            break
+    zero_padding = '\x00' * padding_count
+    long_val = long(encoded)
+    if not long_val:
+        return zero_padding
+    else:
+        return zero_padding + long_to_bytes(long_val)
 
 
 _HEX_TO_BIN_LOOKUP = {
@@ -232,15 +260,6 @@ def bytearray_base64_encode(byte_array):
     from mom._types.bytearray import bytearray_to_bytes
 
     return base64_encode(bytearray_to_bytes(byte_array))
-
-
-#    if encoded[0] == "-":
-#        encoded = encoded[1:]
-#        has_negative = True
-#    else:
-#        has_negative = False
-#    long_val = long(reduce((lambda first, second: (long(first) << 1) + long(second)), encoded))
-#    return (-long_val) if has_negative else long_val
 
 
 # Taken from PyCrypto "as is".
