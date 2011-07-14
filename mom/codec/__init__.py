@@ -55,8 +55,7 @@ OpenSSL MPI Bignum conversion
 
 import binascii
 
-from mom._builtins import reduce
-from mom.builtins import bytes, hex, bin, long_byte_count, long_bit_length
+from mom.builtins import bytes, long_byte_count, long_bit_length
 from mom.itertools import group
 
 
