@@ -8,14 +8,14 @@ all: build
 
 help:
 	@echo "Possible targets:"
-	@echo "	   test        - run testsuite"
+	@echo "    test        - run testsuite"
 	@echo "    doc(s)      - builds the documentation"
-	@echo "	   view-doc    - opens documentation in the browser"
-	@echo "	   upload-doc  - uploads the documentation to PyPI"
-	@echo "	   develop     - set up development environment"
-	@echo "	   clean       - clean up generated files"
-	@echo "	   release     - performs a release"
-	@echo "	   auto        - continuous builds"
+	@echo "    view-doc    - opens documentation in the browser"
+	@echo "    upload-doc  - uploads the documentation to PyPI"
+	@echo "    develop     - set up development environment"
+	@echo "    clean       - clean up generated files"
+	@echo "    release     - performs a release"
+	@echo "    auto        - continuous builds"
 	@echo "    push        - 'git push' to all hosted repositories"
 
 release: clean test upload-doc
