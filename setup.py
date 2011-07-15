@@ -12,8 +12,23 @@ import sys
 
 from setuptools import setup
 
+try:
+    from PyCrypto.PublicKey import RSA
+except ImportError:
+    import logging
+    logging.warning(
+        "PyCrypto >=2.3 is required for cryptographic functions to work. " \
+        "If you are using any of these routines, please also add it to your " \
+        "list of dependencies."
+    )
+
 install_requires = [
-    "PyCrypto >=2.3",
+    # Binary dependency. Allow the user to decide whether she wants to pull this
+    # in or not. For example, App Engine provides its own version of PyCrypto
+    # which is written in pure Python. Forcing this dependency will cause
+    # compatibility problems on that platform.
+    #"PyCrypto >=2.3",
+
     "pyasn1 >=0.0.13b",
 ]
 if sys.version_info < (2, 6, 0):
