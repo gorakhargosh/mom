@@ -22,6 +22,11 @@ or
 ::
 
     $ git clone git://github.com/gorakhargosh/mom.git
+
+    or
+
+    $ git clone http://code.google.com/p/python-mom/
+
     $ cd mom
     $ python setup.py install
 
