@@ -23,7 +23,6 @@
 Bytes and byte arrays
 ---------------------
 .. autofunction:: generate_random_bytes
-.. autofunction:: generate_random_bytearray
 
 Numbers
 -------

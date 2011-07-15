@@ -72,9 +72,9 @@ class Test_bin_codec(unittest2.TestCase):
 
 
 class Test_bytes_long_codec(unittest2.TestCase):
-    def test_codec_identity(self):
-        # TODO: DESTRUCTIVE behavior for zero bytes (is acceptable here).
+    def test_codec_equivalence(self):
+        # Padding bytes are not preserved (it is acceptable here).
+        random_bytes = """\x00\xbcE\x9a\xda]"""
+        expected_bytes = """\xbcE\x9a\xda]"""
         self.assertEqual(long_to_bytes(bytes_to_long(zero_bytes)), one_zero_byte)
-        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes)), expected_bytes)

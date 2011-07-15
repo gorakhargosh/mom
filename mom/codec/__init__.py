@@ -27,6 +27,14 @@ converting between long, hex, base64, decimal, binary, mpi, and bytearray.
 
 Bytes base-encoding
 -------------------
+These codecs preserve bytes as is
+when decoding back to bytes. In a more mathematical
+sense,
+
+    ``g(f(x))`` is an **identity function**
+
+where ``g`` is the decoder and ``f`` is the encoder.
+
 .. autofunction:: base64_decode
 .. autofunction:: base64_encode
 .. autofunction:: bin_encode
@@ -43,6 +51,15 @@ Bytearray encoding
 
 Number-bytes conversion
 -----------------------
+These codecs are "lossy" in that prefixed
+padding zero bytes will not be preserved when
+converting back to bytes. In a more mathematical
+sense,
+
+    ``g(f(x))`` is **not an identity function**
+
+where ``g`` is the decoder and ``f`` is a encoder.
+
 .. autofunction:: bytes_to_long
 .. autofunction:: long_to_bytes
 
@@ -271,6 +288,8 @@ def long_to_bytes(num, blocksize=0):
 
         long_to_bytes(n:long, blocksize:int) : string
 
+    .. WARNING: Does not preserve prefixed zero-padding bytes.
+
     :param num:
         Long value
     :param blocksize:
@@ -312,6 +331,8 @@ def bytes_to_long(byte_string):
         bytes_to_long(bytestring) : long
 
     This is (essentially) the inverse of long_to_bytes().
+
+    .. WARNING: Does not preserve prefixed zero-padding bytes.
 
     :param byte_string:
         A byte string.

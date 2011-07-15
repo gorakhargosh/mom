@@ -27,7 +27,6 @@ from __future__ import absolute_import
 
 from pyasn1.type import univ
 from pyasn1.codec.der import encoder, decoder
-from mom.codec import long_bin_decode
 from mom.security.codec.pem import \
     der_to_pem_certificate, pem_to_der_certificate
 from mom.security.codec.asn1.x509 import Certificate
@@ -78,7 +77,8 @@ class X509Certificate(object):
         :returns:
             Tuple of (modulus, exponent)
         """
-        public_key_long = long_bin_decode(public_key_bitstring)
+        #public_key_long = long(reduce((lambda first, second: (long(first) << 1) + long(second)), encoded))
+        public_key_long = long(encoded, 2)
         public_key_hex = hex(public_key_long)[2:-1]
         public_key_asn1 = decoder.decode(public_key_hex.decode('hex'))
 
