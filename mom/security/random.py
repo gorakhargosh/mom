@@ -149,6 +149,12 @@ def generate_random_uint_string(bit_strength=64, base=10):
             2. 10 (default)
             3. 16
             4. 64
+        When using 10 as base, please note that prefixed 0s are
+        preserved in the resulting string. If you do not want this behavior,
+        do this:
+
+            generate_random_uint_string(64, 10) -> "00909615666762360633"
+            str(long("00909615666762360633")) -> "909615666762360633"
     :returns:
         An ASCII-encoded base representation of a randomly-generated
         unsigned integral number based on the bit strength.
