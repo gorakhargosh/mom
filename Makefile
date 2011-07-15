@@ -2,7 +2,7 @@ RM = rm -rf
 
 PKG_NAME=mom
 
-.PHONY: all clean distclean develop lint test upload-doc view-doc doc docs build dist release auto submodules
+.PHONY: all clean distclean develop lint test upload-doc view-doc doc docs build dist release auto submodules push
 
 all: build
 
@@ -12,10 +12,11 @@ help:
 	@echo "    doc(s)      - builds the documentation"
 	@echo "	   view-doc    - opens documentation in the browser"
 	@echo "	   upload-doc  - uploads the documentation to PyPI"
-	@echo "	   develop	   - set up development environment"
+	@echo "	   develop     - set up development environment"
 	@echo "	   clean       - clean up generated files"
 	@echo "	   release     - performs a release"
 	@echo "	   auto        - continuous builds"
+	@echo "    push        - 'git push' to all hosted repositories"
 
 release: clean test upload-doc
 	python setup.py sdist upload
@@ -39,6 +40,7 @@ view-doc: doc
 
 test:
 	@echo "You will need Coverage 3.5 and unittest2 or higher for this to work."
+	@rm -rf htmlcov
 	@bin/coverage erase
 	@bin/coverage run run_tests.py
 	@bin/coverage report -m
@@ -62,6 +64,12 @@ bin/buildout: buildout.cfg setup.py
 
 bin/python: bin/buildout
 	@bin/buildout
+
+push:
+	@echo "Pushing repository to remote:origin"
+	@git push origin master
+	@echo "Pushing repository to remote:google"
+	@git push google master
 
 clean:
 	@make -C docs/ clean > /dev/null
