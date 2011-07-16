@@ -204,4 +204,3 @@ def generate_random_hex_string(length=8):
             "This function expects a positive even number "\
             "length: got length `%r`." % length)
     return hex_encode(generate_random_bytes(length/2))
-
