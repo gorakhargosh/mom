@@ -31,6 +31,15 @@ from mom.security.codec.pem import \
     der_to_pem_certificate, pem_to_der_certificate
 from mom.security.codec.asn1.x509 import Certificate
 
+try:
+    reduce((lambda a,b: a+b), [1, 2, 3, 4])
+except NameError:
+    from functools import reduce
+
+
+def bitarray_to_long(bitarray):
+    return long(reduce((lambda a, b: (long(a) << 1) + long(b)), bitarray))
+
 
 class X509Certificate(object):
     # http://tools.ietf.org/html/rfc3279 - Section 2.3.1
@@ -77,9 +86,7 @@ class X509Certificate(object):
         :returns:
             Tuple of (modulus, exponent)
         """
-        #public_key_long = long(reduce((lambda first, second: (long(first) << 1) + long(second)), encoded))
-        public_key_long = long(encoded, 2)
-        public_key_hex = hex(public_key_long)[2:-1]
+        public_key_hex = hex(bitarray_to_long(public_key_bitstring))[2:-1]
         public_key_asn1 = decoder.decode(public_key_hex.decode('hex'))
 
         if len(public_key_asn1) < 1:
