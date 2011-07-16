@@ -20,28 +20,28 @@
 :module: mom.security.random
 :synopsis: Random number, string, and bytearray generation utilities.
 
-Bytes and byte arrays
----------------------
+Bits and bytes
+---------------------------
 .. autofunction:: generate_random_bytes
+.. autofunction:: generate_random_bits
 
 Numbers
 -------
+.. autofunction:: generate_random_ulong
 .. autofunction:: generate_random_long_in_range
 
 Strings
 -------
-.. autofunction:: generate_random_uint_string
 .. autofunction:: generate_random_hex_string
 """
 
 from __future__ import absolute_import
 
 import os
+from mom.builtins import long_bit_length
 from mom.codec import \
-    bin_encode, \
-    base64_encode, \
-    decimal_encode, \
-    hex_encode
+    hex_encode, \
+    bytes_to_long
 
 
 try:
@@ -130,44 +130,61 @@ def generate_random_long_in_range(low, high):
             return num
 
 
-_BYTE_BASE_ENCODING_MAP = {
-    2:  bin_encode,
-    10: decimal_encode,
-    16: hex_encode,
-    64: base64_encode,
-}
-def generate_random_uint_string(bit_strength=64, base=10):
+def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     """
-    Generates an ASCII-encoded base-representation of a randomly-generated
-    unsigned integral number.
+    Generates the specified number of random bits as a byte string.
+    For example::
 
-    :param bit_strength:
-        Bit strength.
-    :param base:
-        One of:
-            1. 2
-            2. 10 (default)
-            3. 16
-            4. 64
-        When using 10 as base, please note that prefixed 0s are
-        preserved in the resulting string. If you do not want this behavior,
-        do this:
+        f(x) -> y such that
+        f(16) ->           1111 1111 1111 1111; bytes_to_long(y) => 65535L
+        f(17) -> 0000 0001 1111 1111 1111 1111; bytes_to_long(y) => 131071L
 
-            generate_random_uint_string(64, 10) -> "00909615666762360633"
-            str(long("00909615666762360633")) -> "909615666762360633"
+    :param n_bits:
+        Number of random bits.
+
+        if n is divisible by 8, (n * 8) bytes will be returned.
+        if n is not divisible by 8, ((n * 8) + 1) bytes will be returned
+        and the prefixed offset-byte will have `(n % 8)` number of random bits,
+        (that is, `8 - (n % 8)` high bits will be cleared).
+
+        The range of the numbers is 0 to (2**n)-1 inclusive.
+    :param rand_func:
+        Random bytes generator function.
     :returns:
-        An ASCII-encoded base representation of a randomly-generated
-        unsigned integral number based on the bit strength.
+        Bytes.
     """
-    if bit_strength % 8 or bit_strength <= 0:
-        raise ValueError(
-            "This function expects a bit strength: got `%r`." % bit_strength)
-    random_bytes = generate_random_bytes(bit_strength // 8)
-    try:
-        return _BYTE_BASE_ENCODING_MAP[base](random_bytes)
-    except KeyError:
-        raise ValueError(
-            "Base must be one of %r" % _BYTE_BASE_ENCODING_MAP.keys())
+    if not isinstance(n_bits, (int, long)):
+        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
+    q, r = divmod(n_bits, 8)
+    random_bytes = rand_func(q)
+    if r:
+        offset = ord(rand_func(1)) >> (8 - r)
+        random_bytes = chr(offset) + random_bytes
+    return random_bytes
+
+
+def generate_random_ulong(n_bits, exact=False, rand_func=generate_random_bytes):
+    """
+    Generates a random unsigned long with `n_bits` random bits.
+
+    :param n_bits:
+        Number of random bits.
+    :param exact:
+        If exact is ``True``, the generated unsigned long integer
+        will be between 2**(n_bits-1) and (2**n_bits)-1 both inclusive.
+        If exact is ``False`` (default), the generated unsigned long integer
+        will be between 0 and (2**n_bits)-1 both inclusive.
+    :param rand_func:
+        Random bytes generator function.
+    :returns:
+        Returns an unsigned long integer with `n_bits` random bits.
+    """
+    value = bytes_to_long(generate_random_bits(n_bits, rand_func=rand_func))
+    assert(value >= 0 and value < (2L ** n_bits))
+    if exact:
+        value |= 2L ** (n_bits - 1)
+        assert(long_bit_length(value) >= n_bits)
+    return value
 
 
 def generate_random_hex_string(length=8):

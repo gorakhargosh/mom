@@ -147,6 +147,9 @@ class Test_long_bit_length(unittest2.TestCase):
                 length = len(bin(num, None))
             self.assertEqual(long_bit_length(num), length)
 
+        self.assertEqual(long_bit_length(2L**32-1), 32)
+        self.assertEqual(long_bit_length(2L**64-1), 64)
+
     def test_raises_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, long_bit_length, None)
         self.assertRaises(TypeError, long_bit_length, object)

@@ -84,7 +84,6 @@ from mom._builtins import \
 
 __all__ = [
     "bytes",
-    "unicode",
     "bin",
     "hex",
     "long_byte_count",
@@ -413,7 +412,25 @@ def long_byte_count(num):
 #    def long_bit_length(num):
 #        return num.bit_length()
 #else:
+
 def long_bit_length(num):
+    """
+    Number of bits needed to represent a long integer excluding any prefix
+    0 bits.
+
+    :param num:
+        Long value. If num is 0, then :func:`long_bit_length` returns 0.
+    :returns:
+        Returns the number of bits in the long integer.
+    """
+    bits = 0
+    if num < 0:
+        num = -num
+    while num >> bits:
+        bits += 1
+    return bits
+
+def _long_bit_length(num):
     """
     Number of bits needed to represent a long integer excluding any prefix
     0 bits.
