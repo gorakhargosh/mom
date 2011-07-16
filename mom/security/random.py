@@ -156,6 +156,7 @@ def generate_random_ulong(n_bits, exact=False, rand_func=generate_random_bytes):
     return value
 
 
+# Taken from PyCrypto.
 def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     """
     Generates a random long integer between low and high, not including high.
@@ -165,7 +166,7 @@ def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     :param high:
         High
     :returns:
-        Random long integer value.
+        Random unsigned long integer value.
     """
     if not isinstance(low, (int, long)) or not isinstance(high, (int, long)):
         raise TypeError("unsupported operand types(s): %r and %r" \
