@@ -28,7 +28,7 @@ Bits and bytes
 Numbers
 -------
 .. autofunction:: generate_random_ulong
-.. autofunction:: generate_random_long_in_range
+.. autofunction:: generate_random_ulong_between
 
 Strings
 -------
@@ -98,38 +98,6 @@ except AttributeError:
                 raise NotImplementedError("What the fuck?! No PRNG available.")
 
 
-def generate_random_long_in_range(low, high):
-    """
-    Generates a random long integer between low and high, not including
-    high.
-
-    The smaller the range, the lower the uniqueness.
-
-    :param low:
-        Low
-    :param high:
-        High
-    :returns:
-        Random long integer value.
-    """
-    from mom.builtins import long_byte_count, long_bit_length
-    from mom._types.bytearray import \
-        bytearray_to_long, bytes_to_bytearray
-
-    if low >= high:
-        raise ValueError("High must be greater than low.")
-    num_bits = long_bit_length(high)
-    num_bytes = long_byte_count(high)
-    last_bits = num_bits % 8
-    while 1:
-        byte_array = bytes_to_bytearray(generate_random_bytes(num_bytes))
-        if last_bits:
-            byte_array[0] = byte_array[0] % (1 << last_bits)
-        num = bytearray_to_long(byte_array)
-        if num >= low and num < high:
-            return num
-
-
 def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     """
     Generates the specified number of random bits as a byte string.
@@ -188,6 +156,30 @@ def generate_random_ulong(n_bits, exact=False, rand_func=generate_random_bytes):
     return value
 
 
+def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
+    """
+    Generates a random long integer between low and high, not including high.
+
+    :param low:
+        Low
+    :param high:
+        High
+    :returns:
+        Random long integer value.
+    """
+    if not isinstance(low, (int, long)) or not isinstance(high, (int, long)):
+        raise TypeError("unsupported operand types(s): %r and %r" \
+                        % (type(low).__name__, type(high).__name__))
+    if low >= high:
+        raise ValueError("high value must be greater than low value.")
+    r = high - low - 1
+    bits = long_bit_length(r)
+    value = generate_random_ulong(bits, rand_func=rand_func)
+    while value > r:
+        value = generate_random_ulong(bits, rand_func=rand_func)
+    return low + value
+
+
 def generate_random_hex_string(length=8):
     """
     Generates a random ASCII-encoded hexadecimal string of an even length.
@@ -199,7 +191,7 @@ def generate_random_hex_string(length=8):
         A string representation of a randomly-generated hexadecimal string.
     """
     #if length % 2 or length <= 0:
-    if length & 1 or length <= 0:
+    if length & 1L or length <= 0:
         raise ValueError(
             "This function expects a positive even number "\
             "length: got length `%r`." % length)
