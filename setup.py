@@ -12,15 +12,21 @@ import sys
 
 from setuptools import setup
 
-try:
-    from PyCrypto.PublicKey import RSA
-except ImportError:
+def pycrypto_complain(version):
     import logging
     logging.warning(
         "PyCrypto >=2.3 is required for cryptographic functions to work. " \
         "If you are using any of these routines, please also add it to your " \
-        "list of dependencies."
+        "list of dependencies. Found %r." % repr(version)
     )
+
+try:
+    import Crypto
+    if Crypto.version_info[0:3] < (2, 3, 0):
+        pycrypto_complain(Crypto.version_info)
+except ImportError:
+    pycrypto_complain(None)
+
 
 install_requires = [
     # Binary dependency. Allow the user to decide whether she wants to pull this
