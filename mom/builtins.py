@@ -134,7 +134,8 @@ def bin(num, prefix="0b"):
         Bit string.
     """
     if num is None:
-        raise TypeError("'NoneType' object cannot be interpreted as an index")
+        raise TypeError("'%r' object cannot be interpreted as an index" \
+                        % type(num).__name__)
     prefix = prefix or ""
     if num < 0:
         num = -num
@@ -205,7 +206,8 @@ def hex(num, prefix="0x"):
         Hexadecimal string.
     """
     if num is None:
-        raise TypeError("'NoneType' object cannot be interpreted as an index")
+        raise TypeError("'%r' object cannot be interpreted as an index" \
+                        % type(num).__name__)
     prefix = prefix or ""
     if num < 0:
         num = -num
@@ -442,7 +444,8 @@ def _long_bit_length(num):
     """
     # import math
     if num is None:
-        raise TypeError("NoneType' object cannot be interpreted as an index")
+        raise TypeError("'%r' object cannot be interpreted as an index" \
+                        % type(num).__name__)
     if num == 0:
         return 0
     if num < 0:
