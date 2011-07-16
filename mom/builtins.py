@@ -103,7 +103,8 @@ __all__ = [
 # Types and their meanings:
 #
 # * ``bytes`` = bytes (binary data or a sequence of bytes).
-# * ``unicode`` = Unicode string or text (for backward compatibility, 2to3 converts these).
+# * ``unicode`` = Unicode string or text (for backward compatibility,
+#    2to3 converts these).
 
 bytes = bytes_type
 
@@ -414,7 +415,6 @@ def long_byte_count(num):
 #    def long_bit_length(num):
 #        return num.bit_length()
 #else:
-
 def long_bit_length(num):
     """
     Number of bits needed to represent a long integer excluding any prefix
@@ -431,6 +431,7 @@ def long_bit_length(num):
     while num >> bits:
         bits += 1
     return bits
+
 
 def _long_bit_length(num):
     """
