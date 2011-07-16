@@ -228,24 +228,24 @@ def bin_encode(byte_string):
     return ''.join(_HEX_TO_BIN_LOOKUP[hex_char]
                    for hex_char in hex_encode(byte_string))
 
-    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return long_bin_encode(bytes_to_long(byte_string))
+    # Prefixed zero-bytes destructive. '\x00\x00' treated as '\x00'
+    #return bin(bytes_to_long(byte_string))[2:]
 
 
-def bin_decode(binary_string):
+def bin_decode(encoded):
     """
     Converts a binary representation to bytes.
 
-    :param binary_string:
+    :param encoded:
         Binary representation.
     :returns:
         Byte string.
     """
     return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[byt]
-                              for byt in chunks(4, binary_string)))
+                              for byt in chunks(4, encoded)))
 
-    # Zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return long_to_bytes(long_bin_decode(binary))
+    # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
+    #return long_to_bytes(long(encoded, 2))
 
 
 # Byte array base64 encoding.
