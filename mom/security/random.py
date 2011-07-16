@@ -182,6 +182,7 @@ def generate_random_ulong(n_bits, exact=False, rand_func=generate_random_bytes):
     value = bytes_to_long(generate_random_bits(n_bits, rand_func=rand_func))
     assert(value >= 0 and value < (2L ** n_bits))
     if exact:
+        # Set the high bit to ensure bit length.
         value |= 2L ** (n_bits - 1)
         assert(long_bit_length(value) >= n_bits)
     return value
