@@ -3,10 +3,10 @@
 
 import unittest2
 from mom.security.codec.pem import \
-    pem_to_der_private_key, pem_to_der_rsa_private_key, \
+    pem_to_der_private_key, pem_to_der_private_rsa_key, \
     pem_to_der_public_key, pem_to_der_certificate, \
     der_to_pem_certificate, der_to_pem_private_key, \
-    der_to_pem_public_key, der_to_pem_rsa_private_key, \
+    der_to_pem_public_key, der_to_pem_private_rsa_key, \
     cert_time_to_seconds
 
 private_key='''
@@ -104,9 +104,9 @@ class Test_pem_to_der_private_key(unittest2.TestCase):
         self.assertEqual(pem_to_der_private_key(private_key),
                          private_key_der)
 
-class Test_pem_to_der_rsa_private_key(unittest2.TestCase):
+class Test_pem_to_der_private_rsa_key(unittest2.TestCase):
     def test_decode(self):
-        self.assertEqual(pem_to_der_rsa_private_key(private_rsa_key),
+        self.assertEqual(pem_to_der_private_rsa_key(private_rsa_key),
                          private_key_der)
 
 class Test_pem_to_der_public_key(unittest2.TestCase):
@@ -125,8 +125,8 @@ class Test_pem_der_codec(unittest2.TestCase):
             pem_to_der_certificate(certificate)).strip(), certificate.strip())
         self.assertEqual(der_to_pem_private_key(
             pem_to_der_private_key(private_key)).strip(), private_key.strip())
-        self.assertEqual(der_to_pem_rsa_private_key(
-            pem_to_der_rsa_private_key(private_rsa_key)).strip(),
+        self.assertEqual(der_to_pem_private_rsa_key(
+            pem_to_der_private_rsa_key(private_rsa_key)).strip(),
                          private_rsa_key.strip())
 
     def test_ValueError_on_missing_suffix(self):

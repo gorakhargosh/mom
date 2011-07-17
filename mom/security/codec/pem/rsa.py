@@ -42,8 +42,8 @@ from mom.security.codec.pem.x509 import X509Certificate
 from mom.security.codec.pem import \
     pem_to_der_public_key, \
     der_to_pem_public_key, \
-    der_to_pem_rsa_private_key, \
-    pem_to_der_rsa_private_key, \
+    der_to_pem_private_rsa_key, \
+    pem_to_der_private_rsa_key, \
     pem_to_der_private_key
 
 
@@ -94,7 +94,7 @@ class RSAPrivateKey(object):
     def decode_from_pem_key(cls, key):
         keyType = rsadsa.RSAPrivateKey()
         try:
-            der = pem_to_der_rsa_private_key(key)
+            der = pem_to_der_private_rsa_key(key)
         except Exception, e:
             #logging.exception(e)
             der = pem_to_der_private_key(key)
@@ -114,7 +114,7 @@ class RSAPrivateKey(object):
 
     @classmethod
     def encode_to_pem_private_key(cls, key_asn1):
-        return der_to_pem_rsa_private_key(encoder.encode(key_asn1))
+        return der_to_pem_private_rsa_key(encoder.encode(key_asn1))
 
 TEST_RSA_PRIVATE_KEYS = (
     '''

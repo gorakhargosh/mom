@@ -11,11 +11,11 @@ PEM/DER codec
 .. autofunction:: der_to_pem_certificate
 .. autofunction:: der_to_pem_private_key
 .. autofunction:: der_to_pem_public_key
-.. autofunction:: der_to_pem_rsa_private_key
+.. autofunction:: der_to_pem_private_rsa_key
 .. autofunction:: pem_to_der_certificate
 .. autofunction:: pem_to_der_private_key
 .. autofunction:: pem_to_der_public_key
-.. autofunction:: pem_to_der_rsa_private_key
+.. autofunction:: pem_to_der_private_rsa_key
 
 Miscellaneous
 -------------
@@ -53,12 +53,12 @@ __all__ = [
     'der_to_pem_certificate',
     'der_to_pem_private_key',
     'der_to_pem_public_key',
-    'der_to_pem_rsa_private_key',
+    'der_to_pem_private_rsa_key',
     'pem_to_der',
     'pem_to_der_certificate',
     'pem_to_der_private_key',
     'pem_to_der_public_key',
-    'pem_to_der_rsa_private_key',
+    'pem_to_der_private_rsa_key',
     'cert_time_to_seconds',
 ]
 
@@ -148,7 +148,7 @@ def der_to_pem(der_cert_bytes, pem_header, pem_footer):
 pem_to_der_private_key = partial(pem_to_der,
                                  pem_header=PRIVATE_KEY_PEM_HEADER,
                                  pem_footer=PRIVATE_KEY_PEM_FOOTER)
-pem_to_der_rsa_private_key = partial(pem_to_der,
+pem_to_der_private_rsa_key = partial(pem_to_der,
                                      pem_header=RSA_PRIVATE_KEY_PEM_HEADER,
                                      pem_footer=RSA_PRIVATE_KEY_PEM_FOOTER)
 pem_to_der_public_key = partial(pem_to_der,
@@ -161,7 +161,7 @@ pem_to_der_certificate = partial(pem_to_der,
 der_to_pem_private_key = partial(der_to_pem,
                                  pem_header=PRIVATE_KEY_PEM_HEADER,
                                  pem_footer=PRIVATE_KEY_PEM_FOOTER)
-der_to_pem_rsa_private_key = partial(der_to_pem,
+der_to_pem_private_rsa_key = partial(der_to_pem,
                                      pem_header=RSA_PRIVATE_KEY_PEM_HEADER,
                                      pem_footer=RSA_PRIVATE_KEY_PEM_FOOTER)
 der_to_pem_public_key = partial(der_to_pem,
