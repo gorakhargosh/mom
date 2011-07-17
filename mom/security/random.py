@@ -121,8 +121,10 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     :returns:
         Bytes.
     """
-    if not isinstance(n_bits, (int, long)):
+    if not isinstance(n_bits, (int, long)) or isinstance(n_bits, bool):
         raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
+    if n_bits <= 0:
+        raise ValueError("number of bits must be greater than 0.")
     q, r = divmod(n_bits, 8)
     random_bytes = rand_func(q)
     if r:

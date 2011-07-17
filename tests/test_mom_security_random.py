@@ -7,7 +7,7 @@ import unittest2
 from mom.codec import bytes_to_long
 from mom.security.random import \
     generate_random_hex_string, generate_random_ulong_between, \
-    generate_random_bits
+    generate_random_bits, generate_random_ulong
 
 
 class Test_generate_random_bits(unittest2.TestCase):
@@ -19,6 +19,34 @@ class Test_generate_random_bits(unittest2.TestCase):
 
     def test_uniqueness(self):
         self.assertNotEqual(generate_random_bits(64), generate_random_bits(64))
+
+    def test_0_bits_raises_ValueError(self):
+        self.assertRaises(ValueError, generate_random_bits, 0)
+
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_bits, None)
+        self.assertRaises(TypeError, generate_random_bits, {})
+        self.assertRaises(TypeError, generate_random_bits, object)
+        self.assertRaises(TypeError, generate_random_bits, True)
+        self.assertRaises(TypeError, generate_random_bits, "")
+
+class Test_generate_random_ulong(unittest2.TestCase):
+    def test_range(self):
+        for i in range(1000):
+            generate_random_ulong(i + 1, False)
+            self.assertTrue(generate_random_ulong(i + 1, True) & (2L ** ((i + 1) - 1)))
+
+
+    def test_0_bits_raises_ValueError(self):
+        self.assertRaises(ValueError, generate_random_ulong, 0)
+
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_ulong, None)
+        self.assertRaises(TypeError, generate_random_ulong, {})
+        self.assertRaises(TypeError, generate_random_ulong, object)
+        self.assertRaises(TypeError, generate_random_ulong, True)
+        self.assertRaises(TypeError, generate_random_ulong, "")
+
 
 class Test_generate_random_hex_string(unittest2.TestCase):
     def test_length(self):
@@ -54,7 +82,13 @@ class Test_generate_random_ulong_between(unittest2.TestCase):
             value = generate_random_ulong_between(low, high)
             self.assertTrue(value >= low and value < high)
 
-
     def test_raises_ValueError_when_low_greater_than_high(self):
         low, high = 4, 3
         self.assertRaises(ValueError, generate_random_ulong_between, low, high)
+
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_ulong_between, None)
+        self.assertRaises(TypeError, generate_random_ulong_between, {})
+        self.assertRaises(TypeError, generate_random_ulong_between, object)
+        self.assertRaises(TypeError, generate_random_ulong_between, True)
+        self.assertRaises(TypeError, generate_random_ulong_between, "")
