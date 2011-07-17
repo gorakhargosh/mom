@@ -8,6 +8,14 @@ PEM/DER codec
 -------------
 .. autofunction:: pem_to_der
 .. autofunction:: der_to_pem
+.. autofunction:: der_to_pem_certificate
+.. autofunction:: der_to_pem_private_key
+.. autofunction:: der_to_pem_public_key
+.. autofunction:: der_to_pem_rsa_private_key
+.. autofunction:: pem_to_der_certificate
+.. autofunction:: pem_to_der_private_key
+.. autofunction:: pem_to_der_public_key
+.. autofunction:: pem_to_der_rsa_private_key
 
 Miscellaneous
 -------------
@@ -39,6 +47,20 @@ __author__ = ", ".join([
     "Yesudeep Mangalapilly",
 ])
 
+
+__all__ = [
+    'der_to_pem',
+    'der_to_pem_certificate',
+    'der_to_pem_private_key',
+    'der_to_pem_public_key',
+    'der_to_pem_rsa_private_key',
+    'pem_to_der',
+    'pem_to_der_certificate',
+    'pem_to_der_private_key',
+    'pem_to_der_public_key',
+    'pem_to_der_rsa_private_key',
+    'cert_time_to_seconds',
+]
 
 from functools import partial
 from mom.codec import base64_decode, base64_encode
