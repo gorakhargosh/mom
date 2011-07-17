@@ -38,7 +38,7 @@ upload-doc: doc
 view-doc: doc
 	@bin/python -c "import webbrowser; webbrowser.open('docs/build/html/index.html')"
 
-test:
+test: doc
 	@echo "You will need Coverage 3.5 and unittest2 or higher for this to work."
 	@rm -rf htmlcov
 	@bin/coverage erase
