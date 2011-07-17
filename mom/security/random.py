@@ -158,7 +158,6 @@ def generate_random_ulong(n_bits, exact=False, rand_func=generate_random_bytes):
     return value
 
 
-
 # Taken from PyCrypto.
 def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     """
