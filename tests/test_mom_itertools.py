@@ -15,7 +15,7 @@ class Test_chunks(unittest2.TestCase):
                          [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
     def test_returns_generator_object(self):
-        self.assertTrue("generator" in repr(type(chunks(4, "aaaabbbb"))))
+        self.assertEqual(type(chunks(4, "aaaabbbb")).__name__, "generator")
 
     def test_odd_ball_grouping(self):
         self.assertEqual(list(chunks(3, "aaabb")), ["aaa", "bb"])

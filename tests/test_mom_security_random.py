@@ -30,6 +30,7 @@ class Test_generate_random_bits(unittest2.TestCase):
         self.assertRaises(TypeError, generate_random_bits, True)
         self.assertRaises(TypeError, generate_random_bits, "")
 
+
 class Test_generate_random_ulong(unittest2.TestCase):
     def test_range(self):
         for i in range(1000):
@@ -51,10 +52,10 @@ class Test_generate_random_hex_string(unittest2.TestCase):
     def test_length(self):
         default_length = 8
         self.assertEqual(len(generate_random_hex_string()), default_length,
-                     "Verification code length does not match "\
+                     "Length does not match "\
                      "default expected length of %d." % default_length)
         self.assertEqual(len(generate_random_hex_string(length=10)), 10,
-                     "Verification code length does not match expected length.")
+                     "Length does not match expected length.")
 
         self.assertRaises(ValueError, generate_random_hex_string, 33)
         self.assertRaises(ValueError, generate_random_hex_string, 0)
@@ -66,12 +67,11 @@ class Test_generate_random_hex_string(unittest2.TestCase):
     def test_uniqueness(self):
         self.assertNotEqual(generate_random_hex_string(),
                          generate_random_hex_string(),
-                         "Verification code is not unique.")
+                         "Not unique.")
 
     def test_is_string(self):
         self.assertTrue(isinstance(generate_random_hex_string(), bytes),
-                    "Verification code is not a bytestring.")
-
+                    "Not a bytestring.")
 
 
 class Test_generate_random_ulong_between(unittest2.TestCase):
