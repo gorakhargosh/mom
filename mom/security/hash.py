@@ -6,20 +6,20 @@
 
 SHA-1 digests
 -------------
+.. autofunction:: sha1_base64_digest
 .. autofunction:: sha1_digest
 .. autofunction:: sha1_hex_digest
-.. autofunction:: sha1_base64_digest
 
 MD5 digests
 -----------
+.. autofunction:: md5_base64_digest
 .. autofunction:: md5_digest
 .. autofunction:: md5_hex_digest
-.. autofunction:: md5_base64_digest
 
 HMAC-SHA-1 digests
 ------------------
-.. autofunction:: hmac_sha1_digest
 .. autofunction:: hmac_sha1_base64_digest
+.. autofunction:: hmac_sha1_digest
 
 """
 
@@ -46,6 +46,16 @@ limitations under the License.
 
 __author__ = "Trevor Perrin, Yesudeep Mangalapilly"
 
+__all__ = [
+    "hmac_sha1_base64",
+    "hmac_sha1_digest",
+    "md5_base64_digest",
+    "md5_digest",
+    "md5_hex_digest",
+    "sha1_base64_digest",
+    "sha1_digest",
+    "sha1_hex_digest",
+]
 
 import hashlib
 from mom.codec import base64_encode, hex_encode

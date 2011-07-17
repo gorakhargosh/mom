@@ -4,7 +4,6 @@
 :module: mom.codec
 :synopsis: Many different types of common encode/decode function.
 
-Hexadecimal, base-64, binary, and decimal are byte string encodings.
 This module contains codecs for converting between long and bytes, and
 the hex, base64, decimal, and binary representations of bytes.
 

@@ -6,8 +6,8 @@
 
 Bits and bytes
 ---------------------------
-.. autofunction:: generate_random_bytes
 .. autofunction:: generate_random_bits
+.. autofunction:: generate_random_bytes
 
 Numbers
 -------
@@ -48,6 +48,14 @@ __author__ = ", ".join([
     "Yesudeep Mangalapilly",
 ])
 
+
+__all__ = [
+    "generate_random_bits",
+    "generate_random_bytes",
+    "generate_random_hex_string",
+    "generate_random_ulong",
+    "generate_random_ulong_between",
+    ]
 
 import os
 from mom.builtins import long_bit_length, is_integer

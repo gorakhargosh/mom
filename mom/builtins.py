@@ -41,22 +41,31 @@ Rules to follow:
 
 The meanings of these types have been changed to suit Python 3.
 
-Type detection
---------------
+Encodings
+---------
 .. autofunction:: bin
 .. autofunction:: hex
-.. autofunction:: long_byte_count
+
+Size counting
+-------------
 .. autofunction:: long_bit_length
-.. autofunction:: is_sequence
-.. autofunction:: is_unicode
+.. autofunction:: long_byte_count
+
+Type detection
+--------------
 .. autofunction:: is_bytes
 .. autofunction:: is_bytes_or_unicode
 .. autofunction:: is_integer
-.. autofunction:: unicode_to_utf8
+.. autofunction:: is_sequence
+.. autofunction:: is_unicode
+
+Unicode string encoding
+-----------------------
 .. autofunction:: bytes_to_unicode
-.. autofunction:: to_utf8_if_unicode
-.. autofunction:: to_unicode_if_bytes
 .. autofunction:: bytes_to_unicode_recursive
+.. autofunction:: to_unicode_if_bytes
+.. autofunction:: to_utf8_if_unicode
+.. autofunction:: unicode_to_utf8
 .. autofunction:: unicode_to_utf8_recursive
 """
 

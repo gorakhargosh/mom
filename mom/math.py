@@ -7,15 +7,15 @@
 Math
 ----
 .. autofunction:: gcd
+.. autofunction:: inverse_mod
 .. autofunction:: lcm
 .. autofunction:: pow_mod
-.. autofunction:: inverse_mod
 
 Primes
 ------
-.. autofunction:: is_prime
 .. autofunction:: generate_random_prime
 .. autofunction:: generate_random_safe_prime
+.. autofunction:: is_prime
 """
 
 from __future__ import absolute_import

@@ -4,30 +4,30 @@
 :module: mom.functional
 :synopsis: Handy things for functional style programming.
 
-.. autofunction:: some
+.. autofunction:: cyclic_pairs
 .. autofunction:: every
 .. autofunction:: find
-.. autofunction:: remove_duplicates
-.. autofunction:: transpose
-.. autofunction:: intersection
-.. autofunction:: partition_list
-.. autofunction:: reverse
-.. autofunction:: sort
-.. autofunction:: maximum
-.. autofunction:: minimum
-.. autofunction:: sum
 .. autofunction:: first_difference
-.. autofunction:: mean
-.. autofunction:: variance
-.. autofunction:: stddev
+.. autofunction:: flatten
+.. autofunction:: flatten1
+.. autofunction:: intersection
 .. autofunction:: lebesque_norm
 .. autofunction:: list2dict
 .. autofunction:: mapdict
-.. autofunction:: cyclic_pairs
+.. autofunction:: maximum
+.. autofunction:: mean
+.. autofunction:: minimum
 .. autofunction:: number_of_leading
 .. autofunction:: number_of_trailing
-.. autofunction:: flatten1
-.. autofunction:: flatten
+.. autofunction:: partition_list
+.. autofunction:: remove_duplicates
+.. autofunction:: reverse
+.. autofunction:: some
+.. autofunction:: sort
+.. autofunction:: stddev
+.. autofunction:: sum
+.. autofunction:: transpose
+.. autofunction:: variance
 """
 
 from __future__ import nested_scopes, absolute_import
@@ -338,7 +338,6 @@ def number_of_leading(p, lst):
 
   Returns the number of leading elements X of LST for which P(X) is true.
   """
-
   i = 0
   for v in lst:
     if not p(v):
