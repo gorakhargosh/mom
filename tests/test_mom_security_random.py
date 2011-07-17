@@ -4,35 +4,21 @@
 from __future__ import absolute_import
 
 import unittest2
+from mom.codec import bytes_to_long
 from mom.security.random import \
-    generate_random_hex_string, generate_random_ulong_between
+    generate_random_hex_string, generate_random_ulong_between, \
+    generate_random_bits
 
 
-#class Test_generate_random_uint_string(unittest2.TestCase):
-#    def test_uniqueness(self):
-#        self.assertNotEqual(generate_random_uint_string(), generate_random_uint_string())
-#
-#    def test_hex_length(self):
-#        for i in range(1, 1000):
-#            self.assertEqual(len(generate_random_uint_string(64, 16)), 16)
-#
-#    def test_unsigned_integer(self):
-#        self.assertTrue(int(generate_random_uint_string(64, 2), 2) >= 0)
-#        self.assertTrue(int(generate_random_uint_string(64, 10)) >= 0)
-#        self.assertTrue(int(generate_random_uint_string(64, 16), 16) >= 0)
-#
-#    def test_raises_ValueError_when_invalid_bit_strength(self):
-#        self.assertRaises(ValueError, generate_random_uint_string, 63)
-#        self.assertRaises(ValueError, generate_random_uint_string, 0)
-#
-#    def test_raises_ValueError_when_invalid_base(self):
-#        self.assertRaises(ValueError, generate_random_uint_string, 64, 0)
-#        self.assertRaises(ValueError, generate_random_uint_string, 64, None)
-#
-#    def test_result_is_string(self):
-#        self.assertTrue(isinstance(generate_random_uint_string(64, 10), bytes))
-#        self.assertTrue(isinstance(generate_random_uint_string(64, 16), bytes))
-#
+class Test_generate_random_bits(unittest2.TestCase):
+    def test_range(self):
+        for i in range(9999):
+            n_bits = 4
+            value = bytes_to_long(generate_random_bits(n_bits))
+            self.assertTrue(value >= 0 and value < (2L ** n_bits))
+
+    def test_uniqueness(self):
+        self.assertNotEqual(generate_random_bits(64), generate_random_bits(64))
 
 class Test_generate_random_hex_string(unittest2.TestCase):
     def test_length(self):
@@ -58,6 +44,8 @@ class Test_generate_random_hex_string(unittest2.TestCase):
     def test_is_string(self):
         self.assertTrue(isinstance(generate_random_hex_string(), bytes),
                     "Verification code is not a bytestring.")
+
+
 
 class Test_generate_random_ulong_between(unittest2.TestCase):
     def test_range(self):
