@@ -69,6 +69,7 @@ Type detection
 .. autofunction:: is_unicode
 .. autofunction:: is_bytes
 .. autofunction:: is_bytes_or_unicode
+.. autofunction:: is_integer
 .. autofunction:: unicode_to_utf8
 .. autofunction:: bytes_to_unicode
 .. autofunction:: to_utf8_if_unicode
@@ -92,6 +93,7 @@ __all__ = [
     "is_unicode",
     "is_bytes",
     "is_bytes_or_unicode",
+    "is_integer",
     "unicode_to_utf8",
     "bytes_to_unicode",
     "to_utf8_if_unicode",
@@ -275,6 +277,18 @@ def is_bytes_or_unicode(obj):
         ``True`` if ``value`` is a string; ``False`` otherwise.
     """
     return isinstance(obj, basestring_type)
+
+
+def is_integer(obj):
+    """
+    Determines whether the object value is actually an integer and not a bool.
+
+    :param obj:
+        The value to test.
+    :returns:
+        ``True`` if yes; ``False`` otherwise.
+    """
+    return isinstance(obj, (int, long)) and not isinstance(obj, bool)
 
 
 def unicode_to_utf8(obj):

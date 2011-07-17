@@ -38,7 +38,7 @@ Strings
 from __future__ import absolute_import
 
 import os
-from mom.builtins import long_bit_length
+from mom.builtins import long_bit_length, is_integer
 from mom.codec import \
     hex_encode, \
     bytes_to_long
@@ -121,7 +121,7 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     :returns:
         Bytes.
     """
-    if not isinstance(n_bits, (int, long)) or isinstance(n_bits, bool):
+    if not is_integer(n_bits):
         raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
@@ -158,6 +158,7 @@ def generate_random_ulong(n_bits, exact=False, rand_func=generate_random_bytes):
     return value
 
 
+
 # Taken from PyCrypto.
 def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     """
@@ -170,7 +171,7 @@ def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     :returns:
         Random unsigned long integer value.
     """
-    if not isinstance(low, (int, long)) or not isinstance(high, (int, long)):
+    if not is_integer(low) or not is_integer(high):
         raise TypeError("unsupported operand types(s): %r and %r" \
                         % (type(low).__name__, type(high).__name__))
     if low >= high:

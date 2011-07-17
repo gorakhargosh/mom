@@ -87,8 +87,8 @@ class Test_generate_random_ulong_between(unittest2.TestCase):
         self.assertRaises(ValueError, generate_random_ulong_between, low, high)
 
     def test_TypeError_when_invalid_argument(self):
-        self.assertRaises(TypeError, generate_random_ulong_between, None)
-        self.assertRaises(TypeError, generate_random_ulong_between, {})
-        self.assertRaises(TypeError, generate_random_ulong_between, object)
-        self.assertRaises(TypeError, generate_random_ulong_between, True)
-        self.assertRaises(TypeError, generate_random_ulong_between, "")
+        self.assertRaises(TypeError, generate_random_ulong_between, None, None)
+        self.assertRaises(TypeError, generate_random_ulong_between, {}, {})
+        self.assertRaises(TypeError, generate_random_ulong_between, object, object)
+        self.assertRaises(TypeError, generate_random_ulong_between, True, True)
+        self.assertRaises(TypeError, generate_random_ulong_between, "", "")
