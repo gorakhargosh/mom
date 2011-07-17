@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from pyasn1.error import SubstrateUnderrunError
 
 import unittest2
 from mom.security.codec import public_key_pem_decode, private_key_pem_decode
@@ -61,6 +62,44 @@ yQkdgcMv11l4KoBkcwIDAQAB
 -----END PUBLIC KEY-----'''
 
 
+junk = """\
+eqp1iAIIh89/WHE3rfwNVPeBl2ZU9ywUk9vvhUot8yuCrlprR6avhfIkUm1LCSqi
+tqEwJqVmtJHmkM4VDFr6uiLknVaJYJ+SvK0mRlml5ACre1FH1rMBgvs3G+cvPNA9
+13Vh5VW/eHAzCLiqXEc74azybwhrQWeiRTlEE6BSlQ0Zg5zz2VhsAQN4KPxrD1lP
+6QqUnv2zjAJFdkQ6CJunnor7OSKCMbaxXA1oxbLq6ykTtWV0lUizu6VzIdQrpf9S
+GTIO4YiCb/3s8pyNiCPXXG4QtBhkxwX7yU4nnRvk/ic0fmSQntk5lwBFqDG6mIzc
+WXwfsXB8r6Sm2Vxvzin5Yj4PZXrXztLj43gG/30HF2/Lcy9jGEllU9RPirJn5Q5n
+Y5OwicxAO3nrXbjAivf0dZLJpXAPG60BPha3qlvFuB0BsO1HVeQYagKqCbywm6l5
+5lJbTjYTVpqLMMORd0k8YBKJVNfr9whAjffmHtEtWpBt9awNgVbOREbu4Vj6E1zo
+2t7kPdlL26gc9CizfjFjUS0mKbC6FCN2XgdOsGqoGg6GSu52lapaaFjmrWePrtk0
+EdwAjghZAYqa6RkG8rNgIpeS8YKZjfbAb8j7ku2ACDHq50sToMvbIf3u20/o5GLb
+E9CHNqx2jQiXKCSap5CO/J47dGrUDK22CruYC56rDMn7Mzcd5eF9mULLoQhq0sm0
+XRjcxzF0D+B8JyB79T+zW7tjnnzpYmN5rBb4z0pLgxjakxG6bLeBU0yQ4tC90EUB
+IQts3Y8dZ09A6I2+1tVo9YR/P+5RaGFXoUb4z3u+gRYdie0eBXGQPRaiyP+qae4G
+SAdFjP2Eagpl2Jq010bn94deZx2pqaayphvLjDHsIWSkJ5XLvmifbB8+tmImxspY
+m/bTrzYJMnXEZ8BDN1X+yQntTYDc/bdUJJbK3NfEiaDFpW4/jfyNMnflkKIv01bV
+o6YHLiTMTcBBSEg/K7lnLfcJbJZ/si2tTJ/aEZXemFCxOhA9InNDigh1kSPG7Hay
+fnRean9LviaVqi4tQbx/iWGq8glrW493RY3qsO8rBfos8H2EzEivOaRySrDgQrrV
+px44E0Pi3+ebE8vHTKi6IPrYt+IJMRpmSbBqXgxQbiNWLUSbTause1lfk/5nLk/W
+DomqFwRLb+/FQzRpW2S3XJ3ThTuls8U5i9PcQQcW+vjIPmpgTxsW9JuEvjjCpCl0
+cTfUdnrMUw7Q/Jxa1VCpn7RzeHlTLrSXkdq3xVB9gq6DG+umJRfsKPLmw9t5TbD1
+CIfb09GR/D1+6ogCfayqZoXe/xaRRjM3nzOLP4Z4ouMyZC7krj/UsItg0Y8FS0Wq
+gZU88x/X78LlryEvfB0KH/GuULo6ziAzsSsB5Okfm68lFLdaNWA2d3f8lPvQNmL3
+bZI="""
+junk_private_key = """\
+-----BEGIN PRIVATE KEY-----
+%s
+-----END PRIVATE KEY-----""" % junk
+junk_public_key = """\
+-----BEGIN PUBLIC KEY-----
+%s
+-----END PUBLIC KEY-----""" % junk
+junk_certificate = """\
+-----BEGIN CERTIFICATE-----
+%s
+-----END CERTIFICATE-----""" % junk
+
+
 class Test_public_key_pem_decode(unittest2.TestCase):
     def test_decode(self):
         self.assertDictEqual(public_key_pem_decode(public_key), public_key_decoded)
@@ -69,6 +108,9 @@ class Test_public_key_pem_decode(unittest2.TestCase):
     def test_NotImplementedError_when_not_public_key(self):
         self.assertRaises(NotImplementedError, public_key_pem_decode, private_key)
 
+    def test_fails_on_junk(self):
+        self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_public_key)
+        self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_certificate)
 
 class Test_private_key_pem_decode(unittest2.TestCase):
     def test_decode(self):
@@ -77,3 +119,6 @@ class Test_private_key_pem_decode(unittest2.TestCase):
     def test_NotImplementedError_when_not_private_key(self):
         self.assertRaises(NotImplementedError, private_key_pem_decode, public_key)
         self.assertRaises(NotImplementedError, private_key_pem_decode, certificate)
+
+    def test_fails_on_junk(self):
+        self.assertRaises(SubstrateUnderrunError, private_key_pem_decode, junk_private_key)
