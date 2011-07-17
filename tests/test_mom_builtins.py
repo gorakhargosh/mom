@@ -18,7 +18,7 @@ from mom.builtins import \
     b, \
     bin, \
     hex, \
-    long_byte_count, long_bit_length, is_sequence, bytes_to_unicode_recursive, unicode_to_utf8_recursive
+    long_byte_count, long_bit_length, is_sequence, bytes_to_unicode_recursive, unicode_to_utf8_recursive, _long_bit_length
 
 
 random_bytes = generate_random_bytes(100)
@@ -131,6 +131,7 @@ class Test_long_byte_count(unittest2.TestCase):
 class Test_long_bit_length(unittest2.TestCase):
     def test_bit_length_zero_if_zero(self):
         self.assertEqual(long_bit_length(0), 0)
+        self.assertEqual(_long_bit_length(0), 0)
 
     def test_bit_length_correct(self):
         numbers = [
@@ -146,14 +147,18 @@ class Test_long_bit_length(unittest2.TestCase):
             else:
                 length = len(bin(num, None))
             self.assertEqual(long_bit_length(num), length)
+            self.assertEqual(_long_bit_length(num), length)
 
         self.assertEqual(long_bit_length(2L**32-1), 32)
         self.assertEqual(long_bit_length(2L**64-1), 64)
+        self.assertEqual(_long_bit_length(2L**32-1), 32)
+        self.assertEqual(_long_bit_length(2L**64-1), 64)
 
     def test_raises_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, long_bit_length, None)
         self.assertRaises(TypeError, long_bit_length, object)
-
+        self.assertRaises(TypeError, _long_bit_length, None)
+        self.assertRaises(TypeError, _long_bit_length, object)
 
 
 class Test_is_bytes(unittest2.TestCase):

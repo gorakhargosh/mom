@@ -1,20 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Copyright (C) 2005 Trevor Perrin <trevp@trevp.net>
-# Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 """
 :module: mom._types.bytearray
@@ -32,12 +17,55 @@ Type conversion
 .. autofunction:: bytes_to_bytearray
 .. autofunction:: bytearray_to_long
 .. autofunction:: long_to_bytearray
+
+OpenSSL MPI Bignum conversion
+-----------------------------
+.. autofunction:: mpi_to_long
+.. autofunction:: long_to_mpi
 """
 
 from __future__ import absolute_import
 
+__license__ = """\
+The Apache Licence, Version 2.0
+
+Copyright (C) 2005 Trevor Perrin <trevp@trevp.net>
+Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
+__author__ = ", ".join([
+    "Trevor Perrin",
+    "Yesudeep Mangalapilly",
+])
+
 from array import array
-from mom.builtins import long_byte_count
+#from mom.builtins import b
+from mom.builtins import long_byte_count, long_bit_length
+
+
+#try:
+#    _bytearray(0)
+#except NameError:
+#    class bytearray(object):
+#        def __init__(self, source=None, encoding=None, errors=None):
+#            source = source or b('')
+#            self._array = array('B', source)
+#
+#        def __repr__(self):
+#            return repr(self._array)
+#bytearray = bytearray
 
 
 def bytearray_create(sequence):
@@ -104,6 +132,7 @@ def bytes_to_bytearray(byte_string):
     return byte_array
 
 
+# TODO: Keep these functions around.
 def bytearray_to_long(byte_array):
     """
     Converts a byte array to long.
@@ -138,3 +167,49 @@ def long_to_bytearray(num):
         num >>= 8
     return byte_array
 
+
+def mpi_to_long(mpi_byte_string):
+    """
+    Converts an OpenSSL-format MPI Bignum byte string into a long.
+
+    :param mpi_byte_string:
+        OpenSSL-format MPI Bignum byte string.
+    :returns:
+        Long value.
+    """
+#    from mom._types.bytearray import \
+#        bytes_to_bytearray, bytearray_to_long
+
+    #Make sure this is a positive number
+    assert (ord(mpi_byte_string[4]) & 0x80) == 0
+
+    byte_array = bytes_to_bytearray(mpi_byte_string[4:])
+    return bytearray_to_long(byte_array)
+
+
+def long_to_mpi(num):
+    """
+    Converts a long value into an OpenSSL-format MPI Bignum byte string.
+
+    :param num:
+        Long value.
+    :returns:
+        OpenSSL-format MPI Bignum byte string.
+    """
+#    from mom._types.bytearray import \
+#        long_to_bytearray, bytearray_concat, \
+#        bytearray_to_bytes, bytearray_create_zeros
+
+    byte_array = long_to_bytearray(num)
+    ext = 0
+    #If the high-order bit is going to be set,
+    #add an extra byte of zeros
+    if not (long_bit_length(num) & 0x7):
+        ext = 1
+    length = long_byte_count(num) + ext
+    byte_array = bytearray_concat(bytearray_create_zeros(4+ext), byte_array)
+    byte_array[0] = (length >> 24) & 0xFF
+    byte_array[1] = (length >> 16) & 0xFF
+    byte_array[2] = (length >> 8) & 0xFF
+    byte_array[3] = length & 0xFF
+    return bytearray_to_bytes(byte_array)

@@ -41,10 +41,6 @@ where ``g`` is the decoder and ``f`` is a encoder.
 .. autofunction:: bytes_to_long
 .. autofunction:: long_to_bytes
 
-OpenSSL MPI Bignum conversion
------------------------------
-.. autofunction:: mpi_to_long
-.. autofunction:: long_to_mpi
 """
 
 from __future__ import absolute_import
@@ -76,7 +72,7 @@ __author__ = ", ".join([
 
 import binascii
 
-from mom.builtins import bytes, long_byte_count, long_bit_length
+from mom.builtins import bytes
 from mom.itertools import chunks
 
 
@@ -326,49 +322,3 @@ def bytes_to_long(byte_string):
         acc = (acc << 32) + unpack('>I', byte_string[i:i+4])[0]
     return acc
 
-
-def mpi_to_long(mpi_byte_string):
-    """
-    Converts an OpenSSL-format MPI Bignum byte string into a long.
-
-    :param mpi_byte_string:
-        OpenSSL-format MPI Bignum byte string.
-    :returns:
-        Long value.
-    """
-    from mom._types.bytearray import \
-        bytes_to_bytearray, bytearray_to_long
-
-    #Make sure this is a positive number
-    assert (ord(mpi_byte_string[4]) & 0x80) == 0
-
-    byte_array = bytes_to_bytearray(mpi_byte_string[4:])
-    return bytearray_to_long(byte_array)
-
-
-def long_to_mpi(num):
-    """
-    Converts a long value into an OpenSSL-format MPI Bignum byte string.
-
-    :param num:
-        Long value.
-    :returns:
-        OpenSSL-format MPI Bignum byte string.
-    """
-    from mom._types.bytearray import \
-        long_to_bytearray, bytearray_concat, \
-        bytearray_to_bytes, bytearray_create_zeros
-
-    byte_array = long_to_bytearray(num)
-    ext = 0
-    #If the high-order bit is going to be set,
-    #add an extra byte of zeros
-    if not (long_bit_length(num) & 0x7):
-        ext = 1
-    length = long_byte_count(num) + ext
-    byte_array = bytearray_concat(bytearray_create_zeros(4+ext), byte_array)
-    byte_array[0] = (length >> 24) & 0xFF
-    byte_array[1] = (length >> 16) & 0xFF
-    byte_array[2] = (length >> 8) & 0xFF
-    byte_array[3] = length & 0xFF
-    return bytearray_to_bytes(byte_array)
