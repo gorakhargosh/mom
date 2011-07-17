@@ -67,8 +67,10 @@ __author__ = ", ".join([
     "Chris DiBona",
     "Nathaniel Manista",
     "Dan Bentley",
-
+    "Ade Oshineye",
+    "Yesudeep Mangalapilly",
 ])
+
 
 import math as _math
 
