@@ -19,14 +19,14 @@ __author__ = ", ".join([
 
 
 import collections
+import operator
+import random
 
 from itertools import \
     islice, imap, count, chain, repeat, starmap, \
     tee, izip, izip_longest, cycle, combinations, \
     ifilterfalse, groupby
-import operator
-import random
-from mom._builtins import _RANGE
+from mom._builtins import range
 
 try:
     from itertools import product as product_
@@ -46,9 +46,9 @@ except ImportError:
             yield tuple(prod)
 
 
-def chunks(size, iterable):
+def ichunks(size, iterable):
     """
-    Splits an iterable into a list of iterables each of specified chunk size.
+    Splits an iterable into a iterable of chunks each of specified chunk size.
 
     :param size:
         Chunk size.
@@ -57,10 +57,23 @@ def chunks(size, iterable):
     :returns:
         Generator of sequences each of the specified chunk size.
     """
-    #iterable = iter(iterable)
-    for i in _RANGE(0, len(iterable), size):
+    for i in range(0, len(iterable), size):
+        yield islice(iterable, i, i + size)
+
+
+def chunks(size, iterable):
+    """
+    Splits an iterable into a iterable of chunks each of specified chunk size.
+
+    :param size:
+        Chunk size.
+    :param iterable:
+        The iterable to split.
+    :returns:
+        Generator of sequences each of the specified chunk size.
+    """
+    for i in range(0, len(iterable), size):
         yield iterable[i:i+size]
-    #return grouper(size, iterable, fillvalue)
 
 
 def grouper(n, iterable, fillvalue=None):
