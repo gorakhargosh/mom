@@ -18,12 +18,12 @@ where ``g`` is the decoder and ``f`` is the encoder.
 
 .. autofunction:: base64_decode
 .. autofunction:: base64_encode
-.. autofunction:: bin_encode
 .. autofunction:: bin_decode
-.. autofunction:: hex_encode
-.. autofunction:: hex_decode
-.. autofunction:: decimal_encode
+.. autofunction:: bin_encode
 .. autofunction:: decimal_decode
+.. autofunction:: decimal_encode
+.. autofunction:: hex_decode
+.. autofunction:: hex_encode
 
 Number-bytes conversion
 -----------------------

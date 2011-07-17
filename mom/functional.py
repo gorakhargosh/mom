@@ -66,10 +66,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 __author__ = ", ".join([
-    "Chris DiBona",
-    "Nathaniel Manista",
-    "Dan Bentley",
     "Ade Oshineye",
+    "Chris DiBona",
+    "Dan Bentley",
+    "Nathaniel Manista",
     "Yesudeep Mangalapilly",
 ])
 

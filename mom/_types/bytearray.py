@@ -7,21 +7,21 @@
 
 Creation and manipulation
 -------------------------
+.. autofunction:: bytearray_concat
 .. autofunction:: bytearray_create
 .. autofunction:: bytearray_create_zeros
-.. autofunction:: bytearray_concat
 
 Type conversion
 ---------------
 .. autofunction:: bytearray_to_bytes
-.. autofunction:: bytes_to_bytearray
 .. autofunction:: bytearray_to_long
+.. autofunction:: bytes_to_bytearray
 .. autofunction:: long_to_bytearray
 
 OpenSSL MPI Bignum conversion
 -----------------------------
-.. autofunction:: mpi_to_long
 .. autofunction:: long_to_mpi
+.. autofunction:: mpi_to_long
 """
 
 from __future__ import absolute_import
