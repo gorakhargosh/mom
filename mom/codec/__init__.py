@@ -73,63 +73,64 @@ from mom.itertools import chunks
 
 # Bytes base-encoding.
 
+def base64_encode(raw_bytes):
+    """
+    Encodes raw bytes into base64 representation without appending a trailing
+    newline character.
+
+    :param raw_bytes:
+        Bytes to encode.
+    :returns:
+        Base64 encoded string without newline characters.
+    """
+    return binascii.b2a_base64(raw_bytes)[:-1]
+
+
 def base64_decode(encoded):
     """
-    Decodes a base-64 encoded string into a byte string.
+    Decodes base64-encoded bytes into raw bytes.
 
     :param encoded:
-        Base-64 encoded byte string.
+        Base-64 encoded representation.
     :returns:
-        byte string.
+        Raw bytes.
     """
     return binascii.a2b_base64(encoded)
 
 
-def base64_encode(byte_string):
+def hex_encode(raw_bytes):
     """
-    Encodes a byte string using Base 64 and removes the last new line character.
+    Encodes raw bytes into hexadecimal representation.
 
-    :param byte_string:
-        The byte string to encode.
+    :param raw_bytes:
+        Bytes.
     :returns:
-        Base64 encoded string without newline characters.
+        Hex-encoded representation.
     """
-    return binascii.b2a_base64(byte_string)[:-1]
-
-
-def hex_encode(byte_string):
-    """
-    Converts a byte string to its hex representation.
-
-    :param byte_string:
-        Byte string.
-    :returns:
-        Hex-encoded byte string.
-    """
-    return binascii.b2a_hex(byte_string)
+    return binascii.b2a_hex(raw_bytes)
 
 
 def hex_decode(encoded):
     """
-    Converts a hex byte string to its byte representation.
+    Decodes hexadecimal-encoded bytes into raw bytes.
 
     :param encoded:
-        Hex string.
+        Hex representation.
     :returns:
-        Byte string.
+        Raw bytes.
     """
     return binascii.a2b_hex(encoded)
 
 
-def decimal_encode(byte_string):
+def decimal_encode(raw_bytes):
     """
-    Converts a byte string to its decimal representation.
-    Prefixed zero-padding is preserved.
+    Encodes raw bytes into decimal representation. Leading zero bytes are
+    preserved.
 
-    :param byte_string:
-        Byte string.
+    :param raw_bytes:
+        Bytes.
     :returns:
-        Decimal-encoded byte string.
+        Decimal-encoded representation.
     """
 #    long_val = 0L
 #    multiplier = 1L
@@ -137,13 +138,13 @@ def decimal_encode(byte_string):
 #        long_val += multiplier * ord(x)
 #        multiplier *= 256     # multiplier <<= 8
     padding_count = 0
-    for x in byte_string:
+    for x in raw_bytes:
         if ord(x) > 0:
             break
         else:
             padding_count += 1
     zero_padding = "0" * padding_count
-    long_val = bytes_to_long(byte_string)
+    long_val = bytes_to_long(raw_bytes)
     if long_val:
         return zero_padding + bytes(long_val)
     else:
@@ -152,13 +153,13 @@ def decimal_encode(byte_string):
 
 def decimal_decode(encoded):
     """
-    Converts a decimal-encoded string to its byte representation.
-    Prefixed zeros are converted to padded zero bytes.
+    Decodes decimal-encoded bytes to raw bytes. Leading zeros are converted to
+    leading zero bytes.
 
     :param encoded:
-        Decimal encoded string.
+        Decimal-encoded representation.
     :returns:
-        Byte string.
+        Raw bytes.
     """
     padding_count = 0
     for x in encoded:
@@ -210,18 +211,17 @@ _BIN_TO_HEX_LOOKUP = {
     '1110': 'e',
     '1111': 'f',
 }
-
-def bin_encode(byte_string):
+def bin_encode(raw_bytes):
     """
-    Converts a byte string to binary representation.
+    Encodes raw bytes into binary representation.
 
-    :param byte_string:
-        Byte string.
+    :param raw_bytes:
+        Raw bytes.
     :returns:
-        Binary representation of the byte string.
+        Binary representation.
     """
     return ''.join(_HEX_TO_BIN_LOOKUP[hex_char]
-                   for hex_char in hex_encode(byte_string))
+                   for hex_char in hex_encode(raw_bytes))
 
     # Prefixed zero-bytes destructive. '\x00\x00' treated as '\x00'
     #return bin(bytes_to_long(byte_string))[2:]
@@ -229,12 +229,12 @@ def bin_encode(byte_string):
 
 def bin_decode(encoded):
     """
-    Converts a binary representation to bytes.
+    Decodes binary-encoded bytes into raw bytes.
 
     :param encoded:
         Binary representation.
     :returns:
-        Byte string.
+        Raw bytes.
     """
     return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[byt]
                               for byt in chunks(4, encoded)))
@@ -245,15 +245,14 @@ def bin_decode(encoded):
 
 # Taken from PyCrypto "as is".
 # Improved conversion functions contributed by Barry Warsaw, after
-# careful benchmarking
-
+# careful benchmarking.
 def long_to_bytes(num, blocksize=0):
     """
-    Convert a long integer to a byte string::
+    Convert a long integer to bytes::
 
         long_to_bytes(n:long, blocksize:int) : string
 
-    .. WARNING: Does not preserve prefixed zero-padding bytes.
+    .. WARNING: Does not preserve leading zeros.
 
     :param num:
         Long value
@@ -262,18 +261,19 @@ def long_to_bytes(num, blocksize=0):
         the byte string with binary zeros so that the length is a multiple of
         blocksize.
     :returns:
-        Byte string.
+        Raw bytes.
     """
     import struct
 
-    # after much testing, this algorithm was deemed to be the fastest
+    # After much testing, this algorithm was deemed to be the fastest
     s = ''
     num = long(num)
     pack = struct.pack
     while num > 0:
         s = pack('>I', num & 0xffffffffL) + s
         num >>= 32
-    # strip off leading zeros
+
+    # Strip off leading zeros
     for i in range(len(s)):
         if s[i] != '\000':
             break
@@ -282,25 +282,26 @@ def long_to_bytes(num, blocksize=0):
         s = '\000'
         i = 0
     s = s[i:]
-    # add back some pad bytes.  this could be done more efficiently w.r.t. the
+
+    # Add back some pad bytes.  this could be done more efficiently w.r.t. the
     # de-padding being done above, but sigh...
     if blocksize > 0 and len(s) % blocksize:
         s = (blocksize - len(s) % blocksize) * '\000' + s
     return s
 
 
-def bytes_to_long(byte_string):
+def bytes_to_long(raw_bytes):
     """
-    Convert a byte string to a long integer::
+    Converts bytes to long integer::
 
-        bytes_to_long(bytestring) : long
+        bytes_to_long(bytes) : long
 
     This is (essentially) the inverse of long_to_bytes().
 
-    .. WARNING: Does not preserve prefixed zero-padding bytes.
+    .. WARNING: Does not preserve leading zero bytes.
 
-    :param byte_string:
-        A byte string.
+    :param raw_bytes:
+        Raw bytes.
     :returns:
         Long.
     """
@@ -308,12 +309,12 @@ def bytes_to_long(byte_string):
 
     acc = 0L
     unpack = struct.unpack
-    length = len(byte_string)
+    length = len(raw_bytes)
     if length % 4:
         extra = (4 - length % 4)
-        byte_string = '\000' * extra + byte_string
+        raw_bytes = '\000' * extra + raw_bytes
         length = length + extra
     for i in range(0, length, 4):
-        acc = (acc << 32) + unpack('>I', byte_string[i:i+4])[0]
+        acc = (acc << 32) + unpack('>I', raw_bytes[i:i+4])[0]
     return acc
 
