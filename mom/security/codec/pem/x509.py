@@ -1,21 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Copyright (C) 2010 Google Inc.
-# Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """
 :module: mom.security.codec.pem.x509
 :synopsis: X.509 certificates parsing.
@@ -25,16 +9,37 @@
 
 from __future__ import absolute_import
 
+__license__ = """\
+The Apache Licence, Version 2.0
+
+Copyright (C) 2010 Google Inc.
+Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
+__author__ = ", ".join([
+    "Arne Roomann-Kurrik",
+    "Yesudeep Mangalapilly",
+])
+
+
 from pyasn1.type import univ
 from pyasn1.codec.der import encoder, decoder
+from mom.builtins import reduce
 from mom.security.codec.pem import \
     der_to_pem_certificate, pem_to_der_certificate
 from mom.security.codec.asn1.x509 import Certificate
-
-try:
-    reduce((lambda a,b: a+b), [1, 2, 3, 4])
-except NameError:
-    from functools import reduce
 
 
 def bitarray_to_long(bitarray):

@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-
 """
 :module: mom.itertools
 :synopsis: itertools extensions from the Python documentation.
@@ -13,6 +11,13 @@ Tools useful for iterating over sequences.
 """
 
 from __future__ import absolute_import
+
+__author__ = ", ".join([
+    "Python Documentation",
+    "Yesudeep Mangalapilly",
+])
+
+
 import collections
 
 from itertools import \
