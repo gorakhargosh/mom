@@ -4,21 +4,27 @@
 :module: mom.functional
 :synopsis: Functional programming primitives.
 
-.. autofunction:: every
-.. autofunction:: none
-.. autofunction:: find
-.. autofunction:: leading
-.. autofunction:: trailing
-.. autofunction:: some
 .. autofunction:: even
+.. autofunction:: every
+.. autofunction:: find
+.. autofunction:: first
+.. autofunction:: ireject
+.. autofunction:: iselect
+.. autofunction:: last
+.. autofunction:: leading
+.. autofunction:: negative
+.. autofunction:: none
 .. autofunction:: odd
 .. autofunction:: positive
-.. autofunction:: negative
-.. autofunction:: first
+.. autofunction:: reject
 .. autofunction:: rest
+.. autofunction:: select
+.. autofunction:: some
+.. autofunction:: trailing
 """
 
 from __future__ import absolute_import
+from itertools import ifilter
 
 license = """\
 The Apache Licence, Version 2.0
@@ -43,24 +49,29 @@ __author__ = ", ".join([
 ])
 
 __all__ = [
-    "some",
     "every",
     "find",
-    "leading",
-    "trailing",
-    "even",
-    "odd",
-    "none",
-    "positive",
-    "negative",
     "first",
+    "ireject",
+    "is_even",
+    "is_negative",
+    "is_odd",
+    "is_positive",
+    "iselect",
+    "last",
+    "leading",
+    "none",
+    "reject",
     "rest",
+    "select",
+    "some",
+    "trailing",
 ]
 
 
 from mom._builtins import range
 
-
+# Higher-order function.
 def some(func, iterable):
     """
     Determines whether :func:`func` applied to any element of the iterable is
@@ -174,7 +185,52 @@ def trailing(func, iterable):
     return leading(func, reversed(iterable))
 
 
-def even(num):
+def select(func, iterable):
+    """
+    Return those items of sequence for which func(item) is true.  If
+    func is None, return the items that are true.  If sequence is a tuple
+    or string, return the same type, else return a list::
+
+        select(function or None, sequence) -> list, tuple, or string
+    """
+    return filter(func, iterable)
+
+
+def iselect(func, iterable):
+    """
+    Return those items of sequence for which func(item) is true.
+    If func is None, return the items that are true::
+
+        iselect(function or None, sequence) --> ifilter object
+    """
+    return ifilter(func, iterable)
+
+
+def reject(func, iterable):
+    """
+    Return those items of sequence for which func(item) is false.  If
+    func is None, return the items that are false.  If sequence is a tuple
+    or string, return the same type, else return a list::
+
+        select(function or None, sequence) -> list, tuple, or string
+    """
+    func = func or (lambda w: w)
+    return filter((lambda w: not func(w)), iterable)
+
+
+def ireject(func, iterable):
+    """
+    Return those items of sequence for which func(item) is false.
+    If func is None, return the items that are false::
+
+        ireject(function or None, sequence) --> ifilter object
+    """
+    func = func or (lambda w: w)
+    return ifilter((lambda w: not func(w)), iterable)
+
+
+# Utility test functions.
+def is_even(num):
     """
     Determines whether a number is even.
 
@@ -186,7 +242,7 @@ def even(num):
     return not (num & 1L)
 
 
-def odd(num):
+def is_odd(num):
     """
     Determines whether a number is odd.
 
@@ -198,7 +254,7 @@ def odd(num):
     return bool(num & 1L)
 
 
-def positive(num):
+def is_positive(num):
     """
     Determines whether a number is positive.
 
@@ -212,7 +268,7 @@ def positive(num):
     return num > 0
 
 
-def negative(num):
+def is_negative(num):
     """
     Determines whether a number is negative.
 
@@ -226,6 +282,7 @@ def negative(num):
     return num < 0
 
 
+# Sequences
 def first(iterable):
     """
     Returns the first element out of an iterable.
@@ -248,4 +305,16 @@ def rest(iterable):
         All elements of the iterable sequence excluding the first.
     """
     return iterable[1:]
+
+
+def last(iterable):
+    """
+    Returns the last element out of an iterable.
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Last element of the iterable sequence.
+    """
+    return iterable[-1]
 
