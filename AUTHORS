@@ -1,15 +1,39 @@
 Contributors:
 -------------
-Trevor Perrin           <website@trevp.net>
-Rick Copeland           <rcopeland@geek.net>
-Arne Roomann-Kurrik     <kurrik+contributor@gmail.com>
+Yesudeep Mangalapilly   <yesudeep+contributor@gmail.com>
+
+Other contributors:
+-------------------
+PyCrypto contributions
+~~~~~~~~~~~~~~~~~~~~~~
 Barry Warsaw            <barry@python.org>
+
+Python SSL module
+~~~~~~~~~~~~~~~~~
 Bill Janssen            <janssen@parc.com>
+
+PyASN.1 examples
+~~~~~~~~~~~~~~~~
 Ilya Etingof            <ilya@glas.net>
+
+The library borrows heavily from TLSLite
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Trevor Perrin           <website@trevp.net>
+
+Patches to python-oauth2 part of which was used here
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Rick Copeland           <rcopeland@geek.net>
+
+The library borrows some code from Google's goopy functional library
+and some other projects.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Nathaniel Manista       <nathaniel+contributor@google.com>
 Chris DiBona            <cdibona+contributor@google.com>
 Dan Bentley             <dbentley+contributor@google.com>
 Ade Oshineye            <ade+contributor@google.com>
-Yesudeep Mangalapilly   <yesudeep+contributor@gmail.com>
+Arne Roomann-Kurrik     <kurrik+contributor@gmail.com>
+
+The library borrows some code from Facebook's Tornado Web framework
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Bret Taylor             <btaylor+contributor@gmail.com>
 Ben Darnell             <ben@bendarnell.com>
