@@ -64,6 +64,7 @@ limitations under the License.
 """
 
 __author__ = ", ".join([
+    "Barry Warsaw",
     "Yesudeep Mangalapilly",
 ])
 
