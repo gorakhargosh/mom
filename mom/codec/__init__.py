@@ -5,8 +5,8 @@
 :synopsis: Many different types of common encode/decode functions.
 
 Hexadecimal, base-64, binary, and decimal are byte string encodings.
-``bytearray`` is an array of bytes. This module contains codecs for
-converting between long, hex, base64, decimal, binary, mpi, and bytearray.
+This module contains codecs for converting between long and bytes, and
+the hex, base64, decimal, and binary representations of bytes.
 
 Bytes base-encoding
 -------------------
