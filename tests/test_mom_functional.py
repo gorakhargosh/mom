@@ -1,87 +1,93 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2005, Google Inc.
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are
-# met:
-#
-#     * Redistributions of source code must retain the above copyright
-# notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above
-# copyright notice, this list of conditions and the following disclaimer
-# in the documentation and/or other materials provided with the
-# distribution.
-#     * Neither the name of Google Inc. nor the names of its
-# contributors may be used to endorse or promote products derived from
-# this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest2
 
-from mom.functional import *
+from mom.functional import \
+    leading, some, trailing, _trailing, every, find
 
-class Test_functional(unittest2.TestCase):
-  def test_some_every(self):
-    self.assertTrue(some(lambda x: x == 5, range(10)))
-    self.assertFalse(every(lambda x: x == 5, range(10)))
-    self.assertFalse(some(lambda x: x == 5, [6] * 10))
-    self.assertTrue(every(lambda x: x == 6, [6] * 10))
 
-    n = 0
-    for a, b in cyclic_pairs(range(5)):
-      self.assertEqual(a,((b - 1) % 5))
-      n += 1
-    self.assertEqual(n, 5)
+class Test_some(unittest2.TestCase):
+    def test_valid(self):
+        self.assertTrue(some((lambda w: w > 0), [0, -1, 4, 6]))
 
-    a = range(10)
-    b = range(5, 15)
-    c = range(20, 30)
-    self.assertFalse(intersection(a, c))
-    def same_set(a, b):
-      return dict(zip(a, a)) == dict(zip(b, b))
-    self.assertTrue(same_set(intersection(a, b), range(5, 10)))
+        self.assertFalse(some((lambda w: w > 0), [0, -1, -4, 0]))
 
-  def test_partition_list(self):
-    matched, unmatched = partition_list(lambda x: x % 2, range(5))
-    self.assertEquals(matched, [1, 3])
-    self.assertEquals(unmatched, [0, 2, 4])
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, some, (lambda w: w > 0), None)
+        self.assertRaises(TypeError, some, (lambda w: w > 0), 5)
+        self.assertRaises(TypeError, some, (lambda w: w > 0), True)
 
-  def test_remove_duplicates(self):
-    self.assertEquals(remove_duplicates(range(0, 10)
-                                        + range(5, 15)
-                                        + range(2, 12)),
-                      range(0, 15))
+class Test_every(unittest2.TestCase):
+    def test_valid(self):
+        self.assertTrue(every((lambda w: w > 0), [1, 1, 4, 6]))
 
-  def test_transpose(self):
-    self.assertEquals(transpose([range(i, i + 20)
-                                 for i in range(10)]),
-                      [tuple(range(j, j + 10))
-                       for j in range(20)])
+        self.assertFalse(every((lambda w: w > 0), [0, -1, 4, 6]))
+        self.assertFalse(every((lambda w: w > 0), [0, -1, -4, 0]))
 
-  def test_flatten(self):
-    self.assertEquals(flatten1(zip(range(0, 10, 2), range(1, 11, 2))),
-                      range(0, 10))
-    self.assertEquals(flatten1(dict([(x, x) for x in range(3)]).items()),
-                      [0, 0, 1, 1, 2, 2])
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, every, (lambda w: w > 0), None)
+        self.assertRaises(TypeError, every, (lambda w: w > 0), 5)
+        self.assertRaises(TypeError, every, (lambda w: w > 0), True)
 
-    self.assertEquals(flatten([7,(6,[5,4],3),2,1]), [7,6,5,4,3,2,1])
-    self.assertEquals(flatten((4,5,3,2,1)), [4,5,3,2,1])
-    self.assertEquals(flatten(zip(zip(range(0,10,2)), range(1,11,2))),
-                      [0,1,2,3,4,5,6,7,8,9])
 
+class Test_find(unittest2.TestCase):
+    def test_valid_index(self):
+        self.assertEqual(find((lambda w: w > 2), [0, 1, 2, 3, 4, 5]), 3)
+
+    def test_not_found(self):
+        self.assertEqual(find((lambda w: w > 50), range(5)), -1)
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, find, (lambda w: w > 2), None)
+        self.assertRaises(TypeError, find, (lambda w: w > 2), 5)
+        self.assertRaises(TypeError, find, (lambda w: w > 2), True)
+
+
+class Test_leading(unittest2.TestCase):
+    def test_count(self):
+        self.assertEqual(leading((lambda w: w > 0), [0, 0, 1]), 0)
+        self.assertEqual(leading((lambda w: w > 1), [2, 2, 3, 0, 5]), 3)
+        self.assertEqual(leading((lambda w: ord(w) >= ord('c')), "abalskjd"), 0)
+        self.assertEqual(leading((lambda w: ord(w) >= ord('c')), "cuddleya"), 7)
+
+    def test_full_count(self):
+        self.assertEqual(leading((lambda w: w > 0), range(1, 10)), 9)
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, leading, (lambda w: w > 0), None)
+        self.assertRaises(TypeError, leading, (lambda w: w > 0), 3)
+        self.assertRaises(TypeError, leading, (lambda w: w > 0), True)
+
+class Test_trailing(unittest2.TestCase):
+    def test_count(self):
+        self.assertEqual(trailing((lambda w: w > 0), [0, 0, 1]), 1)
+        self.assertEqual(trailing((lambda w: w > 1), [2, 0, 2, 3, 5]), 3)
+        self.assertEqual(trailing((lambda w: ord(w) >= ord('c')), "abalskjd"), 5)
+        self.assertEqual(trailing((lambda w: ord(w) >= ord('c')), "cuddleya"), 0)
+
+    def test_full_count(self):
+        self.assertEqual(trailing((lambda w: w > 0), range(1, 10)), 9)
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, trailing, (lambda w: w > 0), None)
+        self.assertRaises(TypeError, trailing, (lambda w: w > 0), 3)
+        self.assertRaises(TypeError, trailing, (lambda w: w > 0), True)
+
+class Test__trailing(unittest2.TestCase):
+    def test_count(self):
+        self.assertEqual(_trailing((lambda w: w > 0), [0, 0, 1]), 1)
+        self.assertEqual(_trailing((lambda w: w > 1), [2, 0, 2, 3, 5]), 3)
+        self.assertEqual(_trailing((lambda w: ord(w) >= ord('c')), "abalskjd"), 5)
+        self.assertEqual(_trailing((lambda w: ord(w) >= ord('c')), "cuddleya"), 0)
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, _trailing, (lambda w: w > 0), None)
+        self.assertRaises(TypeError, _trailing, (lambda w: w > 0), 3)
+        self.assertRaises(TypeError, _trailing, (lambda w: w > 0), True)
+
+    def test_full_count(self):
+        self.assertEqual(_trailing((lambda w: w > 0), range(1, 10)), 9)
 
 if __name__ == '__main__':
   unittest2.main()

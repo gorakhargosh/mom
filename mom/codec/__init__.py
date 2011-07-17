@@ -39,6 +39,7 @@ where ``g`` is the decoder and ``f`` is a encoder.
 """
 
 from __future__ import absolute_import
+from mom.functional import leading
 
 __license__ = """\
 The Apache Licence, Version 2.0
@@ -131,23 +132,9 @@ def decimal_encode(raw_bytes):
     :returns:
         Decimal-encoded representation.
     """
-#    long_val = 0L
-#    multiplier = 1L
-#    for x in reversed(byte_string):
-#        long_val += multiplier * ord(x)
-#        multiplier *= 256     # multiplier <<= 8
-    padding_count = 0
-    for x in raw_bytes:
-        if ord(x) > 0:
-            break
-        else:
-            padding_count += 1
-    zero_padding = "0" * padding_count
+    padding = "0" * leading((lambda w: w == "\x00"), raw_bytes)
     long_val = bytes_to_long(raw_bytes)
-    if long_val:
-        return zero_padding + bytes(long_val)
-    else:
-        return zero_padding
+    return padding + bytes(long_val) if long_val else padding
 
 
 def decimal_decode(encoded):
@@ -160,18 +147,9 @@ def decimal_decode(encoded):
     :returns:
         Raw bytes.
     """
-    padding_count = 0
-    for x in encoded:
-        if x == "0":
-            padding_count += 1
-        else:
-            break
-    zero_padding = '\x00' * padding_count
+    padding = '\000' * leading((lambda x: x == "0"), encoded)
     long_val = long(encoded)
-    if not long_val:
-        return zero_padding
-    else:
-        return zero_padding + long_to_bytes(long_val)
+    return padding + long_to_bytes(long_val) if long_val else padding
 
 
 _HEX_TO_BIN_LOOKUP = {
@@ -235,8 +213,8 @@ def bin_decode(encoded):
     :returns:
         Raw bytes.
     """
-    return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[byt]
-                              for byt in chunks(4, encoded)))
+    return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[nibble]
+                              for nibble in chunks(4, encoded)))
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
     #return long_to_bytes(long(encoded, 2))
