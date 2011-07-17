@@ -44,31 +44,49 @@ class Test_base64_codec(unittest2.TestCase):
     def test_codec_identity(self):
         # Not zero-destructive.
         self.assertEqual(base64_decode(base64_encode(zero_bytes)), zero_bytes)
-        self.assertEqual(base64_decode(base64_encode(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(base64_decode(base64_encode(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(base64_decode(base64_encode(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(base64_decode(base64_encode(random_bytes_1024)),
+                         random_bytes_1024)
+        self.assertEqual(base64_decode(base64_encode(random_bytes_2048)),
+                         random_bytes_2048)
+        self.assertEqual(base64_decode(base64_encode(random_bytes_len_4093)),
+                         random_bytes_len_4093)
 
 class Test_hex_codec(unittest2.TestCase):
     def test_codec_identity(self):
         # Not zero-destructive
         self.assertEqual(hex_decode(hex_encode(zero_bytes)), zero_bytes)
-        self.assertEqual(hex_decode(hex_encode(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(hex_decode(hex_encode(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(hex_decode(hex_encode(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(hex_decode(hex_encode(random_bytes_1024)),
+                         random_bytes_1024)
+        self.assertEqual(hex_decode(hex_encode(random_bytes_2048)),
+                         random_bytes_2048)
+        self.assertEqual(hex_decode(hex_encode(random_bytes_len_4093)),
+                         random_bytes_len_4093)
 
 class Test_decimal_codec(unittest2.TestCase):
     def test_codec_identity(self):
-        self.assertEqual(decimal_decode(decimal_encode(zero_bytes)), zero_bytes)
-        self.assertEqual(decimal_decode(decimal_encode(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(decimal_decode(decimal_encode(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(decimal_decode(decimal_encode(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(
+            decimal_decode(decimal_encode(zero_bytes)),
+            zero_bytes)
+        self.assertEqual(
+            decimal_decode(decimal_encode(random_bytes_1024)),
+            random_bytes_1024)
+        self.assertEqual(
+            decimal_decode(decimal_encode(random_bytes_2048)),
+            random_bytes_2048)
+        self.assertEqual(
+            decimal_decode(decimal_encode(random_bytes_len_4093)),
+            random_bytes_len_4093)
 
 class Test_bin_codec(unittest2.TestCase):
     def test_codec_identity(self):
         self.assertEqual(bin_decode(bin_encode(zero_bytes)), zero_bytes)
-        self.assertEqual(bin_decode(bin_encode(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(bin_decode(bin_encode(random_bytes_2048)), random_bytes_2048)
-        self.assertEqual(bin_decode(bin_encode(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(
+            bin_decode(bin_encode(random_bytes_1024)), random_bytes_1024)
+        self.assertEqual(
+            bin_decode(bin_encode(random_bytes_2048)), random_bytes_2048)
+        self.assertEqual(
+            bin_decode(bin_encode(random_bytes_len_4093)),
+            random_bytes_len_4093)
 
 
 class Test_bytes_long_codec(unittest2.TestCase):
@@ -76,5 +94,13 @@ class Test_bytes_long_codec(unittest2.TestCase):
         # Padding bytes are not preserved (it is acceptable here).
         random_bytes = """\x00\xbcE\x9a\xda]"""
         expected_bytes = """\xbcE\x9a\xda]"""
-        self.assertEqual(long_to_bytes(bytes_to_long(zero_bytes)), one_zero_byte)
-        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes)), expected_bytes)
+        self.assertEqual(long_to_bytes(bytes_to_long(zero_bytes)),
+                         one_zero_byte)
+        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes)),
+                         expected_bytes)
+
+
+class Test_long_to_bytes(unittest2.TestCase):
+    def test_block_size(self):
+        self.assertEqual(long_to_bytes(299999999999L, blocksize=4),
+                         '\x00\x00\x00E\xd9d\xb7\xff')
