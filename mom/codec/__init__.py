@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 :module: mom.codec
-:synopsis: Many different types of common encode/decode functions.
+:synopsis: Many different types of common encode/decode function.
 
 Hexadecimal, base-64, binary, and decimal are byte string encodings.
 This module contains codecs for converting between long and bytes, and
@@ -10,9 +10,8 @@ the hex, base64, decimal, and binary representations of bytes.
 
 Bytes base-encoding
 -------------------
-These codecs preserve bytes as is
-when decoding back to bytes. In a more mathematical
-sense,
+These codecs preserve bytes "as is" when decoding back to bytes. In a more
+mathematical sense,
 
     ``g(f(x))`` is an **identity function**
 
@@ -29,18 +28,15 @@ where ``g`` is the decoder and ``f`` is the encoder.
 
 Number-bytes conversion
 -----------------------
-These codecs are "lossy" in that prefixed
-padding zero bytes will not be preserved when
-converting back to bytes. In a more mathematical
-sense,
+These codecs are "lossy" as they don't preserve prefixed padding zero bytes.
+In a more mathematical sense,
 
-    ``g(f(x))`` is **not an identity function**
+    ``g(f(x))`` is **almost** an identity function, but not exactly.
 
 where ``g`` is the decoder and ``f`` is a encoder.
 
 .. autofunction:: bytes_to_long
 .. autofunction:: long_to_bytes
-
 """
 
 from __future__ import absolute_import
