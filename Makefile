@@ -27,6 +27,10 @@ dist: clean
 build: doc
 	@bin/python setup.py build
 
+doc-rebuild:
+	@make -C docs/ clean
+	@make SPHINXBUILD=../bin/sphinx-build -C docs/ html
+
 docs: doc
 
 doc: # develop
@@ -38,7 +42,7 @@ upload-doc: doc
 view-doc: doc
 	@bin/python -c "import webbrowser; webbrowser.open('docs/build/html/index.html')"
 
-test: doc
+test: doc-rebuild
 	@echo "You will need Coverage 3.5 and unittest2 or higher for this to work."
 	@rm -rf htmlcov
 	@bin/coverage erase
