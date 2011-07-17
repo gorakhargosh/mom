@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import unittest2
-from mom.security.codec.pem import pem_to_der_private_key, pem_to_der_rsa_private_key, pem_to_der_public_key, pem_to_der_certificate, der_to_pem_certificate, der_to_pem_private_key, der_to_pem_public_key, der_to_pem_rsa_private_key
+from mom.security.codec.pem import \
+    pem_to_der_private_key, pem_to_der_rsa_private_key, \
+    pem_to_der_public_key, pem_to_der_certificate, \
+    der_to_pem_certificate, der_to_pem_private_key, \
+    der_to_pem_public_key, der_to_pem_rsa_private_key, \
+    cert_time_to_seconds
 
 private_key='''
 -----BEGIN PRIVATE KEY-----
@@ -68,13 +73,41 @@ yQkdgcMv11l4KoBkcwIDAQAB
 public_key_der = '''0\x81\x9f0\r\x06\t*\x86H\x86\xf7\r\x01\x01\x01\x05\x00\x03\x81\x8d\x000\x81\x89\x02\x81\x81\x00\xb4b0\xb0!\xf6(\xa6\xba\xbf\x15\x03\xba\x95\xbd\xda\xb1z\xf1.RE\xb8+\xed\x8at\xc5\xe6\x9d\x06\xc6\xf4\x06\xbb\x93\xb7\x81\x8c\xadR\xfbB\xd8\x99X\xcf*RF5q\xc3\x1a\xec\xb9\x17\x0f\xdd\xee\xb8\xd5\'@K\x07\xeb\x9b<\xaf"\x03\xf4\xf0\xde\x12\xd0\x81s\x11DdW\\)\xfc\x8aG\xeeA\xf8\xd4K[\x99I\xab],\x1f5\x9b\'A\x119I\x84\x8e\x86\x1f\x8bp\xad\xb0\xc9\t\x1d\x81\xc3/\xd7Yx*\x80ds\x02\x03\x01\x00\x01'''
 
 
+certificate_without_suffix='''\
+-----BEGIN CERTIFICATE-----
+MIIBpjCCAQ+gAwIBAgIBATANBgkqhkiG9w0BAQUFADAZMRcwFQYDVQQDDA5UZXN0
+IFByaW5jaXBhbDAeFw03MDAxMDEwODAwMDBaFw0zODEyMzEwODAwMDBaMBkxFzAV
+BgNVBAMMDlRlc3QgUHJpbmNpcGFsMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
+gQC0YjCwIfYoprq/FQO6lb3asXrxLlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlY
+zypSRjVxwxrsuRcP3e641SdASwfrmzyvIgP08N4S0IFzEURkV1wp/IpH7kH41Etb
+mUmrXSwfNZsnQRE5SYSOhh+LcK2wyQkdgcMv11l4KoBkcwIDAQABMA0GCSqGSIb3
+DQEBBQUAA4GBAGZLPEuJ5SiJ2ryq+CmEGOXfvlTtEL2nuGtr9PewxkgnOjZpUy+d
+4TvuXJbNQc8f4AMWL/tO9w0Fk80rWKp9ea8/df4qMq5qlFWlx6yOLQxumNOmECKb
+WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
+'''
+
+certificate_without_prefix='''\
+MIIBpjCCAQ+gAwIBAgIBATANBgkqhkiG9w0BAQUFADAZMRcwFQYDVQQDDA5UZXN0
+IFByaW5jaXBhbDAeFw03MDAxMDEwODAwMDBaFw0zODEyMzEwODAwMDBaMBkxFzAV
+BgNVBAMMDlRlc3QgUHJpbmNpcGFsMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
+gQC0YjCwIfYoprq/FQO6lb3asXrxLlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlY
+zypSRjVxwxrsuRcP3e641SdASwfrmzyvIgP08N4S0IFzEURkV1wp/IpH7kH41Etb
+mUmrXSwfNZsnQRE5SYSOhh+LcK2wyQkdgcMv11l4KoBkcwIDAQABMA0GCSqGSIb3
+DQEBBQUAA4GBAGZLPEuJ5SiJ2ryq+CmEGOXfvlTtEL2nuGtr9PewxkgnOjZpUy+d
+4TvuXJbNQc8f4AMWL/tO9w0Fk80rWKp9ea8/df4qMq5qlFWlx6yOLQxumNOmECKb
+WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
+-----END CERTIFICATE-----'''
+
+
 class Test_pem_to_der_private_key(unittest2.TestCase):
     def test_decode(self):
-        self.assertEqual(pem_to_der_private_key(private_key), private_key_der)
+        self.assertEqual(pem_to_der_private_key(private_key),
+                         private_key_der)
 
 class Test_pem_to_der_rsa_private_key(unittest2.TestCase):
     def test_decode(self):
-        self.assertEqual(pem_to_der_rsa_private_key(private_rsa_key), private_key_der)
+        self.assertEqual(pem_to_der_rsa_private_key(private_rsa_key),
+                         private_key_der)
 
 class Test_pem_to_der_public_key(unittest2.TestCase):
     def test_decode(self):
@@ -86,7 +119,25 @@ class Test_pem_to_der_certificate(unittest2.TestCase):
 
 class Test_pem_der_codec(unittest2.TestCase):
     def test_codec_identity(self):
-        self.assertEqual(der_to_pem_public_key(pem_to_der_public_key(public_key)).strip(), public_key.strip())
-        self.assertEqual(der_to_pem_certificate(pem_to_der_certificate(certificate)).strip(), certificate.strip())
-        self.assertEqual(der_to_pem_private_key(pem_to_der_private_key(private_key)).strip(), private_key.strip())
-        self.assertEqual(der_to_pem_rsa_private_key(pem_to_der_rsa_private_key(private_rsa_key)).strip(), private_rsa_key.strip())
+        self.assertEqual(der_to_pem_public_key(
+            pem_to_der_public_key(public_key)).strip(), public_key.strip())
+        self.assertEqual(der_to_pem_certificate(
+            pem_to_der_certificate(certificate)).strip(), certificate.strip())
+        self.assertEqual(der_to_pem_private_key(
+            pem_to_der_private_key(private_key)).strip(), private_key.strip())
+        self.assertEqual(der_to_pem_rsa_private_key(
+            pem_to_der_rsa_private_key(private_rsa_key)).strip(),
+                         private_rsa_key.strip())
+
+    def test_ValueError_on_missing_suffix(self):
+        self.assertRaises(ValueError, pem_to_der_certificate,
+                          certificate_without_suffix)
+
+    def test_ValueError_on_missing_prefix(self):
+        self.assertRaises(ValueError, pem_to_der_certificate,
+                          certificate_without_prefix)
+
+class Test_cert_time_in_seconds(unittest2.TestCase):
+    def test_format(self):
+        self.assertEqual(cert_time_to_seconds('Jul 17 18:24:41 2011 GMT'),
+                         1310907281.0)
