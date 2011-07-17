@@ -33,6 +33,8 @@
 from __future__ import nested_scopes, absolute_import
 
 license = """\
+New BSD License
+
 Copyright (c) 2005, Google Inc.
 All rights reserved.
 
