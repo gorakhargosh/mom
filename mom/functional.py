@@ -2,58 +2,43 @@
 # -*- coding: utf-8 -*-
 """
 :module: mom.functional
-:synopsis: Handy things for functional style programming.
+:synopsis: Functional programming primitives.
 
 .. autofunction:: every
+.. autofunction:: none
 .. autofunction:: find
 .. autofunction:: leading
 .. autofunction:: trailing
-.. autofunction:: reverse
 .. autofunction:: some
-.. autofunction:: sort
+.. autofunction:: even
+.. autofunction:: odd
+.. autofunction:: positive
+.. autofunction:: negative
+.. autofunction:: first
+.. autofunction:: rest
 """
 
-from __future__ import nested_scopes, absolute_import
+from __future__ import absolute_import
 
 license = """\
-New BSD License
+The Apache Licence, Version 2.0
 
-Copyright (c) 2005, Google Inc.
-Copyright (c) 2011 Yesudeep Mangalapilly
-All rights reserved.
+Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+http://www.apache.org/licenses/LICENSE-2.0
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
 
 __author__ = ", ".join([
-    "Ade Oshineye",
-    "Chris DiBona",
-    "Dan Bentley",
-    "Nathaniel Manista",
     "Yesudeep Mangalapilly",
 ])
 
@@ -63,9 +48,15 @@ __all__ = [
     "find",
     "leading",
     "trailing",
+    "even",
+    "odd",
+    "none",
+    "positive",
+    "negative",
+    "first",
+    "rest",
 ]
 
-import math as _math
 
 from mom._builtins import range
 
@@ -108,6 +99,22 @@ def every(func, iterable):
         if not func(x):
             return False
     return True
+
+
+def none(func, iterable):
+    """
+    Determines whether :func:`func` is false for all elements in in iterable.
+
+    :param func:
+        Function of the form::
+
+            f(x) -> bool
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        ``True`` if :func:`func` is false for all elements in the iterable.
+    """
+    return every((lambda w: not func(w)), iterable)
 
 
 def find(func, iterable, start=0):
@@ -167,21 +174,78 @@ def trailing(func, iterable):
     return leading(func, reversed(iterable))
 
 
-def _trailing(func, iterable):
+def even(num):
     """
-    Returns the number of trailing elements in the iterable for which
-    :func:`func` is true.
+    Determines whether a number is even.
 
-    :param func:
-        Function of the form::
+    :param num:
+        Integer
+    :returns:
+        ``True`` if even; ``False`` otherwise.
+    """
+    return not (num & 1L)
 
-            f(x) -> bool
+
+def odd(num):
+    """
+    Determines whether a number is odd.
+
+    :param num:
+        Integer
+    :returns:
+        ``True`` if odd; ``False`` otherwise.
+    """
+    return bool(num & 1L)
+
+
+def positive(num):
+    """
+    Determines whether a number is positive.
+
+    :param num:
+        Number
+    :returns:
+        ``True`` if positive; ``False`` otherwise.
+    """
+    if not isinstance(num, (int, long, bool, float)):
+        raise TypeError("unsupported operand type: %r", type(num).__name__)
+    return num > 0
+
+
+def negative(num):
+    """
+    Determines whether a number is negative.
+
+    :param num:
+        Number
+    :returns:
+        ``True`` if positive; ``False`` otherwise.
+    """
+    if not isinstance(num, (int, long, bool, float)):
+        raise TypeError("unsupported operand type: %r", type(num).__name__)
+    return num < 0
+
+
+def first(iterable):
+    """
+    Returns the first element out of an iterable.
+
     :param iterable:
         Iterable sequence.
+    :returns:
+        First element of the iterable sequence.
     """
-    n = len(iterable)
-    for i in range(n - 1, -1, -1):
-        if not func(iterable[i]):
-            return (n - 1) - i
-    return len(iterable)
+    return iterable[0]
+
+
+def rest(iterable):
+    """
+    Returns all elements excluding the first out of an iterable.
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        All elements of the iterable sequence excluding the first.
+    """
+    return iterable[1:]
 
