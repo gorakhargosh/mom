@@ -29,51 +29,49 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import sys
-import unittest
+import unittest2
 
 from mom.functional import *
 
-
-class functionalUnitTest(unittest.TestCase):
-  def testSomeEvery(self):
-    assert some(lambda x: x == 5, range(10))
-    assert not every(lambda x: x == 5, range(10))
-    assert not some(lambda x: x == 5, [6] * 10)
-    assert every(lambda x: x == 6, [6] * 10)
+class Test_functional(unittest2.TestCase):
+  def test_some_every(self):
+    self.assertTrue(some(lambda x: x == 5, range(10)))
+    self.assertFalse(every(lambda x: x == 5, range(10)))
+    self.assertFalse(some(lambda x: x == 5, [6] * 10))
+    self.assertTrue(every(lambda x: x == 6, [6] * 10))
 
     n = 0
     for a, b in cyclic_pairs(range(5)):
-      assert a == ((b - 1) % 5)
+      self.assertEqual(a,((b - 1) % 5))
       n += 1
-    assert n == 5
+    self.assertEqual(n, 5)
 
     a = range(10)
     b = range(5, 15)
     c = range(20, 30)
-    assert not intersection(a, c)
+    self.assertFalse(intersection(a, c))
     def same_set(a, b):
       return dict(zip(a, a)) == dict(zip(b, b))
-    assert same_set(intersection(a, b), range(5, 10))
+    self.assertTrue(same_set(intersection(a, b), range(5, 10)))
 
-  def testParitionList(self):
+  def test_partition_list(self):
     matched, unmatched = partition_list(lambda x: x % 2, range(5))
     self.assertEquals(matched, [1, 3])
     self.assertEquals(unmatched, [0, 2, 4])
 
-  def testRemoveDuplicates(self):
+  def test_remove_duplicates(self):
     self.assertEquals(remove_duplicates(range(0, 10)
                                         + range(5, 15)
                                         + range(2, 12)),
                       range(0, 15))
 
-  def testTranspose(self):
+  def test_transpose(self):
     self.assertEquals(transpose([range(i, i + 20)
                                  for i in range(10)]),
                       [tuple(range(j, j + 10))
                        for j in range(20)])
 
-  def testFlatten(self):
+  def test_flatten(self):
     self.assertEquals(flatten1(zip(range(0, 10, 2), range(1, 11, 2))),
                       range(0, 10))
     self.assertEquals(flatten1(dict([(x, x) for x in range(3)]).items()),
@@ -84,5 +82,6 @@ class functionalUnitTest(unittest.TestCase):
     self.assertEquals(flatten(zip(zip(range(0,10,2)), range(1,11,2))),
                       [0,1,2,3,4,5,6,7,8,9])
 
+
 if __name__ == '__main__':
-  unittest.main()
+  unittest2.main()
