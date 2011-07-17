@@ -20,7 +20,7 @@ class Test_generate_random_bits(unittest2.TestCase):
     def test_uniqueness(self):
         self.assertNotEqual(generate_random_bits(64), generate_random_bits(64))
 
-    def test_0_bits_raises_ValueError(self):
+    def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_bits, 0)
 
     def test_TypeError_when_invalid_argument(self):
@@ -36,8 +36,7 @@ class Test_generate_random_ulong(unittest2.TestCase):
             generate_random_ulong(i + 1, False)
             self.assertTrue(generate_random_ulong(i + 1, True) & (2L ** ((i + 1) - 1)))
 
-
-    def test_0_bits_raises_ValueError(self):
+    def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_ulong, 0)
 
     def test_TypeError_when_invalid_argument(self):
@@ -82,7 +81,7 @@ class Test_generate_random_ulong_between(unittest2.TestCase):
             value = generate_random_ulong_between(low, high)
             self.assertTrue(value >= low and value < high)
 
-    def test_raises_ValueError_when_low_greater_than_high(self):
+    def test_ValueError_when_low_greater_than_high(self):
         low, high = 4, 3
         self.assertRaises(ValueError, generate_random_ulong_between, low, high)
 
