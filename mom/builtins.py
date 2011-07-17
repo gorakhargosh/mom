@@ -116,7 +116,9 @@ __all__ = [
 ]
 
 from mom._builtins import \
-    byte_literal, bytes_type, unicode_type, basestring_type
+    byte_literal, bytes_type, unicode_type, basestring_type, range
+
+range = range
 
 try:
     # Check whether we have reduce as a built-in.

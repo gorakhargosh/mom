@@ -49,9 +49,11 @@ except NameError:
     basestring_type = (str, bytes)
 
 try:
-    _RANGE = xrange
+    # Python 2.5+
+    xrange(0)
+    range = xrange
 except NameError:
-    _RANGE = range
+    range = range
 
 # Fake byte literal support:  In python 2.6+, you can say b"foo" to get
 # a byte literal (str in 2.x, bytes in 3.x).  There's no way to do this
