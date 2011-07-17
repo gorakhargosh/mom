@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 :module: mom.security.random
-:synopsis: Random number, string, and bytearray generation utilities.
+:synopsis: Random number, bits, bytes, and string generation utilities.
 
 Bits and bytes
 ---------------------------

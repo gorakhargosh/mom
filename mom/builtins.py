@@ -115,7 +115,7 @@ try:
 except NameError:
     # Python 3k
     from functools import reduce
-    reduce = reduce
+reduce = reduce
 
 
 # Types and their meanings:
