@@ -27,11 +27,6 @@ where ``g`` is the decoder and ``f`` is the encoder.
 .. autofunction:: decimal_encode
 .. autofunction:: decimal_decode
 
-Bytearray encoding
-------------------
-.. autofunction:: bytearray_base64_decode
-.. autofunction:: bytearray_base64_encode
-
 Number-bytes conversion
 -----------------------
 These codecs are "lossy" in that prefixed
@@ -255,36 +250,6 @@ def bin_decode(encoded):
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
     #return long_to_bytes(long(encoded, 2))
-
-
-# Byte array base64 encoding.
-
-def bytearray_base64_decode(encoded):
-    """
-    Converts a base-64 encoded value into a byte array.
-
-    :param encoded:
-        The base-64 encoded value.
-    :returns:
-        Byte array.
-    """
-    from mom._types.bytearray import bytes_to_bytearray
-
-    return bytes_to_bytearray(base64_decode(encoded))
-
-
-def bytearray_base64_encode(byte_array):
-    """
-    Base-64 encodes a byte array.
-
-    :param byte_array:
-        The byte array.
-    :returns:
-        Base-64 encoded byte array without newlines.
-    """
-    from mom._types.bytearray import bytearray_to_bytes
-
-    return base64_encode(bytearray_to_bytes(byte_array))
 
 
 # Taken from PyCrypto "as is".
