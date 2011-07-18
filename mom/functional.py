@@ -4,37 +4,62 @@
 :module: mom.functional
 :synopsis: Functional programming primitives.
 
-.. autofunction:: accept
-.. autofunction:: allow
-.. autofunction:: disallow
-.. autofunction:: discard
-.. autofunction:: chunks
-.. autofunction:: compact
-.. autofunction:: compose
+Higher-order functions
+-----------------------
+These functions accept other functions as arguments and apply them over
+specific types of data structures.
+
+Boolean logic and search
+~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: each
 .. autofunction:: every
 .. autofunction:: find
+.. autofunction:: none
+.. autofunction:: some
+
+Filtering
+~~~~~~~~~
+.. autofunction:: ireject
+.. autofunction:: iselect
+.. autofunction:: reject
+.. autofunction:: select
+
+Counting
+~~~~~~~~
+.. autofunction:: leading
+.. autofunction:: trailing
+
+Function-generators
+~~~~~~~~~~~~~~~~~~~
+.. autofunction:: compose
+
+
+Iteration helpers
+-----------------
+.. autofunction:: chunks
+.. autofunction:: compact
 .. autofunction:: first
 .. autofunction:: ichunks
-.. autofunction:: invert_dict
-.. autofunction:: ireject
+.. autofunction:: last
+.. autofunction:: rest
+
+
+Utility tests
+-------------
 .. autofunction:: is_even
 .. autofunction:: is_negative
 .. autofunction:: is_odd
 .. autofunction:: is_positive
-.. autofunction:: iselect
-.. autofunction:: last
-.. autofunction:: leading
+
+
+Dictionaries and dictionary sequences
+-------------------------------------
+.. autofunction:: invert_dict
 .. autofunction:: map_dict
-.. autofunction:: none
 .. autofunction:: pluck
-.. autofunction:: reject
 .. autofunction:: reject_dict
-.. autofunction:: rest
-.. autofunction:: select
 .. autofunction:: select_dict
-.. autofunction:: some
-.. autofunction:: trailing
+
 """
 
 from __future__ import absolute_import
@@ -62,10 +87,6 @@ __author__ = ", ".join([
 ])
 
 __all__ = [
-    "accept",
-    "allow",
-    "disallow",
-    "discard",
     "chunks",
     "compact",
     "compose",
@@ -237,9 +258,6 @@ def select(func, iterable):
     """
     return filter(func, iterable)
 
-accept = select
-allow = select
-
 
 def iselect(func, iterable):
     """
@@ -249,9 +267,6 @@ def iselect(func, iterable):
         iselect(function or None, sequence) --> ifilter object
     """
     return ifilter(func, iterable)
-
-iaccept = iselect
-iallow = iselect
 
 
 def reject(func, iterable):
@@ -265,9 +280,6 @@ def reject(func, iterable):
     func = func or (lambda w: w)
     return filter(lambda w: not func(w), iterable)
 
-discard = reject
-disallow = reject
-
 
 def ireject(func, iterable):
     """
@@ -278,9 +290,6 @@ def ireject(func, iterable):
     """
     func = func or (lambda w: w)
     return ifilter(lambda w: not func(w), iterable)
-
-idiscard = ireject
-idisallow = ireject
 
 
 def compose(*funcs):

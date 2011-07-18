@@ -6,8 +6,6 @@
 
 Tools useful for iterating over sequences.
 
-.. autofunction:: chunks
-
 """
 
 from __future__ import absolute_import
