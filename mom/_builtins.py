@@ -67,3 +67,11 @@ if str is unicode:
 else:
     def byte_literal(s):
         return s
+
+try:
+    # Check whether we have reduce as a built-in.
+    __reduce_test__ = reduce((lambda num1, num2: num1 + num2), [1, 2, 3, 4])
+except NameError:
+    # Python 3k
+    from functools import reduce
+reduce = reduce

@@ -130,18 +130,11 @@ __all__ = [
 ]
 
 from mom._builtins import \
-    byte_literal, bytes_type, unicode_type, basestring_type, range
+    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce
 
 range = range
 
-try:
-    # Check whether we have reduce as a built-in.
-    __reduce_test__ = reduce((lambda num1, num2: num1 + num2), [1, 2, 3, 4])
-except NameError:
-    # Python 3k
-    from functools import reduce
 reduce = reduce
-
 
 # Types and their meanings:
 #
