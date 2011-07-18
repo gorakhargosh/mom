@@ -408,11 +408,5 @@ class Test_identity(unittest2.TestCase):
         self.assertEqual(identity(None), None)
 
 
-class Test_noop(unittest2.TestCase):
-    def test_noop(self):
-        # How the hell do you test a no-op?
-        # This only ensures coverage.
-        self.assertEqual(noop(), None)
-
 if __name__ == '__main__':
     unittest2.main()

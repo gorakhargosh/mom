@@ -161,13 +161,6 @@ def complement(func):
 
 
 # Utility functions
-def noop(*args, **kwargs):
-    """
-    Does nothing.
-    """
-    pass
-
-
 def identity(x):
     """
     Identity function.
