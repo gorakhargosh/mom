@@ -30,6 +30,7 @@ Counting
 
 Function-generators
 ~~~~~~~~~~~~~~~~~~~
+.. autofunction:: complement
 .. autofunction:: compose
 
 Iterable sequence helpers
@@ -39,10 +40,10 @@ Iterable sequence helpers
 .. autofunction:: rest
 
 .. autofunction:: chunks
-.. autofunction:: ichunks
 .. autofunction:: compact
 .. autofunction:: contains
 .. autofunction:: difference
+.. autofunction:: ichunks
 .. autofunction:: without
 
 Dictionaries and dictionary sequences
@@ -83,6 +84,7 @@ __author__ = ", ".join([
 __all__ = [
     "chunks",
     "compact",
+    "complement",
     "compose",
     "contains",
     "difference",
