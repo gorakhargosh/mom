@@ -51,16 +51,16 @@ Size counting
 .. autofunction:: long_bit_length
 .. autofunction:: long_byte_count
 
-Type detection
---------------
+Type detection predicates
+-------------------------
 .. autofunction:: is_bytes
 .. autofunction:: is_bytes_or_unicode
 .. autofunction:: is_integer
 .. autofunction:: is_sequence
 .. autofunction:: is_unicode
 
-Number tests
-------------
+Number predicates
+-----------------
 People screw these up too. Useful in functional programming.
 
 .. autofunction:: is_even
