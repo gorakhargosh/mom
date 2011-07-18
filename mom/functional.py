@@ -4,9 +4,12 @@
 :module: mom.functional
 :synopsis: Functional programming primitives.
 
+.. autofunction:: chunks
 .. autofunction:: every
 .. autofunction:: find
 .. autofunction:: first
+.. autofunction:: ichunks
+.. autofunction:: invert_dict
 .. autofunction:: ireject
 .. autofunction:: is_even
 .. autofunction:: is_negative
@@ -15,14 +18,15 @@
 .. autofunction:: iselect
 .. autofunction:: last
 .. autofunction:: leading
+.. autofunction:: map_dict
 .. autofunction:: none
 .. autofunction:: reject
+.. autofunction:: reject_dict
 .. autofunction:: rest
 .. autofunction:: select
+.. autofunction:: select_dict
 .. autofunction:: some
 .. autofunction:: trailing
-.. autofunction:: chunks
-.. autofunction:: ichunks
 """
 
 from __future__ import absolute_import
@@ -50,9 +54,12 @@ __author__ = ", ".join([
 ])
 
 __all__ = [
+    "chunks",
     "every",
     "find",
     "first",
+    "ichunks",
+    "invert_dict",
     "ireject",
     "is_even",
     "is_negative",
@@ -61,14 +68,15 @@ __all__ = [
     "iselect",
     "last",
     "leading",
+    "map_dict",
     "none",
     "reject",
+    "reject_dict",
     "rest",
     "select",
+    "select_dict",
     "some",
     "trailing",
-    "chunks",
-    "ichunks",
 ]
 
 from itertools import ifilter, islice
@@ -130,7 +138,7 @@ def none(func, iterable):
     :returns:
         ``True`` if :func:`func` is false for all elements in the iterable.
     """
-    return every((lambda w: not func(w)), iterable)
+    return every(lambda w: not func(w), iterable)
 
 
 def find(func, iterable, start=0):
@@ -220,7 +228,7 @@ def reject(func, iterable):
         select(function or None, sequence) -> list, tuple, or string
     """
     func = func or (lambda w: w)
-    return filter((lambda w: not func(w)), iterable)
+    return filter(lambda w: not func(w), iterable)
 
 
 def ireject(func, iterable):
@@ -231,7 +239,61 @@ def ireject(func, iterable):
         ireject(function or None, sequence) --> ifilter object
     """
     func = func or (lambda w: w)
-    return ifilter((lambda w: not func(w)), iterable)
+    return ifilter(lambda w: not func(w), iterable)
+
+
+# Dictionaries
+def map_dict(func, dictionary):
+    """
+    Maps over a dictionary of key, value pairs.
+
+    :param func:
+        Function that accepts a single argument of type ``(key, value)``
+        and returns a ``(key, value)`` pair.
+    :returns:
+        New dictionary of ``(key, value)`` pairs.
+    """
+    return dict(map(func, dictionary.items()))
+
+
+def select_dict(func, dictionary):
+    """
+    Select a dictionary.
+
+    :param func:
+        Function that accepts a single argument of type ``(key, value)``
+        and returns ``True`` for selectable elements.
+    :returns:
+        New dictionary of selected ``(key, value)`` pairs.
+    """
+    func = func or (lambda a: a[0] and a[1])
+    return dict(select(func, dictionary.items()))
+
+
+def reject_dict(func, dictionary):
+    """
+    Select a dictionary.
+
+    :param func:
+        Function that accepts a single argument of type ``(key, value)``
+        and returns ``True`` for rejected elements.
+    :returns:
+        New dictionary of selected ``(key, value)`` pairs.
+    """
+    func = func or (lambda a: a[0] and a[1])
+    return dict(reject(func, dictionary.items()))
+
+
+def invert_dict(dictionary):
+    """
+    Inverts a dictionary.
+
+    :param dictionary:
+        Dictionary to invert.
+    :returns:
+        New dictionary with the keys and values switched.
+    """
+    return map_dict(lambda (k, v): (v, k), dictionary)
 
 
 # Utility test functions.
