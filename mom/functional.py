@@ -114,7 +114,7 @@ __all__ = [
     "trailing",
 ]
 
-from itertools import ifilter, islice, takewhile
+from itertools import ifilter, islice, takewhile, ifilterfalse
 from mom._builtins import range
 
 
@@ -210,9 +210,9 @@ def leading(func, iterable):
     :param iterable:
         Iterable sequence.
     """
-    i = 0
+    i = 0L
     for _ in takewhile(func, iterable):
-        i += 1
+        i += 1L
     return i
 
 
@@ -233,32 +233,49 @@ def trailing(func, iterable):
 
 def select(func, iterable):
     """
-    Return those items of sequence for which func(item) is true.  If
-    func is None, return the items that are true.  If sequence is a tuple
-    or string, return the same type, else return a list::
+    Select all items from the sequence for which func(item) is true.
 
         select(function or None, sequence) -> list, tuple, or string
+
+    :param func:
+        Truth test function. If func is ``None``, select all truthy items.
+    :param iterable:
+        Iterable.
+    :returns:
+        A sequence of all items for which func(item) is true.
     """
     return filter(func, iterable)
 
 
 def iselect(func, iterable):
     """
-    Return those items of sequence for which func(item) is true.
-    If func is None, return the items that are true::
+    Select all items from the sequence for which func(item) is true.
 
         iselect(function or None, sequence) --> ifilter object
+
+    :param func:
+        Truth test function. If func is ``None``, select all truthy items.
+    :param iterable:
+        Iterable.
+    :returns:
+        A sequence of all items for which func(item) is true.
     """
     return ifilter(func, iterable)
 
 
 def reject(func, iterable):
     """
-    Return those items of sequence for which func(item) is false.  If
-    func is None, return the items that are false.  If sequence is a tuple
-    or string, return the same type, else return a list::
+    Reject all items from the sequence for which func(item) is true.
 
         select(function or None, sequence) -> list, tuple, or string
+
+    :param func:
+        Truth test function. If func is ``None``, reject all truthy items.
+    :param iterable:
+        If sequence is a tuple or string, return the same type, else return a
+        list.
+    :returns:
+        A sequence of all items for which func(item) is false.
     """
     func = func or bool
     return filter(lambda w: not func(w), iterable)
@@ -266,13 +283,19 @@ def reject(func, iterable):
 
 def ireject(func, iterable):
     """
-    Return those items of sequence for which func(item) is false.
-    If func is None, return the items that are false::
+    Reject all items from the sequence for which func(item) is true.
 
-        ireject(function or None, sequence) --> ifilter object
+        ireject(function or None, sequence) --> ifilterfalse object
+
+    :param func:
+        Truth test function. If func is ``None``, reject all truthy items.
+    :param iterable:
+        If sequence is a tuple or string, return the same type, else return a
+        list.
+    :returns:
+        A sequence of all items for which func(item) is false.
     """
-    func = func or bool
-    return ifilter(lambda w: not func(w), iterable)
+    return ifilterfalse(func, iterable)
 
 
 def compose(*funcs):
@@ -292,7 +315,6 @@ def compose(*funcs):
             args = [func(*args)]
         return args[0]
     return composition
-
 
 
 # Dictionaries
@@ -319,7 +341,7 @@ def select_dict(func, dictionary):
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    func = func or (lambda a: a[0] and a[1])
+    func = func or (lambda (a, b): a and b)
     return dict(select(func, dictionary.items()))
 
 
@@ -333,7 +355,7 @@ def reject_dict(func, dictionary):
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    func = func or (lambda a: a[0] and a[1])
+    func = func or (lambda (a, b): a and b)
     return dict(reject(func, dictionary.items()))
 
 
