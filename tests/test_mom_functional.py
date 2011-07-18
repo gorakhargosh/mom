@@ -7,7 +7,8 @@ from mom.functional import \
     leading, some, trailing, every, \
     find, none, is_even, is_odd, is_positive, \
     is_negative, select, reject, ireject, iselect, \
-    chunks, map_dict, select_dict, reject_dict, invert_dict, pluck, each, first, last, rest, compact, ichunks, compose
+    chunks, map_dict, select_dict, reject_dict, invert_dict, \
+    pluck, first, last, rest, compact, ichunks, compose
 
 
 class Test_some(unittest2.TestCase):
@@ -332,16 +333,16 @@ class Test_chunks(unittest2.TestCase):
 
 
 
-class Test_each(unittest2.TestCase):
-    def test_each(self):
-        count = [0]
-        def _sum(x):
-            count[0] += x
-        each(_sum, [1, 2, 3])
-        self.assertEqual(count, [6])
-
-    def test_TypeError_when_not_callable(self):
-        self.assertRaises(TypeError, each, None, range(5))
+#class Test_each(unittest2.TestCase):
+#    def test_each(self):
+#        count = [0]
+#        def _sum(x):
+#            count[0] += x
+#        each(_sum, [1, 2, 3])
+#        self.assertEqual(count, [6])
+#
+#    def test_TypeError_when_not_callable(self):
+#        self.assertRaises(TypeError, each, None, range(5))
 
 
 class Test_seq(unittest2.TestCase):

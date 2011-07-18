@@ -11,7 +11,6 @@ specific types of data structures.
 
 Boolean logic and search
 ~~~~~~~~~~~~~~~~~~~~~~~~
-.. autofunction:: each
 .. autofunction:: every
 .. autofunction:: find
 .. autofunction:: none
@@ -90,7 +89,6 @@ __all__ = [
     "chunks",
     "compact",
     "compose",
-    "each",
     "every",
     "find",
     "first",
@@ -116,24 +114,11 @@ __all__ = [
     "trailing",
 ]
 
-from itertools import ifilter, islice
+from itertools import ifilter, islice, takewhile
 from mom._builtins import range
 
 
 # Higher-order functions.
-
-def each(func, iterable):
-    """
-    Calls a function passing each item in the iterable as argument.
-
-    :param func:
-        Function.
-    :returns:
-        None
-    """
-    for x in iterable:
-        func(x)
-
 
 def some(func, iterable):
     """
@@ -226,9 +211,7 @@ def leading(func, iterable):
         Iterable sequence.
     """
     i = 0
-    for x in iterable:
-        if not func(x):
-           break
+    for _ in takewhile(func, iterable):
         i += 1
     return i
 
@@ -277,7 +260,7 @@ def reject(func, iterable):
 
         select(function or None, sequence) -> list, tuple, or string
     """
-    func = func or (lambda w: w)
+    func = func or bool
     return filter(lambda w: not func(w), iterable)
 
 
@@ -288,7 +271,7 @@ def ireject(func, iterable):
 
         ireject(function or None, sequence) --> ifilter object
     """
-    func = func or (lambda w: w)
+    func = func or bool
     return ifilter(lambda w: not func(w), iterable)
 
 
