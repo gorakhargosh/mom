@@ -24,13 +24,8 @@ Patches to python-oauth2 part of which was used here
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Rick Copeland           <rcopeland@geek.net>
 
-The library borrows some code from Google's goopy functional library
-and some other projects.
+Borrows a bit from Arne's x509.py module.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Nathaniel Manista       <nathaniel+contributor@google.com>
-Chris DiBona            <cdibona+contributor@google.com>
-Dan Bentley             <dbentley+contributor@google.com>
-Ade Oshineye            <ade+contributor@google.com>
 Arne Roomann-Kurrik     <kurrik+contributor@gmail.com>
 
 The library borrows some code from Facebook's Tornado Web framework

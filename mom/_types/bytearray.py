@@ -29,7 +29,6 @@ from __future__ import absolute_import
 __license__ = """\
 The Apache Licence, Version 2.0
 
-Copyright (C) 2005 Trevor Perrin <trevp@trevp.net>
 Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
