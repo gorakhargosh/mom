@@ -310,6 +310,8 @@ class Test_contains(unittest2.TestCase):
     def test_contains_value(self):
         self.assertTrue(contains(range(4), 3))
         self.assertFalse(contains(range(4), 43))
+        self.assertTrue(contains({"a": 4, "b": 5}, "a"))
+        self.assertFalse(contains({"a": 4, "b": 5}, "c"))
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, contains, None, 4)
@@ -321,6 +323,8 @@ class Test__contains(unittest2.TestCase):
     def test__contains_value(self):
         self.assertTrue(_contains_fallback(range(4), 3))
         self.assertFalse(_contains_fallback(range(4), 43))
+        self.assertTrue(_contains_fallback({"a": 4, "b": 5}, "a"))
+        self.assertFalse(_contains_fallback({"a": 4, "b": 5}, "c"))
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, _contains_fallback, None, 4)

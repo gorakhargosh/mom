@@ -399,7 +399,7 @@ def contains(iterable, value):
         ``True`` if the iterable sequence contains the value; ``False``
         otherwise.
     """
-    if is_sequence(iterable):
+    if is_sequence(iterable) and getattr(iterable, "index", None):
         try:
             return iterable.index(value) >= 0
         except ValueError:
@@ -410,7 +410,7 @@ def contains(iterable, value):
 
 def _contains_fallback(iterable, value):
     """
-    Fallback to determines whether the iterable contains the value specified.
+    Fallback to determine whether the iterable contains the value specified.
 
     Uses a loop instead of built-in methods.
 
@@ -422,7 +422,7 @@ def _contains_fallback(iterable, value):
         ``True`` if the iterable sequence contains the value; ``False``
         otherwise.
     """
-    for x in iterable:
+    for x in iter(iterable):
         if x == value:
             return True
     return False
