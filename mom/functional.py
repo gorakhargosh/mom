@@ -176,7 +176,7 @@ def none(func, iterable):
     return every(lambda w: not func(w), iterable)
 
 
-def find(func, iterable, start=0):
+def find(func, iterable, skip=0):
     """
     Determines the first index where :func:`func` is true for an element in
     the iterable.
@@ -187,12 +187,12 @@ def find(func, iterable, start=0):
             f(x) -> bool
     :param iterable:
         Iterable sequence.
-    :param start:
+    :param skip:
         Start index.
     :returns:
         -1 if not found; index (>= start) if found.
     """
-    for i in range(start, len(iterable)):
+    for i in range(skip, len(iterable)):
         if func(iterable[i]):
             return i
     return -1
@@ -230,9 +230,9 @@ def trailing(func, iterable, skip=-1):
     :param iterable:
         Iterable sequence.
     :param skip:
-        If skip is negative, -1 indicates starting from the last character.
-        Therefore, -2 would mean start counting from the second last character.
-        If skip is 0 or positive, it indicates the number of characters to skip
+        If skip is negative, -1 indicates starting from the last item.
+        Therefore, -2 would mean start counting from the second last item.
+        If skip is 0 or positive, it indicates the number of items to skip
         before beginning to count.
     """
     start = abs(skip + 1) if skip < 0 else skip
