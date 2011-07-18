@@ -249,9 +249,9 @@ def map_dict(func, dictionary):
 
     :param func:
         Function that accepts a single argument of type ``(key, value)``
-        and returns a ``(key, value)`` pair.
+        and returns a ``(new key, new value)`` pair.
     :returns:
-        New dictionary of ``(key, value)`` pairs.
+        New dictionary of ``(new key, new value)`` pairs.
     """
     return dict(map(func, dictionary.items()))
 
