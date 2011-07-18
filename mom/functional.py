@@ -277,8 +277,7 @@ def reject(func, iterable):
     :returns:
         A sequence of all items for which func(item) is false.
     """
-    func = func or bool
-    return filter(lambda w: not func(w), iterable)
+    return filter(lambda w: not (func or bool)(w), iterable)
 
 
 def ireject(func, iterable):
@@ -341,8 +340,7 @@ def select_dict(func, dictionary):
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    func = func or (lambda (a, b): a and b)
-    return dict(select(func, dictionary.items()))
+    return dict(select(func or all, dictionary.items()))
 
 
 def reject_dict(func, dictionary):
@@ -355,8 +353,7 @@ def reject_dict(func, dictionary):
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    func = func or (lambda (a, b): a and b)
-    return dict(reject(func, dictionary.items()))
+    return dict(reject(func or all, dictionary.items()))
 
 
 def invert_dict(dictionary):
