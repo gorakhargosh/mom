@@ -34,13 +34,15 @@ Function-generators
 
 Iterable sequence helpers
 -------------------------
-.. autofunction:: chunks
-.. autofunction:: compact
-.. autofunction:: contains
 .. autofunction:: first
-.. autofunction:: ichunks
 .. autofunction:: last
 .. autofunction:: rest
+
+.. autofunction:: chunks
+.. autofunction:: ichunks
+.. autofunction:: compact
+.. autofunction:: contains
+.. autofunction:: difference
 
 Dictionaries and dictionary sequences
 -------------------------------------
@@ -53,7 +55,7 @@ Dictionaries and dictionary sequences
 """
 
 from __future__ import absolute_import
-from mom.builtins import is_even, is_odd, is_positive, is_negative
+from mom.builtins import is_sequence
 
 license = """\
 The Apache Licence, Version 2.0
@@ -82,6 +84,7 @@ __all__ = [
     "compact",
     "compose",
     "contains",
+    "difference",
     "every",
     "find",
     "first",
@@ -394,16 +397,34 @@ def contains(iterable, value):
         ``True`` if the iterable sequence contains the value; ``False``
         otherwise.
     """
-    if isinstance(iterable, (list, tuple)):
+    if is_sequence(iterable):
         try:
             return iterable.index(value) >= 0
         except ValueError:
             return False
     else:
         for x in iterable:
-            if cmp(x, value):
+            if x == value:
                 return True
         return False
+
+
+def difference(iterable1, iterable2):
+    """
+    Difference between one iterable and another.
+    Items from the first iterable are included in the difference.
+
+        iterable1 - iterable2 = difference
+
+    :param iterable1:
+        Iterable sequence.
+    :param iterable2:
+        Iterable sequence.
+    :returns:
+        Iterable sequence containing the difference between the two given
+        iterables.
+    """
+    return select(iterable1, lambda v: not contains(iterable2, v))
 
 
 def first(iterable):
