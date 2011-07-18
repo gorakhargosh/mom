@@ -4,6 +4,7 @@
 from __future__ import absolute_import
 
 import unittest2
+from mom.builtins import is_bytes
 from mom.codec import bytes_to_long
 from mom.security.random import \
     generate_random_hex_string, generate_random_ulong_between, \
@@ -70,8 +71,8 @@ class Test_generate_random_hex_string(unittest2.TestCase):
                          "Not unique.")
 
     def test_is_string(self):
-        self.assertTrue(isinstance(generate_random_hex_string(), bytes),
-                    "Not a bytestring.")
+        self.assertTrue(is_bytes(generate_random_hex_string()),
+                        "Not a bytestring.")
 
 
 class Test_generate_random_ulong_between(unittest2.TestCase):
