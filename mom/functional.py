@@ -119,14 +119,49 @@ __all__ = [
 ]
 
 from functools import partial
-from itertools import ifilter, islice, takewhile, ifilterfalse
+from itertools import ifilter, islice, takewhile, ifilterfalse, dropwhile
 from mom._builtins import range, dict_each
 from mom._builtins import reduce as _reduce
 
 
 
-# Higher-order functions.
+# Higher-order functions that generate other functions.
 
+def compose(*funcs):
+    """
+    Composes a sequence of functions such that
+
+        compose(g(), f(), s()) -> g(f(s()))
+
+    :param funcs:
+        An iterable of functions.
+    :returns:
+        A composition function.
+    """
+    def composition(*args_tuple):
+        args = list(args_tuple)
+        for func in reversed(funcs):
+            args = [func(*args)]
+        return args[0]
+    return composition
+
+
+def complement(func):
+    """
+    Generates a complementary predicate function for the given predicate
+    function.
+
+    :param func:
+        Predicate function.
+    :returns:
+        Complementary predicate function.
+    """
+    def f(*args, **kwargs):
+        return not func(*args, **kwargs)
+    return f
+
+
+# Higher-order functions.
 
 def reduce(func, iterable):
     """
@@ -186,6 +221,17 @@ def some(func, iterable):
     return False
 
 
+def _some1(func, iterable):
+    return any(map(func, iterable))
+
+
+def _some2(func, iterable):
+    result = False
+    for x in dropwhile(complement(func), iterable):
+        result = True
+    return result
+
+
 def every(func, iterable):
     """
     Determines whether :func:`func` is true for all elements in the iterable.
@@ -199,6 +245,9 @@ def every(func, iterable):
     :returns:
         ``True`` if :func:`func` is true for all elements in the iterable.
     """
+    # Equivalent to
+    # return all(map(func, iterable))
+    # but the following short-circuits.
     for x in iterable:
         if not func(x):
             return False
@@ -348,40 +397,6 @@ def ireject(func, iterable):
         A sequence of all items for which func(item) is false.
     """
     return ifilterfalse(func, iterable)
-
-
-def compose(*funcs):
-    """
-    Composes a sequence of functions such that
-
-        compose(g(), f(), s()) -> g(f(s()))
-
-    :param funcs:
-        An iterable of functions.
-    :returns:
-        A composition function.
-    """
-    def composition(*args_tuple):
-        args = list(args_tuple)
-        for func in reversed(funcs):
-            args = [func(*args)]
-        return args[0]
-    return composition
-
-
-def complement(func):
-    """
-    Generates a complementary predicate function for the given predicate
-    function.
-
-    :param func:
-        Predicate function.
-    :returns:
-        Complementary predicate function.
-    """
-    def f(*args, **kwargs):
-        return not func(*args, **kwargs)
-    return f
 
 
 # Dictionaries
