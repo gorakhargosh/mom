@@ -147,7 +147,7 @@ def decimal_decode(encoded):
     :returns:
         Raw bytes.
     """
-    padding = '\000' * leading((lambda x: x == "0"), encoded)
+    padding = '\x00' * leading((lambda x: x == "0"), encoded)
     long_val = long(encoded)
     return padding + long_to_bytes(long_val) if long_val else padding
 
@@ -252,18 +252,18 @@ def long_to_bytes(num, blocksize=0):
 
     # Strip off leading zeros
     for i in range(len(s)):
-        if s[i] != '\000':
+        if s[i] != '\x00':
             break
     else:
         # only happens when n == 0
-        s = '\000'
+        s = '\x00'
         i = 0
     s = s[i:]
 
     # Add back some pad bytes.  this could be done more efficiently w.r.t. the
     # de-padding being done above, but sigh...
     if blocksize > 0 and len(s) % blocksize:
-        s = (blocksize - len(s) % blocksize) * '\000' + s
+        s = (blocksize - len(s) % blocksize) * '\x00' + s
     return s
 
 
@@ -289,7 +289,7 @@ def bytes_to_long(raw_bytes):
     length = len(raw_bytes)
     if length % 4:
         extra = (4 - length % 4)
-        raw_bytes = '\000' * extra + raw_bytes
+        raw_bytes = '\x00' * extra + raw_bytes
         length = length + extra
     for i in range(0, length, 4):
         acc = (acc << 32) + unpack('>I', raw_bytes[i:i+4])[0]
