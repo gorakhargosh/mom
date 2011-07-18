@@ -133,7 +133,7 @@ def each(func, iterable):
             f(x, y)
 
         where ``x, y`` is a ``key, value`` pair if iterable is a dictionary,
-        otherwise ``x, y`` is ``index, item`` pair.
+        otherwise ``x, y`` is an ``index, item`` pair.
     :param iterable:
         Iterable sequence or dictionary.
     """
