@@ -4,7 +4,12 @@
 :module: mom.functional
 :synopsis: Functional programming primitives.
 
+.. autofunction:: accept
+.. autofunction:: allow
+.. autofunction:: disallow
+.. autofunction:: discard
 .. autofunction:: chunks
+.. autofunction:: compact
 .. autofunction:: each
 .. autofunction:: every
 .. autofunction:: find
@@ -56,7 +61,12 @@ __author__ = ", ".join([
 ])
 
 __all__ = [
+    "accept",
+    "allow",
+    "disallow",
+    "discard",
     "chunks",
+    "compact",
     "each",
     "every",
     "find",
@@ -225,6 +235,9 @@ def select(func, iterable):
     """
     return filter(func, iterable)
 
+accept = select
+allow = select
+
 
 def iselect(func, iterable):
     """
@@ -234,6 +247,9 @@ def iselect(func, iterable):
         iselect(function or None, sequence) --> ifilter object
     """
     return ifilter(func, iterable)
+
+iaccept = iselect
+iallow = iselect
 
 
 def reject(func, iterable):
@@ -247,6 +263,9 @@ def reject(func, iterable):
     func = func or (lambda w: w)
     return filter(lambda w: not func(w), iterable)
 
+discard = reject
+disallow = reject
+
 
 def ireject(func, iterable):
     """
@@ -257,6 +276,9 @@ def ireject(func, iterable):
     """
     func = func or (lambda w: w)
     return ifilter(lambda w: not func(w), iterable)
+
+idiscard = ireject
+idisallow = ireject
 
 
 # Dictionaries
@@ -420,7 +442,7 @@ def last(iterable):
 
 def ichunks(size, iterable):
     """
-    Splits an iterable into a iterable of chunks each of specified chunk size.
+    Splits an iterable into an iterable of chunks each of specified chunk size.
 
     :param size:
         Chunk size.
@@ -435,7 +457,7 @@ def ichunks(size, iterable):
 
 def chunks(size, iterable):
     """
-    Splits an iterable into a iterable of chunks each of specified chunk size.
+    Splits an iterable into an iterable of chunks each of specified chunk size.
 
     :param size:
         Chunk size.
@@ -447,3 +469,9 @@ def chunks(size, iterable):
     for i in range(0, len(iterable), size):
         yield iterable[i:i+size]
 
+
+def compact(iterable):
+    """
+    Returns a new iterable with all the falsy values discarded.
+    """
+    return select(None, iterable)
