@@ -9,7 +9,8 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, compact, ichunks, compose, contains, difference, without, _contains_fallback, complement
+    pluck, first, last, rest, compact, ichunks, compose, contains, \
+    difference, without, _contains_fallback, complement
 
 
 class Test_some(unittest2.TestCase):
@@ -122,7 +123,8 @@ class Test_iselect(unittest2.TestCase):
 class Test_ireject(unittest2.TestCase):
     def test_ireject(self):
         self.assertEqual(list(ireject(is_even, [1, 2, 3, 4, 5, 6])), [1, 3, 5])
-        self.assertEqual(list(ireject(None, [0, "", 1, None, 2])), [0, "", None])
+        self.assertEqual(list(ireject(None, [0, "", 1, None, 2])),
+            [0, "", None])
 
 
 class Test_map_dict(unittest2.TestCase):
@@ -161,7 +163,8 @@ class Test_select_dict(unittest2.TestCase):
             3: "three",
             8: "eight",
         }
-        self.assertDictEqual(select_dict(None, dict(a="a", b="b", c=None)), dict(a="a", b="b"))
+        self.assertDictEqual(select_dict(None, dict(a="a", b="b", c=None)),
+                             dict(a="a", b="b"))
         self.assertDictEqual(select_dict(lambda w: is_even(w[0]), d), {
             2: "two",
             8: "eight",
@@ -181,7 +184,8 @@ class Test_reject_dict(unittest2.TestCase):
             8: "eight",
             5: None,
         }
-        self.assertDictEqual(reject_dict(None, dict(a="a", b="b", c=None)), dict(c=None))
+        self.assertDictEqual(reject_dict(None, dict(a="a", b="b", c=None)),
+                             dict(c=None))
         self.assertDictEqual(reject_dict(lambda w: is_even(w[0]), d), {
             1: "one",
             3: "three",
@@ -220,7 +224,8 @@ class Test_pluck(unittest2.TestCase):
         self.assertRaises(TypeError, pluck, ["foo", "blah"])
 
     def test_KeyError_when_missing_key(self):
-        self.assertRaises(KeyError, pluck, [dict(a="something"), dict(b="something")], "a")
+        self.assertRaises(KeyError, pluck,
+            [dict(a="something"), dict(b="something")], "a")
 
 
 class Test_ichunks(unittest2.TestCase):
@@ -287,7 +292,8 @@ class Test_seq(unittest2.TestCase):
 
 class Test_compact(unittest2.TestCase):
     def test_compact(self):
-        self.assertEqual(compact([1, 0, 0, 1, None, True, False, {}]), [1, 1, True])
+        self.assertEqual(compact([1, 0, 0, 1, None, True, False, {}]),
+            [1, 1, True])
 
 
 class Test_compose(unittest2.TestCase):
