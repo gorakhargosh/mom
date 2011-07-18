@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# pyoauth documentation build configuration file, created by
+# mom documentation build configuration file, created by
 # sphinx-quickstart on Thu Jun 23 23:23:49 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.

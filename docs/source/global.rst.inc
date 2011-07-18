@@ -6,8 +6,8 @@
 .. |project_name| replace:: ``mom``
 .. |project_version| replace:: 0.0.1
 
-.. _issue tracker: http://github.com/gorakhargosh/pyoauth/issues
-.. _code repository: http://github.com/gorakhargosh/pyoauth
+.. _issue tracker: http://github.com/gorakhargosh/mom/issues
+.. _code repository: http://github.com/gorakhargosh/mom
 
 .. _coverage: http://nedbatchelder.com/code/coverage/
 .. _git: http://git-scm.org/
