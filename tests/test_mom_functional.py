@@ -314,7 +314,8 @@ class Test_each(unittest2.TestCase):
         each(_sum, [1, 2, 3])
         self.assertEqual(count, [6])
 
-
+    def test_TypeError_when_not_callable(self):
+        self.assertRaises(TypeError, each, None, range(5))
 
 
 if __name__ == '__main__':
