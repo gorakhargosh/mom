@@ -75,3 +75,14 @@ except NameError:
     # Python 3k
     from functools import reduce
 reduce = reduce
+
+
+
+if getattr(dict, "iteritems", None):
+    def dict_each(func, iterable):
+        for k, v in iterable.iteritems():
+            func(k, v)
+else:
+    def dict_each(func, iterable):
+        for k, v in iterable.items():
+            func(k, v)

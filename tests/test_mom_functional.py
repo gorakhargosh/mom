@@ -10,7 +10,7 @@ from mom.functional import \
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
-    difference, without, _contains_fallback, complement
+    difference, without, _contains_fallback, complement, each
 
 
 class Test_some(unittest2.TestCase):
@@ -267,16 +267,29 @@ class Test_chunks(unittest2.TestCase):
         self.assertEqual(list(chunks("aaabb", 3)), ["aaa", "bb"])
 
 
-#class Test_each(unittest2.TestCase):
-#    def test_each(self):
-#        count = [0]
-#        def _sum(x):
-#            count[0] += x
-#        each(_sum, [1, 2, 3])
-#        self.assertEqual(count, [6])
-#
-#    def test_TypeError_when_not_callable(self):
-#        self.assertRaises(TypeError, each, None, range(5))
+class Test_each(unittest2.TestCase):
+    def test_each(self):
+        d = {}
+        def _copy_to_dict(i, x):
+            d[i] = x
+        each(_copy_to_dict, [1, 2, 3])
+        self.assertEqual(d, {
+            0: 1,
+            1: 2,
+            2: 3,
+        })
+
+    def test_dict_each(self):
+        d = {}
+        sample = dict(a="1", b="2")
+        def _copy_dict(k, v):
+            d[k] = v
+        each(_copy_dict, sample)
+        self.assertDictEqual(d, sample)
+
+
+    def test_TypeError_when_not_callable(self):
+        self.assertRaises(TypeError, each, None, range(5))
 
 
 class Test_seq(unittest2.TestCase):

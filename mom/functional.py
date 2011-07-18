@@ -9,6 +9,10 @@ Higher-order functions
 These functions accept other functions as arguments and apply them over
 specific types of data structures.
 
+Iteration
+~~~~~~~~~
+.. autofunction:: each
+
 Logic and search
 ~~~~~~~~~~~~~~~~
 .. autofunction:: every
@@ -57,6 +61,7 @@ Dictionaries and dictionary sequences
 """
 
 from __future__ import absolute_import
+import sys
 from mom.builtins import is_sequence
 
 license = """\
@@ -88,6 +93,7 @@ __all__ = [
     "compose",
     "contains",
     "difference",
+    "each",
     "every",
     "find",
     "first",
@@ -112,10 +118,31 @@ __all__ = [
 
 from functools import partial
 from itertools import ifilter, islice, takewhile, ifilterfalse
-from mom._builtins import range
+from mom._builtins import range, dict_each
 
 
 # Higher-order functions.
+
+def each(func, iterable):
+    """
+    Iterates over iterable yielding each item in turn to :func:`func`.
+
+    :param func:
+        The method signature is as follows:
+
+            f(x, y)
+
+        where ``x, y`` is a ``key, value`` pair if iterable is a dictionary,
+        otherwise ``x, y`` is ``index, item`` pair.
+    :param iterable:
+        Iterable sequence or dictionary.
+    """
+    if isinstance(iterable, dict):
+        dict_each(func, iterable)
+    else:
+        for index, item in enumerate(iterable):
+            func(index, item)
+
 
 def some(func, iterable):
     """
