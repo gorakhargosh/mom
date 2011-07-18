@@ -9,7 +9,7 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, compact, ichunks, compose
+    pluck, first, last, rest, compact, ichunks, compose, contains
 
 
 class Test_some(unittest2.TestCase):
@@ -305,6 +305,13 @@ class Test_compose(unittest2.TestCase):
 
         self.assertEqual(compose(plus1, times2)(5), 11)
         self.assertEqual(compose(times2, plus1)(5), 12)
+
+
+class Test_contains(unittest2.TestCase):
+    def test_contains_value(self):
+        self.assertTrue(contains(range(4), 3))
+        self.assertFalse(contains(range(4), 43))
+
 
 
 if __name__ == '__main__':

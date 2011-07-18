@@ -32,16 +32,15 @@ Function-generators
 ~~~~~~~~~~~~~~~~~~~
 .. autofunction:: compose
 
-
-Iteration helpers
------------------
+Iterable sequence helpers
+-------------------------
 .. autofunction:: chunks
 .. autofunction:: compact
+.. autofunction:: contains
 .. autofunction:: first
 .. autofunction:: ichunks
 .. autofunction:: last
 .. autofunction:: rest
-
 
 Dictionaries and dictionary sequences
 -------------------------------------
@@ -82,6 +81,7 @@ __all__ = [
     "chunks",
     "compact",
     "compose",
+    "contains",
     "every",
     "find",
     "first",
@@ -381,6 +381,31 @@ def pluck(iterable_of_dict, key):
 
 
 # Sequences
+
+def contains(iterable, value):
+    """
+    Determines whether the iterable contains the value specified.
+
+    :param iterable:
+        Iterable sequence.
+    :param value:
+        The value to find.
+    :returns:
+        ``True`` if the iterable sequence contains the value; ``False``
+        otherwise.
+    """
+    if isinstance(iterable, (list, tuple)):
+        try:
+            return iterable.index(value) >= 0
+        except ValueError:
+            return False
+    else:
+        for x in iterable:
+            if cmp(x, value):
+                return True
+        return False
+
+
 def first(iterable):
     """
     Returns the first element out of an iterable.
