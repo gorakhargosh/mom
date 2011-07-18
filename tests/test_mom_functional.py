@@ -11,7 +11,7 @@ from mom.functional import \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
-    reduce
+    reduce, identity, noop
 
 
 class Test_some(unittest2.TestCase):
@@ -397,6 +397,22 @@ class Test_reduce(unittest2.TestCase):
     def test_TypeError(self):
         self.assertRaises(TypeError, reduce, None, range(5))
         self.assertRaises(TypeError, reduce, lambda x, y: x + y, None)
+
+
+class Test_identity(unittest2.TestCase):
+    def test_identity(self):
+        self.assertEqual(identity(True), True)
+        self.assertEqual(identity(False), False)
+        self.assertEqual(identity(0), 0)
+        self.assertEqual(identity({}), {})
+        self.assertEqual(identity(None), None)
+
+
+class Test_noop(unittest2.TestCase):
+    def test_noop(self):
+        # How the hell do you test a no-op?
+        # This only ensures coverage.
+        self.assertEqual(noop(), None)
 
 if __name__ == '__main__':
     unittest2.main()

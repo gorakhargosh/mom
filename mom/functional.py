@@ -160,6 +160,21 @@ def complement(func):
     return f
 
 
+# Utility functions
+def noop(*args, **kwargs):
+    """
+    Does nothing.
+    """
+    pass
+
+
+def identity(x):
+    """
+    Identity function.
+    """
+    return x
+
+
 # Higher-order functions.
 
 def reduce(func, iterable):
@@ -611,3 +626,4 @@ def compact(iterable):
     Returns a new iterable with all the falsy values discarded.
     """
     return select(bool, iterable)
+
