@@ -171,7 +171,7 @@ def some(func, iterable):
     true.
 
     :param func:
-        Function of the form::
+        Predicate function of the form::
 
             f(x) -> bool
     :param iterable:
@@ -191,7 +191,7 @@ def every(func, iterable):
     Determines whether :func:`func` is true for all elements in the iterable.
 
     :param func:
-        Function of the form::
+        Predicate function of the form::
 
             f(x) -> bool
     :param iterable:
@@ -210,7 +210,7 @@ def none(func, iterable):
     Determines whether :func:`func` is false for all elements in in iterable.
 
     :param func:
-        Function of the form::
+        Predicate function of the form::
 
             f(x) -> bool
     :param iterable:
@@ -227,7 +227,7 @@ def find(func, iterable, start=0):
     the iterable.
 
     :param func:
-        Function of the form::
+        Predicate function of the form::
 
             f(x) -> bool
     :param iterable:
@@ -249,7 +249,7 @@ def leading(func, iterable, start=0):
     :func:`func` is true.
 
     :param func:
-        Function of the form::
+        Predicate function of the form::
 
             f(x) -> bool
     :param iterable:
@@ -269,7 +269,7 @@ def trailing(func, iterable, start=-1):
     :func:`func` is true.
 
     :param func:
-        Function of the form::
+        Predicate function of the form::
 
             f(x) -> bool
     :param iterable:
@@ -291,7 +291,7 @@ def select(func, iterable):
         select(function or None, sequence) -> list, tuple, or string
 
     :param func:
-        Truth test function. If func is ``None``, select all truthy items.
+        Predicate function. If func is ``None``, select all truthy items.
     :param iterable:
         Iterable.
     :returns:
@@ -307,7 +307,7 @@ def iselect(func, iterable):
         iselect(function or None, sequence) --> ifilter object
 
     :param func:
-        Truth test function. If func is ``None``, select all truthy items.
+        Predicate function. If func is ``None``, select all truthy items.
     :param iterable:
         Iterable.
     :returns:
@@ -323,7 +323,7 @@ def reject(func, iterable):
         select(function or None, sequence) -> list, tuple, or string
 
     :param func:
-        Truth test function. If func is ``None``, reject all truthy items.
+        Predicate function. If func is ``None``, reject all truthy items.
     :param iterable:
         If sequence is a tuple or string, return the same type, else return a
         list.
@@ -340,7 +340,7 @@ def ireject(func, iterable):
         ireject(function or None, sequence) --> ifilterfalse object
 
     :param func:
-        Truth test function. If func is ``None``, reject all truthy items.
+        Predicate function. If func is ``None``, reject all truthy items.
     :param iterable:
         If sequence is a tuple or string, return the same type, else return a
         list.
@@ -371,12 +371,13 @@ def compose(*funcs):
 
 def complement(func):
     """
-    Generates a complement function of the given function.
+    Generates a complementary predicate function for the given predicate
+    function.
 
     :param func:
-        Function.
+        Predicate function.
     :returns:
-        Complementary function.
+        Complementary predicate function.
     """
     def f(*args, **kwargs):
         return not func(*args, **kwargs)
@@ -402,7 +403,7 @@ def select_dict(func, dictionary):
     Select a dictionary.
 
     :param func:
-        Function that accepts a single argument of type ``(key, value)``
+        Predicate function that accepts a single argument of type ``(key, value)``
         and returns ``True`` for selectable elements.
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
@@ -415,7 +416,7 @@ def reject_dict(func, dictionary):
     Select a dictionary.
 
     :param func:
-        Function that accepts a single argument of type ``(key, value)``
+        Predicate function that accepts a single argument of type ``(key, value)``
         and returns ``True`` for rejected elements.
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
