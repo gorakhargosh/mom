@@ -4,7 +4,7 @@
 import unittest2
 
 from mom.functional import \
-    leading, some, trailing, every, find, none, is_even, is_odd, is_positive, is_negative, select, reject, ireject, iselect
+    leading, some, trailing, every, find, none, is_even, is_odd, is_positive, is_negative, select, reject, ireject, iselect, chunks
 
 
 class Test_some(unittest2.TestCase):
@@ -188,6 +188,20 @@ class Test_ireject(unittest2.TestCase):
     def test_ireject(self):
         self.assertEqual(list(ireject(is_even, [1, 2, 3, 4, 5, 6])), [1, 3, 5])
         self.assertEqual(list(ireject(None, [0, "", 1, None, 2])), [0, "", None])
+
+
+class Test_chunks(unittest2.TestCase):
+    def test_valid_grouping(self):
+        self.assertEqual(list(chunks(4, "aaaabbbbccccdddd")),
+                         ["aaaa", "bbbb", "cccc", "dddd"])
+        self.assertEqual(list(chunks(3, [1, 1, 1, 2, 2, 2, 3, 3, 3])),
+                         [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+
+    def test_returns_generator_object(self):
+        self.assertEqual(type(chunks(4, "aaaabbbb")).__name__, "generator")
+
+    def test_odd_ball_grouping(self):
+        self.assertEqual(list(chunks(3, "aaabb")), ["aaa", "bb"])
 
 
 if __name__ == '__main__':

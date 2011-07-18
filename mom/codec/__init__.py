@@ -68,7 +68,7 @@ __author__ = ", ".join([
 import binascii
 
 from mom.builtins import bytes
-from mom.itertools import chunks
+from mom.functional import chunks
 
 
 # Bytes base-encoding.

@@ -4,27 +4,28 @@
 :module: mom.functional
 :synopsis: Functional programming primitives.
 
-.. autofunction:: even
 .. autofunction:: every
 .. autofunction:: find
 .. autofunction:: first
 .. autofunction:: ireject
+.. autofunction:: is_even
+.. autofunction:: is_negative
+.. autofunction:: is_odd
+.. autofunction:: is_positive
 .. autofunction:: iselect
 .. autofunction:: last
 .. autofunction:: leading
-.. autofunction:: negative
 .. autofunction:: none
-.. autofunction:: odd
-.. autofunction:: positive
 .. autofunction:: reject
 .. autofunction:: rest
 .. autofunction:: select
 .. autofunction:: some
 .. autofunction:: trailing
+.. autofunction:: chunks
+.. autofunction:: ichunks
 """
 
 from __future__ import absolute_import
-from itertools import ifilter
 
 license = """\
 The Apache Licence, Version 2.0
@@ -66,12 +67,16 @@ __all__ = [
     "select",
     "some",
     "trailing",
+    "chunks",
+    "ichunks",
 ]
 
-
+from itertools import ifilter, islice
 from mom._builtins import range
 
-# Higher-order function.
+
+# Higher-order functions.
+
 def some(func, iterable):
     """
     Determines whether :func:`func` applied to any element of the iterable is
@@ -317,4 +322,34 @@ def last(iterable):
         Last element of the iterable sequence.
     """
     return iterable[-1]
+
+
+def ichunks(size, iterable):
+    """
+    Splits an iterable into a iterable of chunks each of specified chunk size.
+
+    :param size:
+        Chunk size.
+    :param iterable:
+        The iterable to split.
+    :returns:
+        Generator of sequences each of the specified chunk size.
+    """
+    for i in range(0, len(iterable), size):
+        yield islice(iterable, i, i + size)
+
+
+def chunks(size, iterable):
+    """
+    Splits an iterable into a iterable of chunks each of specified chunk size.
+
+    :param size:
+        Chunk size.
+    :param iterable:
+        The iterable to split.
+    :returns:
+        Generator of sequences each of the specified chunk size.
+    """
+    for i in range(0, len(iterable), size):
+        yield iterable[i:i+size]
 
