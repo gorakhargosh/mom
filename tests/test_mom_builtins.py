@@ -18,7 +18,16 @@ from mom.builtins import \
     b, \
     bin, \
     hex, \
-    long_byte_count, long_bit_length, is_sequence, bytes_to_unicode_recursive, unicode_to_utf8_recursive, _long_bit_length
+    long_byte_count, \
+    long_bit_length, \
+    is_sequence, \
+    bytes_to_unicode_recursive, \
+    unicode_to_utf8_recursive, \
+    _long_bit_length, \
+    is_odd, \
+    is_even, \
+    is_negative, \
+    is_positive
 
 
 random_bytes = generate_random_bytes(100)
@@ -27,6 +36,7 @@ unicode_string = u'\u00ae'
 utf8_bytes2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
 unicode_string2 = u'深入 Python'
 latin1_bytes = b("\xe9")
+
 
 class Test_bin(unittest2.TestCase):
     def test_binary_0_1_and_minus_1(self):
@@ -378,6 +388,90 @@ class Test_unicode_to_utf8_recursive(unittest2.TestCase):
             n=None
         )
         self.assertDictEqual(unicode_to_utf8_recursive(e), p)
+
+class Test_is_even(unittest2.TestCase):
+    def test_parity(self):
+        self.assertTrue(is_even(2l))
+        self.assertFalse(is_even(1L))
+        self.assertTrue(is_even(-2l))
+        self.assertFalse(is_even(-1L))
+
+        self.assertTrue(is_even(0))
+
+    def test_boolean(self):
+        # Python 2.x legacy. Ew.
+        self.assertFalse(is_even(True))
+        self.assertTrue(is_even(False))
+
+    def test_TypeError_when_invalid_type(self):
+        self.assertRaises(TypeError, is_even, 2.0)
+        self.assertRaises(TypeError, is_even, None)
+        self.assertRaises(TypeError, is_even, object)
+
+
+class Test_is_odd(unittest2.TestCase):
+    def test_parity(self):
+        self.assertTrue(is_odd(1l))
+        self.assertFalse(is_odd(2L))
+        self.assertTrue(is_odd(-1l))
+        self.assertFalse(is_odd(-2L))
+
+        self.assertFalse(is_odd(0))
+
+    def test_boolean(self):
+        # Python 2.x legacy. Ew.
+        self.assertFalse(is_odd(False))
+        self.assertTrue(is_odd(True))
+
+    def test_TypeError_when_invalid_type(self):
+        self.assertRaises(TypeError, is_odd, 2.0)
+        self.assertRaises(TypeError, is_odd, None)
+        self.assertRaises(TypeError, is_odd, object)
+
+
+class Test_is_positive(unittest2.TestCase):
+    def test_positive(self):
+        self.assertTrue(is_positive(4))
+        self.assertFalse(is_positive(-1))
+        self.assertFalse(is_positive(0))
+
+    def test_floats(self):
+        self.assertTrue(is_positive(4.2))
+        self.assertFalse(is_positive(0.0))
+        self.assertFalse(is_positive(-1.4))
+
+    def test_boolean(self):
+        self.assertTrue(is_positive(True))
+        self.assertFalse(is_positive(False))
+
+    def test_wtf(self):
+        self.assertRaises(TypeError, is_positive, None)
+        self.assertRaises(TypeError, is_positive, "")
+        self.assertRaises(TypeError, is_positive, {})
+        self.assertRaises(TypeError, is_positive, object)
+
+
+class Test_is_negative(unittest2.TestCase):
+    def test_negative(self):
+        self.assertFalse(is_negative(4))
+        self.assertTrue(is_negative(-1))
+        self.assertFalse(is_negative(0))
+
+    def test_floats(self):
+        self.assertFalse(is_negative(4.2))
+        self.assertFalse(is_negative(0.0))
+        self.assertTrue(is_negative(-1.4))
+
+    def test_boolean(self):
+        self.assertFalse(is_negative(True))
+        self.assertFalse(is_negative(False))
+
+    def test_wtf(self):
+        self.assertRaises(TypeError, is_negative, None)
+        self.assertRaises(TypeError, is_negative, "")
+        self.assertRaises(TypeError, is_negative, {})
+        self.assertRaises(TypeError, is_negative, object)
+
 
 
 if __name__ == "__main__":

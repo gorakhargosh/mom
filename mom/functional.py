@@ -9,8 +9,8 @@ Higher-order functions
 These functions accept other functions as arguments and apply them over
 specific types of data structures.
 
-Boolean logic and search
-~~~~~~~~~~~~~~~~~~~~~~~~
+Logic and search
+~~~~~~~~~~~~~~~~
 .. autofunction:: every
 .. autofunction:: find
 .. autofunction:: none
@@ -43,14 +43,6 @@ Iteration helpers
 .. autofunction:: rest
 
 
-Utility tests
--------------
-.. autofunction:: is_even
-.. autofunction:: is_negative
-.. autofunction:: is_odd
-.. autofunction:: is_positive
-
-
 Dictionaries and dictionary sequences
 -------------------------------------
 .. autofunction:: invert_dict
@@ -62,6 +54,7 @@ Dictionaries and dictionary sequences
 """
 
 from __future__ import absolute_import
+from mom.builtins import is_even, is_odd, is_positive, is_negative
 
 license = """\
 The Apache Licence, Version 2.0
@@ -95,10 +88,6 @@ __all__ = [
     "ichunks",
     "invert_dict",
     "ireject",
-    "is_even",
-    "is_negative",
-    "is_odd",
-    "is_positive",
     "iselect",
     "last",
     "leading",
@@ -389,59 +378,6 @@ def pluck(iterable_of_dict, key):
         Iterable of values for the key.
     """
     return map(lambda w: w[key], iterable_of_dict)
-
-
-# Utility test functions.
-def is_even(num):
-    """
-    Determines whether a number is even.
-
-    :param num:
-        Integer
-    :returns:
-        ``True`` if even; ``False`` otherwise.
-    """
-    return not (num & 1L)
-
-
-def is_odd(num):
-    """
-    Determines whether a number is odd.
-
-    :param num:
-        Integer
-    :returns:
-        ``True`` if odd; ``False`` otherwise.
-    """
-    return bool(num & 1L)
-
-
-def is_positive(num):
-    """
-    Determines whether a number is positive.
-
-    :param num:
-        Number
-    :returns:
-        ``True`` if positive; ``False`` otherwise.
-    """
-    if not isinstance(num, (int, long, bool, float)):
-        raise TypeError("unsupported operand type: %r", type(num).__name__)
-    return num > 0
-
-
-def is_negative(num):
-    """
-    Determines whether a number is negative.
-
-    :param num:
-        Number
-    :returns:
-        ``True`` if positive; ``False`` otherwise.
-    """
-    if not isinstance(num, (int, long, bool, float)):
-        raise TypeError("unsupported operand type: %r", type(num).__name__)
-    return num < 0
 
 
 # Sequences

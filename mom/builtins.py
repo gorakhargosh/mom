@@ -59,6 +59,15 @@ Type detection
 .. autofunction:: is_sequence
 .. autofunction:: is_unicode
 
+Number tests
+------------
+People screw these up too. Useful in functional programming.
+
+.. autofunction:: is_even
+.. autofunction:: is_negative
+.. autofunction:: is_odd
+.. autofunction:: is_positive
+
 Unicode string encoding
 -----------------------
 .. autofunction:: bytes_to_unicode
@@ -70,6 +79,7 @@ Unicode string encoding
 """
 
 from __future__ import absolute_import
+from exceptions import TypeError
 
 __license__ = """\
 The Apache Licence, Version 2.0
@@ -96,6 +106,7 @@ __author__ = ", ".join([
     "Yesudeep Mangalapilly",
 ])
 
+
 __all__ = [
     "bytes",
     "bin",
@@ -107,6 +118,10 @@ __all__ = [
     "is_bytes",
     "is_bytes_or_unicode",
     "is_integer",
+    "is_even",
+    "is_negative",
+    "is_odd",
+    "is_positive",
     "unicode_to_utf8",
     "bytes_to_unicode",
     "to_utf8_if_unicode",
@@ -499,3 +514,55 @@ def _long_bit_length(num):
         'c':4, 'd':4, 'e':4, 'f':4,
      }[hex_num[0]]
     #return int(math.floor(math.log(n, 2))+1)
+
+
+def is_even(num):
+    """
+    Determines whether a number is even.
+
+    :param num:
+        Integer
+    :returns:
+        ``True`` if even; ``False`` otherwise.
+    """
+    return not (num & 1L)
+
+
+def is_odd(num):
+    """
+    Determines whether a number is odd.
+
+    :param num:
+        Integer
+    :returns:
+        ``True`` if odd; ``False`` otherwise.
+    """
+    return bool(num & 1L)
+
+
+def is_positive(num):
+    """
+    Determines whether a number is positive.
+
+    :param num:
+        Number
+    :returns:
+        ``True`` if positive; ``False`` otherwise.
+    """
+    if not isinstance(num, (int, long, bool, float)):
+        raise TypeError("unsupported operand type: %r", type(num).__name__)
+    return num > 0
+
+
+def is_negative(num):
+    """
+    Determines whether a number is negative.
+
+    :param num:
+        Number
+    :returns:
+        ``True`` if positive; ``False`` otherwise.
+    """
+    if not isinstance(num, (int, long, bool, float)):
+        raise TypeError("unsupported operand type: %r", type(num).__name__)
+    return num < 0

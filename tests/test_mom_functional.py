@@ -3,10 +3,11 @@
 
 import unittest2
 
+from mom.builtins import is_even
 from mom.functional import \
     leading, some, trailing, every, \
-    find, none, is_even, is_odd, is_positive, \
-    is_negative, select, reject, ireject, iselect, \
+    find, none,\
+    select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose
 
@@ -100,90 +101,6 @@ class Test_trailing(unittest2.TestCase):
         self.assertRaises(TypeError, trailing, lambda w: w > 0, None)
         self.assertRaises(TypeError, trailing, lambda w: w > 0, 3)
         self.assertRaises(TypeError, trailing, lambda w: w > 0, True)
-
-
-class Test_is_even(unittest2.TestCase):
-    def test_parity(self):
-        self.assertTrue(is_even(2l))
-        self.assertFalse(is_even(1L))
-        self.assertTrue(is_even(-2l))
-        self.assertFalse(is_even(-1L))
-
-        self.assertTrue(is_even(0))
-
-    def test_boolean(self):
-        # Python 2.x legacy. Ew.
-        self.assertFalse(is_even(True))
-        self.assertTrue(is_even(False))
-
-    def test_TypeError_when_invalid_type(self):
-        self.assertRaises(TypeError, is_even, 2.0)
-        self.assertRaises(TypeError, is_even, None)
-        self.assertRaises(TypeError, is_even, object)
-
-
-class Test_is_odd(unittest2.TestCase):
-    def test_parity(self):
-        self.assertTrue(is_odd(1l))
-        self.assertFalse(is_odd(2L))
-        self.assertTrue(is_odd(-1l))
-        self.assertFalse(is_odd(-2L))
-
-        self.assertFalse(is_odd(0))
-
-    def test_boolean(self):
-        # Python 2.x legacy. Ew.
-        self.assertFalse(is_odd(False))
-        self.assertTrue(is_odd(True))
-
-    def test_TypeError_when_invalid_type(self):
-        self.assertRaises(TypeError, is_odd, 2.0)
-        self.assertRaises(TypeError, is_odd, None)
-        self.assertRaises(TypeError, is_odd, object)
-
-
-class Test_is_positive(unittest2.TestCase):
-    def test_positive(self):
-        self.assertTrue(is_positive(4))
-        self.assertFalse(is_positive(-1))
-        self.assertFalse(is_positive(0))
-
-    def test_floats(self):
-        self.assertTrue(is_positive(4.2))
-        self.assertFalse(is_positive(0.0))
-        self.assertFalse(is_positive(-1.4))
-
-    def test_boolean(self):
-        self.assertTrue(is_positive(True))
-        self.assertFalse(is_positive(False))
-
-    def test_wtf(self):
-        self.assertRaises(TypeError, is_positive, None)
-        self.assertRaises(TypeError, is_positive, "")
-        self.assertRaises(TypeError, is_positive, {})
-        self.assertRaises(TypeError, is_positive, object)
-
-
-class Test_is_negative(unittest2.TestCase):
-    def test_negative(self):
-        self.assertFalse(is_negative(4))
-        self.assertTrue(is_negative(-1))
-        self.assertFalse(is_negative(0))
-
-    def test_floats(self):
-        self.assertFalse(is_negative(4.2))
-        self.assertFalse(is_negative(0.0))
-        self.assertTrue(is_negative(-1.4))
-
-    def test_boolean(self):
-        self.assertFalse(is_negative(True))
-        self.assertFalse(is_negative(False))
-
-    def test_wtf(self):
-        self.assertRaises(TypeError, is_negative, None)
-        self.assertRaises(TypeError, is_negative, "")
-        self.assertRaises(TypeError, is_negative, {})
-        self.assertRaises(TypeError, is_negative, object)
 
 
 class Test_select(unittest2.TestCase):
