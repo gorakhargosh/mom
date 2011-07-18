@@ -10,7 +10,8 @@ from mom.functional import \
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
-    difference, without, _contains_fallback, complement, each
+    difference, without, _contains_fallback, complement, each, \
+    reduce
 
 
 class Test_some(unittest2.TestCase):
@@ -388,6 +389,14 @@ class Test_complement(unittest2.TestCase):
         self.assertFalse(fals(5))
         self.assertTrue(ahem(5))
 
+
+class Test_reduce(unittest2.TestCase):
+    def test_reduce(self):
+        self.assertEqual(reduce(lambda x, y: x + y, [1, 2, 3]), 6)
+
+    def test_TypeError(self):
+        self.assertRaises(TypeError, reduce, None, range(5))
+        self.assertRaises(TypeError, reduce, lambda x, y: x + y, None)
 
 if __name__ == '__main__':
     unittest2.main()

@@ -9,9 +9,10 @@ Higher-order functions
 These functions accept other functions as arguments and apply them over
 specific types of data structures.
 
-Iteration
-~~~~~~~~~
+Iteration and aggregation
+~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: each
+.. autofunction:: reduce
 
 Logic and search
 ~~~~~~~~~~~~~~~~
@@ -108,6 +109,7 @@ __all__ = [
     "pluck",
     "reject",
     "reject_dict",
+    "reduce",
     "rest",
     "select",
     "select_dict",
@@ -119,9 +121,28 @@ __all__ = [
 from functools import partial
 from itertools import ifilter, islice, takewhile, ifilterfalse
 from mom._builtins import range, dict_each
+from mom._builtins import reduce as _reduce
+
 
 
 # Higher-order functions.
+
+
+def reduce(func, iterable):
+    """
+    Aggregate a sequence of items into a single item.
+
+    :param func:
+        Function with signature::
+
+            f(x, y)
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Aggregated item.
+    """
+    return _reduce(func, iterable)
+
 
 def each(func, iterable):
     """
