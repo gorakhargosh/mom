@@ -62,8 +62,7 @@ Dictionaries and dictionary sequences
 """
 
 from __future__ import absolute_import
-import sys
-from mom.builtins import is_sequence
+
 
 license = """\
 The Apache Licence, Version 2.0
@@ -120,8 +119,8 @@ __all__ = [
 
 from functools import partial
 from itertools import ifilter, islice, takewhile, ifilterfalse, dropwhile
-from mom._builtins import range, dict_each
-from mom._builtins import reduce as _reduce
+from mom._builtins import range, dict_each, reduce as _reduce
+from mom.builtins import is_sequence
 
 
 
@@ -524,8 +523,7 @@ def difference(iterable1, iterable2):
         Iterable sequence containing the difference between the two given
         iterables.
     """
-    iterable2_does_not_contain = partial(complement(contains), iterable2)
-    return select(iterable2_does_not_contain, iterable1)
+    return select(partial(complement(contains), iterable2), iterable1)
 
 
 def without(iterable, *values):
@@ -612,4 +610,4 @@ def compact(iterable):
     """
     Returns a new iterable with all the falsy values discarded.
     """
-    return select(None, iterable)
+    return select(bool, iterable)
