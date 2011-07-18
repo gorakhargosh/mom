@@ -199,7 +199,7 @@ def leading(func, iterable, start=0):
     :param iterable:
         Iterable sequence.
     :param start:
-        Number of items to skip before starting counting.
+        Start index. (Number of items to skip before starting counting.)
     """
     i = 0L
     for _ in takewhile(func, islice(iterable, start, None, 1)):
@@ -219,9 +219,9 @@ def trailing(func, iterable, start=-1):
     :param iterable:
         Iterable sequence.
     :param start:
-        If skip is negative, -1 indicates starting from the last item.
+        If start is negative, -1 indicates starting from the last item.
         Therefore, -2 would mean start counting from the second last item.
-        If skip is 0 or positive, it indicates the number of items to skip
+        If start is 0 or positive, it indicates the number of items to skip
         before beginning to count.
     """
     start = abs(start + 1) if start < 0 else start
