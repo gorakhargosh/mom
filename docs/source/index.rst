@@ -44,9 +44,9 @@ API Documentation
 .. toctree::
    :maxdepth: 2
 
+   api/functional
    api/general
    api/security
-
 
 
 Contribute

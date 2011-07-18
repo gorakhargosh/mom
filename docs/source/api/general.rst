@@ -23,13 +23,5 @@ Type detection, encoding, and conversion
 ================
 .. automodule:: mom.decorators
 
-`mom.functional`
-================
-.. automodule:: mom.functional
-
-`mom.itertools`
-===============
-.. automodule:: mom.itertools
-
 .. toctree::
    :maxdepth: 2
