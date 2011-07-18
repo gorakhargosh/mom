@@ -176,7 +176,7 @@ def none(func, iterable):
     return every(lambda w: not func(w), iterable)
 
 
-def find(func, iterable, skip=0):
+def find(func, iterable, start=0):
     """
     Determines the first index where :func:`func` is true for an element in
     the iterable.
@@ -187,18 +187,18 @@ def find(func, iterable, skip=0):
             f(x) -> bool
     :param iterable:
         Iterable sequence.
-    :param skip:
+    :param start:
         Start index.
     :returns:
         -1 if not found; index (>= start) if found.
     """
-    for i in range(skip, len(iterable)):
+    for i in range(start, len(iterable)):
         if func(iterable[i]):
             return i
     return -1
 
 
-def leading(func, iterable, skip=0):
+def leading(func, iterable, start=0):
     """
     Returns the number of leading elements in the iterable for which
     :func:`func` is true.
@@ -209,16 +209,16 @@ def leading(func, iterable, skip=0):
             f(x) -> bool
     :param iterable:
         Iterable sequence.
-    :param skip:
+    :param start:
         Number of items to skip before starting counting.
     """
     i = 0L
-    for _ in takewhile(func, islice(iterable, skip, None, 1)):
+    for _ in takewhile(func, islice(iterable, start, None, 1)):
         i += 1L
     return i
 
 
-def trailing(func, iterable, skip=-1):
+def trailing(func, iterable, start=-1):
     """
     Returns the number of trailing elements in the iterable for which
     :func:`func` is true.
@@ -229,13 +229,13 @@ def trailing(func, iterable, skip=-1):
             f(x) -> bool
     :param iterable:
         Iterable sequence.
-    :param skip:
+    :param start:
         If skip is negative, -1 indicates starting from the last item.
         Therefore, -2 would mean start counting from the second last item.
         If skip is 0 or positive, it indicates the number of items to skip
         before beginning to count.
     """
-    start = abs(skip + 1) if skip < 0 else skip
+    start = abs(start + 1) if start < 0 else start
     return leading(func, reversed(iterable), start)
 
 
