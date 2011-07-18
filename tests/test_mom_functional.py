@@ -225,7 +225,7 @@ class Test_pluck(unittest2.TestCase):
 
 class Test_ichunks(unittest2.TestCase):
     def test_valid_grouping(self):
-        g = ichunks(4, "aaaabbbbccccdddd")
+        g = ichunks("aaaabbbbccccdddd", 4)
         li = []
         for i in g:
             li.append(list(i))
@@ -233,34 +233,33 @@ class Test_ichunks(unittest2.TestCase):
                          [["a"] * 4, ["b"] * 4, ["c"] * 4, ["d"] * 4])
 
         li = []
-        for i in ichunks(3, [1, 1, 1, 2, 2, 2, 3, 3, 3]):
+        for i in ichunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3):
             li.append(list(i))
         self.assertEqual(li,
                          [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
     def test_returns_generator_object(self):
-        self.assertEqual(type(ichunks(4, "aaaabbbb")).__name__, "generator")
+        self.assertEqual(type(ichunks("aaaabbbb", 4)).__name__, "generator")
 
     def test_odd_ball_grouping(self):
         li = []
-        for x in ichunks(3, "aaabb"):
+        for x in ichunks("aaabb", 3):
             li.append(list(x))
         self.assertEqual(li, [["a"] * 3, ["b"] * 2])
 
 
 class Test_chunks(unittest2.TestCase):
     def test_valid_grouping(self):
-        self.assertEqual(list(chunks(4, "aaaabbbbccccdddd")),
+        self.assertEqual(list(chunks("aaaabbbbccccdddd", 4)),
                          ["aaaa", "bbbb", "cccc", "dddd"])
-        self.assertEqual(list(chunks(3, [1, 1, 1, 2, 2, 2, 3, 3, 3])),
+        self.assertEqual(list(chunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)),
                          [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
     def test_returns_generator_object(self):
-        self.assertEqual(type(chunks(4, "aaaabbbb")).__name__, "generator")
+        self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
 
     def test_odd_ball_grouping(self):
-        self.assertEqual(list(chunks(3, "aaabb")), ["aaa", "bb"])
-
+        self.assertEqual(list(chunks("aaabb", 3)), ["aaa", "bb"])
 
 
 #class Test_each(unittest2.TestCase):

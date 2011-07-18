@@ -214,7 +214,7 @@ def bin_decode(encoded):
         Raw bytes.
     """
     return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[nibble]
-                              for nibble in chunks(4, encoded)))
+                              for nibble in chunks(encoded, 4)))
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
     #return long_to_bytes(long(encoded, 2))

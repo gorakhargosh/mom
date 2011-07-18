@@ -483,14 +483,14 @@ def last(iterable):
     return iterable[-1]
 
 
-def ichunks(size, iterable):
+def ichunks(iterable, size):
     """
     Splits an iterable into an iterable of chunks each of specified chunk size.
 
-    :param size:
-        Chunk size.
     :param iterable:
         The iterable to split.
+    :param size:
+        Chunk size.
     :returns:
         Generator of sequences each of the specified chunk size.
     """
@@ -498,14 +498,14 @@ def ichunks(size, iterable):
         yield islice(iterable, i, i + size)
 
 
-def chunks(size, iterable):
+def chunks(iterable, size):
     """
     Splits an iterable into an iterable of chunks each of specified chunk size.
 
-    :param size:
-        Chunk size.
     :param iterable:
         The iterable to split.
+    :param size:
+        Chunk size.
     :returns:
         Generator of sequences each of the specified chunk size.
     """
