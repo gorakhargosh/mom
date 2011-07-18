@@ -11,7 +11,7 @@ from mom.functional import \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
-    reduce, identity, noop
+    reduce, identity
 
 
 class Test_some(unittest2.TestCase):
