@@ -11,6 +11,7 @@
 
 # Build specific files.
 .installed.cfg
+.tox/
 bin/
 build/
 develop-eggs/
