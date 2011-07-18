@@ -10,6 +10,7 @@
 .. autofunction:: discard
 .. autofunction:: chunks
 .. autofunction:: compact
+.. autofunction:: compose
 .. autofunction:: each
 .. autofunction:: every
 .. autofunction:: find
@@ -67,6 +68,7 @@ __all__ = [
     "discard",
     "chunks",
     "compact",
+    "compose",
     "each",
     "every",
     "find",
@@ -279,6 +281,26 @@ def ireject(func, iterable):
 
 idiscard = ireject
 idisallow = ireject
+
+
+def compose(*funcs):
+    """
+    Composes a sequence of functions such that
+
+        compose(g(), f(), s()) -> g(f(s()))
+
+    :param funcs:
+        An iterable of functions.
+    :returns:
+        A composition function.
+    """
+    def composition(*args_tuple):
+        args = list(args_tuple)
+        for func in reversed(funcs):
+            args = [func(*args)]
+        return args[0]
+    return composition
+
 
 
 # Dictionaries

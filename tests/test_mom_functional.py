@@ -7,7 +7,7 @@ from mom.functional import \
     leading, some, trailing, every, \
     find, none, is_even, is_odd, is_positive, \
     is_negative, select, reject, ireject, iselect, \
-    chunks, map_dict, select_dict, reject_dict, invert_dict, pluck, each, first, last, rest, compact, ichunks
+    chunks, map_dict, select_dict, reject_dict, invert_dict, pluck, each, first, last, rest, compact, ichunks, compose
 
 
 class Test_some(unittest2.TestCase):
@@ -359,5 +359,22 @@ class Test_compact(unittest2.TestCase):
     def test_compact(self):
         self.assertEqual(compact([1, 0, 0, 1, None, True, False, {}]), [1, 1, True])
 
+
+class Test_compose(unittest2.TestCase):
+    def test_composition(self):
+        greet = lambda name: "hi: " + name
+        exclaim = lambda statement: statement + "!"
+        welcome = compose(exclaim, greet)
+        self.assertEqual(welcome("moe"), "hi: moe!")
+
+
+    def test_numerical_composition(self):
+        plus1 = lambda w: w + 1
+        times2 = lambda w: w * 2
+
+        self.assertEqual(compose(plus1, times2)(5), 11)
+        self.assertEqual(compose(times2, plus1)(5), 12)
+
+
 if __name__ == '__main__':
-  unittest2.main()
+    unittest2.main()
