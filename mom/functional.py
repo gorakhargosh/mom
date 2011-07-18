@@ -108,6 +108,7 @@ __all__ = [
     "without",
 ]
 
+from functools import partial
 from itertools import ifilter, islice, takewhile, ifilterfalse
 from mom._builtins import range
 
@@ -167,7 +168,7 @@ def none(func, iterable):
     :returns:
         ``True`` if :func:`func` is false for all elements in the iterable.
     """
-    return every(lambda w: not func(w), iterable)
+    return every(complement(func), iterable)
 
 
 def find(func, iterable, start=0):
@@ -279,7 +280,7 @@ def reject(func, iterable):
     :returns:
         A sequence of all items for which func(item) is false.
     """
-    return filter(lambda w: not (func or bool)(w), iterable)
+    return filter(complement(func or bool), iterable)
 
 
 def ireject(func, iterable):
@@ -316,6 +317,20 @@ def compose(*funcs):
             args = [func(*args)]
         return args[0]
     return composition
+
+
+def complement(func):
+    """
+    Generates a complement function of the given function.
+
+    :param func:
+        Function.
+    :returns:
+        Complementary function.
+    """
+    def f(*args, **kwargs):
+        return not func(*args, **kwargs)
+    return f
 
 
 # Dictionaries
@@ -443,7 +458,8 @@ def difference(iterable1, iterable2):
         Iterable sequence containing the difference between the two given
         iterables.
     """
-    return select(lambda v: not contains(iterable2, v), iterable1)
+    iterable2_does_not_contain = partial(complement(contains), iterable2)
+    return select(iterable2_does_not_contain, iterable1)
 
 
 def without(iterable, *values):
