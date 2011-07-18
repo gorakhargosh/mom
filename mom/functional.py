@@ -198,7 +198,7 @@ def find(func, iterable, start=0):
     return -1
 
 
-def leading(func, iterable):
+def leading(func, iterable, skip=0):
     """
     Returns the number of leading elements in the iterable for which
     :func:`func` is true.
@@ -209,14 +209,16 @@ def leading(func, iterable):
             f(x) -> bool
     :param iterable:
         Iterable sequence.
+    :param skip:
+        Number of items to skip before starting counting.
     """
     i = 0L
-    for _ in takewhile(func, iterable):
+    for _ in takewhile(func, islice(iterable, skip, None, 1)):
         i += 1L
     return i
 
 
-def trailing(func, iterable):
+def trailing(func, iterable, skip=-1):
     """
     Returns the number of trailing elements in the iterable for which
     :func:`func` is true.
@@ -227,8 +229,14 @@ def trailing(func, iterable):
             f(x) -> bool
     :param iterable:
         Iterable sequence.
+    :param skip:
+        If skip is negative, -1 indicates starting from the last character.
+        Therefore, -2 would mean start counting from the second last character.
+        If skip is 0 or positive, it indicates the number of characters to skip
+        before beginning to count.
     """
-    return leading(func, reversed(iterable))
+    start = abs(skip + 1) if skip < 0 else skip
+    return leading(func, reversed(iterable), start)
 
 
 def select(func, iterable):

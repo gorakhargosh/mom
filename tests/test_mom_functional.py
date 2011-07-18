@@ -65,6 +65,11 @@ class Test_leading(unittest2.TestCase):
         self.assertEqual(leading(lambda w: ord(w) >= ord('c'), "abalskjd"), 0)
         self.assertEqual(leading(lambda w: ord(w) >= ord('c'), "cuddleya"), 7)
 
+    def test_start(self):
+        self.assertEqual(leading(lambda w: w == "0", "0001"), 3)
+        self.assertEqual(leading(lambda w: w == "0", "0001", 0), 3)
+        self.assertEqual(leading(lambda w: w == "0", "0001", 1), 2)
+
     def test_full_count(self):
         self.assertEqual(leading(lambda w: w > 0, range(1, 10)), 9)
 
@@ -79,6 +84,13 @@ class Test_trailing(unittest2.TestCase):
         self.assertEqual(trailing(lambda w: w > 1, [2, 0, 2, 3, 5]), 3)
         self.assertEqual(trailing(lambda w: ord(w) >= ord('c'), "abalskjd"), 5)
         self.assertEqual(trailing(lambda w: ord(w) >= ord('c'), "cuddleya"), 0)
+
+    def test_end(self):
+        self.assertEqual(trailing(lambda w: w == "0", "0001"), 0)
+        self.assertEqual(trailing(lambda w: w == "0", "1000", -1), 3)
+        self.assertEqual(trailing(lambda w: w == "0", "1000", -2), 2)
+        self.assertEqual(trailing(lambda w: w == "0", "1000", 0), 3)
+        self.assertEqual(trailing(lambda w: w == "0", "1000", 1), 2)
 
     def test_full_count(self):
         self.assertEqual(trailing((lambda w: w > 0), range(1, 10)), 9)
