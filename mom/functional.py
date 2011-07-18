@@ -5,6 +5,7 @@
 :synopsis: Functional programming primitives.
 
 .. autofunction:: chunks
+.. autofunction:: each
 .. autofunction:: every
 .. autofunction:: find
 .. autofunction:: first
@@ -20,6 +21,7 @@
 .. autofunction:: leading
 .. autofunction:: map_dict
 .. autofunction:: none
+.. autofunction:: pluck
 .. autofunction:: reject
 .. autofunction:: reject_dict
 .. autofunction:: rest
@@ -55,6 +57,7 @@ __author__ = ", ".join([
 
 __all__ = [
     "chunks",
+    "each",
     "every",
     "find",
     "first",
@@ -70,6 +73,7 @@ __all__ = [
     "leading",
     "map_dict",
     "none",
+    "pluck",
     "reject",
     "reject_dict",
     "rest",
@@ -84,6 +88,19 @@ from mom._builtins import range
 
 
 # Higher-order functions.
+
+def each(func, iterable):
+    """
+    Calls a function passing each item in the iterable as argument.
+
+    :param func:
+        Function.
+    :returns:
+        None
+    """
+    for x in iterable:
+        func(x)
+
 
 def some(func, iterable):
     """
@@ -294,6 +311,21 @@ def invert_dict(dictionary):
         New dictionary with the keys and values switched.
     """
     return map_dict(lambda (k, v): (v, k), dictionary)
+
+
+# Sequences of dictionaries
+def pluck(iterable_of_dict, key):
+    """
+    Plucks values for a given key from a series of dictionaries.
+
+    :param iterable_of_dict:
+        Iterable sequence of dictionaries.
+    :param key:
+        The key to fetch.
+    :returns:
+        Iterable of values for the key.
+    """
+    return map(lambda w: w[key], iterable_of_dict)
 
 
 # Utility test functions.

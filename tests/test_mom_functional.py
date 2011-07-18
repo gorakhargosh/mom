@@ -7,7 +7,7 @@ from mom.functional import \
     leading, some, trailing, every, \
     find, none, is_even, is_odd, is_positive, \
     is_negative, select, reject, ireject, iselect, \
-    chunks, map_dict, select_dict, reject_dict, invert_dict
+    chunks, map_dict, select_dict, reject_dict, invert_dict, pluck, each
 
 
 class Test_some(unittest2.TestCase):
@@ -275,6 +275,23 @@ class Test_invert_dict(unittest2.TestCase):
     def test_TypeError_when_unhashable_type(self):
         self.assertRaises(TypeError, invert_dict, dict(a=(1, 2), b=[1, 2]))
 
+
+class Test_pluck(unittest2.TestCase):
+    def test_property(self):
+        fruits = [
+            {"name": 'mango', "taste": "sweet"},
+            {"name": 'orange', "taste": "tangy"},
+            {"name": 'banana', "taste": "sweet"},
+        ]
+        self.assertEqual(pluck(fruits, "name"), ["mango", "orange", "banana"])
+
+    def test_TypeError_when_not_iterable_of_dicts(self):
+        self.assertRaises(TypeError, pluck, ["foo", "blah"])
+
+    def test_KeyError_when_missing_key(self):
+        self.assertRaises(KeyError, pluck, [dict(a="something"), dict(b="something")], "a")
+
+
 class Test_chunks(unittest2.TestCase):
     def test_valid_grouping(self):
         self.assertEqual(list(chunks(4, "aaaabbbbccccdddd")),
@@ -288,6 +305,14 @@ class Test_chunks(unittest2.TestCase):
     def test_odd_ball_grouping(self):
         self.assertEqual(list(chunks(3, "aaabb")), ["aaa", "bb"])
 
+
+class Test_each(unittest2.TestCase):
+    def test_each(self):
+        count = [0]
+        def _sum(x):
+            count[0] += x
+        each(_sum, [1, 2, 3])
+        self.assertEqual(count, [6])
 
 
 
