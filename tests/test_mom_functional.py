@@ -9,7 +9,7 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, compact, ichunks, compose, contains
+    pluck, first, last, rest, compact, ichunks, compose, contains, difference, without, _contains
 
 
 class Test_some(unittest2.TestCase):
@@ -312,6 +312,49 @@ class Test_contains(unittest2.TestCase):
         self.assertTrue(contains(range(4), 3))
         self.assertFalse(contains(range(4), 43))
 
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, contains, None, 4)
+        self.assertRaises(TypeError, contains, True, 4)
+        self.assertRaises(TypeError, contains, 0, 4)
+
+
+class Test__contains(unittest2.TestCase):
+    def test__contains_value(self):
+        self.assertTrue(_contains(range(4), 3))
+        self.assertFalse(_contains(range(4), 43))
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, _contains, None, 4)
+        self.assertRaises(TypeError, _contains, True, 4)
+        self.assertRaises(TypeError, _contains, 0, 4)
+
+
+class Test_difference(unittest2.TestCase):
+    def test_difference(self):
+        self.assertEqual(difference(range(1, 6), [5, 2, 10]), [1, 3, 4])
+        self.assertEqual(difference("abcdefg", "abc"), "defg")
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, difference, None, None)
+        self.assertRaises(TypeError, difference, None, True)
+        self.assertRaises(TypeError, difference, None, 0)
+        self.assertRaises(TypeError, difference, 0, None)
+        self.assertRaises(TypeError, difference, 0, True)
+        self.assertRaises(TypeError, difference, 0, 0)
+
+
+class Test_difference(unittest2.TestCase):
+    def test_difference(self):
+        self.assertEqual(without(range(1, 6), *[5, 2, 10]), [1, 3, 4])
+        self.assertEqual(without("abcdefg", *list("abc")), "defg")
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, without, None, None)
+        self.assertRaises(TypeError, without, None, True)
+        self.assertRaises(TypeError, without, None, 0)
+        self.assertRaises(TypeError, without, 0, None)
+        self.assertRaises(TypeError, without, 0, True)
+        self.assertRaises(TypeError, without, 0, 0)
 
 
 if __name__ == '__main__':

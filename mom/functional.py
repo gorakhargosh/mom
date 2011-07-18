@@ -43,6 +43,7 @@ Iterable sequence helpers
 .. autofunction:: compact
 .. autofunction:: contains
 .. autofunction:: difference
+.. autofunction:: without
 
 Dictionaries and dictionary sequences
 -------------------------------------
@@ -104,6 +105,7 @@ __all__ = [
     "select_dict",
     "some",
     "trailing",
+    "without",
 ]
 
 from itertools import ifilter, islice, takewhile, ifilterfalse
@@ -403,10 +405,14 @@ def contains(iterable, value):
         except ValueError:
             return False
     else:
-        for x in iterable:
-            if x == value:
-                return True
-        return False
+        return _contains(iterable, value)
+
+
+def _contains(iterable, value):
+    for x in iterable:
+        if x == value:
+            return True
+    return False
 
 
 def difference(iterable1, iterable2):
@@ -424,7 +430,21 @@ def difference(iterable1, iterable2):
         Iterable sequence containing the difference between the two given
         iterables.
     """
-    return select(iterable1, lambda v: not contains(iterable2, v))
+    return select(lambda v: not contains(iterable2, v), iterable1)
+
+
+def without(iterable, *values):
+    """
+    Returns the iterable without the values specified.
+
+    :param iterable:
+        Iterable sequence.
+    :param values:
+        Variable number of input values.
+    :returns:
+        Iterable sequence without the values specified.
+    """
+    return difference(iterable, values)
 
 
 def first(iterable):
