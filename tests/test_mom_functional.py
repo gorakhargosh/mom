@@ -9,7 +9,7 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, compact, ichunks, compose, contains, difference, without, _contains
+    pluck, first, last, rest, compact, ichunks, compose, contains, difference, without, _contains_fallback
 
 
 class Test_some(unittest2.TestCase):
@@ -319,13 +319,13 @@ class Test_contains(unittest2.TestCase):
 
 class Test__contains(unittest2.TestCase):
     def test__contains_value(self):
-        self.assertTrue(_contains(range(4), 3))
-        self.assertFalse(_contains(range(4), 43))
+        self.assertTrue(_contains_fallback(range(4), 3))
+        self.assertFalse(_contains_fallback(range(4), 43))
 
     def test_TypeError_when_not_iterable(self):
-        self.assertRaises(TypeError, _contains, None, 4)
-        self.assertRaises(TypeError, _contains, True, 4)
-        self.assertRaises(TypeError, _contains, 0, 4)
+        self.assertRaises(TypeError, _contains_fallback, None, 4)
+        self.assertRaises(TypeError, _contains_fallback, True, 4)
+        self.assertRaises(TypeError, _contains_fallback, 0, 4)
 
 
 class Test_difference(unittest2.TestCase):

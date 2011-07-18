@@ -405,10 +405,23 @@ def contains(iterable, value):
         except ValueError:
             return False
     else:
-        return _contains(iterable, value)
+        return _contains_fallback(iterable, value)
 
 
-def _contains(iterable, value):
+def _contains_fallback(iterable, value):
+    """
+    Fallback to determines whether the iterable contains the value specified.
+
+    Uses a loop instead of built-in methods.
+
+    :param iterable:
+        Iterable sequence.
+    :param value:
+        The value to find.
+    :returns:
+        ``True`` if the iterable sequence contains the value; ``False``
+        otherwise.
+    """
     for x in iterable:
         if x == value:
             return True
