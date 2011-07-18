@@ -7,7 +7,7 @@ from mom.functional import \
     leading, some, trailing, every, \
     find, none, is_even, is_odd, is_positive, \
     is_negative, select, reject, ireject, iselect, \
-    chunks, map_dict, select_dict, reject_dict, invert_dict, pluck, each
+    chunks, map_dict, select_dict, reject_dict, invert_dict, pluck, each, first, last, rest, compact, ichunks
 
 
 class Test_some(unittest2.TestCase):
@@ -292,6 +292,31 @@ class Test_pluck(unittest2.TestCase):
         self.assertRaises(KeyError, pluck, [dict(a="something"), dict(b="something")], "a")
 
 
+class Test_ichunks(unittest2.TestCase):
+    def test_valid_grouping(self):
+        g = ichunks(4, "aaaabbbbccccdddd")
+        li = []
+        for i in g:
+            li.append(list(i))
+        self.assertEqual(li,
+                         [["a"] * 4, ["b"] * 4, ["c"] * 4, ["d"] * 4])
+
+        li = []
+        for i in ichunks(3, [1, 1, 1, 2, 2, 2, 3, 3, 3]):
+            li.append(list(i))
+        self.assertEqual(li,
+                         [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+
+    def test_returns_generator_object(self):
+        self.assertEqual(type(ichunks(4, "aaaabbbb")).__name__, "generator")
+
+    def test_odd_ball_grouping(self):
+        li = []
+        for x in ichunks(3, "aaabb"):
+            li.append(list(x))
+        self.assertEqual(li, [["a"] * 3, ["b"] * 2])
+
+
 class Test_chunks(unittest2.TestCase):
     def test_valid_grouping(self):
         self.assertEqual(list(chunks(4, "aaaabbbbccccdddd")),
@@ -306,6 +331,7 @@ class Test_chunks(unittest2.TestCase):
         self.assertEqual(list(chunks(3, "aaabb")), ["aaa", "bb"])
 
 
+
 class Test_each(unittest2.TestCase):
     def test_each(self):
         count = [0]
@@ -317,6 +343,21 @@ class Test_each(unittest2.TestCase):
     def test_TypeError_when_not_callable(self):
         self.assertRaises(TypeError, each, None, range(5))
 
+
+class Test_seq(unittest2.TestCase):
+    def test_first(self):
+        self.assertEqual(first(range(10)), 0)
+
+    def test_last(self):
+        self.assertEqual(last(range(10)), 9)
+
+    def test_rest(self):
+        self.assertEqual(rest(range(10)), range(1, 10))
+
+
+class Test_compact(unittest2.TestCase):
+    def test_compact(self):
+        self.assertEqual(compact([1, 0, 0, 1, None, True, False, {}]), [1, 1, True])
 
 if __name__ == '__main__':
   unittest2.main()
