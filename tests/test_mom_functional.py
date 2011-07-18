@@ -91,6 +91,7 @@ class Test_trailing(unittest2.TestCase):
         self.assertEqual(trailing(lambda w: w == "0", "1000", -2), 2)
         self.assertEqual(trailing(lambda w: w == "0", "1000", 0), 3)
         self.assertEqual(trailing(lambda w: w == "0", "1000", 1), 2)
+        self.assertEqual(trailing(lambda w: w == "0", "1000", 2), 1)
 
     def test_full_count(self):
         self.assertEqual(trailing((lambda w: w > 0), range(1, 10)), 9)
