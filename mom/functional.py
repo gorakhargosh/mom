@@ -708,11 +708,11 @@ def flatten(iterable):
     """
     def _flatten(memo, item):
         if isinstance(item, (list, tuple)):
-            return memo + reduce(_flatten, item, [])
+            return memo + _reduce(_flatten, item, [])
         else:
             memo.append(item)
             return memo
-    return reduce(_flatten, iterable, [])
+    return _reduce(_flatten, iterable, [])
 
 
 def flatten1(iterable):
@@ -735,7 +735,7 @@ def flatten1(iterable):
         else:
             memo.append(item)
             return memo
-    return reduce(_flatten, iterable, [])
+    return _reduce(_flatten, iterable, [])
 
 
 def unique(iterable, is_sorted=False):
@@ -755,7 +755,7 @@ def unique(iterable, is_sorted=False):
             if cond:
                 memo.append(item)
             return memo
-        return reduce(_unique, rest(iterable), [first(iterable)])
+        return _reduce(_unique, rest(iterable), [first(iterable)])
     else:
         return iterable
 
