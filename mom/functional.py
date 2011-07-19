@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Aum Gam Ganapataye Namah
 """
 :module: mom.functional
 :synopsis: Functional programming primitives.
