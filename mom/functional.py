@@ -597,11 +597,15 @@ def contains(iterable, item):
         ``True`` if the iterable sequence contains the value; ``False``
         otherwise.
     """
-    if is_sequence(iterable) and getattr(iterable, "index", None):
+    if getattr(iterable, "index", None):
         try:
             return iterable.index(item) >= 0
         except ValueError:
             return False
+    elif getattr(iterable, "__contains__", None):
+        return iterable.__contains__(item)
+    elif getattr(iterable, "has_key", None):
+        return iterable.has_key(item)
     else:
         return _contains_fallback(iterable, item)
 

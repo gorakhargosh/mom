@@ -388,6 +388,8 @@ class Test_contains(unittest2.TestCase):
         self.assertFalse(contains(range(4), 43))
         self.assertTrue(contains({"a": 4, "b": 5}, "a"))
         self.assertFalse(contains({"a": 4, "b": 5}, "c"))
+        self.assertTrue(contains(set([1, 2, 3]), 3))
+        self.assertFalse(contains(set([1, 2, 3]), 5))
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, contains, None, 4)
