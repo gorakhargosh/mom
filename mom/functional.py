@@ -42,12 +42,17 @@ Function-generators
 .. autofunction:: complement
 .. autofunction:: compose
 
-Iterable sequence helpers
--------------------------
+Iterable sequences
+------------------
+Indexing and slicing
+~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: first
 .. autofunction:: last
 .. autofunction:: rest
+.. autofunction:: nth
 
+Manipulation, filtering, union and difference
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: flatten
 .. autofunction:: flatten1
 .. autofunction:: chunks
@@ -115,6 +120,7 @@ __all__ = [
     "leading",
     "map_dict",
     "none",
+    "nth",
     "pluck",
     "reject",
     "reject_dict",
