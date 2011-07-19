@@ -244,14 +244,20 @@ class Test_pluck(unittest2.TestCase):
             {"name": 'orange', "taste": "tangy"},
             {"name": 'banana', "taste": "sweet"},
         ]
-        self.assertEqual(pluck(fruits, "name"), ["mango", "orange", "banana"])
+        self.assertEqual(pluck(fruits, "name"), ("mango", "orange", "banana"))
 
     def test_TypeError_when_not_iterable_of_dicts(self):
-        self.assertRaises(TypeError, pluck, ["foo", "blah"])
+        self.assertRaises(TypeError, pluck, ("foo", "blah"))
 
     def test_KeyError_when_missing_key(self):
         self.assertRaises(KeyError, pluck,
             [dict(a="something"), dict(b="something")], "a")
+
+    def test_default_when_missing_key(self):
+        self.assertEqual(
+            pluck([dict(a="something"), dict(b="something")], "a", None),
+            ("something", None)
+        )
 
 
 class Test_ichunks(unittest2.TestCase):

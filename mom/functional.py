@@ -272,7 +272,7 @@ def some(predicate, iterable):
 
 def _some1(predicate, iterable):
     """Alternative implementation of :func:`some`."""
-    return any(map(predicate, iterable))
+    return any(imap(predicate, iterable))
 
 
 def _some2(predicate, iterable):
@@ -519,7 +519,7 @@ def invert_dict(dictionary):
 
 
 # Sequences of dictionaries
-def pluck(dicts, key):
+def pluck(dicts, key, *args, **kwargs):
     """
     Plucks values for a given key from a series of dictionaries.
 
@@ -527,10 +527,19 @@ def pluck(dicts, key):
         Iterable sequence of dictionaries.
     :param key:
         The key to fetch.
+    :param default:
+        The default value to use when a key is not found. If this value is
+        not specified, a KeyError will be raised when a key is not found.
     :returns:
-        Iterable of values for the key.
+        Tuple of values for the key.
     """
-    return map(lambda w: w[key], dicts)
+    if args or kwargs:
+        default = kwargs['default'] if kwargs else args[0]
+        def _get_value_from_dict(d):
+            return d.get(key, default)
+    else:
+        _get_value_from_dict = lambda w: w[key]
+    return tuple(imap(_get_value_from_dict, dicts))
 
 
 # Sequences
