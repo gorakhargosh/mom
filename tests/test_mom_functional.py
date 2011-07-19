@@ -557,8 +557,9 @@ class Test_partition(unittest2.TestCase):
 class Test_peel(unittest2.TestCase):
     def test_peel(self):
         self.assertEqual(list(peel("abbbc")), ["b", "b", "b"])
-        self.assertEqual(peel(""), "")
+        self.assertEqual(list(peel("")), [])
         self.assertEqual(list(peel("a")), [])
+        self.assertEqual(list(peel("a", 34)), [])
 
 if __name__ == '__main__':
     unittest2.main()

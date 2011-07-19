@@ -760,19 +760,24 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
-def peel(iterable):
+def peel(iterable, count=1):
     """
-    Returns the meat of an iterable by peeling off one element from both ends.
+    Returns the meat of an iterable by peeling off the specified number of
+    elements from both ends.
 
     :param iterable:
         Iterable sequence.
+    :param count:
+        The number of elements to remove from each end.
     :returns:
         Peeled iterable.
     """
     if not iterable:
-        return iterable
-    return islice(iterable, 1, len(iterable) - 1, 1)
-
+        return imap(identity, [])
+    try:
+        return islice(iterable, count, len(iterable) - count, 1)
+    except ValueError:
+        return imap(identity, [])
 
 def chunks(iterable, size, *args, **kwargs):
     """
