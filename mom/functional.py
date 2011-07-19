@@ -76,7 +76,6 @@ Indexing and slicing
 .. autofunction:: take
 .. autofunction:: nth
 .. autofunction:: chunks
-.. autofunction:: morsels
 .. autofunction:: round_robin
 
 Manipulation, filtering, union and difference
@@ -151,7 +150,6 @@ __all__ = [
     "last",
     "leading",
     "map_dict",
-    "morsels",
     "none",
     "nth",
     "partition",
@@ -759,47 +757,9 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
-def morsels(iterable, size, filler=None):
-    """
-    Splits an iterable into an iterable of morsels each of specified size.
-    Like :func:`chunks` but returns each chunk as a tuple.
-
-    :param iterable:
-        The iterable to split.
-    :param size:
-        Morsel size.
-    :param filler:
-        Default ``None``, which means no filler will be appended.
-
-        If a filler iterable is specified it will be appended to the end if the size
-        is not an integral multiple of the length of the iterable:
-
-            list(morsels("aaabccd", 3, "-"))
-            -> [("a", "a", "a"), ("b", "c", "c"), ("d", "-", "-")]
-
-            list(morsels("aaabccd", 3, [None]))
-            -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
-
-    :returns:
-        Generator of tuples each of the specified size.
-    """
-    if filler:
-        for i in range(0, len(iterable), size):
-            value = list(islice(iterable, i, i + size))
-            times = size - len(value)
-            yield tuple(chain(value, filler * times))
-    else:
-        for i in range(0, len(iterable), size):
-            yield tuple(islice(iterable, i, i + size))
-
-
 def chunks(iterable, size, filler=None):
     """
-    Splits an iterable into an iterable of chunks each of specified chunk size.
-
-    Example::
-
-        list(chunks("aaaabbbbccccdd", 4)) -> ["aaaa", "bbbb", "cccc", "dd"]
+    Splits an iterable into an iterable of chunks each of specified size.
 
     :param iterable:
         The iterable to split.
@@ -808,22 +768,27 @@ def chunks(iterable, size, filler=None):
     :param filler:
         Default ``None``, which means no filler will be appended.
 
-        If a filler iterable is specified it will be appended to the end if the
-        size is not an integral multiple of the length of the iterable:
+        If a filler iterable is specified it will be appended to the end if the size
+        is not an integral multiple of the length of the iterable:
 
-            list(chunks("aaaabb", 4, "-")) -> ["aaaa", "bb--"]
+            list(chunks("aaabccd", 3, "-"))
+            -> [("a", "a", "a"), ("b", "c", "c"), ("d", "-", "-")]
+
+            list(chunks("aaabccd", 3, [None]))
+            -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
 
     :returns:
-        Generator of sequences each of the specified chunk size.
+        Generates a sequence of chunk iterators each having the specified chunk
+        size.
     """
     if filler:
         for i in range(0, len(iterable), size):
-            value = iterable[i:i+size]
+            value = list(islice(iterable, i, i + size))
             times = size - len(value)
-            yield value + (filler * times)
+            yield chain(value, filler * times)
     else:
         for i in range(0, len(iterable), size):
-            yield iterable[i:i+size]
+            yield islice(iterable, i, i + size)
 
 
 def truthy(iterable):

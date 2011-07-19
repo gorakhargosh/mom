@@ -9,7 +9,7 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, truthy, morsels, compose, contains, \
+    pluck, first, last, rest, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, partition, falsy
@@ -284,70 +284,48 @@ class Test_pluck(unittest2.TestCase):
         )
 
 
-class Test_morsels(unittest2.TestCase):
+class Test_chunks(unittest2.TestCase):
     def test_valid_grouping(self):
-        got = morsels("aaaabbbbccccdddd", 4)
+        got = chunks("aaaabbbbccccdddd", 4)
         expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
-        for g, e in zip(got, expected):
+        for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
-        got = morsels([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
+        got = chunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
         expected = [(1, 1, 1), (2, 2, 2), (3, 3, 3)]
-        for g, e in zip(got, expected):
+        for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
     def test_filler(self):
-        got = morsels("aaaabbbccccddd", 4, "-")
+        got = chunks("aaaabbbccccddd", 4, "-")
         expected = (("a", "a", "a", "a"),
                     ("b", "b", "b", "c"),
                     ("c", "c", "c", "d"),
                     ("d", "d", "-", "-"))
-        for g, e in zip(got, expected):
+        for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
     def test_filler_None(self):
-        got = morsels("aaaabbbccccddd", 4, [None])
+        got = chunks("aaaabbbccccddd", 4, [None])
         expected = (("a", "a", "a", "a"),
                     ("b", "b", "b", "c"),
                     ("c", "c", "c", "d"),
                     ("d", "d", None, None))
-        for g, e in zip(got, expected):
+        for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
     def test_TypeError_when_filler_not_iterable(self):
-        self.assertRaises(TypeError, list, morsels("aabbc", 2, 3))
-
-    def test_returns_generator_object(self):
-        self.assertEqual(type(morsels("aaaabbbb", 4)).__name__, "generator")
-
-    def test_odd_ball_grouping(self):
-        got = morsels("aaabb", 3)
-        expected = [("a",) * 3, ("b",) * 2]
-        for g, e in zip(got, expected):
-            self.assertEqual(g, e)
-
-
-class Test_chunks(unittest2.TestCase):
-    def test_valid_grouping(self):
-        self.assertEqual(list(chunks("aaaabbbbccccdddd", 4)),
-                         ["aaaa", "bbbb", "cccc", "dddd"])
-        self.assertEqual(list(chunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)),
-                         [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+        self.assertRaises(TypeError, map, tuple, chunks("aabbc", 2, 3))
 
     def test_returns_generator_object(self):
         self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
 
-    def test_no_filler(self):
-        self.assertEqual(list(chunks("aaabb", 3)), ["aaa", "bb"])
+    def test_odd_ball_grouping(self):
+        got = chunks("aaabb", 3)
+        expected = [("a",) * 3, ("b",) * 2]
+        for g, e in zip(map(tuple, got), expected):
+            self.assertEqual(g, e)
 
-    def test_filler(self):
-        self.assertEqual(list(chunks("aaaabb", 4, "-")), ["aaaa", "bb--"])
-
-    def test_TypeError_when_bad_type(self):
-        self.assertRaises(TypeError, list, chunks("aabbc", 2, [None]))
-
-    def test_TypeError_when_filler_not_iterable(self):
-        self.assertRaises(TypeError, list, chunks("aabbc", 2, 3))
 
 class Test_each(unittest2.TestCase):
     def test_each(self):
