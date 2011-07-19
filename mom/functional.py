@@ -833,7 +833,7 @@ def falsy(iterable):
     :returns:
         Iterable with false values.
     """
-    return select(complement(bool), iterable)
+    return reject(bool, iterable)
 
 
 def flatten(iterable):
