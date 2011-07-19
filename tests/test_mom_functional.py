@@ -11,7 +11,8 @@ from mom.functional import \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
-    reduce, identity, flatten, flatten1, unique, _some1, _some2, union, nth
+    reduce, identity, flatten, flatten1, unique, _some1, _some2, \
+    union, nth, intersection
 
 
 class Test_some(unittest2.TestCase):
@@ -473,6 +474,11 @@ class Test_nth(unittest2.TestCase):
         self.assertEqual(nth("abcd", 4, None), None)
         self.assertEqual(nth("abcd", 4), None)
 
+
+class Test_intersection(unittest2.TestCase):
+    def test_intersection(self):
+        self.assertEqual(intersection([1, 2, 3, 0], [0, 2, 3]), [2, 3, 0])
+        self.assertEqual(intersection([1, 5, 4], [0, 2, 3]), [])
 
 if __name__ == '__main__':
     unittest2.main()

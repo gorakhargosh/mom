@@ -60,6 +60,8 @@ Manipulation, filtering, union and difference
 .. autofunction:: contains
 .. autofunction:: difference
 .. autofunction:: ichunks
+.. autofunction:: union
+.. autofunction:: intersection
 .. autofunction:: unique
 .. autofunction:: without
 
@@ -113,6 +115,7 @@ __all__ = [
     "flatten1",
     "ichunks",
     "identity",
+    "intersection",
     "invert_dict",
     "ireject",
     "iselect",
@@ -130,6 +133,7 @@ __all__ = [
     "select_dict",
     "some",
     "trailing",
+    "union",
     "unique",
     "without",
 ]
@@ -503,13 +507,13 @@ def pluck(iterable_of_dict, key):
 
 # Sequences
 
-def contains(iterable, value):
+def contains(iterable, item):
     """
     Determines whether the iterable contains the value specified.
 
     :param iterable:
         Iterable sequence.
-    :param value:
+    :param item:
         The value to find.
     :returns:
         ``True`` if the iterable sequence contains the value; ``False``
@@ -517,14 +521,14 @@ def contains(iterable, value):
     """
     if is_sequence(iterable) and getattr(iterable, "index", None):
         try:
-            return iterable.index(value) >= 0
+            return iterable.index(item) >= 0
         except ValueError:
             return False
     else:
-        return _contains_fallback(iterable, value)
+        return _contains_fallback(iterable, item)
 
 
-def _contains_fallback(iterable, value):
+def _contains_fallback(iterable, item):
     """
     Fallback to determine whether the iterable contains the value specified.
 
@@ -532,14 +536,14 @@ def _contains_fallback(iterable, value):
 
     :param iterable:
         Iterable sequence.
-    :param value:
+    :param item:
         The value to find.
     :returns:
         ``True`` if the iterable sequence contains the value; ``False``
         otherwise.
     """
     for x in iter(iterable):
-        if x == value:
+        if x == item:
             return True
     return False
 
@@ -766,3 +770,18 @@ def union(*iterables):
         Union of the iterable sequences.
     """
     return unique(iter(chain(*iterables)))
+
+
+def intersection(*iterables):
+    """
+    Returns the intersection of given iterable sequences.
+
+    :param iterables:
+        Variable number of input iterable sequences.
+    :returns:
+        Intersection of the iterable sequences in the order of appearance
+        in the first sequence.
+    """
+    def f(item):
+        return every(partial(contains, item=item), iterables[1:])
+    return filter(f, unique(iterables[0]))
