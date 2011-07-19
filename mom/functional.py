@@ -771,10 +771,10 @@ def chunks(iterable, size, filler=None):
         If a filler iterable is specified it will be appended to the end if the size
         is not an integral multiple of the length of the iterable:
 
-            list(chunks("aaabccd", 3, "-"))
+            list(map(tuple, chunks("aaabccd", 3, "-")))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", "-", "-")]
 
-            list(chunks("aaabccd", 3, [None]))
+            list(map(tuple, chunks("aaabccd", 3, [None])))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
 
     :returns:
