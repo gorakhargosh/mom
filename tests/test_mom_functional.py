@@ -385,6 +385,7 @@ class Test_difference(unittest2.TestCase):
     def test_difference(self):
         self.assertEqual(difference(range(1, 6), [5, 2, 10]), [1, 3, 4])
         self.assertEqual(difference("abcdefg", "abc"), "defg")
+        self.assertEqual(difference("abcdefg", "xyz"), "abcdefg")
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, difference, None, None)
@@ -395,10 +396,12 @@ class Test_difference(unittest2.TestCase):
         self.assertRaises(TypeError, difference, 0, 0)
 
 
-class Test_difference(unittest2.TestCase):
-    def test_difference(self):
+class Test_without(unittest2.TestCase):
+    def test_without(self):
         self.assertEqual(without(range(1, 6), *[5, 2, 10]), [1, 3, 4])
         self.assertEqual(without("abcdefg", *list("abc")), "defg")
+        self.assertEqual(without("abcdefg", *list("xyz")), "abcdefg")
+
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, without, None, None)
