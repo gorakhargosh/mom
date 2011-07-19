@@ -357,6 +357,8 @@ def leading(predicate, iterable, start=0):
     :param start:
         Start index. (Number of items to skip before starting counting.)
     """
+    # return len(map(identity,
+    #                takewhile(predicate, islice(iterable, start, None, 1))))
     i = 0L
     for _ in takewhile(predicate, islice(iterable, start, None, 1)):
         i += 1L
