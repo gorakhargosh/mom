@@ -602,10 +602,10 @@ def contains(iterable, item):
             return iterable.index(item) >= 0
         except ValueError:
             return False
-    elif getattr(iterable, "__contains__", None):
-        return iterable.__contains__(item)
     elif getattr(iterable, "has_key", None):
         return iterable.has_key(item)
+    elif getattr(iterable, "__contains__", None):
+        return iterable.__contains__(item)
     else:
         return _contains_fallback(iterable, item)
 
