@@ -52,6 +52,7 @@ Filtering
 .. autofunction:: iselect
 .. autofunction:: reject
 .. autofunction:: select
+.. autofunction:: partition
 
 Counting
 ~~~~~~~~
@@ -151,6 +152,7 @@ __all__ = [
     "map_dict",
     "none",
     "nth",
+    "partition",
     "pluck",
     "reject",
     "reject_dict",
@@ -494,6 +496,25 @@ def ireject(predicate, iterable):
         A sequence of all items for which the predicate is false.
     """
     return ifilterfalse(predicate, iterable)
+
+
+def partition(predicate, iterable):
+    """
+    Partitions an interable into two iterables where for the elements of
+    one iterable the predicate is true and for those of the other it is false.
+
+    :param predicate:
+        Function of the format::
+
+            f(x) -> bool
+    :returns:
+        Tuple (selected, rejected)
+    """
+    def _partitioner(memo, item):
+        part = memo[0] if predicate(item) else memo[1]
+        part.append(item)
+        return memo
+    return tuple(reduce(_partitioner, iterable, [[], []]))
 
 
 # Dictionaries

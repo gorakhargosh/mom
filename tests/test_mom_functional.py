@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally, _leading
+    union, nth, intersection, take, round_robin, tally, _leading, partition
 
 
 class Test_some(unittest2.TestCase):
@@ -525,6 +525,16 @@ class Test_round_robin(unittest2.TestCase):
 class Test_tally(unittest2.TestCase):
     def test_tally(self):
         self.assertEqual(tally(lambda w: w > 10, range(10, 40)), 29)
+
+
+class Test_partition(unittest2.TestCase):
+    def test_partition(self):
+        self.assertEqual(partition(lambda w: w > 5, range(10)),
+                         ([6, 7, 8, 9], [0, 1, 2, 3, 4, 5]))
+
+    def test_not_iterable(self):
+        self.assertRaises(TypeError, partition, bool, None)
+
 
 if __name__ == '__main__':
     unittest2.main()
