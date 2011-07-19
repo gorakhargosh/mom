@@ -130,11 +130,13 @@ __all__ = [
 ]
 
 from mom._builtins import \
-    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce
+    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, next
 
 range = range
 
 reduce = reduce
+
+next = next
 
 # Types and their meanings:
 #
