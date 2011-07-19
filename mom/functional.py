@@ -250,10 +250,12 @@ def some(func, iterable):
 
 
 def _some1(func, iterable):
+    """Alternative implementation of :func:`some`."""
     return any(map(func, iterable))
 
 
 def _some2(func, iterable):
+    """Alternative implementation of :func:`some`."""
     result = False
     for x in dropwhile(complement(func), iterable):
         result = True
