@@ -314,6 +314,9 @@ class Test_morsels(unittest2.TestCase):
         for g, e in zip(got, expected):
             self.assertEqual(g, e)
 
+    def test_TypeError_when_filler_not_iterable(self):
+        self.assertRaises(TypeError, list, morsels("aabbc", 2, 3))
+
     def test_returns_generator_object(self):
         self.assertEqual(type(morsels("aaaabbbb", 4)).__name__, "generator")
 
@@ -343,6 +346,8 @@ class Test_chunks(unittest2.TestCase):
     def test_TypeError_when_bad_type(self):
         self.assertRaises(TypeError, list, chunks("aabbc", 2, [None]))
 
+    def test_TypeError_when_filler_not_iterable(self):
+        self.assertRaises(TypeError, list, chunks("aabbc", 2, 3))
 
 class Test_each(unittest2.TestCase):
     def test_each(self):
