@@ -779,6 +779,7 @@ def peel(iterable, count=1):
     except ValueError:
         return imap(identity, [])
 
+
 def chunks(iterable, size, *args, **kwargs):
     """
     Splits an iterable into an iterable of chunks each of specified size.
