@@ -514,7 +514,7 @@ def partition(predicate, iterable):
         part = memo[0] if predicate(item) else memo[1]
         part.append(item)
         return memo
-    return tuple(reduce(_partitioner, iterable, [[], []]))
+    return tuple(_reduce(_partitioner, iterable, [[], []]))
 
 
 # Dictionaries
