@@ -84,6 +84,7 @@ Manipulation, filtering, union and difference
 .. autofunction:: flatten
 .. autofunction:: flatten1
 .. autofunction:: truthy
+.. autofunction:: falsy
 .. autofunction:: contains
 .. autofunction:: difference
 .. autofunction:: union
@@ -131,13 +132,13 @@ __author__ = ", ".join([
 
 __all__ = [
     "chunks",
-    "truthy",
     "complement",
     "compose",
     "contains",
     "difference",
     "each",
     "every",
+    "falsy",
     "find",
     "first",
     "flatten",
@@ -166,6 +167,7 @@ __all__ = [
     "take",
     "tally",
     "trailing",
+    "truthy",
     "union",
     "unique",
     "without",
@@ -175,7 +177,6 @@ from functools import partial
 from itertools import \
     ifilter, islice, takewhile, ifilterfalse, dropwhile, chain, cycle, imap
 from mom._builtins import range, dict_each, reduce as _reduce, next
-from mom.builtins import is_sequence
 
 
 # Higher-order functions that generate other functions.
