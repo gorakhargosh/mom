@@ -11,7 +11,7 @@ from mom.functional import \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
-    reduce, identity, flatten, flatten1, unique, _some1, _some2, union
+    reduce, identity, flatten, flatten1, unique, _some1, _some2, union, nth
 
 
 class Test_some(unittest2.TestCase):
@@ -464,6 +464,14 @@ class Test_union(unittest2.TestCase):
             union("google", "yahoo"),
             ["g", "o", "l", "e", "y", "a", "h"]
         )
+
+
+class Test_nth(unittest2.TestCase):
+    def test_nth(self):
+        self.assertEqual(nth("abcd", 0), "a")
+        self.assertEqual(nth("abcd", 3), "d")
+        self.assertEqual(nth("abcd", 4, None), None)
+        self.assertEqual(nth("abcd", 4), None)
 
 
 if __name__ == '__main__':

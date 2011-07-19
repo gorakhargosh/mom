@@ -569,6 +569,7 @@ def without(iterable, *values):
     """
     return difference(iterable, values)
 
+
 def first(iterable):
     """
     Returns the first element out of an iterable.
