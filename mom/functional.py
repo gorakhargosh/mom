@@ -4,14 +4,35 @@
 :module: mom.functional
 :synopsis: Functional programming primitives.
 
-Utility functions
------------------
-.. autofunction:: identity
-
 Higher-order functions
 -----------------------
 These functions accept other functions as arguments and apply them over
-specific types of data structures.
+specific types of data structures. Here's an example of how to find the
+youngest person and the oldest person from among people::
+
+    people = [
+        {"name" : "Harry",    "age" : 100},
+        {"name" : "Hermione", "age" : 16},
+        {"name" : "Rob",      "age" : 200},
+    ]
+    def youngest(person1, person2):
+        '''Comparator that returns the youngest of two people.'''
+        return person1 if person1["age"] <= person2["age"] else person2
+
+    def oldest(person1, person2):
+        '''Comparator that returns the oldest of two people.'''
+        return person1 if person1["age"] >= person2["age"] else person2
+
+    who_youngest = reduce(youngest, people)
+    who_oldest = reduce(oldest, people)
+
+    print(who_youngest)
+    -> {"age" : 16, "name" : "Hermione"}
+    print(who_oldest)
+    -> {"age" : 200, "name" : "Rob"}
+
+Higher-order functions are extremely useful where you want to express yourself
+succinctly instead of writing a ton of for and while loops.
 
 Iteration and aggregation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,6 +97,9 @@ Dictionaries and dictionary sequences
 .. autofunction:: reject_dict
 .. autofunction:: select_dict
 
+Utility functions
+-----------------
+.. autofunction:: identity
 """
 
 from __future__ import absolute_import
