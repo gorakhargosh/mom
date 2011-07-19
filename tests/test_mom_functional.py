@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take
+    union, nth, intersection, take, round_robin
 
 
 class Test_some(unittest2.TestCase):
@@ -485,6 +485,11 @@ class Test_take(unittest2.TestCase):
     def test_take(self):
         self.assertEqual(take([1, 2, 3, 4, 5], 3), (1, 2, 3))
 
+
+class Test_round_robin(unittest2.TestCase):
+    def test_round_robin(self):
+        self.assertEqual(list(round_robin("ABC", "D", "EF")),
+                        ["A", "D", "E", "B", "F", "C"])
 
 if __name__ == '__main__':
     unittest2.main()

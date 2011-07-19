@@ -53,6 +53,7 @@ Indexing and slicing
 .. autofunction:: nth
 .. autofunction:: ichunks
 .. autofunction:: chunks
+.. autofunction:: round_robin
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -130,6 +131,7 @@ __all__ = [
     "reject_dict",
     "reduce",
     "rest",
+    "round_robin",
     "select",
     "select_dict",
     "some",
@@ -141,7 +143,8 @@ __all__ = [
 ]
 
 from functools import partial
-from itertools import ifilter, islice, takewhile, ifilterfalse, dropwhile, chain
+from itertools import \
+    ifilter, islice, takewhile, ifilterfalse, dropwhile, chain, cycle
 from mom._builtins import range, dict_each, reduce as _reduce, next
 from mom.builtins import is_sequence
 
@@ -806,3 +809,29 @@ def take(iterable, n):
         First n items of the iterable as a tuple.
     """
     return tuple(islice(iterable, 0, n, 1))
+
+
+def round_robin(*iterables):
+    """
+    Returns items from the iterables in a round-robin fashion.
+
+    Recipe credited to George Sakkis
+
+    Example::
+
+        round_robin('ABC', 'D', 'EF') --> A D E B F C"
+
+    :param iterables:
+        Variable number of inputs for iterable sequences.
+    :returns:
+        Items from the iterable sequences in a round-robin fashion.
+    """
+    pending = len(iterables)
+    nexts = cycle(iter(it).next for it in iterables)
+    while pending:
+        try:
+            for next_ in nexts:
+                yield next_()
+        except StopIteration:
+            pending -= 1
+            nexts = cycle(islice(nexts, pending))
