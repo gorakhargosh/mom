@@ -55,6 +55,7 @@ Iterable sequence helpers
 .. autofunction:: contains
 .. autofunction:: difference
 .. autofunction:: ichunks
+.. autofunction:: unique
 .. autofunction:: without
 
 Dictionaries and dictionary sequences
@@ -123,6 +124,7 @@ __all__ = [
     "select_dict",
     "some",
     "trailing",
+    "unique",
     "without",
 ]
 
@@ -695,7 +697,6 @@ def flatten1(iterable):
 
         flatten1((1, (0, 5, ('a', 'b')), (3, 4))) -> [1, 0, 5, ('a', 'b'), 3, 4]
 
-
     :param iterable:
         Iterable sequence of iterables.
     :returns:
@@ -708,3 +709,25 @@ def flatten1(iterable):
             memo.append(item)
             return memo
     return reduce(_flatten, iterable, [])
+
+
+def unique(iterable, is_sorted=False):
+    """
+    Returns an iterable sequence of unique values from the given iterable.
+
+    :param iterable:
+        Iterable sequence.
+    :param is_sorted:
+        Whether the iterable has already been sorted. Works faster if it is.
+    :returns:
+        Iterable sequence of unique values.
+    """
+    if iterable:
+        def _unique(memo, item):
+            cond = last(memo) != item if is_sorted else not contains(memo, item)
+            if cond:
+                memo.append(item)
+            return memo
+        return reduce(_unique, rest(iterable), [first(iterable)])
+    else:
+        return iterable
