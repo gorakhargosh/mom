@@ -4,6 +4,10 @@
 :module: mom.functional
 :synopsis: Functional programming primitives.
 
+Utility functions
+-----------------
+.. autofunction:: identity
+
 Higher-order functions
 -----------------------
 These functions accept other functions as arguments and apply them over
@@ -102,6 +106,7 @@ __all__ = [
     "flatten",
     "flatten1",
     "ichunks",
+    "identity",
     "invert_dict",
     "ireject",
     "iselect",
@@ -167,7 +172,12 @@ def complement(func):
 # Utility functions
 def identity(x):
     """
-    Identity function.
+    Identity function. Produces what it consumes.
+
+    :param x:
+        Argument
+    :returns:
+        Argument.
     """
     return x
 
