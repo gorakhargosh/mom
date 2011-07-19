@@ -186,21 +186,21 @@ def complement(predicate):
 
 
 # Utility functions
-def identity(x):
+def identity(arg):
     """
     Identity function. Produces what it consumes.
 
-    :param x:
+    :param arg:
         Argument
     :returns:
         Argument.
     """
-    return x
+    return arg
 
 
 # Higher-order functions.
 
-def reduce(func, iterable, *args):
+def reduce(iterator, iterable, *args):
     """
     Aggregate a sequence of items into a single item. Python equivalent of
     Haskell's left fold.
@@ -212,7 +212,7 @@ def reduce(func, iterable, *args):
 
         reduce_right = foldr = lambda f, i: lambda s: reduce(f, s, i)
 
-    :param func:
+    :param iterator:
         Function with signature::
 
             f(x, y)
@@ -223,14 +223,14 @@ def reduce(func, iterable, *args):
     :returns:
         Aggregated item.
     """
-    return _reduce(func, iterable, *args)
+    return _reduce(iterator, iterable, *args)
 
 
-def each(func, iterable):
+def each(iterator, iterable):
     """
-    Iterates over iterable yielding each item in turn to :func:`func`.
+    Iterates over iterable yielding each item in turn to the iterator.
 
-    :param func:
+    :param iterator:
         The method signature is as follows:
 
             f(x, y)
@@ -241,16 +241,16 @@ def each(func, iterable):
         Iterable sequence or dictionary.
     """
     if isinstance(iterable, dict):
-        dict_each(func, iterable)
+        dict_each(iterator, iterable)
     else:
         for index, item in enumerate(iterable):
-            func(index, item)
+            iterator(index, item)
 
 
 def some(predicate, iterable):
     """
-    Determines whether :func:`func` applied to any element of the iterable is
-    true.
+    Determines whether the predicate applied to any element of the iterable
+    is true.
 
     :param predicate:
         Predicate function of the form::
@@ -259,8 +259,8 @@ def some(predicate, iterable):
     :param iterable:
         Iterable sequence.
     :returns:
-        ``True`` if :func:`func` applied to any element of the iterable is true;
-        ``False`` otherwise.
+        ``True`` if the predicate applied to any element of the iterable
+        is true; ``False`` otherwise.
     """
     for x in iterable:
         if predicate(x):
@@ -283,7 +283,7 @@ def _some2(predicate, iterable):
 
 def every(predicate, iterable):
     """
-    Determines whether :func:`func` is true for all elements in the iterable.
+    Determines whether the predicate is true for all elements in the iterable.
 
     :param predicate:
         Predicate function of the form::
@@ -292,10 +292,10 @@ def every(predicate, iterable):
     :param iterable:
         Iterable sequence.
     :returns:
-        ``True`` if :func:`func` is true for all elements in the iterable.
+        ``True`` if the predicate is true for all elements in the iterable.
     """
     # Equivalent to
-    # return all(map(func, iterable))
+    # return all(map(predicate, iterable))
     # but the following short-circuits.
     for x in iterable:
         if not predicate(x):
@@ -305,7 +305,7 @@ def every(predicate, iterable):
 
 def none(predicate, iterable):
     """
-    Determines whether :func:`func` is false for all elements in in iterable.
+    Determines whether the predicate is false for all elements in in iterable.
 
     :param predicate:
         Predicate function of the form::
@@ -314,14 +314,14 @@ def none(predicate, iterable):
     :param iterable:
         Iterable sequence.
     :returns:
-        ``True`` if :func:`func` is false for all elements in the iterable.
+        ``True`` if the predicate is false for all elements in the iterable.
     """
     return every(complement(predicate), iterable)
 
 
 def find(predicate, iterable, start=0):
     """
-    Determines the first index where :func:`func` is true for an element in
+    Determines the first index where the predicate is true for an element in
     the iterable.
 
     :param predicate:
@@ -344,7 +344,7 @@ def find(predicate, iterable, start=0):
 def leading(predicate, iterable, start=0):
     """
     Returns the number of leading elements in the iterable for which
-    :func:`func` is true.
+    the predicate is true.
 
     :param predicate:
         Predicate function of the form::
@@ -364,7 +364,7 @@ def leading(predicate, iterable, start=0):
 def trailing(predicate, iterable, start=-1):
     """
     Returns the number of trailing elements in the iterable for which
-    :func:`func` is true.
+    the predicate is true.
 
     :param predicate:
         Predicate function of the form::
@@ -384,66 +384,66 @@ def trailing(predicate, iterable, start=-1):
 
 def select(predicate, iterable):
     """
-    Select all items from the sequence for which func(item) is true.
+    Select all items from the sequence for which the predicate is true.
 
         select(function or None, sequence) -> list, tuple, or string
 
     :param predicate:
-        Predicate function. If func is ``None``, select all truthy items.
+        Predicate function. If ``None``, select all truthy items.
     :param iterable:
         Iterable.
     :returns:
-        A sequence of all items for which func(item) is true.
+        A sequence of all items for which the predicate is true.
     """
     return filter(predicate, iterable)
 
 
 def iselect(predicate, iterable):
     """
-    Select all items from the sequence for which func(item) is true.
+    Select all items from the sequence for which the predicate is true.
 
         iselect(function or None, sequence) --> ifilter object
 
     :param predicate:
-        Predicate function. If func is ``None``, select all truthy items.
+        Predicate function. If ``None``, select all truthy items.
     :param iterable:
         Iterable.
     :returns:
-        A sequence of all items for which func(item) is true.
+        A sequence of all items for which the predicate is true.
     """
     return ifilter(predicate, iterable)
 
 
 def reject(predicate, iterable):
     """
-    Reject all items from the sequence for which func(item) is true.
+    Reject all items from the sequence for which the predicate is true.
 
         select(function or None, sequence) -> list, tuple, or string
 
     :param predicate:
-        Predicate function. If func is ``None``, reject all truthy items.
+        Predicate function. If ``None``, reject all truthy items.
     :param iterable:
         If sequence is a tuple or string, return the same type, else return a
         list.
     :returns:
-        A sequence of all items for which func(item) is false.
+        A sequence of all items for which the predicate is false.
     """
     return filter(complement(predicate or bool), iterable)
 
 
 def ireject(predicate, iterable):
     """
-    Reject all items from the sequence for which func(item) is true.
+    Reject all items from the sequence for which the predicate is true.
 
         ireject(function or None, sequence) --> ifilterfalse object
 
     :param predicate:
-        Predicate function. If func is ``None``, reject all truthy items.
+        Predicate function. If ``None``, reject all truthy items.
     :param iterable:
         If sequence is a tuple or string, return the same type, else return a
         list.
     :returns:
-        A sequence of all items for which func(item) is false.
+        A sequence of all items for which the predicate is false.
     """
     return ifilterfalse(predicate, iterable)
 
