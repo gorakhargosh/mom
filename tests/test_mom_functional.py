@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, rest, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy
+    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, peel
 
 
 class Test_some(unittest2.TestCase):
@@ -553,6 +553,12 @@ class Test_partition(unittest2.TestCase):
     def test_not_iterable(self):
         self.assertRaises(TypeError, partition, bool, None)
 
+
+class Test_peel(unittest2.TestCase):
+    def test_peel(self):
+        self.assertEqual(list(peel("abbbc")), ["b", "b", "b"])
+        self.assertEqual(peel(""), "")
+        self.assertEqual(list(peel("a")), [])
 
 if __name__ == '__main__':
     unittest2.main()

@@ -70,13 +70,15 @@ Iterable sequences
 ------------------
 Indexing and slicing
 ~~~~~~~~~~~~~~~~~~~~
+.. autofunction:: chunks
 .. autofunction:: first
 .. autofunction:: last
-.. autofunction:: rest
-.. autofunction:: take
 .. autofunction:: nth
-.. autofunction:: chunks
+.. autofunction:: peel
+.. autofunction:: rest
 .. autofunction:: round_robin
+.. autofunction:: take
+
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,6 +155,7 @@ __all__ = [
     "none",
     "nth",
     "partition",
+    "peel",
     "pluck",
     "reduce",
     "reject",
@@ -755,6 +758,20 @@ def last(iterable):
         Last element of the iterable sequence.
     """
     return nth(iterable, len(iterable)-1)
+
+
+def peel(iterable):
+    """
+    Returns the meat of an iterable by peeling off one element from both ends.
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Peeled iterable.
+    """
+    if not iterable:
+        return iterable
+    return islice(iterable, 1, len(iterable) - 1, 1)
 
 
 def chunks(iterable, size, *args, **kwargs):
