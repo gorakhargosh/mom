@@ -500,7 +500,7 @@ def ireject(predicate, iterable):
 
 def partition(predicate, iterable):
     """
-    Partitions an interable into two iterables where for the elements of
+    Partitions an iterable into two iterables where for the elements of
     one iterable the predicate is true and for those of the other it is false.
 
     :param predicate:
