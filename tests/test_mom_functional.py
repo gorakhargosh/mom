@@ -264,8 +264,11 @@ class Test_chunks(unittest2.TestCase):
     def test_returns_generator_object(self):
         self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
 
-    def test_odd_ball_grouping(self):
+    def test_no_fillvalue(self):
         self.assertEqual(list(chunks("aaabb", 3)), ["aaa", "bb"])
+
+    def test_fillvalue(self):
+        self.assertEqual(list(chunks("aaaabb", 4, "-")), ["aaaa", "bb--"])
 
 
 class Test_each(unittest2.TestCase):
@@ -308,6 +311,7 @@ class Test_compact(unittest2.TestCase):
     def test_compact(self):
         self.assertEqual(compact([1, 0, 0, 1, None, True, False, {}]),
             [1, 1, True])
+        self.assertEqual(compact((0, 1, 2, False, None, True)), (1, 2, True))
 
 
 class Test_compose(unittest2.TestCase):

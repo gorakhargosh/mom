@@ -618,24 +618,48 @@ def ichunks(iterable, size):
         yield islice(iterable, i, i + size)
 
 
-def chunks(iterable, size):
+def chunks(iterable, size, fillvalue=None):
     """
     Splits an iterable into an iterable of chunks each of specified chunk size.
+
+    Example::
+
+        chunks("aaaabbbbccccdd", 4) -> ["aaaa", "bbbb", "cccc", "dd"]
 
     :param iterable:
         The iterable to split.
     :param size:
         Chunk size.
+    :param fillvalue:
+        Default ``None``. If fillvalue is specified it will be appended
+        to each chunk to satisfy the chunk size::
+
+            chunks("aaaabb", 4, "-") -> ["aaaa", "bb--"]
+
     :returns:
         Generator of sequences each of the specified chunk size.
     """
-    for i in range(0, len(iterable), size):
-        yield iterable[i:i+size]
+    if fillvalue:
+        for i in range(0, len(iterable), size):
+            value = iterable[i:i+size]
+            yield value + (fillvalue * (size - len(value)))
+    else:
+        for i in range(0, len(iterable), size):
+            yield iterable[i:i+size]
 
 
 def compact(iterable):
     """
     Returns a new iterable with all the falsy values discarded.
+
+    Example::
+
+        compact((0, 1, 2, False, None, True)) -> (1, 2, True)
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Iterable with truthy values.
     """
     return select(bool, iterable)
 
@@ -643,6 +667,10 @@ def compact(iterable):
 def flatten(iterable):
     """
     Flattens nested iterables into a single iterable.
+
+    Example::
+
+        flatten((1, (0, 5, ('a', 'b')), (3, 4))) -> [1, 0, 5, 'a', 'b', 3, 4]
 
     :param iterable:
         Iterable sequence of iterables.
@@ -662,6 +690,11 @@ def flatten1(iterable):
     """
     Flattens nested iterables into a single iterable only one level
     deep.
+
+    Example::
+
+        flatten1((1, (0, 5, ('a', 'b')), (3, 4))) -> [1, 0, 5, ('a', 'b'), 3, 4]
+
 
     :param iterable:
         Iterable sequence of iterables.
