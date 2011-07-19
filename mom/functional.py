@@ -757,7 +757,7 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
-def chunks(iterable, size, pad=None):
+def chunks(iterable, size, *args, **kwargs):
     """
     Splits an iterable into an iterable of chunks each of specified size.
 
@@ -768,29 +768,30 @@ def chunks(iterable, size, pad=None):
     :param pad:
         Default ``None``, which means no padding will be appended.
 
-        If a pad iterable is specified it will be appended to the end if the
-        size is not an integral multiple of the length of the iterable:
+        If a pad value is specified appropriate multiples of it will be
+        appended to the end of the iterator if the size is not an integral
+        multiple of the length of the iterable:
 
             map(tuple, chunks("aaabccd", 3, "-"))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", "-", "-")]
 
-            map(tuple, chunks("aaabccd", 3, [None]))
+            map(tuple, chunks("aaabccd", 3, None))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
 
     :returns:
-        Generates a sequence of chunk iterators each having the specified chunk
-        size.
+        Generates a sequence of chunk iterators.
     """
     length = len(iterable)
     range_ = range(0, length, size)
-    if pad:
+    if args or kwargs:
+        pad = kwargs["pad"] if kwargs else args[0]
         remainder = length % size
         if remainder:
             last_index = length - remainder
             for i in range_:
                 it = islice(iterable, i, i + size)
                 if last_index == i:
-                    yield chain(it, pad * (size - remainder))
+                    yield chain(it, repeat(pad, (size - remainder)))
                 else:
                     yield it
         else:

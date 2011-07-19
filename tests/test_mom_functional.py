@@ -305,13 +305,13 @@ class Test_chunks(unittest2.TestCase):
         for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
-        got = chunks("aaaabbbbccccdddd", 4, [None])
+        got = chunks("aaaabbbbccccdddd", 4, None)
         expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
         for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
     def test_filler_None(self):
-        got = chunks("aaaabbbccccddd", 4, [None])
+        got = chunks("aaaabbbccccddd", 4, None)
         expected = (("a", "a", "a", "a"),
                     ("b", "b", "b", "c"),
                     ("c", "c", "c", "d"),
@@ -319,8 +319,8 @@ class Test_chunks(unittest2.TestCase):
         for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
-    def test_TypeError_when_filler_not_iterable(self):
-        self.assertRaises(TypeError, map, tuple, chunks("aabbc", 2, 3))
+#    def test_TypeError_when_filler_not_iterable(self):
+#        self.assertRaises(TypeError, map, tuple, chunks("aabbc", 2, 3))
 
     def test_returns_generator_object(self):
         self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
