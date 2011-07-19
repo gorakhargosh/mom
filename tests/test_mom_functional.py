@@ -258,6 +258,10 @@ class Test_pluck(unittest2.TestCase):
             pluck([dict(a="something"), dict(b="something")], "a", None),
             ("something", None)
         )
+        self.assertEqual(
+            pluck([dict(a="something"), dict(b="something")], "a", default=None),
+            ("something", None)
+        )
 
 
 class Test_ichunks(unittest2.TestCase):
