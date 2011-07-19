@@ -11,7 +11,7 @@ from mom.functional import \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
-    reduce, identity
+    reduce, identity, flatten, flatten1
 
 
 class Test_some(unittest2.TestCase):
@@ -407,6 +407,19 @@ class Test_identity(unittest2.TestCase):
         self.assertEqual(identity({}), {})
         self.assertEqual(identity(None), None)
 
+class Test_flatten(unittest2.TestCase):
+    def test_flattened(self):
+        self.assertEqual(
+            flatten([[0, 1, 2], (0, 6, (5, 4), ('a', 'b')), (7, 8)]),
+            [0, 1, 2, 0, 6, 5, 4, 'a', 'b', 7, 8]
+        )
+
+class Test_flatten1(unittest2.TestCase):
+    def test_flattened_one_level(self):
+        self.assertEqual(
+            flatten1((1, (0, 5, ('a', 'b')), (3, 4))),
+            [1, 0, 5, ('a', 'b'), 3, 4]
+        )
 
 if __name__ == '__main__':
     unittest2.main()

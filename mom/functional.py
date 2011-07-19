@@ -170,9 +170,12 @@ def identity(x):
 
 # Higher-order functions.
 
-def reduce(func, iterable):
+def reduce(func, iterable, *args):
     """
     Aggregate a sequence of items into a single item.
+
+    Please see Python documentation for reduce. There is no change in behavior.
+    This is simply a wrapper function.
 
     :param func:
         Function with signature::
@@ -180,10 +183,12 @@ def reduce(func, iterable):
             f(x, y)
     :param iterable:
         Iterable sequence.
+    :param initial:
+        Initial value.
     :returns:
         Aggregated item.
     """
-    return _reduce(func, iterable)
+    return _reduce(func, iterable, *args)
 
 
 def each(func, iterable):
@@ -425,8 +430,8 @@ def select_dict(func, dictionary):
     Select a dictionary.
 
     :param func:
-        Predicate function that accepts a single argument of type ``(key, value)``
-        and returns ``True`` for selectable elements.
+        Predicate function that accepts a single argument of type
+        ``(key, value)`` and returns ``True`` for selectable elements.
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
@@ -438,8 +443,8 @@ def reject_dict(func, dictionary):
     Select a dictionary.
 
     :param func:
-        Predicate function that accepts a single argument of type ``(key, value)``
-        and returns ``True`` for rejected elements.
+        Predicate function that accepts a single argument of type
+        ``(key, value)`` and returns ``True`` for rejected elements.
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
@@ -620,3 +625,39 @@ def compact(iterable):
     """
     return select(bool, iterable)
 
+
+def flatten(iterable):
+    """
+    Flattens nested iterables into a single iterable.
+
+    :param iterable:
+        Iterable sequence of iterables.
+    :returns:
+        Iterable sequence of items.
+    """
+    def _flatten(memo, item):
+        if isinstance(item, (list, tuple)):
+            return memo + reduce(_flatten, item, [])
+        else:
+            memo.append(item)
+            return memo
+    return reduce(_flatten, iterable, [])
+
+
+def flatten1(iterable):
+    """
+    Flattens nested iterables into a single iterable only one level
+    deep.
+
+    :param iterable:
+        Iterable sequence of iterables.
+    :returns:
+        Iterable sequence of items.
+    """
+    def _flatten(memo, item):
+        if isinstance(item, (list, tuple)):
+            return memo + list(item)
+        else:
+            memo.append(item)
+            return memo
+    return reduce(_flatten, iterable, [])
