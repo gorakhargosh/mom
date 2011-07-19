@@ -44,6 +44,8 @@ Iterable sequence helpers
 .. autofunction:: last
 .. autofunction:: rest
 
+.. autofunction:: flatten
+.. autofunction:: flatten1
 .. autofunction:: chunks
 .. autofunction:: compact
 .. autofunction:: contains
@@ -97,6 +99,8 @@ __all__ = [
     "every",
     "find",
     "first",
+    "flatten",
+    "flatten1",
     "ichunks",
     "invert_dict",
     "ireject",
