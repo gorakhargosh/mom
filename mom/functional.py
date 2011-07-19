@@ -36,6 +36,7 @@ Counting
 ~~~~~~~~
 .. autofunction:: leading
 .. autofunction:: trailing
+.. autofunction:: tally
 
 Function-generators
 ~~~~~~~~~~~~~~~~~~~
@@ -136,6 +137,7 @@ __all__ = [
     "select_dict",
     "some",
     "take",
+    "tally",
     "trailing",
     "union",
     "unique",
@@ -144,7 +146,7 @@ __all__ = [
 
 from functools import partial
 from itertools import \
-    ifilter, islice, takewhile, ifilterfalse, dropwhile, chain, cycle
+    ifilter, islice, takewhile, ifilterfalse, dropwhile, chain, cycle, imap
 from mom._builtins import range, dict_each, reduce as _reduce, next
 from mom.builtins import is_sequence
 
@@ -380,6 +382,20 @@ def trailing(predicate, iterable, start=-1):
     """
     start = abs(start + 1) if start < 0 else start
     return leading(predicate, reversed(iterable), start)
+
+
+def tally(predicate, iterable):
+    """
+    Count how many times the predicate is true.
+
+    :param predicate:
+        Predicate function.
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        The number of times a predicate is true.
+    """
+    return sum(imap(predicate, iterable))
 
 
 def select(predicate, iterable):
