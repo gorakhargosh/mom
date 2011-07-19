@@ -197,10 +197,15 @@ def identity(x):
 
 def reduce(func, iterable, *args):
     """
-    Aggregate a sequence of items into a single item.
+    Aggregate a sequence of items into a single item. Python equivalent of
+    Haskell's left fold.
 
     Please see Python documentation for reduce. There is no change in behavior.
     This is simply a wrapper function.
+
+    If you need reduce_right (right fold)::
+
+        reduce_right = foldr = lambda f, i: lambda s: reduce(f, s, i)
 
     :param func:
         Function with signature::
