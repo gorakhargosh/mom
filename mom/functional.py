@@ -213,19 +213,6 @@ def complement(predicate):
     return f
 
 
-# Utility functions
-def identity(arg):
-    """
-    Identity function. Produces what it consumes.
-
-    :param arg:
-        Argument
-    :returns:
-        Argument.
-    """
-    return arg
-
-
 # Higher-order functions.
 
 def reduce(iterator, iterable, *args):
@@ -918,3 +905,17 @@ def round_robin(*iterables):
         except StopIteration:
             pending -= 1
             nexts = cycle(islice(nexts, pending))
+
+
+
+# Utility functions
+def identity(arg):
+    """
+    Identity function. Produces what it consumes.
+
+    :param arg:
+        Argument
+    :returns:
+        Argument.
+    """
+    return arg
