@@ -129,10 +129,9 @@ __all__ = [
 ]
 
 from functools import partial
-from itertools import ifilter, islice, takewhile, ifilterfalse, dropwhile
-from mom._builtins import range, dict_each, reduce as _reduce
+from itertools import ifilter, islice, takewhile, ifilterfalse, dropwhile, chain
+from mom._builtins import range, dict_each, reduce as _reduce, next
 from mom.builtins import is_sequence
-
 
 
 # Higher-order functions that generate other functions.
@@ -570,7 +569,6 @@ def without(iterable, *values):
     """
     return difference(iterable, values)
 
-
 def first(iterable):
     """
     Returns the first element out of an iterable.
@@ -580,7 +578,7 @@ def first(iterable):
     :returns:
         First element of the iterable sequence.
     """
-    return iterable[0]
+    return nth(iterable, 0)
 
 
 def rest(iterable):
@@ -592,7 +590,23 @@ def rest(iterable):
     :returns:
         All elements of the iterable sequence excluding the first.
     """
-    return iterable[1:]
+    return islice(iterable, 1, None, 1)
+
+
+def nth(iterable, n, default=None):
+    """
+    Returns the nth element out of an iterable.
+
+    :param iterable:
+        Iterable sequence.
+    :param n:
+        Index
+    :param default:
+        If not found, this or ``None`` will be returned.
+    :returns:
+        nth element of the iterable sequence.
+    """
+    return next(islice(iterable, n, None), default)
 
 
 def last(iterable):
@@ -604,7 +618,7 @@ def last(iterable):
     :returns:
         Last element of the iterable sequence.
     """
-    return iterable[-1]
+    return nth(iterable, len(iterable)-1)
 
 
 def ichunks(iterable, size):
@@ -733,3 +747,15 @@ def unique(iterable, is_sorted=False):
         return reduce(_unique, rest(iterable), [first(iterable)])
     else:
         return iterable
+
+
+def union(*iterables):
+    """
+    Returns the union of given iterable sequences.
+
+    :param iterables:
+        Variable number of input iterable sequences.
+    :returns:
+        Union of the iterable sequences.
+    """
+    return unique(iter(chain(*iterables)))

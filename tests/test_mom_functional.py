@@ -11,7 +11,7 @@ from mom.functional import \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
-    reduce, identity, flatten, flatten1, unique, _some1, _some2
+    reduce, identity, flatten, flatten1, unique, _some1, _some2, union
 
 
 class Test_some(unittest2.TestCase):
@@ -328,7 +328,7 @@ class Test_seq(unittest2.TestCase):
         self.assertEqual(last(range(10)), 9)
 
     def test_rest(self):
-        self.assertEqual(rest(range(10)), range(1, 10))
+        self.assertEqual(list(rest(range(10))), range(1, 10))
 
 
 class Test_compact(unittest2.TestCase):
@@ -457,6 +457,13 @@ class Test_unique(unittest2.TestCase):
         self.assertEqual(unique('google', False),
             ["g", "o", "l", "e"])
         self.assertEqual(unique(""), "")
+
+class Test_union(unittest2.TestCase):
+    def test_union(self):
+        self.assertEqual(
+            union("google", "yahoo"),
+            ["g", "o", "l", "e", "y", "a", "h"]
+        )
 
 
 if __name__ == '__main__':
