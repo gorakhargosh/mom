@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally
+    union, nth, intersection, take, round_robin, tally, _leading
 
 
 class Test_some(unittest2.TestCase):
@@ -85,6 +85,26 @@ class Test_find(unittest2.TestCase):
         self.assertRaises(TypeError, find, lambda w: w > 2, 5)
         self.assertRaises(TypeError, find, lambda w: w > 2, True)
 
+
+class Test__leading(unittest2.TestCase):
+    def test_count(self):
+        self.assertEqual(_leading(lambda w: w > 0, [0, 0, 1]), 0)
+        self.assertEqual(_leading(lambda w: w > 1, [2, 2, 3, 0, 5]), 3)
+        self.assertEqual(_leading(lambda w: ord(w) >= ord('c'), "abalskjd"), 0)
+        self.assertEqual(_leading(lambda w: ord(w) >= ord('c'), "cuddleya"), 7)
+
+    def test_start(self):
+        self.assertEqual(_leading(lambda w: w == "0", "0001"), 3)
+        self.assertEqual(_leading(lambda w: w == "0", "0001", 0), 3)
+        self.assertEqual(_leading(lambda w: w == "0", "0001", 1), 2)
+
+    def test_full_count(self):
+        self.assertEqual(_leading(lambda w: w > 0, range(1, 10)), 9)
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, _leading, lambda w: w > 0, None)
+        self.assertRaises(TypeError, _leading, lambda w: w > 0, 3)
+        self.assertRaises(TypeError, _leading, lambda w: w > 0, True)
 
 class Test_leading(unittest2.TestCase):
     def test_count(self):
