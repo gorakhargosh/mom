@@ -766,8 +766,6 @@ def chunks(iterable, size, *args, **kwargs):
     :param size:
         Chunk size.
     :param pad:
-        Default ``None``, which means no padding will be appended.
-
         If a pad value is specified appropriate multiples of it will be
         appended to the end of the iterator if the size is not an integral
         multiple of the length of the iterable:
@@ -778,6 +776,9 @@ def chunks(iterable, size, *args, **kwargs):
             map(tuple, chunks("aaabccd", 3, None))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
 
+        If no pad value is specified, nothing will be appended and if
+        the chunk size is not an integral multiple of the length of the iterable
+        the last chunk will have chunk size less than the specified size.
     :returns:
         Generates a sequence of chunk iterators.
     """
