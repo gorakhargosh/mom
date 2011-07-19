@@ -11,7 +11,7 @@ from mom.functional import \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
-    reduce, identity, flatten, flatten1, unique
+    reduce, identity, flatten, flatten1, unique, _some1, _some2
 
 
 class Test_some(unittest2.TestCase):
@@ -24,6 +24,30 @@ class Test_some(unittest2.TestCase):
         self.assertRaises(TypeError, some, lambda w: w > 0, None)
         self.assertRaises(TypeError, some, lambda w: w > 0, 5)
         self.assertRaises(TypeError, some, lambda w: w > 0, True)
+
+
+class Test__some1(unittest2.TestCase):
+    def test_valid(self):
+        self.assertTrue(_some1(lambda w: w > 0, [0, -1, 4, 6]))
+
+        self.assertFalse(_some1(lambda w: w > 0, [0, -1, -4, 0]))
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, _some1, lambda w: w > 0, None)
+        self.assertRaises(TypeError, _some1, lambda w: w > 0, 5)
+        self.assertRaises(TypeError, _some1, lambda w: w > 0, True)
+
+class Test__some2(unittest2.TestCase):
+    def test_valid(self):
+        self.assertTrue(_some2(lambda w: w > 0, [0, -1, 4, 6]))
+
+        self.assertFalse(_some2(lambda w: w > 0, [0, -1, -4, 0]))
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, _some2, lambda w: w > 0, None)
+        self.assertRaises(TypeError, _some2, lambda w: w > 0, 5)
+        self.assertRaises(TypeError, _some2, lambda w: w > 0, True)
+
 
 class Test_every(unittest2.TestCase):
     def test_valid(self):
@@ -432,6 +456,7 @@ class Test_unique(unittest2.TestCase):
             ["a", "b", "c", "y"])
         self.assertEqual(unique('google', False),
             ["g", "o", "l", "e"])
+        self.assertEqual(unique(""), "")
 
 
 if __name__ == '__main__':
