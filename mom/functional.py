@@ -507,6 +507,8 @@ def partition(predicate, iterable):
         Function of the format::
 
             f(x) -> bool
+    :param iterable:
+        Iterable sequence.
     :returns:
         Tuple (selected, rejected)
     """
