@@ -49,17 +49,18 @@ Indexing and slicing
 .. autofunction:: first
 .. autofunction:: last
 .. autofunction:: rest
+.. autofunction:: take
 .. autofunction:: nth
+.. autofunction:: ichunks
+.. autofunction:: chunks
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: flatten
 .. autofunction:: flatten1
-.. autofunction:: chunks
 .. autofunction:: compact
 .. autofunction:: contains
 .. autofunction:: difference
-.. autofunction:: ichunks
 .. autofunction:: union
 .. autofunction:: intersection
 .. autofunction:: unique
@@ -132,6 +133,7 @@ __all__ = [
     "select",
     "select_dict",
     "some",
+    "take",
     "trailing",
     "union",
     "unique",
@@ -649,7 +651,7 @@ def ichunks(iterable, size):
         Generator of sequences each of the specified chunk size.
     """
     for i in range(0, len(iterable), size):
-        yield islice(iterable, i, i + size)
+        yield tuple(islice(iterable, i, i + size))
 
 
 def chunks(iterable, size, fillvalue=None):
@@ -790,3 +792,17 @@ def intersection(*iterables):
     def f(item):
         return every(partial(contains, item=item), iterables[1:])
     return filter(f, unique(iterables[0]))
+
+
+def take(iterable, n):
+    """
+    Return first n items of the iterable as a tuple.
+
+    :param n:
+        The number of items to obtain.
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        First n items of the iterable as a tuple.
+    """
+    return tuple(islice(iterable, 0, n, 1))

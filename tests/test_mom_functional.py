@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, rest, compact, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection
+    union, nth, intersection, take
 
 
 class Test_some(unittest2.TestCase):
@@ -256,27 +256,24 @@ class Test_pluck(unittest2.TestCase):
 
 class Test_ichunks(unittest2.TestCase):
     def test_valid_grouping(self):
-        g = ichunks("aaaabbbbccccdddd", 4)
-        li = []
-        for i in g:
-            li.append(list(i))
-        self.assertEqual(li,
-                         [["a"] * 4, ["b"] * 4, ["c"] * 4, ["d"] * 4])
+        got = ichunks("aaaabbbbccccdddd", 4)
+        expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
+        for g, e in zip(got, expected):
+            self.assertEqual(g, e)
 
-        li = []
-        for i in ichunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3):
-            li.append(list(i))
-        self.assertEqual(li,
-                         [[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+        got = ichunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
+        expected = [(1, 1, 1), (2, 2, 2), (3, 3, 3)]
+        for g, e in zip(got, expected):
+            self.assertEqual(g, e)
 
     def test_returns_generator_object(self):
         self.assertEqual(type(ichunks("aaaabbbb", 4)).__name__, "generator")
 
     def test_odd_ball_grouping(self):
-        li = []
-        for x in ichunks("aaabb", 3):
-            li.append(list(x))
-        self.assertEqual(li, [["a"] * 3, ["b"] * 2])
+        got = ichunks("aaabb", 3)
+        expected = [("a",) * 3, ("b",) * 2]
+        for g, e in zip(got, expected):
+            self.assertEqual(g, e)
 
 
 class Test_chunks(unittest2.TestCase):
@@ -482,6 +479,12 @@ class Test_intersection(unittest2.TestCase):
     def test_intersection(self):
         self.assertEqual(intersection([1, 2, 3, 0], [0, 2, 3]), [2, 3, 0])
         self.assertEqual(intersection([1, 5, 4], [0, 2, 3]), [])
+
+
+class Test_take(unittest2.TestCase):
+    def test_take(self):
+        self.assertEqual(take([1, 2, 3, 4, 5], 3), (1, 2, 3))
+
 
 if __name__ == '__main__':
     unittest2.main()
