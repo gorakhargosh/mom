@@ -305,6 +305,11 @@ class Test_chunks(unittest2.TestCase):
         for g, e in zip(map(tuple, got), expected):
             self.assertEqual(g, e)
 
+        got = chunks("aaaabbbbccccdddd", 4, [None])
+        expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
+        for g, e in zip(map(tuple, got), expected):
+            self.assertEqual(g, e)
+
     def test_filler_None(self):
         got = chunks("aaaabbbccccddd", 4, [None])
         expected = (("a", "a", "a", "a"),
