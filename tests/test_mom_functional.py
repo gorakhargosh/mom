@@ -9,10 +9,10 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, compact, ichunks, compose, contains, \
+    pluck, first, last, rest, truthy, ichunks, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally, _leading, partition
+    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy
 
 
 class Test_some(unittest2.TestCase):
@@ -359,11 +359,18 @@ class Test_seq(unittest2.TestCase):
         self.assertEqual(list(rest(range(10))), range(1, 10))
 
 
-class Test_compact(unittest2.TestCase):
-    def test_compact(self):
-        self.assertEqual(compact([1, 0, 0, 1, None, True, False, {}]),
+class Test_truthy(unittest2.TestCase):
+    def test_truthy(self):
+        self.assertEqual(truthy([1, 0, 0, 1, None, True, False, {}]),
             [1, 1, True])
-        self.assertEqual(compact((0, 1, 2, False, None, True)), (1, 2, True))
+        self.assertEqual(truthy((0, 1, 2, False, None, True)), (1, 2, True))
+
+
+class Test_falsy(unittest2.TestCase):
+    def test_falsy(self):
+        self.assertEqual(falsy([1, 0, 0, 1, None, True, False, {}]),
+            [0, 0, None, False, {}])
+        self.assertEqual(falsy((0, 1, 2, False, None, True)), (0, False, None))
 
 
 class Test_compose(unittest2.TestCase):

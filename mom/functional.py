@@ -83,7 +83,7 @@ Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: flatten
 .. autofunction:: flatten1
-.. autofunction:: compact
+.. autofunction:: truthy
 .. autofunction:: contains
 .. autofunction:: difference
 .. autofunction:: union
@@ -131,7 +131,7 @@ __author__ = ", ".join([
 
 __all__ = [
     "chunks",
-    "compact",
+    "truthy",
     "complement",
     "compose",
     "contains",
@@ -803,13 +803,13 @@ def chunks(iterable, size, fillvalue=None):
             yield iterable[i:i+size]
 
 
-def compact(iterable):
+def truthy(iterable):
     """
-    Returns a new iterable with all the falsy values discarded.
+    Returns a iterable with only the truthy values.
 
     Example::
 
-        compact((0, 1, 2, False, None, True)) -> (1, 2, True)
+        truthy((0, 1, 2, False, None, True)) -> (1, 2, True)
 
     :param iterable:
         Iterable sequence.
@@ -817,6 +817,22 @@ def compact(iterable):
         Iterable with truthy values.
     """
     return select(bool, iterable)
+
+
+def falsy(iterable):
+    """
+    Returns a iterable with only the falsy values.
+
+    Example::
+
+        falsy((0, 1, 2, False, None, True)) -> (0, False, None)
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Iterable with false values.
+    """
+    return select(complement(bool), iterable)
 
 
 def flatten(iterable):
