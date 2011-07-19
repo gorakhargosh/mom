@@ -388,6 +388,8 @@ def tally(predicate, iterable):
     """
     Count how many times the predicate is true.
 
+    Taken from the Python documentation.
+
     :param predicate:
         Predicate function.
     :param iterable:
