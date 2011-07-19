@@ -284,7 +284,7 @@ class Test_pluck(unittest2.TestCase):
         )
 
 
-class Test_ichunks(unittest2.TestCase):
+class Test_morsels(unittest2.TestCase):
     def test_valid_grouping(self):
         got = morsels("aaaabbbbccccdddd", 4)
         expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
@@ -293,6 +293,24 @@ class Test_ichunks(unittest2.TestCase):
 
         got = morsels([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
         expected = [(1, 1, 1), (2, 2, 2), (3, 3, 3)]
+        for g, e in zip(got, expected):
+            self.assertEqual(g, e)
+
+    def test_filler(self):
+        got = morsels("aaaabbbccccddd", 4, "-")
+        expected = (("a", "a", "a", "a"),
+                    ("b", "b", "b", "c"),
+                    ("c", "c", "c", "d"),
+                    ("d", "d", "-", "-"))
+        for g, e in zip(got, expected):
+            self.assertEqual(g, e)
+
+    def test_filler_None(self):
+        got = morsels("aaaabbbccccddd", 4, [None])
+        expected = (("a", "a", "a", "a"),
+                    ("b", "b", "b", "c"),
+                    ("c", "c", "c", "d"),
+                    ("d", "d", None, None))
         for g, e in zip(got, expected):
             self.assertEqual(g, e)
 
@@ -316,11 +334,14 @@ class Test_chunks(unittest2.TestCase):
     def test_returns_generator_object(self):
         self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
 
-    def test_no_fillvalue(self):
+    def test_no_filler(self):
         self.assertEqual(list(chunks("aaabb", 3)), ["aaa", "bb"])
 
-    def test_fillvalue(self):
+    def test_filler(self):
         self.assertEqual(list(chunks("aaaabb", 4, "-")), ["aaaa", "bb--"])
+
+    def test_TypeError_when_bad_type(self):
+        self.assertRaises(TypeError, list, chunks("aabbc", 2, [None]))
 
 
 class Test_each(unittest2.TestCase):

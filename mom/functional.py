@@ -51,15 +51,15 @@ Filtering
 ~~~~~~~~~
 .. autofunction:: ireject
 .. autofunction:: iselect
+.. autofunction:: partition
 .. autofunction:: reject
 .. autofunction:: select
-.. autofunction:: partition
 
 Counting
 ~~~~~~~~
 .. autofunction:: leading
-.. autofunction:: trailing
 .. autofunction:: tally
+.. autofunction:: trailing
 
 Function-generators
 ~~~~~~~~~~~~~~~~~~~
@@ -75,20 +75,20 @@ Indexing and slicing
 .. autofunction:: rest
 .. autofunction:: take
 .. autofunction:: nth
-.. autofunction:: morsels
 .. autofunction:: chunks
+.. autofunction:: morsels
 .. autofunction:: round_robin
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. autofunction:: flatten
-.. autofunction:: flatten1
-.. autofunction:: truthy
-.. autofunction:: falsy
 .. autofunction:: contains
 .. autofunction:: difference
-.. autofunction:: union
+.. autofunction:: falsy
+.. autofunction:: flatten
+.. autofunction:: flatten1
 .. autofunction:: intersection
+.. autofunction:: truthy
+.. autofunction:: union
 .. autofunction:: unique
 .. autofunction:: without
 
@@ -143,7 +143,6 @@ __all__ = [
     "first",
     "flatten",
     "flatten1",
-    "morsels",
     "identity",
     "intersection",
     "invert_dict",
@@ -152,13 +151,14 @@ __all__ = [
     "last",
     "leading",
     "map_dict",
+    "morsels",
     "none",
     "nth",
     "partition",
     "pluck",
+    "reduce",
     "reject",
     "reject_dict",
-    "reduce",
     "rest",
     "round_robin",
     "select",
@@ -175,7 +175,7 @@ __all__ = [
 
 from functools import partial
 from itertools import \
-    ifilter, islice, takewhile, ifilterfalse, dropwhile, chain, cycle, imap
+    ifilter, islice, takewhile, ifilterfalse, dropwhile, chain, cycle, imap, repeat
 from mom._builtins import range, dict_each, reduce as _reduce, next
 
 
@@ -759,7 +759,7 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
-def morsels(iterable, size):
+def morsels(iterable, size, filler=None):
     """
     Splits an iterable into an iterable of morsels each of specified size.
     Like :func:`chunks` but returns each chunk as a tuple.
@@ -768,38 +768,59 @@ def morsels(iterable, size):
         The iterable to split.
     :param size:
         Morsel size.
+    :param filler:
+        Default ``None``, which means no filler will be appended.
+
+        If a filler iterable is specified it will be appended to the end if the size
+        is not an integral multiple of the length of the iterable:
+
+            list(morsels("aaabccd", 3, "-"))
+            -> [("a", "a", "a"), ("b", "c", "c"), ("d", "-", "-")]
+
+            list(morsels("aaabccd", 3, [None]))
+            -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
+
     :returns:
         Generator of tuples each of the specified size.
     """
-    for i in range(0, len(iterable), size):
-        yield tuple(islice(iterable, i, i + size))
+    if filler:
+        for i in range(0, len(iterable), size):
+            value = list(islice(iterable, i, i + size))
+            times = size - len(value)
+            yield tuple(chain(value, filler * times))
+    else:
+        for i in range(0, len(iterable), size):
+            yield tuple(islice(iterable, i, i + size))
 
 
-def chunks(iterable, size, fillvalue=None):
+def chunks(iterable, size, filler=None):
     """
     Splits an iterable into an iterable of chunks each of specified chunk size.
 
     Example::
 
-        chunks("aaaabbbbccccdd", 4) -> ["aaaa", "bbbb", "cccc", "dd"]
+        list(chunks("aaaabbbbccccdd", 4)) -> ["aaaa", "bbbb", "cccc", "dd"]
 
     :param iterable:
         The iterable to split.
     :param size:
         Chunk size.
-    :param fillvalue:
-        Default ``None``. If fillvalue is specified it will be appended
-        to each chunk to satisfy the chunk size::
+    :param filler:
+        Default ``None``, which means no filler will be appended.
 
-            chunks("aaaabb", 4, "-") -> ["aaaa", "bb--"]
+        If a filler iterable is specified it will be appended to the end if the
+        size is not an integral multiple of the length of the iterable:
+
+            list(chunks("aaaabb", 4, "-")) -> ["aaaa", "bb--"]
 
     :returns:
         Generator of sequences each of the specified chunk size.
     """
-    if fillvalue:
+    if filler:
         for i in range(0, len(iterable), size):
             value = iterable[i:i+size]
-            yield value + (fillvalue * (size - len(value)))
+            times = size - len(value)
+            yield value + (filler * times)
     else:
         for i in range(0, len(iterable), size):
             yield iterable[i:i+size]
