@@ -170,18 +170,18 @@ def compose(*funcs):
     return composition
 
 
-def complement(func):
+def complement(predicate):
     """
     Generates a complementary predicate function for the given predicate
     function.
 
-    :param func:
+    :param predicate:
         Predicate function.
     :returns:
         Complementary predicate function.
     """
     def f(*args, **kwargs):
-        return not func(*args, **kwargs)
+        return not predicate(*args, **kwargs)
     return f
 
 
