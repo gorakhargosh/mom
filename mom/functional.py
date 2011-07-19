@@ -772,7 +772,7 @@ def peel(iterable, count=1):
     :returns:
         Peeled iterable.
     """
-    if not iterable:
+    if not iterable or count < 0:
         return imap(identity, [])
     try:
         return islice(iterable, count, len(iterable) - count, 1)
