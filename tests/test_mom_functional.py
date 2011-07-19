@@ -9,7 +9,7 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     chunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, truthy, ichunks, compose, contains, \
+    pluck, first, last, rest, truthy, morsels, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, partition, falsy
@@ -286,21 +286,21 @@ class Test_pluck(unittest2.TestCase):
 
 class Test_ichunks(unittest2.TestCase):
     def test_valid_grouping(self):
-        got = ichunks("aaaabbbbccccdddd", 4)
+        got = morsels("aaaabbbbccccdddd", 4)
         expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
         for g, e in zip(got, expected):
             self.assertEqual(g, e)
 
-        got = ichunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
+        got = morsels([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
         expected = [(1, 1, 1), (2, 2, 2), (3, 3, 3)]
         for g, e in zip(got, expected):
             self.assertEqual(g, e)
 
     def test_returns_generator_object(self):
-        self.assertEqual(type(ichunks("aaaabbbb", 4)).__name__, "generator")
+        self.assertEqual(type(morsels("aaaabbbb", 4)).__name__, "generator")
 
     def test_odd_ball_grouping(self):
-        got = ichunks("aaabb", 3)
+        got = morsels("aaabb", 3)
         expected = [("a",) * 3, ("b",) * 2]
         for g, e in zip(got, expected):
             self.assertEqual(g, e)

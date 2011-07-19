@@ -75,7 +75,7 @@ Indexing and slicing
 .. autofunction:: rest
 .. autofunction:: take
 .. autofunction:: nth
-.. autofunction:: ichunks
+.. autofunction:: morsels
 .. autofunction:: chunks
 .. autofunction:: round_robin
 
@@ -143,7 +143,7 @@ __all__ = [
     "first",
     "flatten",
     "flatten1",
-    "ichunks",
+    "morsels",
     "identity",
     "intersection",
     "invert_dict",
@@ -759,16 +759,17 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
-def ichunks(iterable, size):
+def morsels(iterable, size):
     """
-    Splits an iterable into an iterable of chunks each of specified chunk size.
+    Splits an iterable into an iterable of morsels each of specified size.
+    Like :func:`chunks` but returns each chunk as a tuple.
 
     :param iterable:
         The iterable to split.
     :param size:
-        Chunk size.
+        Morsel size.
     :returns:
-        Generator of sequences each of the specified chunk size.
+        Generator of tuples each of the specified size.
     """
     for i in range(0, len(iterable), size):
         yield tuple(islice(iterable, i, i + size))
