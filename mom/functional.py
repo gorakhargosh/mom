@@ -757,7 +757,7 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
-def chunks(iterable, size, filler=None):
+def chunks(iterable, size, pad=None):
     """
     Splits an iterable into an iterable of chunks each of specified size.
 
@@ -765,11 +765,11 @@ def chunks(iterable, size, filler=None):
         The iterable to split.
     :param size:
         Chunk size.
-    :param filler:
-        Default ``None``, which means no filler will be appended.
+    :param pad:
+        Default ``None``, which means no padding will be appended.
 
-        If a filler iterable is specified it will be appended to the end if the size
-        is not an integral multiple of the length of the iterable:
+        If a pad iterable is specified it will be appended to the end if the
+        size is not an integral multiple of the length of the iterable:
 
             map(tuple, chunks("aaabccd", 3, "-"))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", "-", "-")]
@@ -781,13 +781,23 @@ def chunks(iterable, size, filler=None):
         Generates a sequence of chunk iterators each having the specified chunk
         size.
     """
-    if filler:
-        for i in range(0, len(iterable), size):
-            value = list(islice(iterable, i, i + size))
-            times = size - len(value)
-            yield chain(value, filler * times)
+    length = len(iterable)
+    range_ = range(0, length, size)
+    if pad:
+        remainder = length % size
+        if remainder:
+            last_index = length - remainder
+            for i in range_:
+                it = islice(iterable, i, i + size)
+                if last_index == i:
+                    yield chain(it, pad * (size - remainder))
+                else:
+                    yield it
+        else:
+            for i in range_:
+                yield islice(iterable, i, i + size)
     else:
-        for i in range(0, len(iterable), size):
+        for i in range_:
             yield islice(iterable, i, i + size)
 
 
