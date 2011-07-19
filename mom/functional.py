@@ -247,12 +247,12 @@ def each(func, iterable):
             func(index, item)
 
 
-def some(func, iterable):
+def some(predicate, iterable):
     """
     Determines whether :func:`func` applied to any element of the iterable is
     true.
 
-    :param func:
+    :param predicate:
         Predicate function of the form::
 
             f(x) -> bool
@@ -263,29 +263,29 @@ def some(func, iterable):
         ``False`` otherwise.
     """
     for x in iterable:
-        if func(x):
+        if predicate(x):
             return True
     return False
 
 
-def _some1(func, iterable):
+def _some1(predicate, iterable):
     """Alternative implementation of :func:`some`."""
-    return any(map(func, iterable))
+    return any(map(predicate, iterable))
 
 
-def _some2(func, iterable):
+def _some2(predicate, iterable):
     """Alternative implementation of :func:`some`."""
     result = False
-    for x in dropwhile(complement(func), iterable):
+    for x in dropwhile(complement(predicate), iterable):
         result = True
     return result
 
 
-def every(func, iterable):
+def every(predicate, iterable):
     """
     Determines whether :func:`func` is true for all elements in the iterable.
 
-    :param func:
+    :param predicate:
         Predicate function of the form::
 
             f(x) -> bool
@@ -298,16 +298,16 @@ def every(func, iterable):
     # return all(map(func, iterable))
     # but the following short-circuits.
     for x in iterable:
-        if not func(x):
+        if not predicate(x):
             return False
     return True
 
 
-def none(func, iterable):
+def none(predicate, iterable):
     """
     Determines whether :func:`func` is false for all elements in in iterable.
 
-    :param func:
+    :param predicate:
         Predicate function of the form::
 
             f(x) -> bool
@@ -316,15 +316,15 @@ def none(func, iterable):
     :returns:
         ``True`` if :func:`func` is false for all elements in the iterable.
     """
-    return every(complement(func), iterable)
+    return every(complement(predicate), iterable)
 
 
-def find(func, iterable, start=0):
+def find(predicate, iterable, start=0):
     """
     Determines the first index where :func:`func` is true for an element in
     the iterable.
 
-    :param func:
+    :param predicate:
         Predicate function of the form::
 
             f(x) -> bool
@@ -336,17 +336,17 @@ def find(func, iterable, start=0):
         -1 if not found; index (>= start) if found.
     """
     for i in range(start, len(iterable)):
-        if func(iterable[i]):
+        if predicate(iterable[i]):
             return i
     return -1
 
 
-def leading(func, iterable, start=0):
+def leading(predicate, iterable, start=0):
     """
     Returns the number of leading elements in the iterable for which
     :func:`func` is true.
 
-    :param func:
+    :param predicate:
         Predicate function of the form::
 
             f(x) -> bool
@@ -356,17 +356,17 @@ def leading(func, iterable, start=0):
         Start index. (Number of items to skip before starting counting.)
     """
     i = 0L
-    for _ in takewhile(func, islice(iterable, start, None, 1)):
+    for _ in takewhile(predicate, islice(iterable, start, None, 1)):
         i += 1L
     return i
 
 
-def trailing(func, iterable, start=-1):
+def trailing(predicate, iterable, start=-1):
     """
     Returns the number of trailing elements in the iterable for which
     :func:`func` is true.
 
-    :param func:
+    :param predicate:
         Predicate function of the form::
 
             f(x) -> bool
@@ -379,48 +379,48 @@ def trailing(func, iterable, start=-1):
         before beginning to count.
     """
     start = abs(start + 1) if start < 0 else start
-    return leading(func, reversed(iterable), start)
+    return leading(predicate, reversed(iterable), start)
 
 
-def select(func, iterable):
+def select(predicate, iterable):
     """
     Select all items from the sequence for which func(item) is true.
 
         select(function or None, sequence) -> list, tuple, or string
 
-    :param func:
+    :param predicate:
         Predicate function. If func is ``None``, select all truthy items.
     :param iterable:
         Iterable.
     :returns:
         A sequence of all items for which func(item) is true.
     """
-    return filter(func, iterable)
+    return filter(predicate, iterable)
 
 
-def iselect(func, iterable):
+def iselect(predicate, iterable):
     """
     Select all items from the sequence for which func(item) is true.
 
         iselect(function or None, sequence) --> ifilter object
 
-    :param func:
+    :param predicate:
         Predicate function. If func is ``None``, select all truthy items.
     :param iterable:
         Iterable.
     :returns:
         A sequence of all items for which func(item) is true.
     """
-    return ifilter(func, iterable)
+    return ifilter(predicate, iterable)
 
 
-def reject(func, iterable):
+def reject(predicate, iterable):
     """
     Reject all items from the sequence for which func(item) is true.
 
         select(function or None, sequence) -> list, tuple, or string
 
-    :param func:
+    :param predicate:
         Predicate function. If func is ``None``, reject all truthy items.
     :param iterable:
         If sequence is a tuple or string, return the same type, else return a
@@ -428,16 +428,16 @@ def reject(func, iterable):
     :returns:
         A sequence of all items for which func(item) is false.
     """
-    return filter(complement(func or bool), iterable)
+    return filter(complement(predicate or bool), iterable)
 
 
-def ireject(func, iterable):
+def ireject(predicate, iterable):
     """
     Reject all items from the sequence for which func(item) is true.
 
         ireject(function or None, sequence) --> ifilterfalse object
 
-    :param func:
+    :param predicate:
         Predicate function. If func is ``None``, reject all truthy items.
     :param iterable:
         If sequence is a tuple or string, return the same type, else return a
@@ -445,47 +445,47 @@ def ireject(func, iterable):
     :returns:
         A sequence of all items for which func(item) is false.
     """
-    return ifilterfalse(func, iterable)
+    return ifilterfalse(predicate, iterable)
 
 
 # Dictionaries
-def map_dict(func, dictionary):
+def map_dict(iterator, dictionary):
     """
     Maps over a dictionary of key, value pairs.
 
-    :param func:
+    :param iterator:
         Function that accepts a single argument of type ``(key, value)``
         and returns a ``(new key, new value)`` pair.
     :returns:
         New dictionary of ``(new key, new value)`` pairs.
     """
-    return dict(map(func, dictionary.items()))
+    return dict(map(iterator, dictionary.items()))
 
 
-def select_dict(func, dictionary):
+def select_dict(predicate, dictionary):
     """
     Select a dictionary.
 
-    :param func:
+    :param predicate:
         Predicate function that accepts a single argument of type
         ``(key, value)`` and returns ``True`` for selectable elements.
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    return dict(select(func or all, dictionary.items()))
+    return dict(select(predicate or all, dictionary.items()))
 
 
-def reject_dict(func, dictionary):
+def reject_dict(predicate, dictionary):
     """
     Select a dictionary.
 
-    :param func:
+    :param predicate:
         Predicate function that accepts a single argument of type
         ``(key, value)`` and returns ``True`` for rejected elements.
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    return dict(reject(func or all, dictionary.items()))
+    return dict(reject(predicate or all, dictionary.items()))
 
 
 def invert_dict(dictionary):
@@ -501,18 +501,18 @@ def invert_dict(dictionary):
 
 
 # Sequences of dictionaries
-def pluck(iterable_of_dict, key):
+def pluck(dicts, key):
     """
     Plucks values for a given key from a series of dictionaries.
 
-    :param iterable_of_dict:
+    :param dicts:
         Iterable sequence of dictionaries.
     :param key:
         The key to fetch.
     :returns:
         Iterable of values for the key.
     """
-    return map(lambda w: w[key], iterable_of_dict)
+    return map(lambda w: w[key], dicts)
 
 
 # Sequences
@@ -801,6 +801,8 @@ def take(iterable, n):
     """
     Return first n items of the iterable as a tuple.
 
+    Taken from the Python documentation.
+
     :param n:
         The number of items to obtain.
     :param iterable:
@@ -815,6 +817,7 @@ def round_robin(*iterables):
     """
     Returns items from the iterables in a round-robin fashion.
 
+    Taken from the Python documentation.
     Recipe credited to George Sakkis
 
     Example::
