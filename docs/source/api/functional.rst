@@ -10,10 +10,6 @@ Functional Programmming
 ================
 .. automodule:: mom.functional
 
-`mom.itertools`
-===============
-.. automodule:: mom.itertools
-
 
 .. toctree::
    :maxdepth: 2
