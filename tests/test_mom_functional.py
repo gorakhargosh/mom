@@ -14,7 +14,7 @@ from mom.functional import \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, \
     partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
-    loob, rest, ipluck, peel, chunks
+    loob, rest, ipluck, peel, chunks, _compose
 
 
 class Test_some(unittest2.TestCase):
@@ -436,6 +436,22 @@ class Test_compose(unittest2.TestCase):
 
         self.assertEqual(compose(plus1, times2)(5), 11)
         self.assertEqual(compose(times2, plus1)(5), 12)
+
+class Test__compose(unittest2.TestCase):
+    def test_composition(self):
+        greet = lambda name: "hi: " + name
+        exclaim = lambda statement: statement + "!"
+        welcome = _compose(exclaim, greet)
+        self.assertEqual(welcome("moe"), "hi: moe!")
+
+
+    def test_numerical_composition(self):
+        plus1 = lambda w: w + 1
+        times2 = lambda w: w * 2
+
+        self.assertEqual(_compose(plus1, times2)(5), 11)
+        self.assertEqual(_compose(times2, plus1)(5), 12)
+
 
 class Test_complement(unittest2.TestCase):
     def test_complementary_function(self):

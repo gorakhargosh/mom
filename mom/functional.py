@@ -197,23 +197,43 @@ from mom._builtins import range, dict_each, reduce as _reduce, next
 
 # Higher-order functions that generate other functions.
 
-def compose(*funcs):
+def compose(*functions):
     """
-    Composes a sequence of functions such that
+    Composes a sequence of functions such that::
 
-        compose(g(), f(), s()) -> g(f(s()))
+        compose(g, f, s) -> g(f(s()))
 
-    :param funcs:
+    :param functions:
         An iterable of functions.
     :returns:
         A composition function.
     """
-    def composition(*args_tuple):
+    def _composition(a, b):
+        def wrap(*args, **kwargs):
+            return a(b(*args, **kwargs))
+        return wrap
+    return reduce(_composition, functions)
+
+
+def _compose(*functions):
+    """
+    Alternative implementation.
+
+    Composes a sequence of functions such that::
+
+        compose(g(), f(), s()) -> g(f(s()))
+
+    :param functions:
+        An iterable of functions.
+    :returns:
+        A composition function.
+    """
+    def _composition(*args_tuple):
         args = list(args_tuple)
-        for func in reversed(funcs):
-            args = [func(*args)]
+        for function in reversed(functions):
+            args = [function(*args)]
         return args[0]
-    return composition
+    return _composition
 
 
 def complement(predicate):
