@@ -926,6 +926,9 @@ def chunks(iterable, size, *args, **kwargs):
     :param size:
         Chunk size.
     :param padding:
+        This must be an iterable. So if you want a ``None`` filler, use [None]
+        or (None, ) depending on whether it is a list or a tuple.
+
         If a pad value is specified appropriate multiples of it will be
         concatenated at the end of the iterable if the size is not an integral
         multiple of the length of the iterable:
@@ -933,10 +936,7 @@ def chunks(iterable, size, *args, **kwargs):
             tuple(chunks("aaabccd", 3, "-"))
             -> ("aaa", "bcc", "d--")
 
-            tuple(chunks("aaabccd", 3, None))
-            -> ("aaa", "bcc", "d")
-
-            tuple(chunks((1, 1, 1, 2, 2), 3, None))
+            tuple(chunks((1, 1, 1, 2, 2), 3, (None,)))
             -> ((1, 1, 1, ), (2, 2, None))
 
         If no padding is specified, nothing will be appended if the chunk

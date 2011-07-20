@@ -287,7 +287,7 @@ class Test_pluck(unittest2.TestCase):
         )
 
 
-class Test_chunks(unittest2.TestCase):
+class Test_ichunks(unittest2.TestCase):
     def test_valid_grouping(self):
         got = ichunks("aaaabbbbccccdddd", 4)
         expected = [("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4]
@@ -336,12 +336,16 @@ class Test_chunks(unittest2.TestCase):
         expected = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
         self.assertEqual(list(got), expected)
 
+        self.assertEqual(tuple(chunks((1, 1, 1, 2, 2), 3, (None,))),
+            ((1, 1, 1, ), (2, 2, None)))
+
     def test_filler(self):
         got = chunks("aaaabbbccccddd", 4, "-")
         self.assertEqual(list(got), ["aaaa", "bbbc", "cccd", "dd--"])
 
     def test_filler_wrong_type(self):
         self.assertRaises(TypeError, list, chunks("aaaabbbccccddd", 4, None))
+        self.assertRaises(TypeError, tuple, chunks((1, 1, 1, 2, 2), 3, [None,]))
 
     def test_returns_generator_object(self):
         self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
