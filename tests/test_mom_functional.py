@@ -336,15 +336,16 @@ class Test_chunks(unittest2.TestCase):
         expected = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
         self.assertEqual(list(got), expected)
 
+    def test_filler(self):
+        got = chunks("aaaabbbccccddd", 4, "-")
+        self.assertEqual(list(got), ["aaaa", "bbbc", "cccd", "dd--"])
+
+
         self.assertEqual(tuple(chunks((1, 1, 1, 2, 2), 3, (True,))),
             ((1, 1, 1, ), (2, 2, True)))
 
         self.assertEqual(tuple(chunks((1, 1, 1, 2, 2), 3, None)),
             ((1, 1, 1, ), (2, 2, None)))
-
-    def test_filler(self):
-        got = chunks("aaaabbbccccddd", 4, "-")
-        self.assertEqual(list(got), ["aaaa", "bbbc", "cccd", "dd--"])
 
     def test_filler_iterable_not_same_type_as_filler(self):
         #self.assertRaises(TypeError, list, chunks("aaaabbbccccddd", 4, None))

@@ -908,7 +908,7 @@ def ichunks(iterable, size, *args, **kwargs):
     Splits an iterable into iterators for chunks each of specified size.
 
     :param iterable:
-        The iterable to split.
+        The iterable to split. Must be an ordered sequence to guarantee order.
     :param size:
         Chunk size.
     :param padding:
@@ -945,7 +945,7 @@ def chunks(iterable, size, *args, **kwargs):
     Splits an iterable into materialized chunks each of specified size.
 
     :param iterable:
-        The iterable to split.
+        The iterable to split. Must be an ordered sequence to guarantee order.
     :param size:
         Chunk size.
     :param padding:
@@ -978,6 +978,7 @@ def chunks(iterable, size, *args, **kwargs):
             elif isinstance(iterable, tuple):
                 padding = (padding,)
             else:
+                iterable = list(iterable)
                 padding = [padding]
         padding_size = (size - (length % size))
         it = iterable + (padding * padding_size)
