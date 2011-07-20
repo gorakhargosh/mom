@@ -212,7 +212,7 @@ def compose(*functions):
         def wrap(*args, **kwargs):
             return a(b(*args, **kwargs))
         return wrap
-    return reduce(_composition, functions)
+    return _reduce(_composition, functions)
 
 
 def _compose(*functions):
