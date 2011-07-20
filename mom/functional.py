@@ -70,6 +70,7 @@ Iterable sequences
 ------------------
 Indexing and slicing
 ~~~~~~~~~~~~~~~~~~~~
+.. autofunction:: chunks
 .. autofunction:: ichunks
 .. autofunction:: first
 .. autofunction:: last
@@ -139,6 +140,7 @@ __author__ = ", ".join([
 ])
 
 __all__ = [
+    "chunks",
     "complement",
     "compose",
     "contains",
@@ -913,6 +915,46 @@ def ichunks(iterable, size, *args, **kwargs):
     else:
         for i in range(0, length, size):
             yield islice(iterable, i, i + size)
+
+
+def chunks(iterable, size, *args, **kwargs):
+    """
+    Splits an iterable into materialized chunks each of specified size.
+
+    :param iterable:
+        The iterable to split.
+    :param size:
+        Chunk size.
+    :param padding:
+        If a pad value is specified appropriate multiples of it will be
+        concatenated at the end of the iterable if the size is not an integral
+        multiple of the length of the iterable:
+
+            tuple(chunks("aaabccd", 3, "-"))
+            -> ("aaa", "bcc", "d--")
+
+            tuple(chunks("aaabccd", 3, None))
+            -> ("aaa", "bcc", "d")
+
+            tuple(chunks((1, 1, 1, 2, 2), 3, None))
+            -> ((1, 1, 1, ), (2, 2, None))
+
+        If no padding is specified, nothing will be appended if the chunk
+        size is not an integral multiple of the length of the iterable. That is,
+        the last chunk will have chunk size less than the specified chunk size.
+    :returns:
+        Generator of materialized chunks.
+    """
+    length = len(iterable)
+    if args or kwargs:
+        padding = kwargs["padding"] if kwargs else args[0]
+        padding_size = (size - (length % size))
+        it = iterable + (padding * padding_size)
+        for i in range(0, length, size):
+            yield it[i:i+size]
+    else:
+        for i in range(0, length, size):
+            yield iterable[i:i+size]
 
 
 def truthy(iterable):

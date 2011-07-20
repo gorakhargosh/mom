@@ -12,7 +12,9 @@ from mom.functional import \
     pluck, first, last, irest, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, loob, rest, ipluck, peel
+    union, nth, intersection, take, round_robin, tally, _leading, \
+    partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
+    loob, rest, ipluck, peel, chunks
 
 
 class Test_some(unittest2.TestCase):
@@ -285,17 +287,15 @@ class Test_pluck(unittest2.TestCase):
         )
 
 
-class Test_ichunks(unittest2.TestCase):
+class Test_chunks(unittest2.TestCase):
     def test_valid_grouping(self):
         got = ichunks("aaaabbbbccccdddd", 4)
-        expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
-        for g, e in zip(map(tuple, got), expected):
-            self.assertEqual(g, e)
+        expected = [("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4]
+        self.assertEqual(map(tuple, got), expected)
 
         got = ichunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
         expected = [(1, 1, 1), (2, 2, 2), (3, 3, 3)]
-        for g, e in zip(map(tuple, got), expected):
-            self.assertEqual(g, e)
+        self.assertEqual(map(tuple, got), expected)
 
     def test_filler(self):
         got = ichunks("aaaabbbccccddd", 4, "-")
@@ -317,9 +317,6 @@ class Test_ichunks(unittest2.TestCase):
                     ("d", "d", None, None)]
         self.assertEqual(map(tuple, got), expected)
 
-#    def test_TypeError_when_filler_not_iterable(self):
-#        self.assertRaises(TypeError, map, tuple, ichunks("aabbc", 2, 3))
-
     def test_returns_generator_object(self):
         self.assertEqual(type(ichunks("aaaabbbb", 4)).__name__, "generator")
 
@@ -327,6 +324,31 @@ class Test_ichunks(unittest2.TestCase):
         got = ichunks("aaabb", 3)
         expected = [("a",) * 3, ("b",) * 2]
         self.assertEqual(map(tuple, got), expected)
+
+
+class Test_chunks(unittest2.TestCase):
+    def test_valid_grouping(self):
+        got = chunks("aaaabbbbccccdddd", 4)
+        expected = ["aaaa", "bbbb", "cccc", "dddd"]
+        self.assertEqual(list(got), expected)
+
+        got = chunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
+        expected = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
+        self.assertEqual(list(got), expected)
+
+    def test_filler(self):
+        got = chunks("aaaabbbccccddd", 4, "-")
+        self.assertEqual(list(got), ["aaaa", "bbbc", "cccd", "dd--"])
+
+    def test_filler_wrong_type(self):
+        self.assertRaises(TypeError, list, chunks("aaaabbbccccddd", 4, None))
+
+    def test_returns_generator_object(self):
+        self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
+
+    def test_odd_ball_grouping(self):
+        got = chunks("aaabb", 3)
+        self.assertEqual(list(got), ["aaa", "bb"])
 
 
 class Test_each(unittest2.TestCase):
