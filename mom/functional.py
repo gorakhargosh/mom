@@ -193,7 +193,9 @@ __all__ = [
 
 from functools import partial
 from itertools import \
-    ifilter, islice, takewhile, ifilterfalse, dropwhile, chain, cycle, imap, repeat
+    ifilter, islice, takewhile, \
+    ifilterfalse, dropwhile, chain, \
+    cycle, imap, repeat
 from mom._compat import range, dict_each, reduce as _reduce, next
 
 
