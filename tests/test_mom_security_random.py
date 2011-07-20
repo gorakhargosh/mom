@@ -13,7 +13,7 @@ from mom.security.random import \
 
 class Test_generate_random_bits(unittest2.TestCase):
     def test_range(self):
-        for i in range(9999):
+        for i in range(999):
             n_bits = 4
             value = bytes_to_long(generate_random_bits(n_bits))
             self.assertTrue(value >= 0 and value < (2L ** n_bits))
@@ -34,7 +34,7 @@ class Test_generate_random_bits(unittest2.TestCase):
 
 class Test_generate_random_ulong(unittest2.TestCase):
     def test_range(self):
-        for i in range(1000):
+        for i in range(999):
             generate_random_ulong(i + 1, False)
             self.assertTrue(generate_random_ulong(i + 1, True) & (2L ** ((i + 1) - 1)))
 
