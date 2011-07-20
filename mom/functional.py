@@ -895,11 +895,11 @@ def ipeel(iterable, count=1):
     if count < 0:
         raise ValueError("peel count cannot be negative: %r" % count)
     if not iterable:
-        return imap(identity, [])
+        return iter([])
     try:
         return islice(iterable, count, len(iterable) - count, 1)
     except ValueError:
-        return imap(identity, [])
+        return iter([])
 
 
 def ichunks(iterable, size, *args, **kwargs):
