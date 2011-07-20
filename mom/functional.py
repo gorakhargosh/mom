@@ -1,6 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Aum Gam Ganapataye Namah
+# The Apache Licence, Version 2.0
+#
+# Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 :module: mom.functional
 :synopsis: Functional programming primitives.
@@ -40,9 +56,7 @@ succinctly instead of writing a ton of for and while loops.
     Now before you go all guns blazing with this set of functions, please note
     that Python generators/iterators are for single use only. Attempting to use
     the same iterator multiple times will cause unexpected behavior in your
-    code. For more information, read
-
-    http://sandersn.com/blog//index.php/2009/06/29/python_s_iterators_are_a_bad_implementat
+    code.
 
     Be careful.
 
@@ -126,30 +140,15 @@ Utility functions
 """
 
 from __future__ import absolute_import
+
+from functools import partial
+from itertools import\
+    ifilter, islice, takewhile,\
+    ifilterfalse, dropwhile, chain,\
+    cycle, imap, repeat
+
 from mom.builtins import is_bytes_or_unicode
-
-
-license = """\
-The Apache Licence, Version 2.0
-
-Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
-
-__author__ = ", ".join([
-    "Yesudeep Mangalapilly",
-])
+from mom._compat import range, dict_each, reduce as _reduce, next
 
 __all__ = [
     "chunks",
@@ -201,14 +200,7 @@ __all__ = [
     "union",
     "unique",
     "without",
-]
-
-from functools import partial
-from itertools import \
-    ifilter, islice, takewhile, \
-    ifilterfalse, dropwhile, chain, \
-    cycle, imap, repeat
-from mom._compat import range, dict_each, reduce as _reduce, next
+    ]
 
 
 # Higher-order functions that generate other functions.
@@ -224,10 +216,13 @@ def compose(function, *functions):
     :returns:
         A composition function.
     """
+
     def _composition(a, b):
         def wrap(*args, **kwargs):
             return a(b(*args, **kwargs))
+
         return wrap
+
     return _reduce(_composition, functions, function)
 
 
@@ -245,11 +240,13 @@ def _compose(function, *functions):
         A composition function.
     """
     functions = (function, ) + functions if functions else (function, )
+
     def _composition(*args_tuple):
         args = list(args_tuple)
         for function in reversed(functions):
             args = [function(*args)]
         return args[0]
+
     return _composition
 
 
@@ -263,8 +260,10 @@ def complement(predicate):
     :returns:
         Complementary predicate function.
     """
+
     def f(*args, **kwargs):
         return not predicate(*args, **kwargs)
+
     return f
 
 
@@ -554,10 +553,12 @@ def partition(predicate, iterable):
     :returns:
         Tuple (selected, rejected)
     """
+
     def _partitioner(memo, item):
         part = memo[0] if predicate(item) else memo[1]
         part.append(item)
         return memo
+
     return tuple(_reduce(_partitioner, iterable, [[], []]))
 
 
@@ -647,6 +648,7 @@ def ipluck(dicts, key, *args, **kwargs):
     """
     if args or kwargs:
         default = kwargs['default'] if kwargs else args[0]
+
         def _get_value_from_dict(d):
             return d.get(key, default)
     else:
@@ -870,7 +872,7 @@ def last(iterable):
     :returns:
         Last element of the iterable sequence.
     """
-    return nth(iterable, len(iterable)-1)
+    return nth(iterable, len(iterable) - 1)
 
 
 def peel(iterable, count=1):
@@ -994,10 +996,10 @@ def chunks(iterable, size, *args, **kwargs):
         padding_size = (size - (length % size))
         it = iterable + (padding * padding_size)
         for i in range(0, length, size):
-            yield it[i:i+size]
+            yield it[i:i + size]
     else:
         for i in range(0, length, size):
-            yield iterable[i:i+size]
+            yield iterable[i:i + size]
 
 
 def truthy(iterable):
@@ -1058,7 +1060,7 @@ def ifalsy(iterable):
 
     :param iterable:
         Iterable sequence.
-    :returns:
+    :yields:
         Iterator for an iterable with falsy values.
     """
     return ifilterfalse(bool, iterable)
@@ -1077,12 +1079,14 @@ def flatten(iterable):
     :returns:
         Iterable sequence of items.
     """
+
     def _flatten(memo, item):
         if isinstance(item, (list, tuple)):
             return memo + _reduce(_flatten, item, [])
         else:
             memo.append(item)
             return memo
+
     return _reduce(_flatten, iterable, [])
 
 
@@ -1100,12 +1104,14 @@ def flatten1(iterable):
     :returns:
         Iterable sequence of items.
     """
+
     def _flatten(memo, item):
         if isinstance(item, (list, tuple)):
             return memo + list(item)
         else:
             memo.append(item)
             return memo
+
     return _reduce(_flatten, iterable, [])
 
 
@@ -1129,6 +1135,7 @@ def unique(iterable, is_sorted=False):
             if cond:
                 memo.append(item)
             return memo
+
         return _reduce(_unique, irest(iterable), [first(iterable)])
     else:
         return iterable
@@ -1156,8 +1163,10 @@ def intersection(*iterables):
         Intersection of the iterable sequences in the order of appearance
         in the first sequence.
     """
+
     def f(item):
         return every(partial(contains, item=item), iterables[1:])
+
     return filter(f, unique(iterables[0]))
 
 

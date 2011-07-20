@@ -1,5 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# The Apache Licence, Version 2.0
+#
+# Copyright (C) 2009 Facebook.
+# Copyright (C) 2010 Google Inc.
+# Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 :module: mom.builtins
 :synopsis: Deals with a lot of cross-version issues.
@@ -79,32 +97,9 @@ Unicode string encoding
 """
 
 from __future__ import absolute_import
-
-__license__ = """\
-The Apache Licence, Version 2.0
-
-Copyright (C) 2009 Facebook.
-Copyright (C) 2010 Google Inc.
-Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
-
-__author__ = ", ".join([
-    "Trevor Perrin",
-    "Yesudeep Mangalapilly",
-])
-
+from exceptions import TypeError
+from mom._compat import \
+    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, next
 
 __all__ = [
     "bytes",
@@ -128,14 +123,8 @@ __all__ = [
     "bytes_to_unicode_recursive",
 ]
 
-from exceptions import TypeError
-from mom._compat import \
-    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, next
-
 range = range
-
 reduce = reduce
-
 next = next
 
 # Types and their meanings:
@@ -143,7 +132,6 @@ next = next
 # * ``bytes`` = bytes (binary data or a sequence of bytes).
 # * ``unicode`` = Unicode string or text (for backward compatibility,
 #    2to3 converts these).
-
 bytes = bytes_type
 
 # We don't really need to define this type.
