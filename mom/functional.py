@@ -1224,8 +1224,6 @@ def identity(arg):
     """
     return arg
 
-
-@complement
 def loob(arg):
     """
     Complement of bool.
@@ -1235,4 +1233,4 @@ def loob(arg):
     :returns:
         Complementary boolean value.
     """
-    return bool(arg)
+    return not bool(arg)
