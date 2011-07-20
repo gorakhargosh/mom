@@ -11,41 +11,45 @@ Borrowed from brownie.itools.
 
 from __future__ import absolute_import
 
-from itertools import repeat, izip
+from itertools import repeat, izip, chain
 
-class chain(object):
-    """
-    An iterator which yields elements from the given `iterables` until each
-    iterable is exhausted.
 
-    .. versionadded:: 0.2
-    """
-    @classmethod
-    def from_iterable(cls, iterable):
+if getattr(chain, "from_iterable", None):
+    chain = chain
+else:
+    class chain(object):
         """
-        Alternative constructor which takes an `iterable` yielding iterators,
-        this can be used to chain an infinite number of iterators.
+        An iterator which yields elements from the given `iterables` until each
+        iterable is exhausted.
+
+        .. versionadded:: 0.2
         """
-        rv = object.__new__(cls)
-        rv._init(iterable)
-        return rv
+        @classmethod
+        def from_iterable(cls, iterable):
+            """
+            Alternative constructor which takes an `iterable` yielding iterators,
+            this can be used to chain an infinite number of iterators.
+            """
+            rv = object.__new__(cls)
+            rv._init(iterable)
+            return rv
 
-    def __init__(self, *iterables):
-        self._init(iterables)
+        def __init__(self, *iterables):
+            self._init(iterables)
 
-    def _init(self, iterables):
-        self.iterables = iter(iterables)
-        self.current_iterable = iter([])
+        def _init(self, iterables):
+            self.iterables = iter(iterables)
+            self.current_iterable = iter([])
 
-    def __iter__(self):
-        return self
+        def __iter__(self):
+            return self
 
-    def next(self):
-        try:
-            return self.current_iterable.next()
-        except StopIteration:
-            self.current_iterable = iter(self.iterables.next())
-            return self.current_iterable.next()
+        def next(self):
+            try:
+                return self.current_iterable.next()
+            except StopIteration:
+                self.current_iterable = iter(self.iterables.next())
+                return self.current_iterable.next()
 
 
 def izip_longest(*iterables, **kwargs):
