@@ -197,7 +197,7 @@ from mom._builtins import range, dict_each, reduce as _reduce, next
 
 # Higher-order functions that generate other functions.
 
-def compose(*functions):
+def compose(function, *functions):
     """
     Composes a sequence of functions such that::
 
@@ -212,10 +212,10 @@ def compose(*functions):
         def wrap(*args, **kwargs):
             return a(b(*args, **kwargs))
         return wrap
-    return _reduce(_composition, functions)
+    return _reduce(_composition, functions, function)
 
 
-def _compose(*functions):
+def _compose(function, *functions):
     """
     Alternative implementation.
 
@@ -228,6 +228,10 @@ def _compose(*functions):
     :returns:
         A composition function.
     """
+    if functions:
+        functions = (function, ) + functions
+    else:
+        functions = [function]
     def _composition(*args_tuple):
         args = list(args_tuple)
         for function in reversed(functions):
