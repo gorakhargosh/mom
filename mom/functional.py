@@ -70,11 +70,11 @@ Iterable sequences
 ------------------
 Indexing and slicing
 ~~~~~~~~~~~~~~~~~~~~
-.. autofunction:: chunks
+.. autofunction:: ichunks
 .. autofunction:: first
 .. autofunction:: last
 .. autofunction:: nth
-.. autofunction:: peel
+.. autofunction:: ipeel
 .. autofunction:: rest
 .. autofunction:: round_robin
 .. autofunction:: take
@@ -134,7 +134,6 @@ __author__ = ", ".join([
 ])
 
 __all__ = [
-    "chunks",
     "complement",
     "compose",
     "contains",
@@ -146,9 +145,11 @@ __all__ = [
     "first",
     "flatten",
     "flatten1",
+    "ichunks",
     "identity",
     "intersection",
     "invert_dict",
+    "ipeel",
     "ireject",
     "iselect",
     "last",
@@ -159,7 +160,6 @@ __all__ = [
     "nth",
     "omits",
     "partition",
-    "peel",
     "pluck",
     "reduce",
     "reject",
@@ -797,10 +797,10 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
-def peel(iterable, count=1):
+def ipeel(iterable, count=1):
     """
-    Returns the meat of an iterable by peeling off the specified number of
-    elements from both ends.
+    Returns an iterator for the meat of an iterable by peeling off the specified
+    number of elements from both ends.
 
     :param iterable:
         Iterable sequence.
@@ -819,9 +819,9 @@ def peel(iterable, count=1):
         return imap(identity, [])
 
 
-def chunks(iterable, size, *args, **kwargs):
+def ichunks(iterable, size, *args, **kwargs):
     """
-    Splits an iterable into an iterable of chunks each of specified size.
+    Splits an iterable into iterators for chunks each of specified size.
 
     :param iterable:
         The iterable to split.
@@ -832,10 +832,10 @@ def chunks(iterable, size, *args, **kwargs):
         appended to the end of the iterator if the size is not an integral
         multiple of the length of the iterable:
 
-            map(tuple, chunks("aaabccd", 3, "-"))
+            map(tuple, ichunks("aaabccd", 3, "-"))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", "-", "-")]
 
-            map(tuple, chunks("aaabccd", 3, None))
+            map(tuple, ichunks("aaabccd", 3, None))
             -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
 
         If no padding is specified, nothing will be appended if the chunk

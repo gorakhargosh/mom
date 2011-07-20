@@ -68,7 +68,7 @@ __author__ = ", ".join([
 import binascii
 
 from mom.builtins import bytes
-from mom.functional import chunks
+from mom.functional import ichunks
 
 
 # Bytes base-encoding.
@@ -215,7 +215,7 @@ def bin_decode(encoded):
     """
     return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[nibble]
                               for nibble in map(lambda w: "".join(w),
-                                                chunks(encoded, 4))))
+                                                ichunks(encoded, 4))))
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
     #return long_to_bytes(long(encoded, 2))
