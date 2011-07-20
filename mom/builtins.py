@@ -79,7 +79,6 @@ Unicode string encoding
 """
 
 from __future__ import absolute_import
-from exceptions import TypeError
 
 __license__ = """\
 The Apache Licence, Version 2.0
@@ -129,7 +128,8 @@ __all__ = [
     "bytes_to_unicode_recursive",
 ]
 
-from mom._builtins import \
+from exceptions import TypeError
+from mom._compat import \
     byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, next
 
 range = range
