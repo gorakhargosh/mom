@@ -76,6 +76,7 @@ Indexing and slicing
 .. autofunction:: nth
 .. autofunction:: ipeel
 .. autofunction:: peel
+.. autofunction:: rest
 .. autofunction:: irest
 .. autofunction:: round_robin
 .. autofunction:: take
@@ -102,6 +103,7 @@ Dictionaries and dictionary sequences
 .. autofunction:: invert_dict
 .. autofunction:: map_dict
 .. autofunction:: pluck
+.. autofunction:: ipluck
 .. autofunction:: reject_dict
 .. autofunction:: select_dict
 
@@ -158,6 +160,7 @@ __all__ = [
     "ireject",
     "iselect",
     "itake",
+    "ipluck",
     "last",
     "leading",
     "loob",
@@ -171,6 +174,7 @@ __all__ = [
     "reduce",
     "reject",
     "reject_dict",
+    "rest",
     "irest",
     "round_robin",
     "select",
@@ -587,13 +591,30 @@ def pluck(dicts, key, *args, **kwargs):
     :returns:
         Tuple of values for the key.
     """
+    return tuple(ipluck(dicts, key, *args, **kwargs))
+
+
+def ipluck(dicts, key, *args, **kwargs):
+    """
+    Plucks values for a given key from a series of dictionaries as an iterator.
+
+    :param dicts:
+        Iterable sequence of dictionaries.
+    :param key:
+        The key to fetch.
+    :param default:
+        The default value to use when a key is not found. If this value is
+        not specified, a KeyError will be raised when a key is not found.
+    :returns:
+        Iterator of values for the key.
+    """
     if args or kwargs:
         default = kwargs['default'] if kwargs else args[0]
         def _get_value_from_dict(d):
             return d.get(key, default)
     else:
         _get_value_from_dict = lambda w: w[key]
-    return tuple(imap(_get_value_from_dict, dicts))
+    return imap(_get_value_from_dict, dicts)
 
 
 # Sequences
@@ -764,7 +785,7 @@ def first(iterable):
     return nth(iterable, 0)
 
 
-def irest(iterable):
+def rest(iterable):
     """
     Returns all elements excluding the first out of an iterable.
 
@@ -772,6 +793,18 @@ def irest(iterable):
         Iterable sequence.
     :returns:
         All elements of the iterable sequence excluding the first.
+    """
+    return iterable[1:]
+
+
+def irest(iterable):
+    """
+    Returns an iterator for all elements excluding the first out of an iterable.
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Iterator for all elements of the iterable sequence excluding the first.
     """
     return islice(iterable, 1, None, 1)
 
@@ -817,7 +850,7 @@ def peel(iterable, count=1):
         Peeled sequence.
     """
     if count < 0:
-        count = 0
+        raise ValueError("peel count cannot be negative: %r" % count)
     if not iterable:
         return iterable
     return iterable[count:-count]
@@ -836,7 +869,7 @@ def ipeel(iterable, count=1):
         Peel iterator.
     """
     if count < 0:
-        count = 0
+        raise ValueError("peel count cannot be negative: %r" % count)
     if not iterable:
         return imap(identity, [])
     try:

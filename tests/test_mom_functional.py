@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, irest, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, loob
+    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, loob, rest, ipluck, peel
 
 
 class Test_some(unittest2.TestCase):
@@ -265,6 +265,7 @@ class Test_pluck(unittest2.TestCase):
             {"name": 'banana', "taste": "sweet"},
         ]
         self.assertEqual(pluck(fruits, "name"), ("mango", "orange", "banana"))
+        self.assertEqual(tuple(ipluck(fruits, "name")), ("mango", "orange", "banana"))
 
     def test_TypeError_when_not_iterable_of_dicts(self):
         self.assertRaises(TypeError, pluck, ("foo", "blah"))
@@ -360,8 +361,11 @@ class Test_seq(unittest2.TestCase):
     def test_last(self):
         self.assertEqual(last(range(10)), 9)
 
-    def test_rest(self):
+    def test_irest(self):
         self.assertEqual(list(irest(range(10))), range(1, 10))
+
+    def test_rest(self):
+        self.assertEqual(rest(range(10)), range(1, 10))
 
 
 # Truthy and falsy tests.
@@ -589,12 +593,22 @@ class Test_partition(unittest2.TestCase):
 
 
 class Test_peel(unittest2.TestCase):
-    def test_peel(self):
+    def test_ipeel(self):
         self.assertEqual(list(ipeel("abbbc")), ["b", "b", "b"])
-        self.assertEqual(list(ipeel("abbbc", -1)), ["a", "b", "b", "b", "c"])
         self.assertEqual(list(ipeel("")), [])
         self.assertEqual(list(ipeel("a")), [])
         self.assertEqual(list(ipeel("a", 34)), [])
+
+    def test_ValueError_when_negative_count(self):
+        self.assertRaises(ValueError, ipeel, "abbbc", -1)
+        self.assertRaises(ValueError, peel, "abbbc", -1)
+
+    def test_peel(self):
+        self.assertEqual(peel("abbbc"), 'bbb')
+        self.assertEqual(peel(0), 0)
+        self.assertEqual(peel(""), "")
+        self.assertEqual(peel("a"), '')
+        self.assertEqual(peel("a", 34), '')
 
 class Test_loob(unittest2.TestCase):
     def test_loob(self):
