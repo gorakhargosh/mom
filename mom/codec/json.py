@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# The Apache Licence, Version 2.0
 #
 # Copyright (C) 2009 Facebook.
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
