@@ -115,6 +115,7 @@ Utility functions
 """
 
 from __future__ import absolute_import
+from mom.builtins import is_bytes_or_unicode
 
 
 license = """\
@@ -948,8 +949,9 @@ def chunks(iterable, size, *args, **kwargs):
     :param size:
         Chunk size.
     :param padding:
-        This must be an iterable. So if you want a ``None`` filler, use [None]
-        or (None, ) depending on whether it is a list or a tuple.
+        This must be an iterable or None. So if you want a ``True`` filler,
+        use [True] or (True, ) depending on whether the iterable is a list or
+        a tuple. Essentially, it must be the same type as the iterable.
 
         If a pad value is specified appropriate multiples of it will be
         concatenated at the end of the iterable if the size is not an integral
@@ -970,6 +972,13 @@ def chunks(iterable, size, *args, **kwargs):
     length = len(iterable)
     if args or kwargs:
         padding = kwargs["padding"] if kwargs else args[0]
+        if padding is None:
+            if is_bytes_or_unicode(iterable):
+                padding = ""
+            elif isinstance(iterable, tuple):
+                padding = (padding,)
+            else:
+                padding = [padding]
         padding_size = (size - (length % size))
         it = iterable + (padding * padding_size)
         for i in range(0, length, size):
