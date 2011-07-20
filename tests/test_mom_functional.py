@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, rest, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, peel
+    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, peel, omits, idifference, itruthy, ifalsy
 
 
 class Test_some(unittest2.TestCase):
@@ -284,7 +284,7 @@ class Test_pluck(unittest2.TestCase):
         )
 
 
-class Test_chunks(unittest2.TestCase):
+class Test_ichunks(unittest2.TestCase):
     def test_valid_grouping(self):
         got = chunks("aaaabbbbccccdddd", 4)
         expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
@@ -368,12 +368,12 @@ class Test_seq(unittest2.TestCase):
         self.assertEqual(list(rest(range(10))), range(1, 10))
 
 
+# Truthy and falsy tests.
 class Test_truthy(unittest2.TestCase):
     def test_truthy(self):
         self.assertEqual(truthy([1, 0, 0, 1, None, True, False, {}]),
             [1, 1, True])
         self.assertEqual(truthy((0, 1, 2, False, None, True)), (1, 2, True))
-
 
 class Test_falsy(unittest2.TestCase):
     def test_falsy(self):
@@ -381,7 +381,20 @@ class Test_falsy(unittest2.TestCase):
             [0, 0, None, False, {}])
         self.assertEqual(falsy((0, 1, 2, False, None, True)), (0, False, None))
 
+class Test_itruthy(unittest2.TestCase):
+    def test_itruthy(self):
+        self.assertEqual(itruthy([1, 0, 0, 1, None, True, False, {}]),
+            [1, 1, True])
+        self.assertEqual(itruthy((0, 1, 2, False, None, True)), (1, 2, True))
 
+class Test_ifalsy(unittest2.TestCase):
+    def test_ifalsy(self):
+        self.assertEqual(list(ifalsy([1, 0, 0, 1, None, True, False, {}])),
+            [0, 0, None, False, {}])
+        self.assertEqual(tuple(ifalsy((0, 1, 2, False, None, True))),
+            (0, False, None))
+
+# Function generator tests.
 class Test_compose(unittest2.TestCase):
     def test_composition(self):
         greet = lambda name: "hi: " + name
@@ -397,7 +410,16 @@ class Test_compose(unittest2.TestCase):
         self.assertEqual(compose(plus1, times2)(5), 11)
         self.assertEqual(compose(times2, plus1)(5), 12)
 
+class Test_complement(unittest2.TestCase):
+    def test_complementary_function(self):
+        def tru(x):
+            return True
+        fals = complement(tru)
+        ahem = complement(fals)
+        self.assertFalse(fals(5))
+        self.assertTrue(ahem(5))
 
+# Contains and omits tests
 class Test_contains(unittest2.TestCase):
     def test_contains_value(self):
         self.assertTrue(contains(range(4), 3))
@@ -412,6 +434,19 @@ class Test_contains(unittest2.TestCase):
         self.assertRaises(TypeError, contains, True, 4)
         self.assertRaises(TypeError, contains, 0, 4)
 
+class Test_omits(unittest2.TestCase):
+    def test_omits_value(self):
+        self.assertFalse(omits(range(4), 3))
+        self.assertTrue(omits(range(4), 43))
+        self.assertFalse(omits({"a": 4, "b": 5}, "a"))
+        self.assertTrue(omits({"a": 4, "b": 5}, "c"))
+        self.assertFalse(omits(set([1, 2, 3]), 3))
+        self.assertTrue(omits(set([1, 2, 3]), 5))
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, omits, None, 4)
+        self.assertRaises(TypeError, omits, True, 4)
+        self.assertRaises(TypeError, omits, 0, 4)
 
 class Test__contains(unittest2.TestCase):
     def test__contains_value(self):
@@ -425,7 +460,7 @@ class Test__contains(unittest2.TestCase):
         self.assertRaises(TypeError, _contains_fallback, True, 4)
         self.assertRaises(TypeError, _contains_fallback, 0, 4)
 
-
+# Unique, union, difference, and without tests.
 class Test_difference(unittest2.TestCase):
     def test_difference(self):
         self.assertEqual(difference(range(1, 6), [5, 2, 10]), [1, 3, 4])
@@ -440,13 +475,25 @@ class Test_difference(unittest2.TestCase):
         self.assertRaises(TypeError, difference, 0, True)
         self.assertRaises(TypeError, difference, 0, 0)
 
+class Test_idifference(unittest2.TestCase):
+    def test_idifference(self):
+        self.assertEqual(list(idifference(range(1, 6), [5, 2, 10])), [1, 3, 4])
+        self.assertEqual("".join(idifference("abcdefg", "abc")), "defg")
+        self.assertEqual("".join(idifference("abcdefg", "xyz")), "abcdefg")
+
+    def test_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, idifference, None, None)
+        self.assertRaises(TypeError, idifference, None, True)
+        self.assertRaises(TypeError, idifference, None, 0)
+        self.assertRaises(TypeError, idifference, 0, None)
+        self.assertRaises(TypeError, idifference, 0, True)
+        self.assertRaises(TypeError, idifference, 0, 0)
 
 class Test_without(unittest2.TestCase):
     def test_without(self):
         self.assertEqual(without(range(1, 6), *[5, 2, 10]), [1, 3, 4])
         self.assertEqual(without("abcdefg", *list("abc")), "defg")
         self.assertEqual(without("abcdefg", *list("xyz")), "abcdefg")
-
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, without, None, None)
@@ -456,15 +503,20 @@ class Test_without(unittest2.TestCase):
         self.assertRaises(TypeError, without, 0, True)
         self.assertRaises(TypeError, without, 0, 0)
 
+class Test_unique(unittest2.TestCase):
+    def test_uniques(self):
+        self.assertEqual(unique('aabbccyyyyyyyyyyyyyyyyy', True),
+            ["a", "b", "c", "y"])
+        self.assertEqual(unique('google', False),
+            ["g", "o", "l", "e"])
+        self.assertEqual(unique(""), "")
 
-class Test_complement(unittest2.TestCase):
-    def test_complementary_function(self):
-        def tru(x):
-            return True
-        fals = complement(tru)
-        ahem = complement(fals)
-        self.assertFalse(fals(5))
-        self.assertTrue(ahem(5))
+class Test_union(unittest2.TestCase):
+    def test_union(self):
+        self.assertEqual(
+            union("google", "yahoo"),
+            ["g", "o", "l", "e", "y", "a", "h"]
+        )
 
 
 class Test_reduce(unittest2.TestCase):
@@ -498,21 +550,6 @@ class Test_flatten1(unittest2.TestCase):
             [1, 0, 5, ('a', 'b'), 3, 4]
         )
 
-
-class Test_unique(unittest2.TestCase):
-    def test_uniques(self):
-        self.assertEqual(unique('aabbccyyyyyyyyyyyyyyyyy', True),
-            ["a", "b", "c", "y"])
-        self.assertEqual(unique('google', False),
-            ["g", "o", "l", "e"])
-        self.assertEqual(unique(""), "")
-
-class Test_union(unittest2.TestCase):
-    def test_union(self):
-        self.assertEqual(
-            union("google", "yahoo"),
-            ["g", "o", "l", "e", "y", "a", "h"]
-        )
 
 
 class Test_nth(unittest2.TestCase):
