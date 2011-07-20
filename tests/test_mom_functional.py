@@ -448,7 +448,6 @@ class Test__compose(unittest2.TestCase):
         welcome = _compose(exclaim, greet)
         self.assertEqual(welcome("moe"), "hi: moe!")
 
-
     def test_numerical_composition(self):
         plus1 = lambda w: w + 1
         times2 = lambda w: w * 2

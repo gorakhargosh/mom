@@ -1095,6 +1095,9 @@ def unique(iterable, is_sorted=False):
     :returns:
         Iterable sequence of unique values.
     """
+    # If we used a "seen" set like the Python documentation implementation does,
+    # we'd have to ensure that the elements are hashable. This implementation
+    # does not have that problem. We can improve this implementation.
     if iterable:
         def _unique(memo, item):
             cond = last(memo) != item if is_sorted else omits(memo, item)
