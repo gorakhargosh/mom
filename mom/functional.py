@@ -228,10 +228,7 @@ def _compose(function, *functions):
     :returns:
         A composition function.
     """
-    if functions:
-        functions = (function, ) + functions
-    else:
-        functions = [function]
+    functions = (function, ) + functions if functions else (function, )
     def _composition(*args_tuple):
         args = list(args_tuple)
         for function in reversed(functions):
