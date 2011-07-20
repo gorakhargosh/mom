@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:module: mom._builtins
+:module: mom._compat
 :synopsis: Deals with a lot of cross-version issues.
 
 Should not be used in public code. Use the wrappers in mom.
