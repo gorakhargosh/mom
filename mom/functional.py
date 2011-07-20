@@ -90,8 +90,18 @@ Function-generators
 .. autofunction:: complement
 .. autofunction:: compose
 
+Iterators
+---------
+These functions take iterators as arguments.
+
+.. autofunction:: eat
+
+
 Iterable sequences
 ------------------
+These functions allow you to filter, manipulate, slice, index, etc.
+iterable sequences.
+
 Indexing and slicing
 ~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: chunks
@@ -105,6 +115,8 @@ Indexing and slicing
 .. autofunction:: rest
 .. autofunction:: round_robin
 .. autofunction:: take
+.. autofunction:: ncycles
+
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,6 +151,7 @@ Utility functions
 """
 
 from __future__ import absolute_import
+import collections
 
 from functools import partial
 from itertools import\
@@ -165,6 +178,7 @@ __all__ = [
     "ichunks",
     "identity",
     "idifference",
+    "eat",
     "ifalsy",
     "intersection",
     "invert_dict",
@@ -178,6 +192,7 @@ __all__ = [
     "leading",
     "loob",
     "map_dict",
+    "ncycles",
     "none",
     "nth",
     "omits",
@@ -460,7 +475,7 @@ def tally(predicate, iterable):
     """
     Count how many times the predicate is true.
 
-    Taken from the Python documentation.
+    Taken from the Python documentation. Under the PSF license.
 
     :param predicate:
         Predicate function.
@@ -610,7 +625,12 @@ def invert_dict(dictionary):
     :returns:
         New dictionary with the keys and values switched.
     """
-    return map_dict(lambda (k, v): (v, k), dictionary)
+
+    def _switch(t):
+        k, v = t
+        return v, k
+
+    return map_dict(_switch, dictionary)
 
 
 # Sequences of dictionaries
@@ -1136,7 +1156,7 @@ def take(iterable, n):
     """
     Return first n items of the iterable as a tuple.
 
-    Taken from the Python documentation.
+    Taken from the Python documentation. Under the PSF license.
 
     :param n:
         The number of items to obtain.
@@ -1152,7 +1172,7 @@ def round_robin(*iterables):
     """
     Returns items from the iterables in a round-robin fashion.
 
-    Taken from the Python documentation.
+    Taken from the Python documentation. Under the PSF license.
     Recipe credited to George Sakkis
 
     Example::
@@ -1173,6 +1193,49 @@ def round_robin(*iterables):
         except StopIteration:
             pending -= 1
             nexts = cycle(islice(nexts, pending))
+
+
+def eat(iterator, n):
+    """
+    Advance an iterator n-steps ahead. If n is None, eat entirely.
+
+    Taken from the Python documentation. Under the PSF license.
+
+    :param iterator:
+        An iterator.
+    :param n:
+        The number of steps to advance.
+    :yields:
+        An iterator.
+    """
+    # Use functions that consume iterators at C speed.
+    if n is None:
+        # Feed the entire iterator into a zero-length deque.
+        collections.deque(iterator, maxLen=0)
+    else:
+        # Advance to the empty slice starting at position n.
+        next(islice(iterator, n, n), None)
+
+
+def ncycles(iterable, n):
+    """
+    Yields the sequence elements n times.
+
+    Taken from the Python documentation. Under the PSF license.
+
+    :param iterable:
+        Iterable sequence.
+    :param n:
+        The number of times to yield the sequence.
+    :yields:
+        Iterator.
+    """
+    try:
+        return chain.from_iterable(repeat(tuple(iterable), n))
+    except AttributeError:
+        # For compatibility.
+        from mom.itertools import chain, repeat
+        return chain.from_iterable(repeat(tuple(iterable), n))
 
 
 # Utility functions
