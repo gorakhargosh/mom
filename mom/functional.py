@@ -71,30 +71,30 @@ Iterable sequences
 Indexing and slicing
 ~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: chunks
-.. autofunction:: ichunks
 .. autofunction:: first
+.. autofunction:: ichunks
+.. autofunction:: ipeel
+.. autofunction:: irest
+.. autofunction:: itake
 .. autofunction:: last
 .. autofunction:: nth
-.. autofunction:: ipeel
 .. autofunction:: peel
 .. autofunction:: rest
-.. autofunction:: irest
 .. autofunction:: round_robin
 .. autofunction:: take
-.. autofunction:: itake
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: contains
-.. autofunction:: omits
 .. autofunction:: difference
 .. autofunction:: falsy
 .. autofunction:: flatten
 .. autofunction:: flatten1
-.. autofunction:: intersection
-.. autofunction:: truthy
-.. autofunction:: itruthy
 .. autofunction:: ifalsy
+.. autofunction:: intersection
+.. autofunction:: itruthy
+.. autofunction:: omits
+.. autofunction:: truthy
 .. autofunction:: union
 .. autofunction:: unique
 .. autofunction:: without
@@ -102,9 +102,9 @@ Manipulation, filtering, union and difference
 Dictionaries and dictionary sequences
 -------------------------------------
 .. autofunction:: invert_dict
+.. autofunction:: ipluck
 .. autofunction:: map_dict
 .. autofunction:: pluck
-.. autofunction:: ipluck
 .. autofunction:: reject_dict
 .. autofunction:: select_dict
 
@@ -154,15 +154,16 @@ __all__ = [
     "flatten1",
     "ichunks",
     "identity",
+    "ifalsy",
     "intersection",
     "invert_dict",
     "ipeel",
-    "itruthy",
-    "ifalsy",
+    "ipluck",
     "ireject",
+    "irest",
     "iselect",
     "itake",
-    "ipluck",
+    "itruthy",
     "last",
     "leading",
     "loob",
@@ -177,7 +178,6 @@ __all__ = [
     "reject",
     "reject_dict",
     "rest",
-    "irest",
     "round_robin",
     "select",
     "select_dict",
@@ -1172,7 +1172,6 @@ def round_robin(*iterables):
         except StopIteration:
             pending -= 1
             nexts = cycle(islice(nexts, pending))
-
 
 
 # Utility functions
