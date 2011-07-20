@@ -39,7 +39,6 @@ where ``g`` is the decoder and ``f`` is a encoder.
 """
 
 from __future__ import absolute_import
-from mom.functional import leading
 
 __license__ = """\
 The Apache Licence, Version 2.0
@@ -68,7 +67,7 @@ __author__ = ", ".join([
 import binascii
 
 from mom.builtins import bytes
-from mom.functional import ichunks
+from mom.functional import leading, chunks
 
 
 # Bytes base-encoding.
@@ -214,8 +213,7 @@ def bin_decode(encoded):
         Raw bytes.
     """
     return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[nibble]
-                              for nibble in map(lambda w: "".join(w),
-                                                ichunks(encoded, 4))))
+                              for nibble in chunks(encoded, 4)))
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
     #return long_to_bytes(long(encoded, 2))
