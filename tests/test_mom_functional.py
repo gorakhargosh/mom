@@ -14,7 +14,7 @@ from mom.functional import \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, \
     partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
-    loob, rest, ipluck, peel, chunks, _compose
+    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat
 
 
 class Test_some(unittest2.TestCase):
@@ -340,16 +340,20 @@ class Test_chunks(unittest2.TestCase):
         got = chunks("aaaabbbccccddd", 4, "-")
         self.assertEqual(list(got), ["aaaa", "bbbc", "cccd", "dd--"])
 
-
         self.assertEqual(tuple(chunks((1, 1, 1, 2, 2), 3, (True,))),
             ((1, 1, 1, ), (2, 2, True)))
-
-        self.assertEqual(tuple(chunks((1, 1, 1, 2, 2), 3, None)),
-            ((1, 1, 1, ), (2, 2, None)))
 
     def test_filler_iterable_not_same_type_as_filler(self):
         #self.assertRaises(TypeError, list, chunks("aaaabbbccccddd", 4, None))
         self.assertRaises(TypeError, tuple, chunks((1, 1, 1, 2, 2), 3, [None,]))
+
+    def test_filler_None(self):
+        got = chunks("aaaabbbccccddd", 4, None)
+        self.assertEqual(list(got), ["aaaa", "bbbc", "cccd", "dd"])
+
+        self.assertEqual(tuple(chunks((1, 1, 1, 2, 2), 3, None)),
+            ((1, 1, 1, ), (2, 2, None)))
+
 
     def test_returns_generator_object(self):
         self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
@@ -676,6 +680,22 @@ class Test_loob(unittest2.TestCase):
         self.assertTrue(loob(0))
         self.assertTrue(loob(False))
         self.assertTrue(loob(None))
+
+
+class Test_ncycles(unittest2.TestCase):
+    def test_ncycles(self):
+        self.assertEqual(tuple(ncycles([1, 2, 3], 4)), (1, 2, 3) * 4)
+
+
+class Test_eat(unittest2.TestCase):
+    def test_eat(self):
+        it = ncycles([1, 2, 3], 4)
+        eat(it, 9)
+        self.assertEqual(tuple(it), (1, 2, 3))
+        it = ncycles([1, 2, 3], 4)
+        eat(it, None)
+        self.assertEqual(tuple(it), ())
+
 
 if __name__ == '__main__':
     unittest2.main()

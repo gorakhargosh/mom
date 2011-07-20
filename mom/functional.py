@@ -156,11 +156,13 @@ import collections
 from functools import partial
 from itertools import\
     ifilter, islice, takewhile,\
-    ifilterfalse, dropwhile, chain,\
+    ifilterfalse, dropwhile,\
     cycle, imap, repeat
 
+from mom.itertools import chain
 from mom.builtins import is_bytes_or_unicode
 from mom._compat import range, dict_each, reduce as _reduce, next
+
 
 __all__ = [
     "chunks",
@@ -1211,7 +1213,7 @@ def eat(iterator, n):
     # Use functions that consume iterators at C speed.
     if n is None:
         # Feed the entire iterator into a zero-length deque.
-        collections.deque(iterator, maxLen=0)
+        collections.deque(iterator)
     else:
         # Advance to the empty slice starting at position n.
         next(islice(iterator, n, n), None)
@@ -1230,12 +1232,7 @@ def ncycles(iterable, n):
     :yields:
         Iterator.
     """
-    try:
-        return chain.from_iterable(repeat(tuple(iterable), n))
-    except AttributeError:
-        # For compatibility.
-        from mom.itertools import chain, repeat
-        return chain.from_iterable(repeat(tuple(iterable), n))
+    return chain.from_iterable(repeat(tuple(iterable), n))
 
 
 # Utility functions
