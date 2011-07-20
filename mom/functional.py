@@ -1224,6 +1224,7 @@ def identity(arg):
     """
     return arg
 
+
 def loob(arg):
     """
     Complement of bool.
