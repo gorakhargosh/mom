@@ -12,7 +12,7 @@ from mom.functional import \
     pluck, first, last, rest, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
-    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, peel, omits, idifference, itruthy, ifalsy
+    union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, peel, omits, idifference, itruthy, ifalsy, loob
 
 
 class Test_some(unittest2.TestCase):
@@ -383,9 +383,10 @@ class Test_falsy(unittest2.TestCase):
 
 class Test_itruthy(unittest2.TestCase):
     def test_itruthy(self):
-        self.assertEqual(itruthy([1, 0, 0, 1, None, True, False, {}]),
+        self.assertEqual(list(itruthy([1, 0, 0, 1, None, True, False, {}])),
             [1, 1, True])
-        self.assertEqual(itruthy((0, 1, 2, False, None, True)), (1, 2, True))
+        self.assertEqual(tuple(itruthy((0, 1, 2, False, None, True))),
+            (1, 2, True))
 
 class Test_ifalsy(unittest2.TestCase):
     def test_ifalsy(self):
@@ -598,6 +599,19 @@ class Test_peel(unittest2.TestCase):
         self.assertEqual(list(peel("")), [])
         self.assertEqual(list(peel("a")), [])
         self.assertEqual(list(peel("a", 34)), [])
+
+class Test_loob(unittest2.TestCase):
+    def test_loob(self):
+        self.assertFalse(loob(True))
+        self.assertFalse(loob("something"))
+        self.assertFalse(loob([1, 2]))
+        self.assertFalse(loob(2))
+        self.assertTrue(loob({}))
+        self.assertTrue(loob(""))
+        self.assertTrue(loob([]))
+        self.assertTrue(loob(0))
+        self.assertTrue(loob(False))
+        self.assertTrue(loob(None))
 
 if __name__ == '__main__':
     unittest2.main()
