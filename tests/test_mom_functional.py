@@ -298,26 +298,23 @@ class Test_ichunks(unittest2.TestCase):
 
     def test_filler(self):
         got = ichunks("aaaabbbccccddd", 4, "-")
-        expected = (("a", "a", "a", "a"),
+        expected = [("a", "a", "a", "a"),
                     ("b", "b", "b", "c"),
                     ("c", "c", "c", "d"),
-                    ("d", "d", "-", "-"))
-        for g, e in zip(map(tuple, got), expected):
-            self.assertEqual(g, e)
+                    ("d", "d", "-", "-")]
+        self.assertEqual(map(tuple, got), expected)
 
         got = ichunks("aaaabbbbccccdddd", 4, None)
-        expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
-        for g, e in zip(map(tuple, got), expected):
-            self.assertEqual(g, e)
+        expected = [("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4]
+        self.assertEqual(map(tuple, got), expected)
 
     def test_filler_None(self):
         got = ichunks("aaaabbbccccddd", 4, None)
-        expected = (("a", "a", "a", "a"),
+        expected = [("a", "a", "a", "a"),
                     ("b", "b", "b", "c"),
                     ("c", "c", "c", "d"),
-                    ("d", "d", None, None))
-        for g, e in zip(map(tuple, got), expected):
-            self.assertEqual(g, e)
+                    ("d", "d", None, None)]
+        self.assertEqual(map(tuple, got), expected)
 
 #    def test_TypeError_when_filler_not_iterable(self):
 #        self.assertRaises(TypeError, map, tuple, ichunks("aabbc", 2, 3))
@@ -328,8 +325,7 @@ class Test_ichunks(unittest2.TestCase):
     def test_odd_ball_grouping(self):
         got = ichunks("aaabb", 3)
         expected = [("a",) * 3, ("b",) * 2]
-        for g, e in zip(map(tuple, got), expected):
-            self.assertEqual(g, e)
+        self.assertEqual(map(tuple, got), expected)
 
 
 class Test_each(unittest2.TestCase):

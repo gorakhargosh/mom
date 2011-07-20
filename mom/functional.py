@@ -75,10 +75,11 @@ Indexing and slicing
 .. autofunction:: last
 .. autofunction:: nth
 .. autofunction:: ipeel
+.. autofunction:: peel
 .. autofunction:: irest
 .. autofunction:: round_robin
 .. autofunction:: take
-
+.. autofunction:: itake
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,6 +91,8 @@ Manipulation, filtering, union and difference
 .. autofunction:: flatten1
 .. autofunction:: intersection
 .. autofunction:: truthy
+.. autofunction:: itruthy
+.. autofunction:: ifalsy
 .. autofunction:: union
 .. autofunction:: unique
 .. autofunction:: without
@@ -150,8 +153,11 @@ __all__ = [
     "intersection",
     "invert_dict",
     "ipeel",
+    "itruthy",
+    "ifalsy",
     "ireject",
     "iselect",
+    "itake",
     "last",
     "leading",
     "loob",
@@ -160,6 +166,7 @@ __all__ = [
     "nth",
     "omits",
     "partition",
+    "peel",
     "pluck",
     "reduce",
     "reject",
@@ -797,6 +804,25 @@ def last(iterable):
     return nth(iterable, len(iterable)-1)
 
 
+def peel(iterable, count=1):
+    """
+    Returns the meat of an iterable by peeling off the specified number of
+    elements from both ends.
+
+    :param iterable:
+        Iterable sequence.
+    :param count:
+        The number of elements to remove from each end.
+    :returns:
+        Peeled sequence.
+    """
+    if count < 0:
+        count = 0
+    if not iterable:
+        return iterable
+    return iterable[count:-count]
+
+
 def ipeel(iterable, count=1):
     """
     Returns an iterator for the meat of an iterable by peeling off the specified
@@ -845,23 +871,14 @@ def ichunks(iterable, size, *args, **kwargs):
         Generator of chunk iterators.
     """
     length = len(iterable)
-    range_ = range(0, length, size)
     if args or kwargs:
         padding = kwargs["padding"] if kwargs else args[0]
-        remainder = length % size
-        if remainder:
-            last_index = length - remainder
-            for i in range_:
-                it = islice(iterable, i, i + size)
-                if last_index == i:
-                    yield chain(it, repeat(padding, (size - remainder)))
-                else:
-                    yield it
-        else:
-            for i in range_:
-                yield islice(iterable, i, i + size)
+        padding_size = (size - (length % size))
+        for i in range(0, length, size):
+            yield islice(chain(iterable, repeat(padding, padding_size)),
+                         i, i + size)
     else:
-        for i in range_:
+        for i in range(0, length, size):
             yield islice(iterable, i, i + size)
 
 
