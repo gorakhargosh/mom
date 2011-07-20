@@ -943,9 +943,9 @@ def ichunks(iterable, size, *args, **kwargs):
     length = len(iterable)
     if args or kwargs:
         padding = kwargs["padding"] if kwargs else args[0]
-        padding_size = (size - (length % size))
         for i in range(0, length, size):
-            yield islice(chain(iterable, repeat(padding, padding_size)),
+            yield islice(chain(iterable,
+                               repeat(padding, (size - (length % size)))),
                          i, i + size)
     else:
         for i in range(0, length, size):
@@ -992,8 +992,7 @@ def chunks(iterable, size, *args, **kwargs):
             else:
                 iterable = list(iterable)
                 padding = [padding]
-        padding_size = (size - (length % size))
-        it = iterable + (padding * padding_size)
+        it = iterable + (padding * (size - (length % size)))
         for i in range(0, length, size):
             yield it[i:i + size]
     else:
