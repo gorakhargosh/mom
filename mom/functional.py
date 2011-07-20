@@ -83,6 +83,7 @@ Indexing and slicing
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: contains
+.. autofunction:: omits
 .. autofunction:: difference
 .. autofunction:: falsy
 .. autofunction:: flatten
@@ -104,6 +105,7 @@ Dictionaries and dictionary sequences
 Utility functions
 -----------------
 .. autofunction:: identity
+.. autofunction:: loob
 """
 
 from __future__ import absolute_import
@@ -151,9 +153,11 @@ __all__ = [
     "iselect",
     "last",
     "leading",
+    "loob",
     "map_dict",
     "none",
     "nth",
+    "omits",
     "partition",
     "peel",
     "pluck",
@@ -533,7 +537,7 @@ def select_dict(predicate, dictionary):
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    return dict(select(predicate or all, dictionary.items()))
+    return dict(ifilter(predicate or all, dictionary.items()))
 
 
 def reject_dict(predicate, dictionary):
@@ -546,7 +550,7 @@ def reject_dict(predicate, dictionary):
     :returns:
         New dictionary of selected ``(key, value)`` pairs.
     """
-    return dict(reject(predicate or all, dictionary.items()))
+    return dict(ifilterfalse(predicate or all, dictionary.items()))
 
 
 def invert_dict(dictionary):
@@ -610,6 +614,22 @@ def contains(iterable, item):
         return iterable.__contains__(item)
     else:
         return _contains_fallback(iterable, item)
+
+
+@complement
+def omits(iterable, item):
+    """
+    Determines whether the iterable omits the value specified.
+
+    :param iterable:
+        Iterable sequence.
+    :param item:
+        The value to find.
+    :returns:
+        ``True`` if the iterable sequence omits the value; ``False``
+        otherwise.
+    """
+    return contains(iterable, item)
 
 
 def _contains_fallback(iterable, item):
@@ -691,7 +711,24 @@ def difference(iterable1, iterable2):
     See how that helps? Now you can be sure you are exporting exactly what
     you need to.
     """
-    return select(partial(complement(contains), iterable2), iterable1)
+    return filter(partial(omits, iterable2), iterable1)
+
+
+def idifference(iterable1, iterable2):
+    """
+    Difference between one iterable and another.
+    Items from the first iterable are included in the difference.
+
+        iterable1 - iterable2 = difference
+
+    :param iterable1:
+        Iterable sequence.
+    :param iterable2:
+        Iterable sequence.
+    :returns:
+        Generator for the difference between the two given iterables.
+    """
+    return ifilter(partial(omits, iterable2), iterable1)
 
 
 def without(iterable, *values):
@@ -770,7 +807,7 @@ def peel(iterable, count=1):
     :param count:
         The number of elements to remove from each end.
     :returns:
-        Peeled iterable.
+        Peel iterator.
     """
     if count < 0:
         count = 0
@@ -805,7 +842,7 @@ def chunks(iterable, size, *args, **kwargs):
         size is not an integral multiple of the length of the iterable. That is,
         the last chunk will have chunk size less than the specified chunk size.
     :returns:
-        Generates a sequence of chunk iterators.
+        Generator of chunk iterators.
     """
     length = len(iterable)
     range_ = range(0, length, size)
@@ -841,7 +878,23 @@ def truthy(iterable):
     :returns:
         Iterable with truthy values.
     """
-    return select(bool, iterable)
+    return filter(bool, iterable)
+
+
+def itruthy(iterable):
+    """
+    Returns an iterator to for an iterable with only the truthy values.
+
+    Example::
+
+        tuple(itruthy((0, 1, 2, False, None, True))) -> (1, 2, True)
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Iterator for an iterable with truthy values.
+    """
+    return ifilter(bool, iterable)
 
 
 def falsy(iterable):
@@ -855,9 +908,25 @@ def falsy(iterable):
     :param iterable:
         Iterable sequence.
     :returns:
-        Iterable with false values.
+        Iterable with falsy values.
     """
-    return reject(bool, iterable)
+    return filter(loob, iterable)
+
+
+def ifalsy(iterable):
+    """
+    Returns a iterator for an iterable with only the falsy values.
+
+    Example::
+
+        tuple(ifalsy((0, 1, 2, False, None, True))) -> (0, False, None)
+
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Iterator for an iterable with falsy values.
+    """
+    return ifilterfalse(bool, iterable)
 
 
 def flatten(iterable):
@@ -918,7 +987,7 @@ def unique(iterable, is_sorted=False):
     """
     if iterable:
         def _unique(memo, item):
-            cond = last(memo) != item if is_sorted else not contains(memo, item)
+            cond = last(memo) != item if is_sorted else omits(memo, item)
             if cond:
                 memo.append(item)
             return memo
@@ -967,7 +1036,23 @@ def take(iterable, n):
     :returns:
         First n items of the iterable as a tuple.
     """
-    return tuple(islice(iterable, 0, n, 1))
+    return tuple(itake(iterable, n))
+
+
+def itake(iterable, n):
+    """
+    Returns an iterator for the first n items of the iterable.
+
+    Taken from the Python documentation.
+
+    :param n:
+        The number of items to obtain.
+    :param iterable:
+        Iterable sequence.
+    :returns:
+        Iterator for the first n items of the iterable.
+    """
+    return islice(iterable, 0, n, 1)
 
 
 def round_robin(*iterables):
@@ -1009,3 +1094,16 @@ def identity(arg):
         Argument.
     """
     return arg
+
+
+@complement
+def loob(arg):
+    """
+    Complement of bool.
+
+    :param arg:
+        Python value.
+    :returns:
+        Complementary boolean value.
+    """
+    return bool(arg)
