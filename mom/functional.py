@@ -35,6 +35,17 @@ youngest person and the oldest person from among people::
 Higher-order functions are extremely useful where you want to express yourself
 succinctly instead of writing a ton of for and while loops.
 
+.. WARNING:: About consuming iterators multiple times
+
+    Now before you go all guns blazing with this set of functions, please note
+    that Python generators/iterators are for single use only. Attempting to use
+    the same iterator multiple times will cause unexpected behavior in your
+    code. For more information, read
+
+    http://sandersn.com/blog//index.php/2009/06/29/python_s_iterators_are_a_bad_implementat
+
+    Be careful.
+
 Iteration and aggregation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: each
