@@ -9,7 +9,7 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     ichunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, rest, truthy, compose, contains, \
+    pluck, first, last, irest, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, loob
@@ -365,7 +365,7 @@ class Test_seq(unittest2.TestCase):
         self.assertEqual(last(range(10)), 9)
 
     def test_rest(self):
-        self.assertEqual(list(rest(range(10))), range(1, 10))
+        self.assertEqual(list(irest(range(10))), range(1, 10))
 
 
 # Truthy and falsy tests.

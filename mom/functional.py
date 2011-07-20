@@ -75,7 +75,7 @@ Indexing and slicing
 .. autofunction:: last
 .. autofunction:: nth
 .. autofunction:: ipeel
-.. autofunction:: rest
+.. autofunction:: irest
 .. autofunction:: round_robin
 .. autofunction:: take
 
@@ -164,7 +164,7 @@ __all__ = [
     "reduce",
     "reject",
     "reject_dict",
-    "rest",
+    "irest",
     "round_robin",
     "select",
     "select_dict",
@@ -757,7 +757,7 @@ def first(iterable):
     return nth(iterable, 0)
 
 
-def rest(iterable):
+def irest(iterable):
     """
     Returns all elements excluding the first out of an iterable.
 
@@ -991,7 +991,7 @@ def unique(iterable, is_sorted=False):
             if cond:
                 memo.append(item)
             return memo
-        return _reduce(_unique, rest(iterable), [first(iterable)])
+        return _reduce(_unique, irest(iterable), [first(iterable)])
     else:
         return iterable
 
