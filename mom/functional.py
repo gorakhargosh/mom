@@ -75,7 +75,6 @@ Indexing and slicing
 .. autofunction:: ichunks
 .. autofunction:: ipeel
 .. autofunction:: irest
-.. autofunction:: itake
 .. autofunction:: last
 .. autofunction:: nth
 .. autofunction:: peel
@@ -162,7 +161,6 @@ __all__ = [
     "ireject",
     "irest",
     "iselect",
-    "itake",
     "itruthy",
     "last",
     "leading",
@@ -1128,23 +1126,7 @@ def take(iterable, n):
     :returns:
         First n items of the iterable as a tuple.
     """
-    return tuple(itake(iterable, n))
-
-
-def itake(iterable, n):
-    """
-    Returns an iterator for the first n items of the iterable.
-
-    Taken from the Python documentation.
-
-    :param n:
-        The number of items to obtain.
-    :param iterable:
-        Iterable sequence.
-    :returns:
-        Iterator for the first n items of the iterable.
-    """
-    return islice(iterable, 0, n, 1)
+    return tuple(islice(iterable, n))
 
 
 def round_robin(*iterables):
