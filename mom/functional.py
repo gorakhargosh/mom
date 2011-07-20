@@ -656,31 +656,16 @@ def contains(iterable, item):
         ``True`` if the iterable sequence contains the value; ``False``
         otherwise.
     """
-    if getattr(iterable, "__contains__", None):
+    try:
         return iterable.__contains__(item)
-    elif getattr(iterable, "index", None):
+    except AttributeError:
         try:
-            return iterable.index(item) >= 0
-        except ValueError:
-            return False
-    else:
-        return _contains_fallback(iterable, item)
-
-
-@complement
-def omits(iterable, item):
-    """
-    Determines whether the iterable omits the value specified.
-
-    :param iterable:
-        Iterable sequence.
-    :param item:
-        The value to find.
-    :returns:
-        ``True`` if the iterable sequence omits the value; ``False``
-        otherwise.
-    """
-    return contains(iterable, item)
+            try:
+                return iterable.index(item) >= 0
+            except ValueError:
+                return False
+        except AttributeError:
+            return _contains_fallback(iterable, item)
 
 
 def _contains_fallback(iterable, item):
@@ -701,6 +686,22 @@ def _contains_fallback(iterable, item):
         if x == item:
             return True
     return False
+
+
+@complement
+def omits(iterable, item):
+    """
+    Determines whether the iterable omits the value specified.
+
+    :param iterable:
+        Iterable sequence.
+    :param item:
+        The value to find.
+    :returns:
+        ``True`` if the iterable sequence omits the value; ``False``
+        otherwise.
+    """
+    return contains(iterable, item)
 
 
 def difference(iterable1, iterable2):
