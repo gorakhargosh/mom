@@ -10,6 +10,9 @@ Tools useful for iterating over sequences.
 
 from __future__ import absolute_import
 
+import logging
+logging.warning("Do not use this module. It will be removed in the future.")
+
 __author__ = ", ".join([
     "Python Documentation",
     "Yesudeep Mangalapilly",
