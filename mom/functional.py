@@ -89,6 +89,7 @@ Manipulation, filtering, union and difference
 .. autofunction:: falsy
 .. autofunction:: flatten
 .. autofunction:: flatten1
+.. autofunction:: idifference
 .. autofunction:: ifalsy
 .. autofunction:: intersection
 .. autofunction:: itruthy
@@ -153,6 +154,7 @@ __all__ = [
     "flatten1",
     "ichunks",
     "identity",
+    "idifference",
     "ifalsy",
     "intersection",
     "invert_dict",
