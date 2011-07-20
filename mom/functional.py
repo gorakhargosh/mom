@@ -498,7 +498,7 @@ def iselect(predicate, iterable):
         Predicate function. If ``None``, select all truthy items.
     :param iterable:
         Iterable.
-    :returns:
+    :yields:
         A sequence of all items for which the predicate is true.
     """
     return ifilter(predicate, iterable)
@@ -532,7 +532,7 @@ def ireject(predicate, iterable):
     :param iterable:
         If sequence is a tuple or string, return the same type, else return a
         list.
-    :returns:
+    :yields:
         A sequence of all items for which the predicate is false.
     """
     return ifilterfalse(predicate, iterable)
@@ -642,7 +642,7 @@ def ipluck(dicts, key, *args, **kwargs):
     :param default:
         The default value to use when a key is not found. If this value is
         not specified, a KeyError will be raised when a key is not found.
-    :returns:
+    :yields:
         Iterator of values for the key.
     """
     if args or kwargs:
@@ -755,7 +755,7 @@ def idifference(iterable1, iterable2):
         Iterable sequence.
     :param iterable2:
         Iterable sequence.
-    :returns:
+    :yields:
         Generator for the difference between the two given iterables.
     """
     return ifilter(partial(omits, iterable2), iterable1)
@@ -805,7 +805,7 @@ def irest(iterable):
 
     :param iterable:
         Iterable sequence.
-    :returns:
+    :yields:
         Iterator for all elements of the iterable sequence excluding the first.
     """
     return islice(iterable, 1, None, 1)
@@ -867,7 +867,7 @@ def ipeel(iterable, count=1):
         Iterable sequence.
     :param count:
         The number of elements to remove from each end.
-    :returns:
+    :yields:
         Peel iterator.
     """
     if count < 0:
@@ -902,7 +902,7 @@ def ichunks(iterable, size, *args, **kwargs):
         If no padding is specified, nothing will be appended if the chunk
         size is not an integral multiple of the length of the iterable. That is,
         the last chunk will have chunk size less than the specified chunk size.
-    :returns:
+    :yields:
         Generator of chunk iterators.
     """
     length = len(iterable)
@@ -943,7 +943,7 @@ def chunks(iterable, size, *args, **kwargs):
         If no padding is specified, nothing will be appended if the chunk
         size is not an integral multiple of the length of the iterable. That is,
         the last chunk will have chunk size less than the specified chunk size.
-    :returns:
+    :yields:
         Generator of materialized chunks.
     """
     length = len(iterable)
@@ -991,7 +991,7 @@ def itruthy(iterable):
 
     :param iterable:
         Iterable sequence.
-    :returns:
+    :yields:
         Iterator for an iterable with truthy values.
     """
     return ifilter(bool, iterable)
@@ -1162,7 +1162,7 @@ def round_robin(*iterables):
 
     :param iterables:
         Variable number of inputs for iterable sequences.
-    :returns:
+    :yields:
         Items from the iterable sequences in a round-robin fashion.
     """
     pending = len(iterables)
