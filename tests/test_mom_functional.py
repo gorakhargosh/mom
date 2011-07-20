@@ -429,13 +429,17 @@ class Test_compose(unittest2.TestCase):
         welcome = compose(exclaim, greet)
         self.assertEqual(welcome("moe"), "hi: moe!")
 
-
     def test_numerical_composition(self):
         plus1 = lambda w: w + 1
         times2 = lambda w: w * 2
 
         self.assertEqual(compose(plus1, times2)(5), 11)
         self.assertEqual(compose(times2, plus1)(5), 12)
+
+    def test_composition_with_one_function(self):
+        def f(x): return x
+        a = compose(f)
+        self.assertEqual(a(5), 5)
 
 class Test__compose(unittest2.TestCase):
     def test_composition(self):
@@ -451,6 +455,11 @@ class Test__compose(unittest2.TestCase):
 
         self.assertEqual(_compose(plus1, times2)(5), 11)
         self.assertEqual(_compose(times2, plus1)(5), 12)
+
+    def test_composition_with_one_function(self):
+        def f(x): return x
+        a = _compose(f)
+        self.assertEqual(a(5), 5)
 
 
 class Test_complement(unittest2.TestCase):
