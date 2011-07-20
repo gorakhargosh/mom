@@ -701,7 +701,6 @@ def _contains_fallback(iterable, item):
     return False
 
 
-@complement
 def omits(iterable, item):
     """
     Determines whether the iterable omits the value specified.
@@ -714,7 +713,7 @@ def omits(iterable, item):
         ``True`` if the iterable sequence omits the value; ``False``
         otherwise.
     """
-    return contains(iterable, item)
+    return not contains(iterable, item)
 
 
 def difference(iterable1, iterable2):
