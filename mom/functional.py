@@ -724,6 +724,15 @@ def difference(iterable1, iterable2):
 
         iterable1 - iterable2 = difference
 
+    For example, here is how to find out what your Python module exports
+    to other modules using wildcard imports::
+
+        >> difference(dir(mom.functional), mom.functional.__all__)
+        ['__all__',
+         # Elided...
+         'range',
+         'takewhile']
+
     :param iterable1:
         Iterable sequence.
     :param iterable2:
@@ -731,50 +740,6 @@ def difference(iterable1, iterable2):
     :returns:
         Iterable sequence containing the difference between the two given
         iterables.
-
-    Example
-    -------
-    Say you want to figure out whether you have listed all the members
-    of a Python module you want to export in its ``__all__`` member to another
-    module that uses a wildcard import like this::
-
-        from yourmodule import *
-
-    Maintaining the ``__all__`` member of module can be a pain, but you can use
-    this function to your aid. For example, for this module, you could do::
-
-        >> import mom.functional
-        >> difference(dir(mom.functional), mom.functional.__all__)
-        ['__all__',
-         '__author__',
-         '__builtins__',
-         '__doc__',
-         '__file__',
-         '__name__',
-         '__package__',
-         '_contains_fallback',
-         '_leading',
-         '_reduce',
-         '_some1',
-         '_some2',
-         'absolute_import',
-         'chain',
-         'cycle',
-         'dict_each',
-         'dropwhile',
-         'ifilter',
-         'ifilterfalse',
-         'imap',
-         'is_sequence',
-         'islice',
-         'license',
-         'next',
-         'partial',
-         'range',
-         'takewhile']
-
-    See how that helps? Now you can be sure you are exporting exactly what
-    you need to.
     """
     return filter(partial(omits, iterable2), iterable1)
 
