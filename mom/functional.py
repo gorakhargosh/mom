@@ -24,7 +24,11 @@ Higher-order functions
 -----------------------
 These functions accept other functions as arguments and apply them over
 specific types of data structures. Here's an example of how to find the
-youngest person and the oldest person from among people::
+youngest person and the oldest person from among people. Place it into a
+Python module and run it::
+
+    import mom.functional
+    from mom.functional import reject, partition, difference, pluck, reduce
 
     people = [
         {"name" : "Harry",    "age" : 100},
@@ -43,9 +47,28 @@ youngest person and the oldest person from among people::
     who_oldest = reduce(oldest, people)
 
     print(who_youngest)
-    -> {"age" : 16, "name" : "Hermione"}
+    # -> {"age" : 16, "name" : "Hermione"}
     print(who_oldest)
-    -> {"age" : 200, "name" : "Rob"}
+    # -> {"age" : 200, "name" : "Rob"}
+
+    # More examples.
+    # Now let's list all the names of the people.
+    print(pluck(people, "name"))
+    # -> ('Harry', 'Hermione', 'Rob')
+
+    # Let's weed out all people who don't have an "H" in their names.
+    print(reject(lambda name: "H" not in name, pluck(people, "name")))
+    # -> ('Harry', 'Hermione')
+
+    # Or let's partition them into two groups
+    print(partition(lambda name: "H" in name, pluck(people, "name")))
+    # -> (['Harry', 'Hermione'], ['Rob'])
+
+    # Let's find all the members of a module that are not exported by its __all__
+    # member.
+    print(difference(dir(mom.functional), mom.functional.__all__))
+    # -> ['__all__', '__builtins__', ... 'repeat', 'takewhile']
+
 
 Higher-order functions are extremely useful where you want to express yourself
 succinctly instead of writing a ton of for and while loops.
