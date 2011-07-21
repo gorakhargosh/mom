@@ -64,7 +64,7 @@ Terminology
 -----------
 * A **predicate** is a function that returns the truth value of its argument.
 * A **walker** is a function that consumes items from a sequence one or more at
- a time.
+  a time.
 * A **transform** is a function that transforms its arguments to produce a
   result.
 
