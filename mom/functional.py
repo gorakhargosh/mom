@@ -63,8 +63,8 @@ succinctly instead of writing a ton of for and while loops.
 Terminology
 -----------
 * A **predicate** is a function that returns the truth value of its argument.
-* A **walker** is a function that consumes items from a sequence one or more at
-  a time.
+* A **walker** is a function that consumes one or more items from a sequence
+  at a time.
 * A **transform** is a function that transforms its arguments to produce a
   result.
 
