@@ -42,6 +42,7 @@ except NameError:
     unicode_type = str
     basestring_type = (str, bytes)
 
+# Integral range.
 try:
     # Python 2.5+
     xrange(0)

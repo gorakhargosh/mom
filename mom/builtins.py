@@ -122,9 +122,12 @@ __all__ = [
     "bytes_to_unicode_recursive",
 ]
 
+# Integral range
 range = range
+
 reduce = reduce
 next = next
+
 
 # Types and their meanings:
 #
