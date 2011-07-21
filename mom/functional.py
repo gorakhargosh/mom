@@ -95,8 +95,8 @@ Terminology
 * **Lazy evaluation** is evaluation delayed until the last possible instant.
 * **Materialized iterables** are iterables that take up memory equal to their
   size.
-* **Non-materialized iterables** are iterables (usually generators) that are
-  computed lazily.
+* **Dematerialized iterables** are iterables (usually iterators/generators)
+  that are evaluated lazily.
 
 Iteration and aggregation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
