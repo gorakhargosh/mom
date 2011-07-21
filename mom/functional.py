@@ -285,7 +285,7 @@ def complement(predicate):
 
 # Higher-order functions.
 
-def reduce(iterator, iterable, *args):
+def reduce(walker, iterable, *args):
     """
     Aggregate a sequence of items into a single item. Python equivalent of
     Haskell's left fold.
@@ -297,7 +297,7 @@ def reduce(iterator, iterable, *args):
 
         reduce_right = foldr = lambda f, i: lambda s: reduce(f, s, i)
 
-    :param iterator:
+    :param walker:
         Function with signature::
 
             f(x, y)
@@ -308,14 +308,14 @@ def reduce(iterator, iterable, *args):
     :returns:
         Aggregated item.
     """
-    return _reduce(iterator, iterable, *args)
+    return _reduce(walker, iterable, *args)
 
 
-def each(iterator, iterable):
+def each(walker, iterable):
     """
-    Iterates over iterable yielding each item in turn to the iterator.
+    Iterates over iterable yielding each item in turn to the walker function.
 
-    :param iterator:
+    :param walker:
         The method signature is as follows:
 
             f(x, y)
@@ -326,10 +326,10 @@ def each(iterator, iterable):
         Iterable sequence or dictionary.
     """
     if isinstance(iterable, dict):
-        dict_each(iterator, iterable)
+        dict_each(walker, iterable)
     else:
         for index, item in enumerate(iterable):
-            iterator(index, item)
+            walker(index, item)
 
 
 def some(predicate, iterable):
@@ -579,17 +579,17 @@ def partition(predicate, iterable):
 
 
 # Dictionaries
-def map_dict(iterator, dictionary):
+def map_dict(walker, dictionary):
     """
     Maps over a dictionary of key, value pairs.
 
-    :param iterator:
+    :param walker:
         Function that accepts a single argument of type ``(key, value)``
         and returns a ``(new key, new value)`` pair.
     :returns:
         New dictionary of ``(new key, new value)`` pairs.
     """
-    return dict(map(iterator, dictionary.items()))
+    return dict(map(walker, dictionary.items()))
 
 
 def select_dict(predicate, dictionary):
@@ -1235,7 +1235,7 @@ def ncycles(iterable, n):
     return chain.from_iterable(repeat(tuple(iterable), n))
 
 
-# Utility functions
+# Predicates and utility functions
 def identity(arg):
     """
     Identity function. Produces what it consumes.
