@@ -59,6 +59,15 @@ succinctly instead of writing a ton of for and while loops.
 
     Be careful.
 
+
+Terminology
+-----------
+* A *predicate* is a function that returns the truth value of its argument.
+* A *walker* is a function that consumes items from a sequence one at a time.
+* A *transform* is a function that transforms its arguments to produce a
+  result.
+
+
 Iteration and aggregation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: each
@@ -285,7 +294,7 @@ def complement(predicate):
 
 # Higher-order functions.
 
-def reduce(walker, iterable, *args):
+def reduce(transform, iterable, *args):
     """
     Aggregate a sequence of items into a single item. Python equivalent of
     Haskell's left fold.
@@ -297,7 +306,7 @@ def reduce(walker, iterable, *args):
 
         reduce_right = foldr = lambda f, i: lambda s: reduce(f, s, i)
 
-    :param walker:
+    :param transform:
         Function with signature::
 
             f(x, y)
@@ -308,7 +317,7 @@ def reduce(walker, iterable, *args):
     :returns:
         Aggregated item.
     """
-    return _reduce(walker, iterable, *args)
+    return _reduce(transform, iterable, *args)
 
 
 def each(walker, iterable):
@@ -579,17 +588,17 @@ def partition(predicate, iterable):
 
 
 # Dictionaries
-def map_dict(walker, dictionary):
+def map_dict(transform, dictionary):
     """
     Maps over a dictionary of key, value pairs.
 
-    :param walker:
+    :param transform:
         Function that accepts a single argument of type ``(key, value)``
         and returns a ``(new key, new value)`` pair.
     :returns:
         New dictionary of ``(new key, new value)`` pairs.
     """
-    return dict(map(walker, dictionary.items()))
+    return dict(map(transform, dictionary.items()))
 
 
 def select_dict(predicate, dictionary):
