@@ -576,6 +576,10 @@ class Test_union(unittest2.TestCase):
             union("google", "yahoo"),
             ["g", "o", "l", "e", "y", "a", "h"]
         )
+        self.assertEqual(
+            union("google"),
+            "google",
+        )
 
 
 class Test_reduce(unittest2.TestCase):
@@ -621,6 +625,7 @@ class Test_nth(unittest2.TestCase):
 
 class Test_intersection(unittest2.TestCase):
     def test_intersection(self):
+        self.assertEqual(intersection([1, 2, 3]), [1, 2, 3])
         self.assertEqual(intersection([1, 2, 3, 0], [0, 2, 3]), [2, 3, 0])
         self.assertEqual(intersection([1, 5, 4], [0, 2, 3]), [])
 

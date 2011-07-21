@@ -1125,7 +1125,7 @@ def unique(iterable, is_sorted=False):
         return iterable
 
 
-def union(*iterables):
+def union(iterable, *iterables):
     """
     Returns the union of given iterable sequences.
 
@@ -1134,10 +1134,14 @@ def union(*iterables):
     :returns:
         Union of the iterable sequences.
     """
-    return unique(iter(chain(*iterables)))
+
+    if not iterables:
+        return iterable
+
+    return unique(iter(chain(iterable, *iterables)))
 
 
-def intersection(*iterables):
+def intersection(iterable, *iterables):
     """
     Returns the intersection of given iterable sequences.
 
@@ -1148,10 +1152,13 @@ def intersection(*iterables):
         in the first sequence.
     """
 
-    def f(item):
-        return every(partial(contains, item=item), iterables[1:])
+    if iterables is None:
+        return iterable
 
-    return filter(f, unique(iterables[0]))
+    def _does_other_contain(item):
+        return every(partial(contains, item=item), iterables)
+
+    return filter(_does_other_contain, unique(iterable))
 
 
 def take(iterable, n):
