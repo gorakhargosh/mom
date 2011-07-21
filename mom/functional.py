@@ -158,8 +158,8 @@ Dictionaries and dictionary sequences
 .. autofunction:: reject_dict
 .. autofunction:: select_dict
 
-Utility functions
------------------
+Predicates, transforms, and walkers
+-----------------------------------
 .. autofunction:: identity
 .. autofunction:: loob
 """
@@ -1256,7 +1256,7 @@ def ncycles(iterable, n):
     return chain.from_iterable(repeat(tuple(iterable), n))
 
 
-# Predicates and utility functions
+# Predicates, transforms, and walkers
 def identity(arg):
     """
     Identity function. Produces what it consumes.
