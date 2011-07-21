@@ -354,6 +354,9 @@ class Test_chunks(unittest2.TestCase):
         self.assertEqual(tuple(chunks((1, 1, 1, 2, 2), 3, None)),
             ((1, 1, 1, ), (2, 2, None)))
 
+        self.assertEqual(tuple(chunks([1, 1, 1, 2, 2], 3, None)),
+            ([1, 1, 1, ], [2, 2, None]))
+
 
     def test_returns_generator_object(self):
         self.assertEqual(type(chunks("aaaabbbb", 4)).__name__, "generator")
@@ -493,6 +496,17 @@ class Test_contains(unittest2.TestCase):
         self.assertRaises(TypeError, contains, True, 4)
         self.assertRaises(TypeError, contains, 0, 4)
 
+    def test_index_ValueError_branch(self):
+        class MockContainer(object):
+            def __init__(self, value):
+                self.value = value
+
+            def index(self, value):
+                raise ValueError("Not found")
+
+        self.assertFalse(contains(MockContainer("something"), None))
+
+
 class Test_omits(unittest2.TestCase):
     def test_omits_value(self):
         self.assertFalse(omits(range(4), 3))
@@ -628,6 +642,9 @@ class Test_intersection(unittest2.TestCase):
         self.assertEqual(intersection([1, 2, 3]), [1, 2, 3])
         self.assertEqual(intersection([1, 2, 3, 0], [0, 2, 3]), [2, 3, 0])
         self.assertEqual(intersection([1, 5, 4], [0, 2, 3]), [])
+
+    def test_single_iterable(self):
+        self.assertEqual(intersection([1, 2, 3]), [1, 2, 3])
 
 
 class Test_take(unittest2.TestCase):

@@ -1191,7 +1191,7 @@ def intersection(iterable, *iterables):
         in the first sequence.
     """
 
-    if iterables is None:
+    if not iterables:
         return iterable
 
     def _does_other_contain(item):
