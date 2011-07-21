@@ -67,7 +67,11 @@ Terminology
   at a time.
 * A **transform** is a function that transforms its arguments to produce a
   result.
-
+* **Lazy evaluation** is evaluation delayed until the last possible instant.
+* **Materialized iterables** are iterables that take up memory equal to their
+  size.
+* **Non-materialized iterables** are iterables (usually generators) that are
+  computed lazily.
 
 Iteration and aggregation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
