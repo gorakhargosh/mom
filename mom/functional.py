@@ -419,7 +419,7 @@ def every(predicate, iterable):
         ``True`` if the predicate is true for all elements in the iterable.
     """
     # Equivalent to
-    # return all(map(predicate, iterable))
+    # return all(imap(predicate, iterable))
     # but the following short-circuits.
     for x in iterable:
         if not predicate(x):
