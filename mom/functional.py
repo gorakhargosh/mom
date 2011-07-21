@@ -277,10 +277,10 @@ def complement(predicate):
         Complementary predicate function.
     """
 
-    def f(*args, **kwargs):
+    def _negate(*args, **kwargs):
         return not predicate(*args, **kwargs)
 
-    return f
+    return _negate
 
 
 # Higher-order functions.
