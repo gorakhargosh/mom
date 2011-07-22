@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2009 Facebook.
-# Copyright (C) 2010 Google Inc.
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -92,7 +90,7 @@ Unicode string encoding
 .. autofunction:: to_unicode_if_bytes
 .. autofunction:: utf8_encode_if_unicode
 .. autofunction:: utf8_encode
-.. autofunction:: unicode_to_utf8_recursive
+.. autofunction:: utf8_encode_recursive
 """
 
 from __future__ import absolute_import
@@ -315,153 +313,6 @@ def is_integer(obj):
         ``True`` if yes; ``False`` otherwise.
     """
     return isinstance(obj, (int, long)) and not isinstance(obj, bool)
-
-
-def utf8_encode(unicode_text):
-    """
-    UTF-8 encodes a Unicode string into bytes; bytes and None are left alone.
-
-    Work with Unicode strings in your code and encode your Unicode strings into
-    UTF-8 before they leave your system.
-
-    :param unicode_text:
-        If already a byte string or None, it is returned unchanged.
-        Otherwise it must be a Unicode string and is encoded as UTF-8 bytes.
-    :returns:
-        UTF-8 encoded bytes.
-    """
-    if unicode_text is None or is_bytes(unicode_text):
-        return unicode_text
-    assert is_unicode(unicode_text)
-    return unicode_text.encode("utf-8")
-
-
-def utf8_decode(utf8_encoded_bytes):
-    """
-    Decodes bytes into a Unicode string using the UTF-8 encoding.
-
-    Decode your UTF-8 encoded bytes into Unicode strings as soon as
-    they arrive into your system. Work with Unicode strings in your code.
-
-    :param utf8_encoded_bytes:
-        UTF-8 encoded bytes.
-    :returns:
-        Unicode string.
-    """
-    return bytes_to_unicode(utf8_encoded_bytes)
-
-
-def utf8_encode_if_unicode(obj):
-    """
-    UTF-8 encodes the object only if it is a Unicode string.
-
-    :param obj:
-        The value that will be UTF-8 encoded if it is a Unicode string.
-    :returns:
-        UTF-8 encoded bytes if the argument is a Unicode string; otherwise
-        the value is returned unchanged.
-    """
-    return utf8_encode(obj) if is_unicode(obj) else obj
-
-
-def utf8_decode_if_bytes(obj):
-    """
-    Decodes UTF-8 encoded bytes into a Unicode string.
-
-    :param obj:
-        Python object. If this is a bytes instance, it will be decoded
-        into a Unicode string; otherwise, it will be left alone.
-    :returns:
-        Unicode string if the argument is a bytes instance;
-        the unchanged object otherwise.
-    """
-    return to_unicode_if_bytes(obj)
-
-
-def to_unicode_if_bytes(obj, encoding="utf-8"):
-    """
-    Decodes encoded bytes into a Unicode string.
-
-    :param obj:
-        The value that will be converted to a Unicode string.
-    :param encoding:
-        The encoding used to decode bytes. Defaults to UTF-8.
-    :returns:
-        Unicode string if the argument is a byte string. Otherwise the value
-        is returned unchanged.
-    """
-    return bytes_to_unicode(obj, encoding) if is_bytes(obj) else obj
-
-
-def bytes_to_unicode(obj, encoding="utf-8"):
-    """
-    Converts bytes to a Unicode string decoding it according to the encoding
-    specified.
-
-    :param obj:
-        If already a Unicode string or None, it is returned unchanged.
-        Otherwise it must be a byte string.
-    :param encoding:
-        The encoding used to decode bytes. Defaults to UTF-8
-    """
-    if obj is None or is_unicode(obj):
-        return obj
-    assert is_bytes(obj)
-    return obj.decode(encoding)
-
-
-def bytes_to_unicode_recursive(obj, encoding="utf-8"):
-    """
-    Walks a simple data structure, converting byte strings to unicode.
-
-    Supports lists, tuples, and dictionaries.
-
-    :param obj:
-        The Python data structure to walk recursively looking for
-        byte strings.
-    :param encoding:
-        The encoding to use when decoding the byte string into Unicode.
-        Default UTF-8.
-    :returns:
-        obj with all the byte strings converted to Unicode strings.
-    """
-    if isinstance(obj, dict):
-        return dict((bytes_to_unicode_recursive(k),
-                     bytes_to_unicode_recursive(v)) for (k, v) in obj.items())
-    elif isinstance(obj, list):
-        return list(bytes_to_unicode_recursive(i) for i in obj)
-    elif isinstance(obj, tuple):
-        return tuple(bytes_to_unicode_recursive(i) for i in obj)
-    elif is_bytes(obj):
-        return bytes_to_unicode(obj, encoding=encoding)
-    else:
-        return obj
-
-
-def unicode_to_utf8_recursive(obj):
-    """
-    Walks a simple data structure, converting Unicode strings to UTF-8 encoded
-    byte strings.
-
-    Supports lists, tuples, and dictionaries.
-
-    :param obj:
-        The Python data structure to walk recursively looking for
-        Unicode strings.
-    :returns:
-        obj with all the Unicode strings converted to byte strings.
-    """
-    if isinstance(obj, dict):
-        return dict((unicode_to_utf8_recursive(k),
-                     unicode_to_utf8_recursive(v)) for (k, v) in obj.items())
-    elif isinstance(obj, list):
-        return list(unicode_to_utf8_recursive(i) for i in obj)
-    elif isinstance(obj, tuple):
-        return tuple(unicode_to_utf8_recursive(i) for i in obj)
-    elif is_unicode(obj):
-        return utf8_encode(obj)
-    else:
-        return obj
 
 
 def long_byte_count(num):

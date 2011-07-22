@@ -25,7 +25,7 @@
 """
 
 from __future__ import absolute_import
-from mom.builtins import bytes_to_unicode_recursive, bytes_to_unicode
+from mom.codec.text import utf8_decode_recursive, utf8_decode
 
 try:
     # Built-in JSON library.
@@ -44,7 +44,7 @@ except Exception:
         import simplejson as json
         def json_loads(value):
             """Wrapper to decode JSON."""
-            return json.loads(bytes_to_unicode(value))
+            return json.loads(utf8_decode(value))
         def json_dumps(value):
             """Wrapper to encode JSON."""
             return json.dumps(value)
@@ -54,7 +54,7 @@ except Exception:
             from django.utils import simplejson as json
             def json_loads(value):
                 """Wrapper to decode JSON."""
-                return json.loads(bytes_to_unicode(value))
+                return json.loads(utf8_decode(value))
             def json_dumps(value):
                 """Wrapper to encode JSON."""
                 return json.dumps(value)
@@ -83,7 +83,7 @@ def encode(obj):
     :returns:
         JSON string.
     """
-    return json_dumps(bytes_to_unicode_recursive(obj)).replace("</", "<\\/")
+    return json_dumps(utf8_decode_recursive(obj)).replace("</", "<\\/")
 
 
 def decode(encoded):

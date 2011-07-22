@@ -4,8 +4,9 @@
 from __future__ import absolute_import
 
 import unittest2
-from mom.builtins import utf8_encode, b
+from mom.builtins import b
 from mom.codec.json import encode, decode
+from mom.codec.text import utf8_encode
 
 
 class Test_decode(unittest2.TestCase):
