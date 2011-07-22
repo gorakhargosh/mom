@@ -36,6 +36,7 @@ Read these before you begin to use these functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 1. http://www.joelonsoftware.com/articles/Unicode.html
 2. http://diveintopython3.org/strings.html
+3. http://docs.python.org/howto/unicode.html
 
 .. autofunction:: utf8_encode
 .. autofunction:: utf8_decode
