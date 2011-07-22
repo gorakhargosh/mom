@@ -46,6 +46,7 @@ API Documentation
 
    api/functional
    api/general
+   api/codec
    api/security
 
 

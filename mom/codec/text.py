@@ -37,20 +37,33 @@ Read these before you begin to use these functions
 1. http://www.joelonsoftware.com/articles/Unicode.html
 2. http://diveintopython3.org/strings.html
 
-.. autofunction:: bytes_to_unicode
-.. autofunction:: bytes_to_unicode_recursive
-.. autofunction:: to_unicode_if_bytes
 .. autofunction:: utf8_encode
 .. autofunction:: utf8_decode
 .. autofunction:: utf8_encode_if_unicode
 .. autofunction:: utf8_decode_if_bytes
 .. autofunction:: utf8_encode_recursive
 .. autofunction:: utf8_decode_recursive
+.. autofunction:: bytes_to_unicode
+.. autofunction:: bytes_to_unicode_recursive
+.. autofunction:: to_unicode_if_bytes
 """
 
 from __future__ import absolute_import
 
 from mom.builtins import is_bytes, is_unicode
+
+
+__all__ = [
+    "utf8_encode",
+    "utf8_decode",
+    "utf8_encode_if_unicode",
+    "utf8_decode_if_bytes",
+    "utf8_decode_recursive",
+    "utf8_encode_recursive",
+    "bytes_to_unicode",
+    "bytes_to_unicode_recursive",
+    "to_unicode_if_bytes",
+]
 
 
 def utf8_encode(unicode_text):

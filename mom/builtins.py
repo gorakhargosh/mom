@@ -83,14 +83,6 @@ People screw these up too. Useful in functional programming.
 .. autofunction:: is_odd
 .. autofunction:: is_positive
 
-Unicode string encoding
------------------------
-.. autofunction:: bytes_to_unicode
-.. autofunction:: bytes_to_unicode_recursive
-.. autofunction:: to_unicode_if_bytes
-.. autofunction:: utf8_encode_if_unicode
-.. autofunction:: utf8_encode
-.. autofunction:: utf8_encode_recursive
 """
 
 from __future__ import absolute_import
@@ -113,11 +105,6 @@ __all__ = [
     "is_negative",
     "is_odd",
     "is_positive",
-    "utf8_encode",
-    "bytes_to_unicode",
-    "utf8_encode_if_unicode",
-    "to_unicode_if_bytes",
-    "bytes_to_unicode_recursive",
 ]
 
 # Integral range

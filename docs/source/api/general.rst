@@ -11,10 +11,6 @@ Type detection, encoding, and conversion
 ==============
 .. automodule:: mom.builtins
 
-`mom.codec`
-===========
-.. automodule:: mom.codec
-
 `mom.math`
 ==========
 .. automodule:: mom.math
