@@ -20,23 +20,74 @@
 :module: mom.codec.text
 :synopsis: Common functions for text encodings.
 
+Text encoding
+-------------
+
+::
+
     "There is no such thing as plain text."
                               - Plain Text.
 
-Text encoding
--------------
-UTF-8 is a byte encoding. It is one of the many ways in which Unicode strings
-can be represented as a series of bytes, and because UTF-8 is more portable
-between diverse systems, you must ensure to convert your Unicode strings to
-UTF-8 encoded bytes before they leave your system and ensure to decode UTF-8
-encoded bytes back into Unicode strings before you start working with them in
-your code--that is if you know those bytes are UTF-8 encoded.
+
+UTF-8 is one of the many ways in which Unicode strings can be represented as
+a *sequence of bytes*, and because UTF-8 is more portable between diverse
+systems, you must ensure to convert your Unicode strings to UTF-8 encoded
+bytes before they leave your system and ensure to decode UTF-8 encoded bytes
+back into Unicode strings before you start working with them in your
+code--that is, if you know those bytes are UTF-8 encoded.
+
+
+Terminology
+~~~~~~~~~~~
+* The process of **encoding** is that of converting a Unicode string into a
+  sequence of bytes. The **method** using which this conversion is done is
+  *also* called an **encoding**::
+
+        Unicode string   -> Encoded bytes
+        ---------------------------------
+        '深入 Python'     -> b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python'
+
+  The **encoding** (method) used to *encode* in this example is UTF-8.
+
+* The process of **decoding** is that of converting a sequence of bytes into a
+  Unicode string::
+
+        Encoded bytes                      -> Unicode string
+        ----------------------------------------------------
+        b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python' -> '深入 Python'
+
+  The **encoding** (method) used to *decode* in this example is UTF-8.
+
+A very crude explanation of when to use what
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Essentially, inside your own system, work with::
+
+    `'深入 Python'`
+
+and not::
+
+    `b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python'`
+
+but when sending things out to other systems that may not see `'深入 Python'`
+the way Python does, you encode it into UTF-8 bytes::
+
+    `b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python'`
+
+**and tell** those systems that you're using UTF-8 to encode your Unicode
+strings so that those systems can decode the bytes you sent appropriately.
+
+When receiving text from other systems, ask for their encodings.
+Decode the text using the appropriate encoding method as soon as you receive
+it and then operate on the resulting Unicode text.
+
 
 Read these before you begin to use these functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 1. http://www.joelonsoftware.com/articles/Unicode.html
 2. http://diveintopython3.org/strings.html
 3. http://docs.python.org/howto/unicode.html
+4. http://docs.python.org/library/codecs.html
+
 
 .. autofunction:: utf8_encode
 .. autofunction:: utf8_decode
