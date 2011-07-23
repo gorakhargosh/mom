@@ -41,9 +41,15 @@ class Test_sha1_hex_digest(unittest2.TestCase):
     def test_value(self):
         self.assertEqual(sha1_hex_digest(*inputs), hex_encode(input_sha1_digest))
 
+    def test_raises_TypeError_when_not_bytes(self):
+        self.assertRaises(TypeError, sha1_hex_digest, *unicode_inputs)
+
 class Test_sha1_base64_digest(unittest2.TestCase):
     def test_value(self):
         self.assertEqual(sha1_base64_digest(*inputs), base64_encode(input_sha1_digest))
+
+    def test_raises_TypeError_when_not_bytes(self):
+        self.assertRaises(TypeError, sha1_base64_digest, *unicode_inputs)
 
 class Test_md5_digest(unittest2.TestCase):
     def test_value(self):
@@ -60,6 +66,9 @@ class Test_md5_base64_digest(unittest2.TestCase):
     def test_value(self):
         self.assertEqual(md5_base64_digest(*inputs), base64_encode(input_md5_digest))
 
+    def test_raises_TypeError_when_not_bytes(self):
+        self.assertRaises(TypeError, md5_base64_digest, *unicode_inputs)
+
 class Test_hmac_sha1_digest(unittest2.TestCase):
     def test_value(self):
         self.assertEqual(hmac_sha1_digest(key, base_string), expected_hmac_sha1_digest)
@@ -70,3 +79,6 @@ class Test_hmac_sha1_digest(unittest2.TestCase):
 class Test_hmac_sha1_base64_digest(unittest2.TestCase):
     def test_value(self):
         self.assertEqual(hmac_sha1_base64_digest(key, base_string), expected_hmac_sha1_base64_digest)
+
+    def test_raises_TypeError_when_not_bytes(self):
+        self.assertRaises(TypeError, hmac_sha1_base64_digest, *unicode_inputs)
