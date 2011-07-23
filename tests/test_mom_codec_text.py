@@ -76,14 +76,14 @@ class Test_bytes_to_unicode(unittest2.TestCase):
 
         self.assertEqual(bytes_to_unicode(None), None)
 
-    def test_raises_error_when_not_string_or_None(self):
-        self.assertRaises(AssertionError, bytes_to_unicode, 5)
-        self.assertRaises(AssertionError, bytes_to_unicode, False)
-        self.assertRaises(AssertionError, bytes_to_unicode, True)
-        self.assertRaises(AssertionError, bytes_to_unicode, [])
-        self.assertRaises(AssertionError, bytes_to_unicode, ())
-        self.assertRaises(AssertionError, bytes_to_unicode, {})
-        self.assertRaises(AssertionError, bytes_to_unicode, object)
+    def test_raises_TypeError_when_not_string_or_None(self):
+        self.assertRaises(TypeError, bytes_to_unicode, 5)
+        self.assertRaises(TypeError, bytes_to_unicode, False)
+        self.assertRaises(TypeError, bytes_to_unicode, True)
+        self.assertRaises(TypeError, bytes_to_unicode, [])
+        self.assertRaises(TypeError, bytes_to_unicode, ())
+        self.assertRaises(TypeError, bytes_to_unicode, {})
+        self.assertRaises(TypeError, bytes_to_unicode, object)
 
     def test_raises_UnicodeDecodeError_when_latin1_bytes(self):
         self.assertRaises(UnicodeDecodeError, bytes_to_unicode, latin1_bytes)
@@ -108,14 +108,14 @@ class Test_unicode_to_utf8(unittest2.TestCase):
         self.assertEqual(utf8_encode(utf8_bytes2), utf8_bytes2)
         self.assertTrue(is_bytes(utf8_encode(utf8_bytes2)))
 
-    def test_raises_error_when_not_string_or_None(self):
-        self.assertRaises(AssertionError, utf8_encode, 5)
-        self.assertRaises(AssertionError, utf8_encode, False)
-        self.assertRaises(AssertionError, utf8_encode, True)
-        self.assertRaises(AssertionError, utf8_encode, [])
-        self.assertRaises(AssertionError, utf8_encode, ())
-        self.assertRaises(AssertionError, utf8_encode, {})
-        self.assertRaises(AssertionError, utf8_encode, object)
+    def test_raises_TypeError_when_not_string_or_None(self):
+        self.assertRaises(TypeError, utf8_encode, 5)
+        self.assertRaises(TypeError, utf8_encode, False)
+        self.assertRaises(TypeError, utf8_encode, True)
+        self.assertRaises(TypeError, utf8_encode, [])
+        self.assertRaises(TypeError, utf8_encode, ())
+        self.assertRaises(TypeError, utf8_encode, {})
+        self.assertRaises(TypeError, utf8_encode, object)
 
 
 class Test_bytes_to_unicode_recursive(unittest2.TestCase):
