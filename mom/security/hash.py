@@ -41,6 +41,7 @@ HMAC-SHA-1 digests
 from __future__ import absolute_import
 
 import hashlib
+from mom.builtins import is_bytes
 from mom.codec import base64_encode, hex_encode
 
 
@@ -68,6 +69,9 @@ def sha1_digest(*inputs):
     """
     hash_func = hashlib.sha1()
     for i in inputs:
+        if not is_bytes(i):
+            raise TypeError(
+                "input type must be bytes: got %r" % type(i).__name__)
         hash_func.update(i)
     return hash_func.digest()
 
@@ -109,6 +113,9 @@ def md5_digest(*inputs):
     """
     hash_func = hashlib.md5()
     for i in inputs:
+        if not is_bytes(i):
+            raise TypeError(
+                "input type must be bytes: got %r" % type(i).__name__)
         hash_func.update(i)
     return hash_func.digest()
 
@@ -146,11 +153,15 @@ def hmac_sha1_digest(key, data):
     :param key:
         The key for the digest.
     :param data:
-        The data for which the digest will be calculted.
+        The raw bytes data for which the digest will be calculated.
     :returns:
         HMAC SHA-1 Digest.
     """
     import hmac
+
+    if not is_bytes(data):
+        raise TypeError(
+            "data type must be bytes: got %r" % type(data).__name__)
 
     return hmac.new(key, data, hashlib.sha1).digest()
 
