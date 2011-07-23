@@ -17,7 +17,7 @@ from mom.codec import \
     bin_encode, \
     bin_decode, \
     bytes_to_long, \
-    long_to_bytes
+    long_to_bytes, _bytes_to_long
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -114,9 +114,17 @@ class Test_bytes_long_codec(unittest2.TestCase):
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes)),
                          expected_bytes)
 
+        self.assertEqual(long_to_bytes(_bytes_to_long(zero_bytes)),
+                         one_zero_byte)
+        self.assertEqual(long_to_bytes(_bytes_to_long(random_bytes)),
+                         expected_bytes)
+
     def test_TypeError_non_bytes_argument(self):
         self.assertRaises(TypeError, bytes_to_long, unicode_string)
         self.assertRaises(TypeError, bytes_to_long, None)
+
+        self.assertRaises(TypeError, _bytes_to_long, unicode_string)
+        self.assertRaises(TypeError, _bytes_to_long, None)
 
 
 class Test_long_to_bytes(unittest2.TestCase):
