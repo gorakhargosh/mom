@@ -117,8 +117,8 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     :param n_bits:
         Number of random bits.
 
-        if n is divisible by 8, (n * 8) bytes will be returned.
-        if n is not divisible by 8, ((n * 8) + 1) bytes will be returned
+        if n is divisible by 8, (n / 8) bytes will be returned.
+        if n is not divisible by 8, ((n / 8) + 1) bytes will be returned
         and the prefixed offset-byte will have `(n % 8)` number of random bits,
         (that is, `8 - (n % 8)` high bits will be cleared).
 
