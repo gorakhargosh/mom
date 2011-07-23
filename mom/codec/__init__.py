@@ -57,7 +57,7 @@ from __future__ import absolute_import
 
 import binascii
 
-from mom.builtins import bytes
+from mom.builtins import bytes, is_bytes
 from mom.functional import leading, chunks
 
 
@@ -68,11 +68,16 @@ def base64_encode(raw_bytes):
     Encodes raw bytes into base64 representation without appending a trailing
     newline character.
 
+    Encode your Unicode strings to a byte encoding before base64-encoding them.
+
     :param raw_bytes:
         Bytes to encode.
     :returns:
         Base64 encoded string without newline characters.
     """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" % \
+                        type(raw_bytes).__name__)
     return binascii.b2a_base64(raw_bytes)[:-1]
 
 
@@ -92,11 +97,16 @@ def hex_encode(raw_bytes):
     """
     Encodes raw bytes into hexadecimal representation.
 
+    Encode your Unicode strings to a byte encoding before hex-encoding them.
+
     :param raw_bytes:
         Bytes.
     :returns:
         Hex-encoded representation.
     """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" % \
+                        type(raw_bytes).__name__)
     return binascii.b2a_hex(raw_bytes)
 
 
@@ -117,11 +127,16 @@ def decimal_encode(raw_bytes):
     Encodes raw bytes into decimal representation. Leading zero bytes are
     preserved.
 
+    Encode your Unicode strings to a byte encoding before decimal-encoding them.
+
     :param raw_bytes:
         Bytes.
     :returns:
         Decimal-encoded representation.
     """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" % \
+                        type(raw_bytes).__name__)
     padding = "0" * leading((lambda w: w == "\x00"), raw_bytes)
     long_val = bytes_to_long(raw_bytes)
     return padding + bytes(long_val) if long_val else padding
@@ -182,11 +197,16 @@ def bin_encode(raw_bytes):
     """
     Encodes raw bytes into binary representation.
 
+    Encode your Unicode strings to a byte encoding before binary-encoding them.
+
     :param raw_bytes:
         Raw bytes.
     :returns:
         Binary representation.
     """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" % \
+                        type(raw_bytes).__name__)
     return ''.join(_HEX_TO_BIN_LOOKUP[hex_char]
                    for hex_char in hex_encode(raw_bytes))
 
@@ -208,6 +228,29 @@ def bin_decode(encoded):
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
     #return long_to_bytes(long(encoded, 2))
+
+
+def bytes_to_long(raw_bytes):
+    """
+    Converts bytes to long integer::
+
+        bytes_to_long(bytes) : long
+
+    This is (essentially) the inverse of long_to_bytes().
+
+    Encode your Unicode strings to a byte encoding before converting them.
+
+    .. WARNING: Does not preserve leading zero bytes.
+
+    :param raw_bytes:
+        Raw bytes.
+    :returns:
+        Long.
+    """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" % \
+                        type(raw_bytes).__name__)
+    return long(hex_encode(raw_bytes), 16)
 
 
 # Taken from PyCrypto "as is".
@@ -257,13 +300,15 @@ def long_to_bytes(num, blocksize=0):
     return s
 
 
-def bytes_to_long(raw_bytes):
+def _bytes_to_long(raw_bytes):
     """
     Converts bytes to long integer::
 
         bytes_to_long(bytes) : long
 
     This is (essentially) the inverse of long_to_bytes().
+
+    Encode your Unicode strings to a byte encoding before converting them.
 
     .. WARNING: Does not preserve leading zero bytes.
 
@@ -273,6 +318,10 @@ def bytes_to_long(raw_bytes):
         Long.
     """
     import struct
+
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" % \
+                        type(raw_bytes).__name__)
 
     acc = 0L
     unpack = struct.unpack
@@ -284,4 +333,3 @@ def bytes_to_long(raw_bytes):
     for i in range(0, length, 4):
         acc = (acc << 32) + unpack('>I', raw_bytes[i:i+4])[0]
     return acc
-

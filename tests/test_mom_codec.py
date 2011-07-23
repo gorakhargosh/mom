@@ -18,7 +18,7 @@ from mom.codec import \
     bin_decode, \
     bytes_to_long, \
     long_to_bytes
-
+from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
 random_bytes_1024 = generate_random_bytes(1024 >> 3)
@@ -51,6 +51,10 @@ class Test_base64_codec(unittest2.TestCase):
         self.assertEqual(base64_decode(base64_encode(random_bytes_len_4093)),
                          random_bytes_len_4093)
 
+    def test_TypeError_non_bytes_argument(self):
+        self.assertRaises(TypeError, base64_encode, unicode_string)
+        self.assertRaises(TypeError, base64_encode, None)
+
 class Test_hex_codec(unittest2.TestCase):
     def test_codec_identity(self):
         # Not zero-destructive
@@ -61,6 +65,10 @@ class Test_hex_codec(unittest2.TestCase):
                          random_bytes_2048)
         self.assertEqual(hex_decode(hex_encode(random_bytes_len_4093)),
                          random_bytes_len_4093)
+
+    def test_TypeError_non_bytes_argument(self):
+        self.assertRaises(TypeError, hex_encode, unicode_string)
+        self.assertRaises(TypeError, hex_encode, None)
 
 class Test_decimal_codec(unittest2.TestCase):
     def test_codec_identity(self):
@@ -77,6 +85,10 @@ class Test_decimal_codec(unittest2.TestCase):
             decimal_decode(decimal_encode(random_bytes_len_4093)),
             random_bytes_len_4093)
 
+    def test_TypeError_non_bytes_argument(self):
+        self.assertRaises(TypeError, decimal_encode, unicode_string)
+        self.assertRaises(TypeError, decimal_encode, None)
+
 class Test_bin_codec(unittest2.TestCase):
     def test_codec_identity(self):
         self.assertEqual(bin_decode(bin_encode(zero_bytes)), zero_bytes)
@@ -88,6 +100,9 @@ class Test_bin_codec(unittest2.TestCase):
             bin_decode(bin_encode(random_bytes_len_4093)),
             random_bytes_len_4093)
 
+    def test_TypeError_non_bytes_argument(self):
+        self.assertRaises(TypeError, bin_encode, unicode_string)
+        self.assertRaises(TypeError, bin_encode, None)
 
 class Test_bytes_long_codec(unittest2.TestCase):
     def test_codec_equivalence(self):
@@ -98,6 +113,10 @@ class Test_bytes_long_codec(unittest2.TestCase):
                          one_zero_byte)
         self.assertEqual(long_to_bytes(bytes_to_long(random_bytes)),
                          expected_bytes)
+
+    def test_TypeError_non_bytes_argument(self):
+        self.assertRaises(TypeError, bytes_to_long, unicode_string)
+        self.assertRaises(TypeError, bytes_to_long, None)
 
 
 class Test_long_to_bytes(unittest2.TestCase):
