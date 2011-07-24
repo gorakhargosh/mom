@@ -4,7 +4,7 @@
 from __future__ import absolute_import
 
 import unittest2
-from mom.builtins import is_bytes
+from mom.builtins import is_bytes, is_bytes_or_unicode
 from mom.codec import bytes_to_long
 from mom.security.random import \
     generate_random_hex_string, generate_random_ulong_between, \
@@ -12,7 +12,7 @@ from mom.security.random import \
     generate_random_ulong_exactly, ALPHANUMERIC, \
     ASCII_PRINTABLE, ALPHA, LOWERCASE_ALPHANUMERIC, \
     LOWERCASE_ALPHA, DIGITS, generate_random_password, \
-    generate_random_sequence, calculate_entropy
+    generate_random_sequence, calculate_entropy, generate_random_string
 
 
 class Test_generate_random_bits(unittest2.TestCase):
@@ -131,6 +131,23 @@ class Test_generate_random_ulong_between(unittest2.TestCase):
         self.assertRaises(TypeError, generate_random_ulong_between, True, True)
         self.assertRaises(TypeError, generate_random_ulong_between, "", "")
 
+
+class Test_generate_random_string(unittest2.TestCase):
+    def test_random_string_length(self):
+        for i in range(10):
+            self.assertEqual(len(generate_random_string(64)),
+                             len(generate_random_string(64)))
+            self.assertEqual(len(generate_random_string(64)), 64)
+
+    def test_is_string(self):
+        self.assertTrue(is_bytes_or_unicode(generate_random_string(64)))
+
+    def test_uniqueness(self):
+        # For a decent enough entropy.
+        for i in range(10):
+            self.assertNotEqual(generate_random_string(64),
+                                generate_random_string(64))
+
 class Test_generate_random_password(unittest2.TestCase):
     def test_random_password_length(self):
         symbol_sets = [
@@ -168,7 +185,7 @@ class Test_generate_random_password(unittest2.TestCase):
 
     def test_uniqueness(self):
         # For a decent enough entropy.
-        for i in range(100):
+        for i in range(10):
             self.assertNotEqual(generate_random_password(64),
                                 generate_random_password(64))
 
