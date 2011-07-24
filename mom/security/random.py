@@ -134,7 +134,7 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
         raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
-    # Don't perform any floating-point operations.
+    # Doesn't perform any floating-point operations.
     q, r = divmod(n_bits, 8)
     random_bytes = rand_func(q)
     if r:
@@ -150,16 +150,17 @@ def generate_random_ulong_atmost(n_bits, rand_func=generate_random_bytes):
     :param n_bits:
         Number of random bits to be generated at most.
     :param rand_func:
-        Random bytes generator function. The generated unsigned long integer
-        will be between 0 and (2**n_bits)-1 both inclusive.
+        Random bytes generator function.
     :returns:
         Returns an unsigned long integer with at most `n_bits` random bits.
+        The generated unsigned long integer will be between 0 and
+        (2**n_bits)-1 both inclusive.
     """
     if not is_integer(n_bits):
         raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
-    # Don't perform any floating-point operations.
+    # Doesn't perform any floating-point operations.
     q, r = divmod(n_bits, 8)
     if r:
         q += 1
@@ -174,13 +175,14 @@ def generate_random_ulong_exactly(n_bits, rand_func=generate_random_bytes):
 
     :param n_bits:
         Number of random bits.
-        The generated unsigned long integer will be between 2**(n_bits-1) and
-         (2**n_bits)-1 both inclusive.
     :param rand_func:
         Random bytes generator function.
     :returns:
         Returns an unsigned long integer with `n_bits` random bits.
+        The generated unsigned long integer will be between 2**(n_bits-1) and
+         (2**n_bits)-1 both inclusive.
     """
+    # Doesn't perform any floating-point operations.
     value = bytes_to_long(generate_random_bits(n_bits, rand_func=rand_func))
     #assert(value >= 0 and value < (2L ** n_bits))
     # Set the high bit to ensure bit length.
