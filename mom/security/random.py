@@ -199,6 +199,8 @@ def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
         Low
     :param high:
         High
+    :param rand_func:
+        Random bytes generator function.
     :returns:
         Random unsigned long integer value.
     """
@@ -215,13 +217,15 @@ def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     return low + value
 
 
-def generate_random_hex_string(length=8):
+def generate_random_hex_string(length=8, rand_func=generate_random_bytes):
     """
     Generates a random ASCII-encoded hexadecimal string of an even length.
 
     :param length:
         Length of the string to be returned. Default 32.
         The length MUST be a positive even number.
+    :param rand_func:
+        Random bytes generator function.
     :returns:
         A string representation of a randomly-generated hexadecimal string.
     """
@@ -230,4 +234,4 @@ def generate_random_hex_string(length=8):
         raise ValueError(
             "This function expects a positive even number "\
             "length: got length `%r`." % length)
-    return hex_encode(generate_random_bytes(length/2))
+    return hex_encode(rand_func(length/2))
