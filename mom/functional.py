@@ -187,6 +187,8 @@ Predicates, transforms, and walkers
 -----------------------------------
 .. autofunction:: identity
 .. autofunction:: loob
+.. autofunction:: always
+.. autofunction:: never
 """
 
 from __future__ import absolute_import
@@ -204,6 +206,7 @@ from mom._compat import range, dict_each, reduce as _reduce, next
 
 
 __all__ = [
+    "always",
     "chunks",
     "complement",
     "compose",
@@ -234,6 +237,7 @@ __all__ = [
     "loob",
     "map_dict",
     "ncycles",
+    "never",
     "none",
     "nth",
     "omits",
@@ -1304,3 +1308,27 @@ def loob(arg):
         Complementary boolean value.
     """
     return not bool(arg)
+
+
+def always(arg):
+    """
+    Predicate function that returns ``True`` always.
+
+    :param arg:
+        Argument
+    :returns:
+        ``True``.
+    """
+    return True
+
+
+def never(arg):
+    """
+    Predicate function that returns ``False`` always.
+
+    :param arg:
+        Argument
+    :returns:
+        ``False``.
+    """
+    return False

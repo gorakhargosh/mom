@@ -14,7 +14,7 @@ from mom.functional import \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, \
     partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
-    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat
+    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never
 
 
 class Test_some(unittest2.TestCase):
@@ -718,6 +718,13 @@ class Test_eat(unittest2.TestCase):
         eat(it, None)
         self.assertEqual(tuple(it), ())
 
+class Test_always(unittest2.TestCase):
+    def test_always_true(self):
+        self.assertTrue(always(False))
+
+class Test_never(unittest2.TestCase):
+    def test_never_true(self):
+        self.assertFalse(never(True))
 
 if __name__ == '__main__':
     unittest2.main()
