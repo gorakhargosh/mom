@@ -4,7 +4,10 @@
 import unittest2
 
 from mom.builtins import is_bytes, is_unicode
-from mom.codec.text import utf8_encode_if_unicode, to_unicode_if_bytes, bytes_to_unicode, utf8_encode, utf8_encode_recursive, bytes_to_unicode_recursive
+from mom.codec.text import utf8_encode_if_unicode, \
+    to_unicode_if_bytes, bytes_to_unicode, utf8_encode, \
+    utf8_encode_recursive, bytes_to_unicode_recursive, \
+    utf8_decode, utf8_decode_if_bytes
 
 from tests.test_mom_builtins import \
     unicode_string, utf8_bytes, unicode_string2, utf8_bytes2, latin1_bytes
@@ -58,6 +61,28 @@ class Test_to_unicode_if_bytes(unittest2.TestCase):
         self.assertEqual(to_unicode_if_bytes({}), {})
         self.assertEqual(to_unicode_if_bytes(object), object)
 
+class Test_utf8_decode_if_bytes(unittest2.TestCase):
+    def test_encodes_bytes_to_unicode(self):
+        self.assertEqual(utf8_decode_if_bytes(utf8_bytes), unicode_string)
+        self.assertTrue(is_unicode(utf8_decode_if_bytes(utf8_bytes)))
+
+        self.assertEqual(utf8_decode_if_bytes(utf8_bytes2), unicode_string2)
+        self.assertTrue(is_unicode(utf8_decode_if_bytes(utf8_bytes2)))
+
+    def test_does_not_encode_else_to_unicode(self):
+        self.assertEqual(utf8_decode_if_bytes(unicode_string), unicode_string)
+        self.assertTrue(is_unicode(utf8_decode_if_bytes(unicode_string)))
+
+        self.assertEqual(utf8_decode_if_bytes(unicode_string2), unicode_string2)
+        self.assertTrue(is_unicode(utf8_decode_if_bytes(unicode_string2)))
+
+        self.assertEqual(utf8_decode_if_bytes(None), None)
+        self.assertEqual(utf8_decode_if_bytes(False), False)
+        self.assertEqual(utf8_decode_if_bytes(5), 5)
+        self.assertEqual(utf8_decode_if_bytes([]), [])
+        self.assertEqual(utf8_decode_if_bytes(()), ())
+        self.assertEqual(utf8_decode_if_bytes({}), {})
+        self.assertEqual(utf8_decode_if_bytes(object), object)
 
 class Test_bytes_to_unicode(unittest2.TestCase):
     def test_converts_bytes_to_unicode(self):
@@ -87,6 +112,36 @@ class Test_bytes_to_unicode(unittest2.TestCase):
 
     def test_raises_UnicodeDecodeError_when_latin1_bytes(self):
         self.assertRaises(UnicodeDecodeError, bytes_to_unicode, latin1_bytes)
+
+
+class Test_utf8_decode(unittest2.TestCase):
+    def test_converts_utf8_decode(self):
+        self.assertEqual(utf8_decode(utf8_bytes), unicode_string)
+        self.assertTrue(is_unicode(utf8_decode(utf8_bytes)))
+
+        self.assertEqual(utf8_decode(utf8_bytes2), unicode_string2)
+        self.assertTrue(is_unicode(utf8_decode(utf8_bytes2)))
+
+    def test_does_not_encode_unicode_and_None_to_unicode(self):
+        self.assertEqual(utf8_decode(unicode_string), unicode_string)
+        self.assertTrue(is_unicode(utf8_decode(unicode_string)))
+
+        self.assertEqual(utf8_decode(unicode_string2), unicode_string2)
+        self.assertTrue(is_unicode(utf8_decode(unicode_string2)))
+
+        self.assertEqual(utf8_decode(None), None)
+
+    def test_raises_TypeError_when_not_string_or_None(self):
+        self.assertRaises(TypeError, utf8_decode, 5)
+        self.assertRaises(TypeError, utf8_decode, False)
+        self.assertRaises(TypeError, utf8_decode, True)
+        self.assertRaises(TypeError, utf8_decode, [])
+        self.assertRaises(TypeError, utf8_decode, ())
+        self.assertRaises(TypeError, utf8_decode, {})
+        self.assertRaises(TypeError, utf8_decode, object)
+
+    def test_raises_UnicodeDecodeError_when_latin1_bytes(self):
+        self.assertRaises(UnicodeDecodeError, utf8_decode, latin1_bytes)
 
 
 class Test_unicode_to_utf8(unittest2.TestCase):
