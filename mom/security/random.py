@@ -265,7 +265,7 @@ def generate_random_hex_string(length=8, rand_func=generate_random_bytes):
         raise ValueError(
             "This function expects a positive even number "\
             "length: got length `%r`." % length)
-    return hex_encode(rand_func(length/2))
+    return hex_encode(rand_func(length >> 1))
 
 
 def random_choice(sequence):

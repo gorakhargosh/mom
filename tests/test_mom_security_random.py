@@ -83,12 +83,6 @@ class Test_generate_random_hex_string(unittest2.TestCase):
         self.assertEqual(len(generate_random_hex_string(length=10)), 10,
                      "Length does not match expected length.")
 
-        self.assertRaises(ValueError, generate_random_hex_string, 33)
-        self.assertRaises(ValueError, generate_random_hex_string, 0)
-        self.assertRaises(ValueError, generate_random_hex_string, -1)
-        self.assertRaises(ValueError, generate_random_hex_string, 33)
-        self.assertRaises(TypeError, generate_random_hex_string, None)
-        self.assertRaises(TypeError, generate_random_hex_string, "")
 
     def test_uniqueness(self):
         self.assertNotEqual(generate_random_hex_string(),
@@ -99,6 +93,17 @@ class Test_generate_random_hex_string(unittest2.TestCase):
         self.assertTrue(is_bytes(generate_random_hex_string()),
                         "Not a bytestring.")
 
+    def test_TypeError_if_invalid_length_type(self):
+        self.assertRaises(TypeError, generate_random_hex_string, None)
+        self.assertRaises(TypeError, generate_random_hex_string, "")
+
+    def test_raises_ValueError_if_invalid_length(self):
+        self.assertRaises(ValueError, generate_random_hex_string, 33)
+        self.assertRaises(ValueError, generate_random_hex_string, 0)
+        self.assertRaises(ValueError, generate_random_hex_string, -1)
+        self.assertRaises(ValueError, generate_random_hex_string, 33)
+        self.assertRaises(ValueError, generate_random_hex_string, True)
+        self.assertRaises(ValueError, generate_random_hex_string, False)
 
 class Test_generate_random_ulong_between(unittest2.TestCase):
     def test_range(self):
