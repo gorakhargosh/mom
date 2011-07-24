@@ -410,7 +410,7 @@ def generate_random_password(entropy, pool=ASCII_PRINTABLE):
     http://en.wikipedia.org/wiki/Password_strength
 
     :param entropy:
-        Desired entropy in bits.
+        Desired entropy in bits. Choose at least 64 to have a decent password.
     :param pool:
         The pool of unique characters from which to randomly choose.
     :returns:
