@@ -51,7 +51,7 @@ Utility
 from __future__ import absolute_import, division
 
 import string
-import os
+from mom._compat import generate_random_bytes as _generate_random_bytes
 from mom.builtins import long_bit_length, is_integer
 from mom.codec import \
     hex_encode, \
@@ -85,58 +85,7 @@ __all__ = [
     ]
 
 
-try:
-    # Operating system unsigned random.
-    os.urandom(1)
-    def generate_random_bytes(count):
-        """
-        Generates a random byte string with ``count`` bytes.
-
-        :param count:
-            Number of bytes.
-        :returns:
-            Random byte string.
-        """
-        return os.urandom(count)
-except AttributeError:
-    try:
-        __urandom_device__ = open("/dev/urandom", "rb")
-        def generate_random_bytes(count):
-            """
-            Generates a random byte string with ``count`` bytes.
-
-            :param count:
-                Number of bytes.
-            :returns:
-                Random byte string.
-            """
-            return __urandom_device__.read(count)
-    except IOError:
-        #Else get Win32 CryptoAPI PRNG
-        try:
-            import win32prng
-            def generate_random_bytes(count):
-                """
-                Generates a random byte string with ``count`` bytes.
-
-                :param count:
-                    Number of bytes.
-                :returns:
-                    Random byte string.
-                """
-                random_bytes = win32prng.generate_random_bytes(count)
-                assert len(random_bytes) == count
-                return random_bytes
-        except ImportError:
-            # What the fuck?!
-            def generate_random_bytes(_):
-                """
-                WTF.
-
-                :returns:
-                    WTF.
-                """
-                raise NotImplementedError("What the fuck?! No PRNG available.")
+generate_random_bytes = _generate_random_bytes
 
 
 def generate_random_bits(n_bits, rand_func=generate_random_bytes):

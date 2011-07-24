@@ -26,6 +26,8 @@ Should not be used in public code. Use the wrappers in mom.
 
 from __future__ import absolute_import
 
+import os
+
 try:
     # Python 2.6 or higher.
     bytes_type = bytes
@@ -112,3 +114,57 @@ except NameError:
             if default is throw:
                 raise
             return default
+
+try:
+    # Operating system unsigned random.
+    os.urandom(1)
+    def generate_random_bytes(count):
+        """
+        Generates a random byte string with ``count`` bytes.
+
+        :param count:
+            Number of bytes.
+        :returns:
+            Random byte string.
+        """
+        return os.urandom(count)
+except AttributeError:
+    try:
+        __urandom_device__ = open("/dev/urandom", "rb")
+        def generate_random_bytes(count):
+            """
+            Generates a random byte string with ``count`` bytes.
+
+            :param count:
+                Number of bytes.
+            :returns:
+                Random byte string.
+            """
+            return __urandom_device__.read(count)
+    except IOError:
+        #Else get Win32 CryptoAPI PRNG
+        try:
+            import win32prng
+            def generate_random_bytes(count):
+                """
+                Generates a random byte string with ``count`` bytes.
+
+                :param count:
+                    Number of bytes.
+                :returns:
+                    Random byte string.
+                """
+                random_bytes = win32prng.generate_random_bytes(count)
+                assert len(random_bytes) == count
+                return random_bytes
+        except ImportError:
+            # What the fuck?!
+            def generate_random_bytes(_):
+                """
+                WTF.
+
+                :returns:
+                    WTF.
+                """
+                raise NotImplementedError("What the fuck?! No PRNG available.")
+
