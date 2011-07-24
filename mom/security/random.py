@@ -34,6 +34,7 @@ Sequences and choices
 ---------------------
 .. autofunction:: random_choice
 .. autofunction:: generate_random_sequence
+.. autofunction:: generate_random_sequence_strong
 
 Strings
 -------
@@ -66,6 +67,8 @@ __all__ = [
     "generate_random_ulong_between",
     "generate_random_string",
     "generate_random_password",
+    "generate_random_sequence",
+    "generate_random_sequence_strong",
     "random_choice",
     "calculate_entropy",
     "HEXADECIMAL_DIGITS",
