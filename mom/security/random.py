@@ -277,6 +277,7 @@ def random_choice(sequence):
     :returns:
         Randomly chosen element.
     """
+    sequence = list(set(sequence))
     return sequence[generate_random_ulong_between(0, len(sequence))]
 
 
@@ -370,11 +371,34 @@ def calculate_entropy(length, pool=ALPHANUMERIC):
     """
     from math import log
 
+    pool = set(pool)
     entropy = length * (log(len(pool)) / log(2))
     return entropy
 
 
-def generate_random_password(entropy, characters=ASCII_PRINTABLE):
+def generate_random_sequence_strong(entropy, pool):
+    """
+    Generates a random sequence based on entropy.
+
+    If you're using this to generate passwords based on entropy:
+    http://en.wikipedia.org/wiki/Password_strength#Password_strength_depends_on_symbol_set_and_length
+
+    :param entropy:
+        Desired entropy in bits.
+    :param pool:
+        The pool of unique elements from which to randomly choose.
+    :returns:
+        Randomly generated sequence with specified entropy.
+    """
+    from math import log, ceil
+
+    pool = set(pool)
+    length = long(ceil((log(2) / log(len(pool))) * entropy))
+
+    return generate_random_sequence(length, pool)
+
+
+def generate_random_password(entropy, pool=ASCII_PRINTABLE):
     """
     Generates a password based on entropy.
 
@@ -383,13 +407,9 @@ def generate_random_password(entropy, characters=ASCII_PRINTABLE):
 
     :param entropy:
         Desired entropy in bits.
-    :param characters:
+    :param pool:
         The pool of unique characters from which to randomly choose.
     :returns:
         Randomly generated password with specified entropy.
     """
-    from math import log, ceil
-
-    length = long(ceil((log(2) / log(len(characters))) * entropy))
-
-    return generate_random_string(length, characters)
+    return ''.join(generate_random_sequence_strong(entropy, pool))
