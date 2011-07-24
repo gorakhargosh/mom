@@ -277,7 +277,6 @@ def random_choice(sequence):
     :returns:
         Randomly chosen element.
     """
-    sequence = list(set(sequence))
     return sequence[generate_random_ulong_between(0, len(sequence))]
 
 
@@ -289,7 +288,7 @@ def generate_random_sequence(length, pool):
     :param length:
         The length of the random sequence.
     :param pool:
-        A sequence of unique elements to be used as the pool from which
+        A sequence of elements to be used as the pool from which
         random elements will be chosen.
     :returns:
         A list of elements randomly chosen from the pool.
@@ -318,6 +317,8 @@ def generate_random_string(length, characters=ALPHANUMERIC):
     """
     Generates a random string of given length using the sequence
     pool specified.
+
+    Don't use this to generate passwords. Use generate_random_password instead.
 
     Entropy:
 
@@ -349,7 +350,7 @@ def generate_random_string(length, characters=ALPHANUMERIC):
     :param length:
         The length of the random sequence.
     :param characters:
-        A sequence of unique characters to be used as the pool from which
+        A sequence of characters to be used as the pool from which
         random characters will be chosen. Default case-sensitive alpha-numeric
         characters.
     :returns:
@@ -373,6 +374,7 @@ def calculate_entropy(length, pool=ALPHANUMERIC):
 
     pool = set(pool)
     entropy = length * (log(len(pool)) / log(2))
+
     return entropy
 
 
@@ -392,7 +394,7 @@ def generate_random_sequence_strong(entropy, pool):
     """
     from math import log, ceil
 
-    pool = set(pool)
+    pool = list(set(pool))
     length = long(ceil((log(2) / log(len(pool))) * entropy))
 
     return generate_random_sequence(length, pool)
