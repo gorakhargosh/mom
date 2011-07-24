@@ -8,7 +8,7 @@ from mom.builtins import is_bytes
 from mom.codec import bytes_to_long
 from mom.security.random import \
     generate_random_hex_string, generate_random_ulong_between, \
-    generate_random_bits, generate_random_ulong
+    generate_random_bits, generate_random_ulong_atmost, generate_random_ulong_exactly
 
 
 class Test_generate_random_bits(unittest2.TestCase):
@@ -32,21 +32,44 @@ class Test_generate_random_bits(unittest2.TestCase):
         self.assertRaises(TypeError, generate_random_bits, "")
 
 
-class Test_generate_random_ulong(unittest2.TestCase):
+
+class Test_generate_random_ulong_exactly(unittest2.TestCase):
     def test_range(self):
         for i in range(999):
-            generate_random_ulong(i + 1, False)
-            self.assertTrue(generate_random_ulong(i + 1, True) & (2L ** ((i + 1) - 1)))
+            n_bits = i + 1
+            x = generate_random_ulong_exactly(i + 1)
+            # Ensure high bit is set
+            #self.assertTrue(x & (2L ** (n_bits - 1)))
+            self.assertTrue(x >= (2L ** (n_bits - 1)) and
+                            x < (2L ** n_bits), "huh? x=%d" % x)
 
     def test_ValueError_when_0_bits(self):
-        self.assertRaises(ValueError, generate_random_ulong, 0)
+        self.assertRaises(ValueError, generate_random_ulong_exactly, 0)
 
     def test_TypeError_when_invalid_argument(self):
-        self.assertRaises(TypeError, generate_random_ulong, None)
-        self.assertRaises(TypeError, generate_random_ulong, {})
-        self.assertRaises(TypeError, generate_random_ulong, object)
-        self.assertRaises(TypeError, generate_random_ulong, True)
-        self.assertRaises(TypeError, generate_random_ulong, "")
+        self.assertRaises(TypeError, generate_random_ulong_exactly, None)
+        self.assertRaises(TypeError, generate_random_ulong_exactly, {})
+        self.assertRaises(TypeError, generate_random_ulong_exactly, object)
+        self.assertRaises(TypeError, generate_random_ulong_exactly, True)
+        self.assertRaises(TypeError, generate_random_ulong_exactly, "")
+
+class Test_generate_random_ulong_atmost(unittest2.TestCase):
+    def test_range(self):
+        for i in range(999):
+            n_bits = i + 1
+            x = generate_random_ulong_atmost(n_bits)
+            self.assertTrue(x >= 0 and x < (2L ** n_bits),
+                            "huh? x=%d" % x)
+
+    def test_ValueError_when_0_bits(self):
+        self.assertRaises(ValueError, generate_random_ulong_atmost, 0)
+
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_ulong_atmost, None)
+        self.assertRaises(TypeError, generate_random_ulong_atmost, {})
+        self.assertRaises(TypeError, generate_random_ulong_atmost, object)
+        self.assertRaises(TypeError, generate_random_ulong_atmost, True)
+        self.assertRaises(TypeError, generate_random_ulong_atmost, "")
 
 
 class Test_generate_random_hex_string(unittest2.TestCase):
