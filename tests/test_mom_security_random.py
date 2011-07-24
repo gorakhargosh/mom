@@ -8,7 +8,11 @@ from mom.builtins import is_bytes
 from mom.codec import bytes_to_long
 from mom.security.random import \
     generate_random_hex_string, generate_random_ulong_between, \
-    generate_random_bits, generate_random_ulong_atmost, generate_random_ulong_exactly
+    generate_random_bits, generate_random_ulong_atmost, \
+    generate_random_ulong_exactly, ALPHANUMERIC, \
+    ASCII_PRINTABLE, ALPHA, LOWERCASE_ALPHANUMERIC, \
+    LOWERCASE_ALPHA, DIGITS, generate_random_password, \
+    generate_random_sequence, calculate_entropy
 
 
 class Test_generate_random_bits(unittest2.TestCase):
@@ -19,6 +23,8 @@ class Test_generate_random_bits(unittest2.TestCase):
             self.assertTrue(value >= 0 and value < (2L ** n_bits))
 
     def test_uniqueness(self):
+        # The likelyhood of recurrence should be tiny if a large enough
+        # bit size is chosen.
         self.assertNotEqual(generate_random_bits(64), generate_random_bits(64))
 
     def test_ValueError_when_0_bits(self):
@@ -85,6 +91,8 @@ class Test_generate_random_hex_string(unittest2.TestCase):
 
 
     def test_uniqueness(self):
+        # The likelyhood of recurrence should be tiny if a large enough
+        # length is chosen.
         self.assertNotEqual(generate_random_hex_string(),
                          generate_random_hex_string(),
                          "Not unique.")
@@ -122,3 +130,102 @@ class Test_generate_random_ulong_between(unittest2.TestCase):
         self.assertRaises(TypeError, generate_random_ulong_between, object, object)
         self.assertRaises(TypeError, generate_random_ulong_between, True, True)
         self.assertRaises(TypeError, generate_random_ulong_between, "", "")
+
+class Test_generate_random_password(unittest2.TestCase):
+    def test_random_password_length(self):
+        symbol_sets = [
+            DIGITS,
+            LOWERCASE_ALPHA,
+            LOWERCASE_ALPHANUMERIC,
+            ALPHA,
+            ALPHANUMERIC,
+            ASCII_PRINTABLE,
+        ]
+        lengths_64 = [
+            20,
+            14,
+            13,
+            12,
+            11,
+            10
+        ]
+        lengths_1024 = [
+            309,
+            218,
+            199,
+            180,
+            172,
+            157,
+        ]
+        for length, symbols in zip(lengths_64, symbol_sets):
+            for i in range(10):
+                self.assertEqual(len(generate_random_password(64, symbols)),
+                                 length)
+        for length, symbols in zip(lengths_1024, symbol_sets):
+            for i in range(10):
+                self.assertEqual(len(generate_random_password(1024, symbols)),
+                                 length)
+
+    def test_uniqueness(self):
+        # For a decent enough entropy.
+        for i in range(100):
+            self.assertNotEqual(generate_random_password(64),
+                                generate_random_password(64))
+
+
+class Test_generate_random_sequence(unittest2.TestCase):
+    def test_raises_TypeError_when_length_is_not_integer(self):
+        self.assertRaises(TypeError, generate_random_sequence, None, ALPHA)
+
+    def test_raises_TypeError_when_pool_is_None(self):
+        self.assertRaises(TypeError, generate_random_sequence, 6, None)
+
+    def test_raises_ValueError_when_length_is_not_positive(self):
+        self.assertRaises(ValueError, generate_random_sequence, 0, ALPHA)
+        self.assertRaises(ValueError, generate_random_sequence, -1, ALPHA)
+
+class Test_calculate_entropy(unittest2.TestCase):
+    def test_entropy(self):
+        symbol_sets = [
+            DIGITS,
+            LOWERCASE_ALPHA,
+            LOWERCASE_ALPHANUMERIC,
+            ALPHA,
+            ALPHANUMERIC,
+            ASCII_PRINTABLE,
+        ]
+        lengths_64 = [
+            20,
+            14,
+            13,
+            12,
+            11,
+            10
+        ]
+        lengths_1024 = [
+            309,
+            218,
+            199,
+            180,
+            172,
+            157,
+        ]
+        lengths_128 = [
+            39,
+            28,
+            25,
+            23,
+            22,
+            20,
+        ]
+
+
+        for length, symbols in zip(lengths_64, symbol_sets):
+            for i in range(10):
+                self.assertTrue(calculate_entropy(length, symbols) >= 64)
+        for length, symbols in zip(lengths_1024, symbol_sets):
+            for i in range(10):
+                self.assertTrue(calculate_entropy(length, symbols) >= 1024)
+        for length, symbols in zip(lengths_128, symbol_sets):
+            for i in range(10):
+                self.assertTrue(calculate_entropy(length, symbols) >= 128)
