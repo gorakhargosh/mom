@@ -206,7 +206,7 @@ def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     :returns:
         Random unsigned long integer value.
     """
-    if not is_integer(low) or not is_integer(high):
+    if not (is_integer(low) and is_integer(high)):
         raise TypeError("unsupported operand types(s): %r and %r" \
                         % (type(low).__name__, type(high).__name__))
     if low >= high:
