@@ -25,46 +25,8 @@
 """
 
 from __future__ import absolute_import
-from mom.codec.text import utf8_decode_recursive, utf8_decode
-
-try:
-    # Built-in JSON library.
-    import json
-    assert hasattr(json, "loads") and hasattr(json, "dumps")
-
-    def json_loads(value):
-        """Wrapper to decode JSON."""
-        return json.loads(value)
-    def json_dumps(value):
-        """Wrapper to encode JSON."""
-        return json.dumps(value)
-except Exception:
-    try:
-        # Try to use the simplejson library.
-        import simplejson as json
-        def json_loads(value):
-            """Wrapper to decode JSON."""
-            return json.loads(utf8_decode(value))
-        def json_dumps(value):
-            """Wrapper to encode JSON."""
-            return json.dumps(value)
-    except ImportError:
-        try:
-            # For Google App Engine.
-            from django.utils import simplejson as json
-            def json_loads(value):
-                """Wrapper to decode JSON."""
-                return json.loads(utf8_decode(value))
-            def json_dumps(value):
-                """Wrapper to encode JSON."""
-                return json.dumps(value)
-        except ImportError:
-            def json_loads(s):
-                """Wrapper to decode JSON."""
-                raise NotImplementedError(
-                    "A JSON parser is required, e.g., simplejson at "
-                    "http://pypi.python.org/pypi/simplejson/")
-            json_dumps = json_loads
+from mom.codec.text import utf8_decode_recursive
+from mom.codec._json_compat import json_dumps, json_loads
 
 
 def encode(obj):
