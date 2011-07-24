@@ -384,7 +384,7 @@ def generate_random_sequence_strong(entropy, pool):
     Generates a random sequence based on entropy.
 
     If you're using this to generate passwords based on entropy:
-    http://en.wikipedia.org/wiki/Password_strength#Password_strength_depends_on_symbol_set_and_length
+    http://en.wikipedia.org/wiki/Password_strength
 
     :param entropy:
         Desired entropy in bits.
@@ -407,7 +407,7 @@ def generate_random_password(entropy, pool=ASCII_PRINTABLE):
     Generates a password based on entropy.
 
     If you're using this to generate passwords based on entropy:
-    http://en.wikipedia.org/wiki/Password_strength#Password_strength_depends_on_symbol_set_and_length
+    http://en.wikipedia.org/wiki/Password_strength
 
     :param entropy:
         Desired entropy in bits.
