@@ -373,7 +373,8 @@ def calculate_entropy(length, pool=ALPHANUMERIC):
     from math import log
 
     pool = set(pool)
-    entropy = length * (log(len(pool)) / log(2))
+    log_of_2 = 0.6931471805599453
+    entropy = length * (log(len(pool)) / log_of_2)
 
     return entropy
 
@@ -395,7 +396,8 @@ def generate_random_sequence_strong(entropy, pool):
     from math import log, ceil
 
     pool = list(set(pool))
-    length = long(ceil((log(2) / log(len(pool))) * entropy))
+    log_of_2 = 0.6931471805599453
+    length = long(ceil((log_of_2 / log(len(pool))) * entropy))
 
     return generate_random_sequence(length, pool)
 
