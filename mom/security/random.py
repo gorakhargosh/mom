@@ -17,7 +17,7 @@
 
 """
 :module: mom.security.random
-:synopsis: Random number, bits, bytes, and string generation utilities.
+:synopsis: Random number, bits, bytes, string, sequence, & password generation.
 
 Bits and bytes
 ---------------------------
@@ -30,12 +30,32 @@ Numbers
 .. autofunction:: generate_random_ulong_exactly
 .. autofunction:: generate_random_ulong_between
 
+Sequences and choices
+---------------------
+.. autofunction:: random_choice
+.. autofunction:: generate_random_sequence
+
 Strings
 -------
+.. autofunction:: generate_random_string
+.. autofunction:: generate_random_password
 .. autofunction:: generate_random_hex_string
+
+Utility
+-------
+.. autofunction:: calculate_entropy
+
 """
 
 from __future__ import absolute_import
+
+import string
+import os
+from mom.builtins import long_bit_length, is_integer
+from mom.codec import \
+    hex_encode, \
+    bytes_to_long
+
 
 __all__ = [
     "generate_random_bits",
@@ -44,13 +64,22 @@ __all__ = [
     "generate_random_ulong_atmost",
     "generate_random_ulong_exactly",
     "generate_random_ulong_between",
+    "generate_random_string",
+    "generate_random_password",
+    "random_choice",
+    "calculate_entropy",
+    "HEXADECIMAL_DIGITS",
+    "DIGITS",
+    "LOWERCASE_ALPHA",
+    "UPPERCASE_ALPHA",
+    "LOWERCASE_ALPHANUMERIC",
+    "UPPERCASE_ALPHANUMERIC",
+    "ALPHA",
+    "ALPHANUMERIC",
+    "ASCII_PRINTABLE",
+    "ALL_PRINTABLE",
+    "PUNCTUATION",
     ]
-
-import os
-from mom.builtins import long_bit_length, is_integer
-from mom.codec import \
-    hex_encode, \
-    bytes_to_long
 
 
 try:
@@ -237,3 +266,130 @@ def generate_random_hex_string(length=8, rand_func=generate_random_bytes):
             "This function expects a positive even number "\
             "length: got length `%r`." % length)
     return hex_encode(rand_func(length/2))
+
+
+def random_choice(sequence):
+    """
+    Randomly chooses an element from the given non-empty sequence.
+
+    :param sequence:
+        Non-empty sequence to randomly choose an element from.
+    :returns:
+        Randomly chosen element.
+    """
+    return sequence[generate_random_ulong_between(0, len(sequence))]
+
+
+def generate_random_sequence(length, pool):
+    """
+    Generates a random sequence of given length using the sequence
+    pool specified.
+
+    :param length:
+        The length of the random sequence.
+    :param pool:
+        A sequence of unique elements to be used as the pool from which
+        random elements will be chosen.
+    :returns:
+        A list of elements randomly chosen from the pool.
+    """
+    if not is_integer(length):
+        raise TypeError("Length must be a positive integer: got `%r`" % \
+                        type(length).__name__)
+    if length <= 0:
+        raise ValueError("length must be a positive integer: got %d" % length)
+    return [random_choice(pool) for _ in range(length)]
+
+
+HEXADECIMAL_DIGITS = string.digits + "abcdef"
+DIGITS = string.digits
+LOWERCASE_ALPHA = string.lowercase
+UPPERCASE_ALPHA = string.uppercase
+LOWERCASE_ALPHANUMERIC = string.lowercase + string.digits
+UPPERCASE_ALPHANUMERIC = string.uppercase + string.digits
+ALPHA = string.letters
+ALPHANUMERIC = string.letters + string.digits
+ASCII_PRINTABLE = string.letters + string.digits + string.punctuation
+ALL_PRINTABLE = string.printable
+PUNCTUATION = string.punctuation
+
+def generate_random_string(length, characters=ALPHANUMERIC):
+    """
+    Generates a random string of given length using the sequence
+    pool specified.
+
+    Entropy:
+
+         H = log2(N**L)
+
+    where:
+
+    * H is the entropy in bits.
+    * N is the possible symbol count
+    * L is length of string of symbols
+
+    Entropy chart::
+
+        -----------------------------------------------------------------
+        Symbol set              Symbol Count (N)  Entropy per symbol (H)
+        -----------------------------------------------------------------
+        HEXADECIMAL_DIGITS      16                4.0000 bits
+        DIGITS                  10                3.3219 bits
+        LOWERCASE_ALPHA         26                4.7004 bits
+        UPPERCASE_ALPHA         26                4.7004 bits
+        PUNCTUATION             32                5.0000 bits
+        LOWERCASE_ALPHANUMERIC  36                5.1699 bits
+        UPPERCASE_ALPHANUMERIC  36                5.1699 bits
+        ALPHA                   52                5.7004 bits
+        ALPHANUMERIC            62                5.9542 bits
+        ASCII_PRINTABLE         94                6.5546 bits
+        ALL_PRINTABLE           100               6.6438 bits
+
+    :param length:
+        The length of the random sequence.
+    :param characters:
+        A sequence of unique characters to be used as the pool from which
+        random characters will be chosen. Default case-sensitive alpha-numeric
+        characters.
+    :returns:
+        A list of elements randomly chosen from the pool.
+    """
+    return "".join(generate_random_sequence(length, characters))
+
+
+def calculate_entropy(length, pool=ALPHANUMERIC):
+    """
+    Determines the entropy of the given sequence length and the pool.
+
+    :param length:
+        The length of the generated random sequence.
+    :param pool:
+        The pool of unique elements used to generate the sequence.
+    :returns:
+        The entropy (in bits) of the random sequence.
+    """
+    from math import log
+
+    entropy = length * (log(len(pool)) / log(2))
+    return entropy
+
+
+def generate_random_password(entropy, characters=ASCII_PRINTABLE):
+    """
+    Generates a password based on entropy.
+
+    If you're using this to generate passwords based on entropy:
+    http://en.wikipedia.org/wiki/Password_strength#Password_strength_depends_on_symbol_set_and_length
+
+    :param entropy:
+        Desired entropy in bits.
+    :param characters:
+        The pool of unique characters from which to randomly choose.
+    :returns:
+        Randomly generated password with specified entropy.
+    """
+    from math import log, ceil
+
+    length = long(ceil((log(2) / log(len(characters))) * entropy))
+
+    return generate_random_string(length, characters)
