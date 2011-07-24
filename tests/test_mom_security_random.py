@@ -35,13 +35,14 @@ class Test_generate_random_bits(unittest2.TestCase):
 
 class Test_generate_random_ulong_exactly(unittest2.TestCase):
     def test_range(self):
-        for i in range(999):
+        for i in range(128):
             n_bits = i + 1
-            x = generate_random_ulong_exactly(i + 1)
-            # Ensure high bit is set
-            #self.assertTrue(x & (2L ** (n_bits - 1)))
-            self.assertTrue(x >= (2L ** (n_bits - 1)) and
-                            x < (2L ** n_bits), "huh? x=%d" % x)
+            for j in range(128):
+                x = generate_random_ulong_exactly(n_bits)
+                # Ensure high bit is set
+                #self.assertTrue(x & (2L ** (n_bits - 1)))
+                self.assertTrue(x >= (2L ** (n_bits - 1)) and
+                                x < (2L ** n_bits), "huh? x=%d" % x)
 
     def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_ulong_exactly, 0)
@@ -55,11 +56,12 @@ class Test_generate_random_ulong_exactly(unittest2.TestCase):
 
 class Test_generate_random_ulong_atmost(unittest2.TestCase):
     def test_range(self):
-        for i in range(999):
+        for i in range(128):
             n_bits = i + 1
-            x = generate_random_ulong_atmost(n_bits)
-            self.assertTrue(x >= 0 and x < (2L ** n_bits),
-                            "huh? x=%d" % x)
+            for j in range(128):
+                x = generate_random_ulong_atmost(n_bits)
+                self.assertTrue(x >= 0 and x < (2L ** n_bits),
+                                "huh? x=%d" % x)
 
     def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_ulong_atmost, 0)
