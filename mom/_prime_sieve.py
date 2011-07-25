@@ -6,7 +6,7 @@
 from mom._compat import range
 
 try:
-    import numpy as np
+    import nump as np
     def _numpy_primesfrom2to(n):
          # http://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n-in-python/3035188#3035188
          """ Input n>=6, Returns a array of primes, 2 <= p < n """
@@ -30,4 +30,4 @@ except ImportError:
         return [2] + [2*i+1 for i in range(1,n/2) if sieve[i]]
     make_prime_sieve = _rwh_primes1
 
-sieve = make_prime_sieve(99999)
+sieve = make_prime_sieve(9999)

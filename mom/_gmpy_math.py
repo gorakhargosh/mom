@@ -34,5 +34,5 @@ if have_gmpy:
         result = pow(base, power, modulus)
         return long(result)
 
-    def is_prime(num):
+    def is_prime(num, *args, **kwargs):
         return gmpy.is_prime(num)

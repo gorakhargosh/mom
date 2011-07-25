@@ -35,6 +35,7 @@ Primes
 
 from __future__ import absolute_import
 from mom.security.random import generate_random_ulong_between
+from mom._prime_sieve import sieve
 
 __all__ = [
     "gcd",
@@ -103,7 +104,7 @@ def inverse_mod(a, b):
     return 0
 
 
-def _pow_mod(base, power, modulus):
+def _pure_pow_mod(base, power, modulus):
     """
     Calculates:
         base**pow mod modulus
@@ -167,7 +168,7 @@ def _pow_mod(base, power, modulus):
     return prod
 
 
-def _is_prime(num, iterations=5):
+def _pure_is_prime(num, iterations=5, _sieve=sieve):
     """
     Determines whether a number is prime.
 
@@ -178,10 +179,9 @@ def _is_prime(num, iterations=5):
     :returns:
         ``True`` if prime; ``False`` otherwise.
     """
-    from mom._prime_sieve import sieve
 
     #Trial division with sieve
-    for x in sieve:
+    for x in _sieve:
         if x >= num:
             return True
         if not num % x:
@@ -195,7 +195,7 @@ def _is_prime(num, iterations=5):
     #Repeat Rabin-Miller x times
     a = 2 #Use 2 as a base for first iteration speedup, per HAC
     for count in range(iterations):
-        v = _pow_mod(a, s, num)
+        v = _pure_pow_mod(a, s, num)
         if v == 1:
             continue
         i = 0
@@ -203,17 +203,18 @@ def _is_prime(num, iterations=5):
             if i == t-1:
                 return False
             else:
-                v, i = _pow_mod(v, 2, num), i+1
+                v, i = _pure_pow_mod(v, 2, num), i+1
         a = generate_random_ulong_between(2, num)
     return True
 
 try:
-    from mom._gmpy_math import is_prime, pow_mod
-    pow_mod = pow_mod
-    is_prime = is_prime
+    from mom._gmpy_math import is_prime as _is_prime, pow_mod as _pow_mod
 except ImportError:
-    pow_mod = _pow_mod
-    is_prime = _is_prime
+    _pow_mod = _pure_pow_mod
+    _is_prime = _pure_is_prime
+
+pow_mod = _pow_mod
+is_prime = _is_prime
 
 
 def generate_random_prime(bits):
