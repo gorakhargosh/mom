@@ -33,7 +33,7 @@ Primes
 .. autofunction:: is_prime
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division
 from mom.security.random import generate_random_ulong_between
 from mom._prime_sieve import sieve
 
@@ -191,7 +191,7 @@ def _pure_is_prime(num, iterations=5, _sieve=sieve):
     #Compute s, t for Rabin-Miller
     s, t = num-1, 0
     while not s % 2:
-        s, t = s/2, t+1
+        s, t = s // 2, t+1
     #Repeat Rabin-Miller x times
     a = 2 #Use 2 as a base for first iteration speedup, per HAC
     for count in range(iterations):
@@ -233,7 +233,7 @@ def generate_random_prime(bits):
     #
     #Since 30 is lcm(2,3,5), we'll set our test numbers to
     #29 % 30 and keep them there
-    low = (2L ** (bits-1)) * 3/2
+    low = (2L ** (bits-1)) * 3 // 2
     high = 2L ** bits - 30
     p = generate_random_ulong_between(low, high)
     p += 29 - (p % 30)
@@ -264,7 +264,7 @@ def generate_random_safe_prime(bits):
     #
     #Since 30 is lcm(2,3,5), we'll set our test numbers to
     #29 % 30 and keep them there
-    low = (2 ** (bits-2)) * 3/2
+    low = (2 ** (bits-2)) * 3 // 2
     high = (2 ** (bits-1)) - 30
     q = generate_random_ulong_between(low, high)
     q += 29 - (q % 30)
