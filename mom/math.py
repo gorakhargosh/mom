@@ -103,119 +103,71 @@ def inverse_mod(a, b):
     return 0
 
 
-try:
-    import gmpy
-    def pow_mod(base, power, modulus):
-        """
-        Calculates:
-            base**pow mod modulus
-
-        :param base:
-            Base
-        :param power:
-            Power
-        :param modulus:
-            Modulus
-        :returns:
-            base**pow mod modulus
-        """
-        base = gmpy.mpz(base)
-        power = gmpy.mpz(power)
-        modulus = gmpy.mpz(modulus)
-        result = pow(base, power, modulus)
-        return long(result)
-
-except ImportError:
-    def pow_mod(base, power, modulus):
-        """
-        Calculates:
-            base**pow mod modulus
-
-        Uses multi bit scanning with nBitScan bits at a time.
-        From Bryan G. Olson's post to comp.lang.python
-
-        Does left-to-right instead of pow()'s right-to-left,
-        thus about 30% faster than the python built-in with small bases
-
-        :param base:
-            Base
-        :param power:
-            Power
-        :param modulus:
-            Modulus
-        :returns:
-            base**pow mod modulus
-        """
-        nBitScan = 5
-
-        #TREV - Added support for negative exponents
-        negativeResult = False
-        if power < 0:
-            power *= -1
-            negativeResult = True
-
-        exp2 = 2**nBitScan
-        mask = exp2 - 1
-
-        # Break power into a list of digits of nBitScan bits.
-        # The list is recursive so easy to read in reverse direction.
-        nibbles = None
-        while power:
-            nibbles = int(power & mask), nibbles
-            power >>= nBitScan
-
-        # Make a table of powers of base up to 2**nBitScan - 1
-        lowPowers = [1]
-        for i in xrange(1, exp2):
-            lowPowers.append((lowPowers[i-1] * base) % modulus)
-
-        # To exponentiate by the first nibble, look it up in the table
-        nib, nibbles = nibbles
-        prod = lowPowers[nib]
-
-        # For the rest, square nBitScan times, then multiply by
-        # base^nibble
-        while nibbles:
-            nib, nibbles = nibbles
-            for i in xrange(nBitScan):
-                prod = (prod * prod) % modulus
-            if nib: prod = (prod * lowPowers[nib]) % modulus
-
-        #TREV - Added support for negative exponents
-        if negativeResult:
-            prodInv = inverse_mod(prod, modulus)
-            #Check to make sure the inverse is correct
-            assert (prod * prodInv) % modulus == 1
-            return prodInv
-        return prod
-
-
-def make_prime_sieve(size):
+def _pow_mod(base, power, modulus):
     """
-    Pre-calculate a sieve of the ~100 primes < 1000.
+    Calculates:
+        base**pow mod modulus
 
-    :param size:
-        Count
+    Uses multi bit scanning with nBitScan bits at a time.
+    From Bryan G. Olson's post to comp.lang.python
+
+    Does left-to-right instead of pow()'s right-to-left,
+    thus about 30% faster than the python built-in with small bases
+
+    :param base:
+        Base
+    :param power:
+        Power
+    :param modulus:
+        Modulus
     :returns:
-        Prime sieve.
+        base**pow mod modulus
     """
-    import math
+    nBitScan = 5
 
-    sieve = range(size)
-    for count in range(2, int(math.sqrt(size))):
-        if not sieve[count]:
-            continue
-        x = sieve[count] * 2
-        while x < len(sieve):
-            sieve[x] = 0
-            x += sieve[count]
-    sieve = [x for x in sieve[2:] if x]
-    return sieve
+    #TREV - Added support for negative exponents
+    negativeResult = False
+    if power < 0:
+        power *= -1
+        negativeResult = True
 
-sieve = make_prime_sieve(1000)
+    exp2 = 2**nBitScan
+    mask = exp2 - 1
+
+    # Break power into a list of digits of nBitScan bits.
+    # The list is recursive so easy to read in reverse direction.
+    nibbles = None
+    while power:
+        nibbles = int(power & mask), nibbles
+        power >>= nBitScan
+
+    # Make a table of powers of base up to 2**nBitScan - 1
+    lowPowers = [1]
+    for i in xrange(1, exp2):
+        lowPowers.append((lowPowers[i-1] * base) % modulus)
+
+    # To exponentiate by the first nibble, look it up in the table
+    nib, nibbles = nibbles
+    prod = lowPowers[nib]
+
+    # For the rest, square nBitScan times, then multiply by
+    # base^nibble
+    while nibbles:
+        nib, nibbles = nibbles
+        for i in xrange(nBitScan):
+            prod = (prod * prod) % modulus
+        if nib: prod = (prod * lowPowers[nib]) % modulus
+
+    #TREV - Added support for negative exponents
+    if negativeResult:
+        prodInv = inverse_mod(prod, modulus)
+        #Check to make sure the inverse is correct
+        assert (prod * prodInv) % modulus == 1
+        return prodInv
+    return prod
 
 
-def is_prime(num, iterations=5):
+def _is_prime(num, iterations=5):
     """
     Determines whether a number is prime.
 
@@ -226,6 +178,8 @@ def is_prime(num, iterations=5):
     :returns:
         ``True`` if prime; ``False`` otherwise.
     """
+    from mom._prime_sieve import sieve
+
     #Trial division with sieve
     for x in sieve:
         if x >= num:
@@ -241,7 +195,7 @@ def is_prime(num, iterations=5):
     #Repeat Rabin-Miller x times
     a = 2 #Use 2 as a base for first iteration speedup, per HAC
     for count in range(iterations):
-        v = pow_mod(a, s, num)
+        v = _pow_mod(a, s, num)
         if v == 1:
             continue
         i = 0
@@ -249,9 +203,17 @@ def is_prime(num, iterations=5):
             if i == t-1:
                 return False
             else:
-                v, i = pow_mod(v, 2, num), i+1
+                v, i = _pow_mod(v, 2, num), i+1
         a = generate_random_ulong_between(2, num)
     return True
+
+try:
+    from mom._gmpy_math import is_prime, pow_mod
+    pow_mod = pow_mod
+    is_prime = is_prime
+except ImportError:
+    pow_mod = _pow_mod
+    is_prime = _is_prime
 
 
 def generate_random_prime(bits):
