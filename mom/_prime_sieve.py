@@ -6,6 +6,8 @@
 from mom._compat import range
 
 try:
+    # TODO: numpy import disabled temporarily until we can convert
+    # the generated list to Python native.
     import nump as np
     def _numpy_primesfrom2to(n):
          # http://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n-in-python/3035188#3035188
