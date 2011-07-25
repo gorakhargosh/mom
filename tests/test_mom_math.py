@@ -11,8 +11,6 @@ from mom._prime_sieve import make_prime_sieve
 
 class Test__pure_is_prime(unittest2.TestCase):
     def test_pure_is_prime_for_sieves(self):
-        sieve_10 = make_prime_sieve(10)
-        sieve_10 = make_prime_sieve(10)
         for i in [10, 100, 1000, 10000]:
             sieve = make_prime_sieve(i)
             odds = []
