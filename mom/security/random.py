@@ -307,7 +307,7 @@ def generate_random_string(length, pool=ALPHANUMERIC,
         random characters will be chosen. Default case-sensitive alpha-numeric
         characters.
     :returns:
-        A list of elements randomly chosen from the pool.
+        A string of elements randomly chosen from the pool.
     """
     return "".join(generate_random_sequence(length, pool, rand_func))
 
