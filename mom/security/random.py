@@ -220,7 +220,7 @@ def generate_random_hex_string(length=8, rand_func=generate_random_bytes):
     return hex_encode(rand_func(length >> 1))
 
 
-def random_choice(sequence):
+def random_choice(sequence, rand_func=generate_random_bytes):
     """
     Randomly chooses an element from the given non-empty sequence.
 
@@ -229,10 +229,10 @@ def random_choice(sequence):
     :returns:
         Randomly chosen element.
     """
-    return sequence[generate_random_ulong_between(0, len(sequence))]
+    return sequence[generate_random_ulong_between(0, len(sequence), rand_func)]
 
 
-def generate_random_sequence(length, pool):
+def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
     """
     Generates a random sequence of given length using the sequence
     pool specified.
@@ -250,7 +250,7 @@ def generate_random_sequence(length, pool):
                         type(length).__name__)
     if length <= 0:
         raise ValueError("length must be a positive integer: got %d" % length)
-    return [random_choice(pool) for _ in range(length)]
+    return [random_choice(pool, rand_func) for _ in range(length)]
 
 
 HEXADECIMAL_DIGITS = string.digits + "abcdef"
@@ -265,7 +265,8 @@ ASCII_PRINTABLE = string.letters + string.digits + string.punctuation
 ALL_PRINTABLE = string.printable
 PUNCTUATION = string.punctuation
 
-def generate_random_string(length, characters=ALPHANUMERIC):
+def generate_random_string(length, pool=ALPHANUMERIC,
+                           rand_func=generate_random_bytes):
     """
     Generates a random string of given length using the sequence
     pool specified.
@@ -301,14 +302,14 @@ def generate_random_string(length, characters=ALPHANUMERIC):
 
     :param length:
         The length of the random sequence.
-    :param characters:
+    :param pool:
         A sequence of characters to be used as the pool from which
         random characters will be chosen. Default case-sensitive alpha-numeric
         characters.
     :returns:
         A list of elements randomly chosen from the pool.
     """
-    return "".join(generate_random_sequence(length, characters))
+    return "".join(generate_random_sequence(length, pool, rand_func))
 
 
 def calculate_entropy(length, pool=ALPHANUMERIC):
@@ -331,7 +332,8 @@ def calculate_entropy(length, pool=ALPHANUMERIC):
     return entropy
 
 
-def generate_random_sequence_strong(entropy, pool):
+def generate_random_sequence_strong(entropy, pool,
+                                    rand_func=generate_random_bytes):
     """
     Generates a random sequence based on entropy.
 
@@ -351,10 +353,11 @@ def generate_random_sequence_strong(entropy, pool):
     log_of_2 = 0.6931471805599453
     length = long(ceil((log_of_2 / log(len(pool))) * entropy))
 
-    return generate_random_sequence(length, pool)
+    return generate_random_sequence(length, pool, rand_func)
 
 
-def generate_random_password(entropy, pool=ASCII_PRINTABLE):
+def generate_random_password(entropy, pool=ASCII_PRINTABLE,
+                             rand_func=generate_random_bytes):
     """
     Generates a password based on entropy.
 
@@ -368,4 +371,4 @@ def generate_random_password(entropy, pool=ASCII_PRINTABLE):
     :returns:
         Randomly generated password with specified entropy.
     """
-    return ''.join(generate_random_sequence_strong(entropy, pool))
+    return ''.join(generate_random_sequence_strong(entropy, pool, rand_func))
