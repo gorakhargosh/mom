@@ -182,6 +182,7 @@ Dictionaries and dictionary sequences
 .. autofunction:: pluck
 .. autofunction:: reject_dict
 .. autofunction:: select_dict
+.. autofunction:: partition_dict
 
 Predicates, transforms, and walkers
 -----------------------------------
@@ -242,6 +243,7 @@ __all__ = [
     "nth",
     "omits",
     "partition",
+    "partition_dict",
     "peel",
     "pluck",
     "reduce",
