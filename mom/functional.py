@@ -622,6 +622,26 @@ def partition(predicate, iterable):
 
 
 # Dictionaries
+def partition_dict(predicate, dictionary):
+    """
+    Partitions a dictionary into two dictionaries where for the elements of
+    one dictionary the predicate is true and for those of the other it is false.
+
+    :param predicate:
+        Function of the format::
+
+            f(x) -> bool
+
+        where x is a 2-element tuple of the form (key, value).
+    :param dictionary:
+        Dictionary.
+    :returns:
+        Tuple (selected_dict, rejected_dict)
+    """
+    a, b = partition(predicate, dictionary.items())
+    return dict(a), dict(b)
+
+
 def map_dict(transform, dictionary):
     """
     Maps over a dictionary of key, value pairs.

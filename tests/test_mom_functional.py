@@ -14,7 +14,7 @@ from mom.functional import \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, \
     partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
-    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never
+    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never, partition_dict
 
 
 class Test_some(unittest2.TestCase):
@@ -725,6 +725,19 @@ class Test_always(unittest2.TestCase):
 class Test_never(unittest2.TestCase):
     def test_never_true(self):
         self.assertFalse(never(True))
+
+
+class Test_partition_dict(unittest2.TestCase):
+    def test_properly_partitions(self):
+        args = dict(
+            oauth_token="token",
+            oauth_blah="blah",
+            something="another",
+            boobooo="booobooo",
+        )
+        a, b = partition_dict(lambda (k, v): k.startswith("oauth_"), args)
+        self.assertDictEqual(a, {'oauth_token': 'token', 'oauth_blah': 'blah'})
+        self.assertDictEqual(b, {'boobooo': 'booobooo', 'something': 'another'})
 
 if __name__ == '__main__':
     unittest2.main()
