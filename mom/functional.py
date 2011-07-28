@@ -201,7 +201,7 @@ from itertools import\
     ifilterfalse, dropwhile,\
     cycle, imap, repeat
 
-from mom.itertools import chain
+from mom.itertools import chain, starmap
 from mom.builtins import is_bytes_or_unicode
 from mom._compat import range, dict_each, reduce as _reduce, next
 
@@ -632,15 +632,14 @@ def partition_dict(predicate, dictionary):
     :param predicate:
         Function of the format::
 
-            f(x) -> bool
+            f(key, value) -> bool
 
-        where x is a 2-element tuple of the form (key, value).
     :param dictionary:
         Dictionary.
     :returns:
         Tuple (selected_dict, rejected_dict)
     """
-    a, b = partition(predicate, dictionary.items())
+    a, b = partition(lambda (k, v): predicate(k, v), dictionary.items())
     return dict(a), dict(b)
 
 
@@ -649,12 +648,13 @@ def map_dict(transform, dictionary):
     Maps over a dictionary of key, value pairs.
 
     :param transform:
-        Function that accepts a single argument of type ``(key, value)``
+        Function that accepts two arguments ``key, value``
         and returns a ``(new key, new value)`` pair.
     :returns:
-        New dictionary of ``(new key, new value)`` pairs.
+        New dictionary of ``new key=new value`` pairs.
     """
-    return dict(map(transform, dictionary.items()))
+    return dict(starmap(transform or (lambda k, v: (k, v)),
+                        dictionary.items()))
 
 
 def select_dict(predicate, dictionary):
@@ -662,12 +662,13 @@ def select_dict(predicate, dictionary):
     Select a dictionary.
 
     :param predicate:
-        Predicate function that accepts a single argument of type
-        ``(key, value)`` and returns ``True`` for selectable elements.
+        Predicate function that accepts two arguments ``key, value``
+        and returns ``True`` for selectable elements.
     :returns:
-        New dictionary of selected ``(key, value)`` pairs.
+        New dictionary of selected ``key=value`` pairs.
     """
-    return dict(ifilter(predicate or all, dictionary.items()))
+    _predicate = (lambda (k, v): predicate(k, v)) if predicate else all
+    return dict(ifilter(_predicate, dictionary.items()))
 
 
 def reject_dict(predicate, dictionary):
@@ -675,12 +676,13 @@ def reject_dict(predicate, dictionary):
     Select a dictionary.
 
     :param predicate:
-        Predicate function that accepts a single argument of type
-        ``(key, value)`` and returns ``True`` for rejected elements.
+        Predicate function that accepts two arguments ``key, value``
+        and returns ``True`` for rejected elements.
     :returns:
-        New dictionary of selected ``(key, value)`` pairs.
+        New dictionary of selected ``key=value`` pairs.
     """
-    return dict(ifilterfalse(predicate or all, dictionary.items()))
+    _predicate = (lambda (k, v): predicate(k, v)) if predicate else all
+    return dict(ifilterfalse(_predicate, dictionary.items()))
 
 
 def invert_dict(dictionary):
@@ -692,12 +694,7 @@ def invert_dict(dictionary):
     :returns:
         New dictionary with the keys and values switched.
     """
-
-    def _switch(t):
-        k, v = t
-        return v, k
-
-    return map_dict(_switch, dictionary)
+    return map_dict(lambda k, v: (v, k), dictionary)
 
 
 # Sequences of dictionaries

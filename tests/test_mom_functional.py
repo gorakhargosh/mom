@@ -184,13 +184,13 @@ class Test_map_dict(unittest2.TestCase):
             8: 5,
         }
 
-        def _uppercase_key(pair):
-            if isinstance(pair[0], str):
-                return pair[0].upper(), pair[1]
+        def _uppercase_key(key, value):
+            if isinstance(key, str):
+                return key.upper(), value
             else:
-                return pair[0], pair[1]
+                return key, value
         self.assertDictEqual(map_dict(None, d), d)
-        self.assertDictEqual(map_dict(lambda w: w, d), d)
+        self.assertDictEqual(map_dict(lambda k, v: (k, v), d), d)
         self.assertDictEqual(map_dict(_uppercase_key, d), {
             "A": "aye",
             "B": 5,
@@ -213,7 +213,7 @@ class Test_select_dict(unittest2.TestCase):
         }
         self.assertDictEqual(select_dict(None, dict(a="a", b="b", c=None)),
                              dict(a="a", b="b"))
-        self.assertDictEqual(select_dict(lambda w: is_even(w[0]), d), {
+        self.assertDictEqual(select_dict(lambda k, v: is_even(k), d), {
             2: "two",
             8: "eight",
         })
@@ -234,7 +234,7 @@ class Test_reject_dict(unittest2.TestCase):
         }
         self.assertDictEqual(reject_dict(None, dict(a="a", b="b", c=None)),
                              dict(c=None))
-        self.assertDictEqual(reject_dict(lambda w: is_even(w[0]), d), {
+        self.assertDictEqual(reject_dict(lambda k, v: is_even(k), d), {
             1: "one",
             3: "three",
             5: None,
@@ -735,7 +735,7 @@ class Test_partition_dict(unittest2.TestCase):
             something="another",
             boobooo="booobooo",
         )
-        a, b = partition_dict(lambda (k, v): k.startswith("oauth_"), args)
+        a, b = partition_dict(lambda k, v: k.startswith("oauth_"), args)
         self.assertDictEqual(a, {'oauth_token': 'token', 'oauth_blah': 'blah'})
         self.assertDictEqual(b, {'boobooo': 'booobooo', 'something': 'another'})
 
