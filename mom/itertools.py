@@ -136,6 +136,7 @@ def product(*iterables, **kwargs):
 
 try:
     from itertools import starmap
+    starmap = starmap
 except ImportError:
     def starmap(function, iterable):
         """
