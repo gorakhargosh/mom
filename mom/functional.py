@@ -155,7 +155,7 @@ Indexing and slicing
 .. autofunction:: round_robin
 .. autofunction:: take
 .. autofunction:: ncycles
-
+.. autofunction:: occurrences
 
 Manipulation, filtering, union and difference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -193,7 +193,6 @@ Predicates, transforms, and walkers
 """
 
 from __future__ import absolute_import
-import collections
 
 from functools import partial
 from itertools import\
@@ -241,6 +240,7 @@ __all__ = [
     "never",
     "none",
     "nth",
+    "occurrences",
     "omits",
     "partition",
     "partition_dict",
@@ -922,6 +922,23 @@ def last(iterable):
     return nth(iterable, len(iterable) - 1)
 
 
+def occurrences(iterable):
+    """
+    Returns a dictionary of counts (multiset) of each element in the iterable.
+
+    :param iterable:
+        Iterable sequence with hashable elements.
+    :returns:
+        A dictionary of counts of each element in the iterable.
+    """
+    from collections import defaultdict
+
+    d = defaultdict(int)
+    for k in iterable:
+        d[k] += 1
+    return d
+
+
 def peel(iterable, count=1):
     """
     Returns the meat of an iterable by peeling off the specified number of
@@ -1282,7 +1299,8 @@ def eat(iterator, n):
     # Use functions that consume iterators at C speed.
     if n is None:
         # Feed the entire iterator into a zero-length deque.
-        collections.deque(iterator)
+        from collections import deque
+        deque(iterator)
     else:
         # Advance to the empty slice starting at position n.
         next(islice(iterator, n, n), None)

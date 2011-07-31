@@ -14,7 +14,7 @@ from mom.functional import \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, \
     partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
-    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never, partition_dict
+    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never, partition_dict, occurrences
 
 
 class Test_some(unittest2.TestCase):
@@ -738,6 +738,23 @@ class Test_partition_dict(unittest2.TestCase):
         a, b = partition_dict(lambda k, v: k.startswith("oauth_"), args)
         self.assertDictEqual(a, {'oauth_token': 'token', 'oauth_blah': 'blah'})
         self.assertDictEqual(b, {'boobooo': 'booobooo', 'something': 'another'})
+
+
+class Test_occurrences(unittest2.TestCase):
+    def test_missing_element_count_is_0(self):
+        d = occurrences('aaaaa')
+        self.assertEqual(d['c'], 0)
+
+    def test_returns_multiset(self):
+        self.assertDictEqual(dict(occurrences('aaaaabbbccc')),
+                             {'a': 5, 'b': 3, 'c': 3})
+
+    def test_returns_blank_for_empty(self):
+        self.assertDictEqual(dict(occurrences("")), {})
+
+    def test_raises_TypeError_when_not_iterable(self):
+        self.assertRaises(TypeError, occurrences, None)
+
 
 if __name__ == '__main__':
     unittest2.main()
