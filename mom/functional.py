@@ -165,7 +165,6 @@ Manipulation, filtering
 .. autofunction:: ifalsy
 .. autofunction:: itruthy
 .. autofunction:: truthy
-.. autofunction:: unique
 .. autofunction:: without
 
 Flattening, grouping, unions, differences, and intersections
@@ -178,6 +177,7 @@ Flattening, grouping, unions, differences, and intersections
 .. autofunction:: idifference
 .. autofunction:: difference
 .. autofunction:: union
+.. autofunction:: unique
 
 Dictionaries and dictionary sequences
 -------------------------------------
