@@ -157,22 +157,27 @@ Indexing and slicing
 .. autofunction:: ncycles
 .. autofunction:: occurrences
 
-Manipulation, filtering, union and difference
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Manipulation, filtering
+~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: contains
-.. autofunction:: difference
-.. autofunction:: falsy
-.. autofunction:: flatten
-.. autofunction:: flatten1
-.. autofunction:: idifference
-.. autofunction:: ifalsy
-.. autofunction:: intersection
-.. autofunction:: itruthy
 .. autofunction:: omits
+.. autofunction:: falsy
+.. autofunction:: ifalsy
+.. autofunction:: itruthy
 .. autofunction:: truthy
-.. autofunction:: union
 .. autofunction:: unique
 .. autofunction:: without
+
+Flattening, grouping, unions, differences, and intersections
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autofunction:: flatten
+.. autofunction:: flatten1
+.. autofunction:: group_consecutive
+.. autofunction:: flock
+.. autofunction:: intersection
+.. autofunction:: idifference
+.. autofunction:: difference
+.. autofunction:: union
 
 Dictionaries and dictionary sequences
 -------------------------------------
@@ -198,7 +203,7 @@ from functools import partial
 from itertools import\
     ifilter, islice, takewhile,\
     ifilterfalse, dropwhile,\
-    cycle, imap, repeat
+    cycle, imap, repeat, groupby
 
 from mom.itertools import chain, starmap
 from mom.builtins import is_bytes_or_unicode
@@ -219,6 +224,8 @@ __all__ = [
     "first",
     "flatten",
     "flatten1",
+    "group_consecutive",
+    "flock",
     "ichunks",
     "identity",
     "idifference",
@@ -926,6 +933,8 @@ def occurrences(iterable):
     """
     Returns a dictionary of counts (multiset) of each element in the iterable.
 
+    Taken from the Python documentation under PSF license.
+
     :param iterable:
         Iterable sequence with hashable elements.
     :returns:
@@ -1176,6 +1185,71 @@ def flatten1(iterable):
             return memo
 
     return _reduce(_flatten, iterable, [])
+
+
+def group_consecutive(predicate, iterable):
+    """
+    Groups consecutive elements into subsequences::
+
+        things = [("phone", "android"),
+                  ("phone", "iphone"),
+                  ("tablet", "ipad"),
+                  ("laptop", "dell studio"),
+                  ("phone", "nokia"),
+                  ("laptop", "macbook pro")]
+
+        list(group_consecutive(lambda w: w[0], things))
+        -> [(('phone', 'android'), ('phone', 'iphone')),
+            (('tablet', 'ipad'),),
+            (('laptop', 'dell studio'),),
+            (('phone', 'nokia'),),
+            (('laptop', 'macbook pro'),)]
+
+        list(group_consecutive(lambda w: w[0], "mississippi"))
+        -> [('m',), ('i',),
+            ('s', 's'), ('i',),
+            ('s', 's'), ('i',),
+            ('p', 'p'), ('i',)]
+
+    :param predicate:
+        Predicate function that returns ``True`` or ``False`` for each
+        element of the iterable.
+    :param iterable:
+        An iterable sequence of elements.
+    :returns:
+        An iterator of lists.
+    """
+    return (tuple(group) for key, group in groupby(iterable, predicate))
+
+
+def flock(predicate, iterable):
+    """
+    Groups elements into subsequences after sorting::
+
+        things = [("phone", "android"),
+                  ("phone", "iphone"),
+                  ("tablet", "ipad"),
+                  ("laptop", "dell studio"),
+                  ("phone", "nokia"),
+                  ("laptop", "macbook pro")]
+
+        list(flock(lambda w: w[0], things))
+        -> [(('laptop', 'dell studio'), ('laptop', 'macbook pro')),
+            (('phone', 'android'), ('phone', 'iphone'), ('phone', 'nokia')),
+            (('tablet', 'ipad'),)]
+
+        list(flock(lambda w: w[0], "mississippi"))
+        -> [('i', 'i', 'i', 'i'), ('m',), ('p', 'p'), ('s', 's', 's', 's')]
+
+    :param predicate:
+        Predicate function that returns ``True`` or ``False`` for each
+        element of the iterable.
+    :param iterable:
+        An iterable sequence of elements.
+    :returns:
+        An iterator of lists.
+    """
+    return (tuple(group) for key, group in groupby(sorted(iterable), predicate))
 
 
 def unique(iterable, is_sorted=False):

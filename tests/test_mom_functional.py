@@ -14,7 +14,7 @@ from mom.functional import \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, \
     partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
-    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never, partition_dict, occurrences
+    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never, partition_dict, occurrences, group_consecutive, flock
 
 
 class Test_some(unittest2.TestCase):
@@ -754,6 +754,52 @@ class Test_occurrences(unittest2.TestCase):
 
     def test_raises_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, occurrences, None)
+
+
+class Test_group_consecutive(unittest2.TestCase):
+    def test_result(self):
+        things = [("phone", "android"),
+                  ("phone", "iphone"),
+                  ("tablet", "ipad"),
+                  ("laptop", "dell studio"),
+                  ("phone", "nokia"),
+                  ("laptop", "macbook pro")]
+
+        self.assertEqual(list(group_consecutive(lambda w: w[0], things)),
+            [(('phone', 'android'), ('phone', 'iphone')),
+            (('tablet', 'ipad'),),
+            (('laptop', 'dell studio'),),
+            (('phone', 'nokia'),),
+            (('laptop', 'macbook pro'),)]
+        )
+
+        self.assertEqual(list(group_consecutive(lambda w: w[0],
+                                                "mississippi")),
+            [('m',), ('i',),
+            ('s', 's'), ('i',),
+            ('s', 's'), ('i',),
+            ('p', 'p'), ('i',)]
+        )
+
+class Test_flock(unittest2.TestCase):
+    def test_result(self):
+        things = [("phone", "android"),
+                  ("phone", "iphone"),
+                  ("tablet", "ipad"),
+                  ("laptop", "dell studio"),
+                  ("phone", "nokia"),
+                  ("laptop", "macbook pro")]
+
+        self.assertEqual(list(flock(lambda w: w[0], things)),
+            [(('laptop', 'dell studio'), ('laptop', 'macbook pro')),
+            (('phone', 'android'), ('phone', 'iphone'), ('phone', 'nokia')),
+            (('tablet', 'ipad'),)]
+        )
+
+        self.assertEqual(
+            list(flock(lambda w: w[0], "mississippi")),
+            [('i', 'i', 'i', 'i'), ('m',), ('p', 'p'), ('s', 's', 's', 's')]
+        )
 
 
 if __name__ == '__main__':
