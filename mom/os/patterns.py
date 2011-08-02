@@ -24,11 +24,16 @@ Functions
 ---------
 .. autofunction:: match_path
 .. autofunction:: match_path_against
+.. autofunction:: match_any_paths
 .. autofunction:: filter_paths
 """
 
 from __future__ import absolute_import
+
+from itertools import imap
+from functools import partial
 from fnmatch import fnmatch, fnmatchcase
+from mom.functional import some, identity
 
 __all__ = ['match_path',
            'match_path_against',
@@ -76,17 +81,12 @@ def match_path_against(pathname, patterns, case_sensitive=True):
         True
     """
     if case_sensitive:
-        match_func = fnmatchcase
-        pattern_transform_func = (lambda w: w)
+        match_func = partial(fnmatchcase, pathname)
+        transform = identity
     else:
-        match_func = fnmatch
-        pathname = pathname.lower()
-        pattern_transform_func = _string_lower
-    for pattern in set(patterns):
-        pattern = pattern_transform_func(pattern)
-        if match_func(pathname, pattern):
-            return True
-    return False
+        match_func = partial(fnmatch, pathname.lower())
+        transform = _string_lower
+    return some(match_func, imap(transform, set(patterns)))
 
 
 def _match_path(pathname,
@@ -210,6 +210,7 @@ def filter_paths(pathnames,
         # above.
         if _match_path(pathname, included, excluded, case_sensitive):
             yield pathname
+
 
 def match_any_paths(pathnames,
                     included_patterns=None,
