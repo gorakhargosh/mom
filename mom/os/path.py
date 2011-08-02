@@ -34,9 +34,11 @@ Functions
 
 from __future__ import absolute_import
 
-import os.path
+from os import walk as _walk
+from os.path import abspath, normpath, realpath, dirname, join as path_join
 from functools import partial
 from mom._compat import next
+
 
 __all__ = [
     'get_dir_walker',
@@ -55,16 +57,16 @@ def get_dir_walker(recursive, topdown=True, followlinks=False):
     Returns a recursive or a non-recursive directory walker.
 
     :param recursive:
-    ``True`` produces a recursive walker; ``False`` produces a non-recursive
-    walker.
+        ``True`` produces a recursive walker; ``False`` produces a non-recursive
+        walker.
     :returns:
-    A walker function.
+        A walker function.
     """
     if recursive:
-        walk = partial(os.walk, topdown=topdown, followlinks=followlinks)
+        walk = partial(_walk, topdown=topdown, followlinks=followlinks)
     else:
         def walk(path, topdown=topdown, followlinks=followlinks):
-            next(os.walk(path, topdown=topdown, followlinks=followlinks))
+            yield next(_walk(path, topdown=topdown, followlinks=followlinks))
     return walk
 
 
@@ -74,18 +76,18 @@ def walk(dir_pathname, recursive=True, topdown=True, followlinks=False):
     :func:`os.walk` only adding the `recursive` argument.
 
     :param dir_pathname:
-    The directory to traverse.
+        The directory to traverse.
     :param recursive:
-    ``True`` for walking recursively through the directory tree;
-    ``False`` otherwise.
+        ``True`` for walking recursively through the directory tree;
+        ``False`` otherwise.
     :param topdown:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     :param followlinks:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     """
     walk_func = get_dir_walker(recursive, topdown, followlinks)
-    for root, dirnames, filenames in walk_func(dir_pathname):
-        yield (root, dirnames, filenames)
+    for root, dir_names, file_names in walk_func(dir_pathname):
+        yield (root, dir_names, file_names)
 
 
 def listdir(dir_pathname,
@@ -97,21 +99,21 @@ def listdir(dir_pathname,
     recursively.
 
     :param dir_pathname:
-    The directory to traverse.
+        The directory to traverse.
     :param recursive:
-    ``True`` for walking recursively through the directory tree;
-    ``False`` otherwise.
+        ``True`` for walking recursively through the directory tree;
+        ``False`` otherwise.
     :param topdown:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     :param followlinks:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     """
-    for root, dirnames, filenames\
-    in walk(dir_pathname, recursive, topdown, followlinks):
-        for dirname in dirnames:
-            yield absolute_path(os.path.join(root, dirname))
-        for filename in filenames:
-            yield absolute_path(os.path.join(root, filename))
+    for root, dir_names, file_names in walk(
+        dir_pathname, recursive, topdown, followlinks):
+        for dir_name in dir_names:
+            yield absolute_path(path_join(root, dir_name))
+        for file_name in file_names:
+            yield absolute_path(path_join(root, file_name))
 
 
 def list_directories(dir_pathname,
@@ -123,19 +125,19 @@ def list_directories(dir_pathname,
     directory, optionally recursively.
 
     :param dir_pathname:
-    The directory to traverse.
+        The directory to traverse.
     :param recursive:
-    ``True`` for walking recursively through the directory tree;
-    ``False`` otherwise.
+        ``True`` for walking recursively through the directory tree;
+        ``False`` otherwise.
     :param topdown:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     :param followlinks:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     """
-    for root, dirnames, filenames\
-    in walk(dir_pathname, recursive, topdown, followlinks):
-        for dirname in dirnames:
-            yield absolute_path(os.path.join(root, dirname))
+    for root, dir_names, file_names in walk(
+        dir_pathname, recursive, topdown, followlinks):
+        for dir_name in dir_names:
+            yield absolute_path(path_join(root, dir_name))
 
 
 def list_files(dir_pathname,
@@ -147,19 +149,19 @@ def list_files(dir_pathname,
     directory, optionally recursively.
 
     :param dir_pathname:
-    The directory to traverse.
+        The directory to traverse.
     :param recursive:
-    ``True`` for walking recursively through the directory tree;
-    ``False`` otherwise.
+        ``True`` for walking recursively through the directory tree;
+        ``False`` otherwise.
     :param topdown:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     :param followlinks:
-    Please see the documentation for :func:`os.walk`
+        Please see the documentation for :func:`os.walk`
     """
-    for root, dirnames, filenames\
-    in walk(dir_pathname, recursive, topdown, followlinks):
-        for filename in filenames:
-            yield absolute_path(os.path.join(root, filename))
+    for root, dir_names, file_names in walk(
+        dir_pathname, recursive, topdown, followlinks):
+        for file_name in file_names:
+            yield absolute_path(path_join(root, file_name))
 
 
 def absolute_path(path):
@@ -167,11 +169,11 @@ def absolute_path(path):
     Returns the absolute path for the given path and normalizes the path.
 
     :param path:
-    Path for which the absolute normalized path will be found.
+        Path for which the absolute normalized path will be found.
     :returns:
-    Absolute normalized path.
+        Absolute normalized path.
     """
-    return os.path.abspath(os.path.normpath(path))
+    return abspath(normpath(path))
 
 
 def real_absolute_path(path):
@@ -179,11 +181,11 @@ def real_absolute_path(path):
     Returns the real absolute normalized path for the given path.
 
     :param path:
-    Path for which the real absolute normalized path will be found.
+        Path for which the real absolute normalized path will be found.
     :returns:
-    Real absolute normalized path.
+        Real absolute normalized path.
     """
-    return os.path.realpath(absolute_path(path))
+    return realpath(absolute_path(path))
 
 
 def parent_dir_path(path):
@@ -191,9 +193,8 @@ def parent_dir_path(path):
     Returns the parent directory path.
 
     :param path:
-    Path for which the parent directory will be obtained.
+        Path for which the parent directory will be obtained.
     :returns:
-    Parent directory path.
+        Parent directory path.
     """
-    return absolute_path(os.path.dirname(path))
-
+    return absolute_path(dirname(path))
