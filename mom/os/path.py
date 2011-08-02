@@ -89,7 +89,7 @@ def walk(dir_pathname, recursive=True, topdown=True, followlinks=False):
     for root, dir_names, file_names in walk_func(dir_pathname):
         yield (root, dir_names, file_names)
 
-
+    
 def listdir(dir_pathname,
             recursive=True,
             topdown=True,
