@@ -43,8 +43,7 @@ __all__ = ['match_path',
 
 def _string_lower(s):
     """
-    Convenience function to lowercase a string (the :mod:`string` module is
-    deprecated/removed in Python 3.0).
+    Convenience function to lowercase a string.
 
     :param s:
         The string which will be lowercased.
@@ -67,18 +66,6 @@ def match_path_against(pathname, patterns, case_sensitive=True):
         ``True`` if the matching should be case-sensitive; ``False`` otherwise.
     :returns:
         ``True`` if the pattern matches; ``False`` otherwise.
-
-    Doctests::
-        >>> match_path_against("/home/username/foobar/blah.py", ["*.py", "*.txt"], False)
-        True
-        >>> match_path_against("/home/username/foobar/blah.py", ["*.PY", "*.txt"], True)
-        False
-        >>> match_path_against("/home/username/foobar/blah.py", ["*.PY", "*.txt"], False)
-        True
-        >>> match_path_against("C:\\windows\\blah\\BLAH.PY", ["*.py", "*.txt"], True)
-        False
-        >>> match_path_against("C:\\windows\\blah\\BLAH.PY", ["*.py", "*.txt"], False)
-        True
     """
     if case_sensitive:
         match_func = partial(fnmatchcase, pathname)
@@ -93,19 +80,8 @@ def _match_path(pathname,
                 included_patterns,
                 excluded_patterns,
                 case_sensitive=True):
-    """Internal function same as :func:`match_path` but does not check arguments.
-
-    Doctests::
-        >>> _match_path("/users/gorakhargosh/foobar.py", ["*.py"], ["*.PY"], True)
-        True
-        >>> _match_path("/users/gorakhargosh/FOOBAR.PY", ["*.py"], ["*.PY"], True)
-        False
-        >>> _match_path("/users/gorakhargosh/foobar/", ["*.py"], ["*.txt"], False)
-        False
-        >>> _match_path("/users/gorakhargosh/FOOBAR.PY", ["*.py"], ["*.PY"], False)
-        Traceback (most recent call last):
-            ...
-        ValueError: conflicting patterns `set(['*.py'])` included and excluded
+    """
+    Internal function same as :func:`match_path` but does not check arguments.
     """
     if not case_sensitive:
         included_patterns = set(map(_string_lower, included_patterns))
@@ -146,22 +122,6 @@ def match_path(pathname,
     :raises:
         ValueError if included patterns and excluded patterns contain the
         same pattern.
-
-    Doctests::
-        >>> match_path("/Users/gorakhargosh/foobar.py")
-        True
-        >>> match_path("/Users/gorakhargosh/foobar.py", case_sensitive=False)
-        True
-        >>> match_path("/users/gorakhargosh/foobar.py", ["*.py"], ["*.PY"], True)
-        True
-        >>> match_path("/users/gorakhargosh/FOOBAR.PY", ["*.py"], ["*.PY"], True)
-        False
-        >>> match_path("/users/gorakhargosh/foobar/", ["*.py"], ["*.txt"], False)
-        False
-        >>> match_path("/users/gorakhargosh/FOOBAR.PY", ["*.py"], ["*.PY"], False)
-        Traceback (most recent call last):
-            ...
-        ValueError: conflicting patterns `set(['*.py'])` included and excluded
     """
     included = ["*"] if included_patterns is None else included_patterns
     excluded = [] if excluded_patterns is None else excluded_patterns
@@ -191,15 +151,6 @@ def filter_paths(pathnames,
     :returns:
         A list of pathnames that matched the allowable patterns and passed
         through the ignored patterns.
-
-    Doctests::
-        >>> pathnames = set(["/users/gorakhargosh/foobar.py", "/var/cache/pdnsd.status", "/etc/pdnsd.conf", "/usr/local/bin/python"])
-        >>> set(filter_paths(pathnames)) == pathnames
-        True
-        >>> set(filter_paths(pathnames, case_sensitive=False)) == pathnames
-        True
-        >>> set(filter_paths(pathnames, ["*.py", "*.conf"], ["*.status"], case_sensitive=True)) == set(["/users/gorakhargosh/foobar.py", "/etc/pdnsd.conf"])
-        True
     """
     included = ["*"] if included_patterns is None else included_patterns
     excluded = [] if excluded_patterns is None else excluded_patterns
@@ -234,19 +185,6 @@ def match_any_paths(pathnames,
         ``True`` if matching should be case-sensitive; ``False`` otherwise.
     :returns:
         ``True`` if any of the paths matches; ``False`` otherwise.
-
-    Doctests::
-        >>> pathnames = set(["/users/gorakhargosh/foobar.py", "/var/cache/pdnsd.status", "/etc/pdnsd.conf", "/usr/local/bin/python"])
-        >>> match_any_paths(pathnames)
-        True
-        >>> match_any_paths(pathnames, case_sensitive=False)
-        True
-        >>> match_any_paths(pathnames, ["*.py", "*.conf"], ["*.status"], case_sensitive=True)
-        True
-        >>> match_any_paths(pathnames, ["*.txt"], case_sensitive=False)
-        False
-        >>> match_any_paths(pathnames, ["*.txt"], case_sensitive=True)
-        False
     """
     included = ["*"] if included_patterns is None else included_patterns
     excluded = [] if excluded_patterns is None else excluded_patterns
