@@ -96,12 +96,12 @@ def listdir(dir_pathname,
             followlinks=False):
     """
     Enlists all items using their absolute paths in a directory, optionally
-    recursively.
+    non-recursively.
 
     :param dir_pathname:
         The directory to traverse.
     :param recursive:
-        ``True`` for walking recursively through the directory tree;
+        ``True`` (default) for walking recursively through the directory tree;
         ``False`` otherwise.
     :param topdown:
         Please see the documentation for :func:`os.walk`
@@ -122,12 +122,12 @@ def list_directories(dir_pathname,
                      followlinks=False):
     """
     Enlists all the directories using their absolute paths within the specified
-    directory, optionally recursively.
+    directory, optionally non-recursively.
 
     :param dir_pathname:
         The directory to traverse.
     :param recursive:
-        ``True`` for walking recursively through the directory tree;
+        ``True`` (default) for walking recursively through the directory tree;
         ``False`` otherwise.
     :param topdown:
         Please see the documentation for :func:`os.walk`
