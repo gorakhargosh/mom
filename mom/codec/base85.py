@@ -117,11 +117,11 @@ def encode(raw_bytes):
 #            uint32_value //= 85
 #        ascii_chars.extend(remainders)
         # Above loop unrolled:
-        ascii_chars.extend((INT_TO_CHAR[x // 52200625],
-                            INT_TO_CHAR[(x // 614125) % 85],
-                            INT_TO_CHAR[(x // 7225) % 85],
-                            INT_TO_CHAR[(x // 85) % 85],
-                            INT_TO_CHAR[x % 85]))
+        ascii_chars.extend((INT_TO_CHAR[x // 52200625],      # 85**4 = 52200625
+                            INT_TO_CHAR[(x // 614125) % 85], # 85**3 = 614125
+                            INT_TO_CHAR[(x // 7225) % 85],   # 85**2 = 7225
+                            INT_TO_CHAR[(x // 85) % 85],     # 85**1 = 85
+                            INT_TO_CHAR[x % 85]))            # 85**0 = 1
     return ''.join(ascii_chars)
 
 
