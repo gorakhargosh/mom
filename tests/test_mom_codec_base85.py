@@ -31,6 +31,13 @@ class Test_base85_encode(unittest2.TestCase):
         self.assertEqual(b85encode(b("."), True), "/cYkO")
         self.assertEqual(b85encode(b(".")), "/c")
 
+class Test_base85_decode(unittest2.TestCase):
     def test_decoder(self):
         self.assertEqual(b85decode(encoded), raw)
-        
+
+    def test_encoding_wikipedia(self):
+        self.assertEqual(b85decode(b("9jqo^")), "Man ")
+        self.assertEqual(b85decode(b("F*2M7")), "sure")
+
+    def test_check_padding(self):
+        self.assertEqual(b85decode(b("/c")), ".")
