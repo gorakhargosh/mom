@@ -39,6 +39,9 @@ from __future__ import absolute_import, division
 
 from struct import unpack, pack
 from mom._compat import range
+from mom.builtins import b
+from mom.codec import long_to_bytes
+from mom.functional import chunks
 
 
 __all__ = [
@@ -46,8 +49,14 @@ __all__ = [
     "b85decode",
 ]
 
+def base85_chr(value):
+    return chr(value + 33)
 
-def b85encode(raw_bytes, padding=False):
+def base85_ord(char):
+    return ord(char) - 33
+
+
+def b85encode(raw_bytes, padding=False, base85_chr=base85_chr):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -80,23 +89,42 @@ def b85encode(raw_bytes, padding=False):
     # Ascii85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
     for x in unpack('>' + 'L' * num_uint32, raw_bytes):
-#        remainders = list(range(5))
-#        for i in reversed(remainders):
-#            remainders[i] = (x % 85) + 33
+#        chars = list(range(5))
+#        for i in reversed(chars):
+#            chars[i] = base85_chr(x % 85)
 #            x //= 85
-#        ascii_chars.extend(map(chr, remainders))
+#        ascii_chars.extend(chars)
         # Above loop unrolled:
         ascii_chars.extend((
-            chr((x // 52200625) + 33),      # 85**4 = 52200625
-            chr(((x // 614125) % 85) + 33), # 85**3 = 614125
-            chr(((x // 7225) % 85) + 33),   # 85**2 = 7225
-            chr(((x // 85) % 85) + 33),     # 85**1 = 85
-            chr((x % 85) + 33),             # 85**0 = 1
+            base85_chr(x // 52200625),      # 85**4 = 52200625
+            base85_chr((x // 614125) % 85), # 85**3 = 614125
+            base85_chr((x // 7225) % 85),   # 85**2 = 7225
+            base85_chr((x // 85) % 85),     # 85**1 = 85
+            base85_chr(x % 85),             # 85**0 = 1
         ))
     if padding_size and not padding:
         ascii_chars = ascii_chars[:-padding_size]
     return ''.join(ascii_chars)
 
 
-def b85decode(encoded):
-    pass
+
+def b85decode(encoded, base85_ord=base85_ord):
+    # We want 5-tuple chunks, so pad with as many 'u' characters as
+    # required to fulfill the length.
+    remainder = len(encoded) % 5
+    if remainder:
+        padding_size = 5 - remainder
+        encoded += 'u' * padding_size
+    else:
+        padding_size = 0
+
+    raw_bytes = b('')
+    for chunk in chunks(encoded, 5):
+        uint32_value = 0
+        for char in chunk:
+            uint32_value = uint32_value * 85 + base85_ord(char)
+        raw_bytes += long_to_bytes(uint32_value)
+
+    if padding_size:
+        raw_bytes = raw_bytes[:-padding_size]
+    return raw_bytes
