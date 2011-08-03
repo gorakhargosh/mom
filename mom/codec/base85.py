@@ -34,8 +34,6 @@ from __future__ import absolute_import, division
 
 import re
 from struct import unpack, pack
-from mom.builtins import b
-from mom.codec import long_to_bytes
 from mom.functional import chunks
 
 
@@ -188,7 +186,7 @@ def b85decode(encoded,
     else:
         padding_size = 0
 
-    #raw_bytes = b('')
+    #raw_bytes = ''
     uint32s = []
     for chunk in chunks(encoded, 5):
         uint32_value = 0
