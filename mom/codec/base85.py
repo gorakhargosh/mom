@@ -16,32 +16,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 """
 :module: mom.codec.base85
-:synopsis: Adobe-modified ASCII-85 encoding and decoding functions.
+:synopsis: Adobe-version of ASCII-85 encoding and decoding functions.
 :see: http://en.wikipedia.org/wiki/Ascii85
 
 Functions
 ---------
 .. autofunction:: b85encode
 .. autofunction:: b85decode
+.. autofunction:: base85_chr
+.. autofunction:: base85_ord
 """
+
 
 from __future__ import absolute_import, division
 
+import re
 from struct import unpack
 from mom.builtins import b
 from mom.codec import long_to_bytes
 from mom.functional import chunks
-import re
+
 
 __all__ = [
     "b85encode",
     "b85decode",
+    "ADOBE_PREFIX",
+    "ADOBE_SUFFIX",
+    "WHITESPACE_PATTERN",
+    "base85_chr",
+    "base85_ord",
 ]
 
+
+ADOBE_PREFIX = '<~'
+ADOBE_SUFFIX = '~>'
+
 WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
+
 
 def base85_chr(value):
     """
@@ -58,6 +71,8 @@ def base85_ord(char):
 
 
 def b85encode(raw_bytes,
+              prefix=ADOBE_PREFIX,
+              suffix=ADOBE_SUFFIX,
               _padding=False,
               _base85_chr=base85_chr):
     """
@@ -80,6 +95,8 @@ def b85encode(raw_bytes,
     :returns:
         ASCII-85 encoded bytes.
     """
+    prefix = prefix or ''
+    suffix = suffix or ''
 
     # We need chunks of 32-bit (4 bytes chunk size) unsigned integers,
     # which means the length of the byte sequence must be divisible by 4.
@@ -112,10 +129,12 @@ def b85encode(raw_bytes,
         ))
     if padding_size and not _padding:
         ascii_chars = ascii_chars[:-padding_size]
-    return ''.join(ascii_chars)
+    return prefix + ''.join(ascii_chars) + suffix
 
 
 def b85decode(encoded,
+              prefix=ADOBE_PREFIX,
+              suffix=ADOBE_SUFFIX,
               _ignore_pattern=WHITESPACE_PATTERN,
               _base85_ord=base85_ord):
     """
@@ -132,9 +151,18 @@ def b85decode(encoded,
     :returns:
         Base85-decoded raw bytes.
     """
+    prefix = prefix or ""
+    suffix = suffix or ""
+
     # ASCII-85 ignores whitespace.
     if _ignore_pattern:
         encoded = re.sub(_ignore_pattern, '', encoded)
+
+    # Strip the prefix and suffix.
+    if prefix and encoded.startswith(prefix):
+        encoded = encoded[len(prefix):]
+    if suffix and encoded.endswith(suffix):
+        encoded = encoded[:-len(suffix)]
 
     # We want 5-tuple chunks, so pad with as many 'u' characters as
     # required to fulfill the length.
