@@ -33,7 +33,7 @@ Functions
 from __future__ import absolute_import, division
 
 import re
-from struct import unpack
+from struct import unpack, pack
 from mom.builtins import b
 from mom.codec import long_to_bytes
 from mom.functional import chunks
@@ -196,7 +196,7 @@ def b85decode(encoded,
         # (encoded as "s8W-!") will cause a decoding error.
         if uint32_value > 4294967295:
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
-        raw_bytes += long_to_bytes(uint32_value)
+        raw_bytes += pack(">L", uint32_value)
 
     if padding_size:
         raw_bytes = raw_bytes[:-padding_size]
