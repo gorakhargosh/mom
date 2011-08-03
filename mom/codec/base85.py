@@ -83,8 +83,14 @@ def b85encode(raw_bytes,
     as many bytes as were added as padding are removed from the end of the
     encoded sequence if ``padding`` is ``False`` (default).
 
+    Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of '!!!!!'.
+
     :param raw_bytes:
         Raw bytes.
+    :param prefix:
+        The prefix used by the encoded text. Defaults to Adobe's prefix.
+    :param suffix:
+        The suffix used by the encoded text. Defaults to Adobe's suffix.
     :param _padding:
         ``True`` if padding should be included; ``False`` (default) otherwise.
         You should not need to use this--the default value is usually the
@@ -129,7 +135,8 @@ def b85encode(raw_bytes,
         ))
     if padding_size and not _padding:
         ascii_chars = ascii_chars[:-padding_size]
-    return prefix + ''.join(ascii_chars) + suffix
+    encoded = ''.join(ascii_chars).replace('!!!!!', 'z')
+    return prefix + encoded + suffix
 
 
 def b85decode(encoded,
@@ -142,6 +149,10 @@ def b85decode(encoded,
 
     :param encoded:
         Encoded ASCII string.
+    :param prefix:
+        The prefix used by the encoded text. Defaults to Adobe's prefix.
+    :param suffix:
+        The suffix used by the encoded text. Defaults to Adobe's suffix.
     :param _ignore_pattern:
         By default all whitespace is ignored. This must be an
         ``re.compile()`` instance. You should not need to use this.
@@ -163,6 +174,9 @@ def b85decode(encoded,
         encoded = encoded[len(prefix):]
     if suffix and encoded.endswith(suffix):
         encoded = encoded[:-len(suffix)]
+
+    # Replace all the 'z' occurrences with '!!!!!'
+    encoded = encoded.replace('z', '!!!!!')
 
     # We want 5-tuple chunks, so pad with as many 'u' characters as
     # required to satisfy the length.

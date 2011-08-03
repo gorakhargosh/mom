@@ -72,3 +72,14 @@ class Test_base85_decode(unittest2.TestCase):
 
     def test_decode_boundary(self):
         self.assertEqual(b85decode(b("s8W-!")), "\xff\xff\xff\xff")
+
+    def test_OverflowError_when_not_decodable_chunk_found(self):
+        self.assertRaises(OverflowError, b85decode, b('xy!!!'))
+
+    def test_decodes_z_into_zero_bytes(self):
+        self.assertEqual(b85decode('zzz'), '\x00\x00\x00')
+
+class Test_codec_identity(unittest2.TestCase):
+    def test_identity(self):
+        zero_bytes = '\x00\x00\x00\x00\x00'
+        self.assertEqual(b85decode(b85encode(zero_bytes)), zero_bytes)
