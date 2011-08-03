@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# base85.py: ASCII-85 encoding/decoding.
+# base85.py: Adobe's version of ASCII-85 encoding/decoding.
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 #
