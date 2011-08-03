@@ -81,14 +81,23 @@ def b85encode(raw_bytes, padding=False):
     # Ascii85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
     for x in unpack('>' + 'L' * num_uint32, raw_bytes):
-        ascii_chars.extend(map(chr,
-                            ((x // 52200625) + 33,     # 85**4 = 52200625
-                            ((x // 614125) % 85) + 33, # 85**3 = 614125
-                            ((x // 7225) % 85) + 33,   # 85**2 = 7225
-                            ((x // 85) % 85) + 33,     # 85**1 = 85
-                            (x % 85) + 33)))           # 85**0 = 1
+#        remainders = range(5)
+#        for i in reversed(remainders):
+#            remainders[i] = (x % 85) + 33
+#            x //= 85
+#        ascii_chars.extend(map(chr, remainders))
+        # Above loop unrolled:
+        ascii_chars.extend((
+            chr((x // 52200625) + 33),      # 85**4 = 52200625
+            chr(((x // 614125) % 85) + 33), # 85**3 = 614125
+            chr(((x // 7225) % 85) + 33),   # 85**2 = 7225
+            chr(((x // 85) % 85) + 33),     # 85**1 = 85
+            chr((x % 85) + 33),             # 85**0 = 1
+        ))
     if not padding:
         ascii_chars = ascii_chars[:-padding_size]
     return ''.join(ascii_chars)
 
 
+def b85decode(encoded):
+    pass

@@ -3,7 +3,7 @@
 
 import unittest2
 
-from mom.codec.base85 import b85decode, b85encode, _b85encode, _b85decode, encode
+from mom.codec.base85 import b85decode, b85encode
 
 class Test_base85_encode(unittest2.TestCase):
     def test_encoding(self):
