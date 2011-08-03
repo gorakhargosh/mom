@@ -210,7 +210,6 @@ def b85decode(encoded,
         uint32s.append(uint32_value)
 
     raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
-        
     if padding_size:
         raw_bytes = raw_bytes[:-padding_size]
     return raw_bytes
