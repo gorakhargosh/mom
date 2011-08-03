@@ -132,11 +132,12 @@ def b85decode(encoded,
     :returns:
         Base85-decoded raw bytes.
     """
-    # We want 5-tuple chunks, so pad with as many 'u' characters as
-    # required to fulfill the length.
+    # ASCII-85 ignores whitespace.
     if _ignore_pattern:
         encoded = re.sub(_ignore_pattern, '', encoded)
 
+    # We want 5-tuple chunks, so pad with as many 'u' characters as
+    # required to fulfill the length.
     remainder = len(encoded) % 5
     if remainder:
         padding_size = 5 - remainder
