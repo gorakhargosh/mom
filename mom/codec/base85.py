@@ -26,7 +26,8 @@
 
 """
 :module: mom.codec.base85
-:synopsis: Base85 encoding and decoding functions.
+:synopsis: Adobe-modified Base85 encoding and decoding functions.
+:see: http://en.wikipedia.org/wiki/Ascii85
 
 Functions
 ---------
@@ -82,6 +83,36 @@ INT_TO_CHAR = [
     'l',  'm',  'n',  'o',  'p',  'q',  'r',  's',  't',  'u',
     'v',  'w',  'x',  'y',  'z'
     ]
+
+
+import string
+symbols = "!#$%&()*+-;<=>?@^_`{|}~"
+INT_TO_ASCII85_CHAR = string.digits + string.uppercase + string.lowercase + \
+                      symbols
+
+def encode(raw_bytes):
+    length = len(raw_bytes)
+
+    # We need chunks of 32-bit (4 bytes chunk size) unsigned integers,
+    # which means the length of the byte sequence must be divisible by 4.
+    # Ensures length by appending additional padding zero bytes if required.
+    # ceil_div(length, 4).
+    num_uint32, remainder = divmod(length, 4)
+    if remainder:
+        padding_size = 4 - remainder
+        raw_bytes += '\x00' * padding_size
+        length = length + padding_size
+        num_uint32 += 1
+    else:
+        padding_size = 0
+
+    ascii_chars = []
+    # Ascii85 uses a big-endian convention.
+    # See: http://en.wikipedia.org/wiki/Ascii85
+    for uint32_value in unpack('>' + 'L' * num_uint32, raw_bytes):
+        pass
+
+    return ''.join(ascii_chars)
 
 
 # covert 4 characters into 5
