@@ -30,8 +30,7 @@ Functions
 
 from __future__ import absolute_import, division
 
-from struct import unpack, pack
-from mom._compat import range
+from struct import unpack
 from mom.builtins import b
 from mom.codec import long_to_bytes
 from mom.functional import chunks
@@ -101,9 +100,14 @@ def b85encode(raw_bytes, padding=False, base85_chr=base85_chr):
 
 
 
-def b85decode(encoded, base85_ord=base85_ord):
+def b85decode(encoded, ignore_whitespace=True, base85_ord=base85_ord):
     # We want 5-tuple chunks, so pad with as many 'u' characters as
     # required to fulfill the length.
+    if ignore_whitespace:
+        import re
+        pattern = re.compile(r'(\s)*', re.MULTILINE)
+        encoded = re.sub(pattern, '', encoded)
+
     remainder = len(encoded) % 5
     if remainder:
         padding_size = 5 - remainder
