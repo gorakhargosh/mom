@@ -19,5 +19,9 @@ Codecs
 ================
 .. automodule:: mom.codec.text
 
+`mom.codec.base85`
+==================
+.. automodule:: mom.codec.base85
+
 .. toctree::
    :maxdepth: 2
