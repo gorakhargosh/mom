@@ -35,7 +35,7 @@ Functions
 .. autofunction:: b85decode
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division
 
 from struct import unpack, pack
 from mom._compat import range
@@ -85,10 +85,11 @@ INT_TO_CHAR = [
     ]
 
 
-import string
-symbols = "!#$%&()*+-;<=>?@^_`{|}~"
-INT_TO_ASCII85_CHAR = string.digits + string.uppercase + string.lowercase + \
-                      symbols
+INT_TO_ASCII85 = "0123456789" \
+                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
+                 "abcdefghijklmnopqrstuvwxyz" \
+                 "!#$%&()*+-;<=>?@^_`{|}~"
+
 
 def encode(raw_bytes):
     length = len(raw_bytes)
@@ -109,9 +110,18 @@ def encode(raw_bytes):
     ascii_chars = []
     # Ascii85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
-    for uint32_value in unpack('>' + 'L' * num_uint32, raw_bytes):
-        pass
-
+    for x in unpack('>' + 'L' * num_uint32, raw_bytes):
+#        remainders = range(5)
+#        for i in reversed(remainders):
+#            remainders[i] = INT_TO_ASCII85[uint32_value % 85]
+#            uint32_value //= 85
+#        ascii_chars.extend(remainders)
+        # Above loop unrolled:
+        ascii_chars.extend((INT_TO_CHAR[x // 52200625],
+                            INT_TO_CHAR[(x // 614125) % 85],
+                            INT_TO_CHAR[(x // 7225) % 85],
+                            INT_TO_CHAR[(x // 85) % 85],
+                            INT_TO_CHAR[x % 85]))
     return ''.join(ascii_chars)
 
 
