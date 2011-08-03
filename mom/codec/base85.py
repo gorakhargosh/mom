@@ -93,6 +93,11 @@ def b85encode(raw_bytes,
 
     Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of '!!!!!'.
 
+    The resulting encoded ASCII string is *not URL-safe* nor is it
+    safe to include within SGML/XML/HTML documents. You will need to escape
+    special characters if you decide to include such an encoded string
+    within these documents.
+
     :param raw_bytes:
         Raw bytes.
     :param prefix:
