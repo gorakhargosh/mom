@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest2
+from mom.builtins import b
 
 from mom.codec.base85 import b85decode, b85encode
 
@@ -21,12 +22,14 @@ l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G\
 class Test_base85_encode(unittest2.TestCase):
     def test_encoding(self):
         self.assertEqual(b85encode(raw), encoded)
-        self.assertEqual(b85encode("Man "), "9jqo^")
-        self.assertEqual(b85encode("sure"), "F*2M7")
+
+    def test_encoding_wikipedia(self):
+        self.assertEqual(b85encode(b("Man ")), "9jqo^")
+        self.assertEqual(b85encode(b("sure")), "F*2M7")
 
     def test_check_padding(self):
-        self.assertEqual(b85encode(".", True), "/cYkO")
-        self.assertEqual(b85encode("."), "/c")
+        self.assertEqual(b85encode(b("."), True), "/cYkO")
+        self.assertEqual(b85encode(b(".")), "/c")
 
     def test_decoder(self):
         self.assertEqual(b85decode(encoded), raw)
