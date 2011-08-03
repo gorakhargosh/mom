@@ -79,6 +79,9 @@ class Test_base85_decode(unittest2.TestCase):
     def test_decodes_z_into_zero_bytes(self):
         self.assertEqual(b85decode('zzz'), '\x00' * 4 * 3)
 
+    def test_decode_zero_groups(self):
+        self.assertEqual(b85decode('!!!!!'), '\x00' * 4)
+
 class Test_codec_identity(unittest2.TestCase):
     def test_identity(self):
         zero_bytes = '\x00\x00\x00\x00\x00'
