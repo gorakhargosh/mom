@@ -34,21 +34,32 @@ from struct import unpack
 from mom.builtins import b
 from mom.codec import long_to_bytes
 from mom.functional import chunks
-
+import re
 
 __all__ = [
     "b85encode",
     "b85decode",
 ]
 
+WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
+
 def base85_chr(value):
+    """
+    Converts an ordinal into its base85 character.
+    """
     return chr(value + 33)
 
+
 def base85_ord(char):
+    """
+    Converts a base85 character into its ordinal.
+    """
     return ord(char) - 33
 
 
-def b85encode(raw_bytes, padding=False, base85_chr=base85_chr):
+def b85encode(raw_bytes,
+              _padding=False,
+              _base85_chr=base85_chr):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -59,8 +70,13 @@ def b85encode(raw_bytes, padding=False, base85_chr=base85_chr):
 
     :param raw_bytes:
         Raw bytes.
-    :param padding:
+    :param _padding:
         ``True`` if padding should be included; ``False`` (default) otherwise.
+        You should not need to use this--the default value is usually the
+        expected value.
+    :param _base85_chr:
+        A function that converts an ordinal number into its base85 character
+        representation.
     :returns:
         ASCII-85 encoded bytes.
     """
@@ -88,25 +104,38 @@ def b85encode(raw_bytes, padding=False, base85_chr=base85_chr):
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
         ascii_chars.extend((
-            base85_chr(x // 52200625),      # 85**4 = 52200625
-            base85_chr((x // 614125) % 85), # 85**3 = 614125
-            base85_chr((x // 7225) % 85),   # 85**2 = 7225
-            base85_chr((x // 85) % 85),     # 85**1 = 85
-            base85_chr(x % 85),             # 85**0 = 1
+            _base85_chr(x // 52200625),      # 85**4 = 52200625
+            _base85_chr((x // 614125) % 85), # 85**3 = 614125
+            _base85_chr((x // 7225) % 85),   # 85**2 = 7225
+            _base85_chr((x // 85) % 85),     # 85**1 = 85
+            _base85_chr(x % 85),             # 85**0 = 1
         ))
-    if padding_size and not padding:
+    if padding_size and not _padding:
         ascii_chars = ascii_chars[:-padding_size]
     return ''.join(ascii_chars)
 
 
+def b85decode(encoded,
+              _ignore_pattern=WHITESPACE_PATTERN,
+              _base85_ord=base85_ord):
+    """
+    Decodes a base85 encoded string into raw bytes.
 
-def b85decode(encoded, ignore_whitespace=True, base85_ord=base85_ord):
+    :param encoded:
+        Encoded ASCII string.
+    :param _ignore_pattern:
+        By default all whitespace is ignored. This must be an
+        ``re.compile()`` instance. You should not need to use this.
+    :param _base85_ord:
+        A function to convert a base85 character to its ordinal value.
+        You should not need to use this.
+    :returns:
+        Base85-decoded raw bytes.
+    """
     # We want 5-tuple chunks, so pad with as many 'u' characters as
     # required to fulfill the length.
-    if ignore_whitespace:
-        import re
-        pattern = re.compile(r'(\s)*', re.MULTILINE)
-        encoded = re.sub(pattern, '', encoded)
+    if _ignore_pattern:
+        encoded = re.sub(_ignore_pattern, '', encoded)
 
     remainder = len(encoded) % 5
     if remainder:
@@ -119,7 +148,7 @@ def b85decode(encoded, ignore_whitespace=True, base85_ord=base85_ord):
     for chunk in chunks(encoded, 5):
         uint32_value = 0
         for char in chunk:
-            uint32_value = uint32_value * 85 + base85_ord(char)
+            uint32_value = uint32_value * 85 + _base85_ord(char)
         raw_bytes += long_to_bytes(uint32_value)
 
     if padding_size:

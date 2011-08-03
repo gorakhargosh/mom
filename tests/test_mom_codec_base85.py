@@ -42,6 +42,8 @@ class Test_base85_encode(unittest2.TestCase):
 class Test_base85_decode(unittest2.TestCase):
     def test_decoder(self):
         self.assertEqual(b85decode(encoded), raw)
+
+    def test_decoder_ignores_whitespace_by_default(self):
         self.assertEqual(b85decode(encoded_with_whitespace), raw)
 
     def test_encoding_wikipedia(self):
