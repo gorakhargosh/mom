@@ -69,3 +69,6 @@ class Test_base85_decode(unittest2.TestCase):
 
     def test_check_padding(self):
         self.assertEqual(b85decode(b("/c")), ".")
+
+    def test_decode_boundary(self):
+        self.assertEqual(b85decode(b("s8W-!")), "\xff\xff\xff\xff")

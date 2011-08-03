@@ -178,6 +178,10 @@ def b85decode(encoded,
         uint32_value = 0
         for char in chunk:
             uint32_value = uint32_value * 85 + _base85_ord(char)
+        # Groups of characters that decode to a value greater than 2**32 − 1
+        # (encoded as "s8W-!") will cause a decoding error.
+        if uint32_value > 4294967295:
+            raise OverflowError("Cannot decode chunk `%r`" % chunk)
         raw_bytes += long_to_bytes(uint32_value)
 
     if padding_size:
