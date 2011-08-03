@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# base85.py: Base85 encoding/decoding.
 #
 # MIT License
 #
@@ -25,10 +24,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+"""
+:module: mom.codec.base85
+:synopsis: Base85 encoding and decoding functions.
+
+Functions
+---------
+.. autofunction:: b85encode
+.. autofunction:: b85decode
+"""
+
 from __future__ import absolute_import
 
 from struct import unpack, pack
 from mom._compat import range
+
+
+__all__ = [
+    "b85encode",
+    "b85decode",
+]
 
 
 CHAR_TO_INT = [
@@ -71,12 +86,25 @@ INT_TO_CHAR = [
 
 # covert 4 characters into 5
 def b85encode(raw_bytes):
+    """
+    Encode raw bytes using Base85.
+
+    :param raw_bytes:
+        The raw bytes to encode.
+    :returns:
+        The base85-encoded bytes are returned.
+    """
     parts = []
     num_chunks = len(raw_bytes) // 4
     format = '!' + str(num_chunks) + 'I'
     for x in unpack(format, raw_bytes):
         # Network order (big endian), 32-bit unsigned integer
         # note: x86 is little endian
+#        parts.extend((INT_TO_CHAR[x // 52200625],
+#                      INT_TO_CHAR[(x // 614125) % 85],
+#                      INT_TO_CHAR[(x // 7225) % 85],
+#                      INT_TO_CHAR[(x // 85) % 85],
+#                      INT_TO_CHAR[x % 85]))
         parts.append(INT_TO_CHAR[x // 52200625])
         parts.append(INT_TO_CHAR[(x // 614125) % 85])
         parts.append(INT_TO_CHAR[(x // 7225) % 85])
@@ -91,6 +119,14 @@ def b85encode(raw_bytes):
 # also does not use the 'struct' module which may be desirable
 # to some
 def _b85encode(raw_bytes):
+    """
+    Encode raw bytes using Base85.
+
+    :param raw_bytes:
+        The raw bytes to encode.
+    :returns:
+        The base85-encoded bytes are returned.
+    """
     parts = []
     for i in range(0, len(raw_bytes), 4):
         chunk = raw_bytes[i:i+4]
@@ -112,6 +148,14 @@ def _b85encode(raw_bytes):
 
 # convert 5 characters to 4
 def b85decode(encoded):
+    """
+    Decodes base85-encoded bytes to raw bytes.
+
+    :param encoded:
+        Encoded bytes.
+    :returns:
+        The base85-decoded bytes are returned.
+    """
     parts = []
     for i in range(0, len(encoded), 5):
         bsum = 0
@@ -127,6 +171,14 @@ def b85decode(encoded):
 
 # convert 5 characters to 4
 def _b85decode(encoded):
+    """
+    Decodes base85-encoded bytes to raw bytes.
+
+    :param encoded:
+        Encoded bytes.
+    :returns:
+        The base85-decoded bytes are returned.
+    """
     parts = []
     for i in range(0, len(encoded), 5):
         bsum = 0
