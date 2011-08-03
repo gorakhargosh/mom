@@ -180,14 +180,16 @@ def b85decode(encoded,
 
     # We want 5-tuple chunks, so pad with as many 'u' characters as
     # required to satisfy the length.
-    remainder = len(encoded) % 5
+    num_uint32s, remainder = divmod(len(encoded), 5)
     if remainder:
         padding_size = 5 - remainder
         encoded += 'u' * padding_size
+        num_uint32s += 1
     else:
         padding_size = 0
 
-    raw_bytes = b('')
+    #raw_bytes = b('')
+    uint32s = []
     for chunk in chunks(encoded, 5):
         uint32_value = 0
         for char in chunk:
@@ -196,8 +198,11 @@ def b85decode(encoded,
         # (encoded as "s8W-!") will cause a decoding error.
         if uint32_value > 4294967295:
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
-        raw_bytes += pack(">L", uint32_value)
+        #raw_bytes += pack(">L", uint32_value)
+        uint32s.append(uint32_value)
 
+    raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
+        
     if padding_size:
         raw_bytes = raw_bytes[:-padding_size]
     return raw_bytes
