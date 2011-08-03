@@ -1,12 +1,23 @@
 # General python ignores.
 *.py[co]
 *.so
+*.o
 *.egg-info
+
+# Operating system-specific files.
+.DS_Store
+*~
+.\#*
+._*
+Desktop.ini
+Thumbs.db
+__MACOSX__
 
 # Editor-specific files.
 *.swp
 *.bak
 *.bkp
+\#*\#
 .idea/
 
 # Build specific files.
