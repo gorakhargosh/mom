@@ -3,64 +3,23 @@
 
 import unittest2
 
-from mom.codec.base85 import b85decode, b85encode, _b85encode, _b85decode
+from mom.codec.base85 import b85decode, b85encode, _b85encode, _b85decode, encode
 
-class Test_base85_codec_identity(unittest2.TestCase):
-    def test_codec_identity(self):
-        # Encodes 5 characters into 4.
-        s = b85decode('!!!!#')
-        self.assertEqual(4, len(s))
-        self.assertEqual(0, ord(s[0]))
-        self.assertEqual(0, ord(s[1]))
-        self.assertEqual(0, ord(s[2]))
-        self.assertEqual(1, ord(s[3]))
-        self.assertEqual('!!!!#', b85encode(s))
+class Test_base85_encode(unittest2.TestCase):
+    def test_encoding(self):
+        raw = "Man is distinguished, not only by his reason, but by this " \
+        "singular passion from other animals, which is a lust of the " \
+        "mind, that by a perseverance of delight in the continued and " \
+        "indefatigable generation of knowledge, exceeds the short " \
+        "vehemence of any carnal pleasure."
 
+        encoded = """\
+9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,\
+O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKY\
+i(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIa\
+l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G\
+>uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c"""
 
-class Test__base85_codec_identity(unittest2.TestCase):
-    def test_codec_identity(self):
-        # Encodes 5 characters into 4.
-        s = _b85decode('!!!!#')
-        self.assertEqual(4, len(s))
-        self.assertEqual(0, ord(s[0]))
-        self.assertEqual(0, ord(s[1]))
-        self.assertEqual(0, ord(s[2]))
-        self.assertEqual(1, ord(s[3]))
-        self.assertEqual('!!!!#', _b85encode(s))
-
-
-class Test_base85_speed(unittest2.TestCase):
-    def test_speed(self):
-        from time import clock
-        s = '!!!!#' * 10
-
-        number_of_times = 1000
-
-        t0 = clock()
-        for i in range(number_of_times):
-            b85decode(s)
-        t1 = clock()
-        b85_decode_time = t1 - t0
-
-        t0 = clock()
-        for i in range(number_of_times):
-           _b85decode(s)
-        t1 = clock()
-        _b85_decode_time = t1 - t0
-
-        s = b85decode('!!!!#' * 10)
-
-        t0 = clock()
-        for i in range(number_of_times):
-           b85encode(s)
-        t1 = clock()
-        b85_encode_time = t1 - t0
-
-        t0 = clock()
-        for i in range(number_of_times):
-            _b85encode(s)
-        t1 = clock()
-        _b85_encode_time = t1 - t0
-
-        self.assertTrue(b85_decode_time <= _b85_decode_time)
-        self.assertTrue(b85_encode_time <= _b85_encode_time)
+        self.assertEqual(b85encode(raw), encoded)
+        self.assertEqual(b85decode(encoded), raw)
+        
