@@ -57,6 +57,11 @@ WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
 def base85_chr(value):
     """
     Converts an ordinal into its base85 character.
+
+    :param value:
+        Ordinal value.
+    :returns:
+        base85 character.
     """
     return chr(value + 33)
 
@@ -64,6 +69,11 @@ def base85_chr(value):
 def base85_ord(char):
     """
     Converts a base85 character into its ordinal.
+
+    :param char:
+        Base85 character
+    :returns:
+        Ordinal value.
     """
     return ord(char) - 33
 
