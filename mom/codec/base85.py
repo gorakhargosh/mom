@@ -165,7 +165,7 @@ def b85decode(encoded,
         encoded = encoded[:-len(suffix)]
 
     # We want 5-tuple chunks, so pad with as many 'u' characters as
-    # required to fulfill the length.
+    # required to satisfy the length.
     remainder = len(encoded) % 5
     if remainder:
         padding_size = 5 - remainder
