@@ -24,6 +24,8 @@ Functions
 ---------
 .. autofunction:: b85encode
 .. autofunction:: b85decode
+.. autofunction:: rfc1924_b85encode
+.. autofunction:: rfc1924_b85decode
 .. autofunction:: ipv6_b85encode
 .. autofunction:: ipv6_b85decode
 """
@@ -40,6 +42,8 @@ from mom._compat import range
 __all__ = [
     "b85encode",
     "b85decode",
+    "rfc1924_b85encode",
+    "rfc1924_b85decode",
     "ADOBE_PREFIX",
     "ADOBE_SUFFIX",
     "WHITESPACE_PATTERN",
