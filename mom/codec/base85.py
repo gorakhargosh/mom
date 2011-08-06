@@ -218,3 +218,46 @@ def b85decode(encoded,
     if padding_size:
         raw_bytes = raw_bytes[:-padding_size]
     return raw_bytes
+
+
+# http://tools.ietf.org/html/rfc1924
+RFC1924_CHARS = "0123456789" \
+                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
+                             "abcdefghijklmnopqrstuvwxyz" \
+                             "!#$%&()*+-;<=>?@^_`{|}~"
+
+RFC1924_CHAR_TO_INT = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
+
+
+def b85_rfc1924_encode(uint128, _charset=RFC1924_CHARS):
+    """
+    Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
+
+    Can be used to encode IPv6 addresses.
+
+    :param uint128:
+        A 128-bit unsigned integer to be encoded.
+    :returns:
+        RFC1924 Base85-encoded string.
+    """
+    encoded = range(20)
+    for i in reversed(encoded):
+        encoded[i] = _charset[uint128 % 85]
+        uint128 //= 85
+    return ''.join(encoded)
+
+
+def b85_rfc1924_decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
+    """
+    Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
+    representation.
+
+    :param encoded:
+        RFC1924 Base85-encoded string.
+    :returns:
+        A 128-bit unsigned integer.
+    """
+    uint128 = 0L
+    for char in encoded:
+        uint128 = uint128 * 85 + _lookup[char]
+    return uint128
