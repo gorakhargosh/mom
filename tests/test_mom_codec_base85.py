@@ -57,6 +57,9 @@ class Test_base85_decode(unittest2.TestCase):
     def test_decoder(self):
         self.assertEqual(b85decode(encoded), raw)
 
+    def test_decoding_unicode_raises_UnicodeEncodeError(self):
+        self.assertRaises(UnicodeEncodeError, b85decode, u"深入")
+
     def test_decoder_ignores_whitespace_by_default(self):
         self.assertEqual(b85decode(encoded_with_whitespace), raw)
 
@@ -106,10 +109,8 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
         self.assertEqual(ipv6_b85decode(ipv6_encoded), ipv6_number)
         self.assertEqual(ipv6_b85decode(ipv6_encoded_2), ipv6_number_2)
 
-    def test_decoding_sequence(self):
-        self.assertEqual(ipv6_b85decode(list(ipv6_encoded)), ipv6_number)
-        self.assertEqual(ipv6_b85decode(list(ipv6_encoded_2)),
-                         ipv6_number_2)
+    def test_decoding_unicode_raises_UnicodeEncodeError(self):
+        self.assertRaises(UnicodeEncodeError, ipv6_b85decode, u"深入")
 
     def test_codec_identity(self):
         self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number)),
@@ -129,4 +130,7 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
 
     def test_TypeError_when_not_number(self):
         self.assertRaises(TypeError, ipv6_b85encode, None)
+
+    def test_ValueError_when_whitespace_found(self):
+        self.assertRaises(ValueError, ipv6_b85decode, '=r54lj&\nUUO Hi%c2ym0')
         

@@ -33,6 +33,7 @@ Functions
 from __future__ import absolute_import, division
 
 import re
+import string
 from struct import unpack, pack
 from mom.functional import chunks
 from mom._compat import range
@@ -181,6 +182,9 @@ def b85decode(encoded,
     prefix = prefix or ""
     suffix = suffix or ""
 
+    # Must be US-ASCII, not Unicode.
+    encoded = encoded.encode("latin1")
+
     # ASCII-85 ignores whitespace.
     if _ignore_pattern:
         encoded = re.sub(_ignore_pattern, '', encoded)
@@ -264,12 +268,13 @@ def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
     representation.
 
     :param encoded:
-        RFC1924 Base85-encoded string (or sequence for convenience).
+        RFC1924 Base85-encoded string.
     :param _lookup:
         (Internal) Look up table.
     :returns:
         A 128-bit unsigned integer.
     """
+    encoded = encoded.encode("latin1")
     if len(encoded) != 20:
         raise ValueError(
             "Encoded IPv6 value must be exactly 20 characters long: got %r" %
@@ -277,5 +282,7 @@ def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
         )
     uint128 = 0L
     for char in encoded:
+        if char in string.whitespace:
+            raise ValueError("Whitespace is not allowed in encoded strings.")
         uint128 = uint128 * 85 + _lookup[char]
     return uint128
