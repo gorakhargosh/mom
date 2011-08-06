@@ -36,7 +36,6 @@ import re
 import string
 from struct import unpack, pack
 from mom.builtins import is_bytes
-from mom.functional import chunks
 from mom._compat import range
 
 
@@ -206,25 +205,32 @@ def b85decode(encoded,
 
     # We want 5-tuple chunks, so pad with as many 'u' characters as
     # required to satisfy the length.
-    num_uint32s, remainder = divmod(len(encoded), 5)
+    length = len(encoded)
+    num_uint32s, remainder = divmod(length, 5)
     if remainder:
         padding_size = 5 - remainder
         encoded += 'u' * padding_size
         num_uint32s += 1
+        length += padding_size
     else:
         padding_size = 0
 
-    #raw_bytes = ''
     uint32s = []
-    for chunk in chunks(encoded, 5):
-        uint32_value = 0
-        for char in chunk:
-            uint32_value = uint32_value * 85 + _base85_ord(char)
+    #for chunk in chunks(encoded, 5):
+    for i in range(0, length, 5):
+        chunk = encoded[i:i+5]
+        #uint32_value = 0
+        #for char in chunk:
+        #    uint32_value = uint32_value * 85 + _base85_ord(char)
+        # Above loop unrolled:
+        a, b, c, d, e = chunk
+        uint32_value = ((((_base85_ord(a)) * 85 + _base85_ord(b)) * 85 +
+                       _base85_ord(c)) * 85 + _base85_ord(d)) * 85 + \
+                       _base85_ord(e)
         # Groups of characters that decode to a value greater than 2**32 − 1
         # (encoded as "s8W-!") will cause a decoding error.
         if uint32_value > 4294967295:
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
-        #raw_bytes += pack(">L", uint32_value)
         uint32s.append(uint32_value)
 
     raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
