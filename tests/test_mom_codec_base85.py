@@ -4,7 +4,7 @@
 import unittest2
 from mom.builtins import b
 
-from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, ipv6_b85decode, ADOBE_PREFIX, ADOBE_SUFFIX
+from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, ipv6_b85decode, ADOBE_PREFIX, ADOBE_SUFFIX, rfc1924_b85encode, rfc1924_b85decode
 
 raw = """Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
@@ -103,6 +103,22 @@ ipv6_encoded = '4)+k&C#VzJ4br>0wv%Yp'
 ipv6_number_2 = 2**128 - 1  # 340282366920938463463374607431768211455L
 ipv6_encoded_2 = '=r54lj&NUUO~Hi%c2ym0'
 
+# Mercurial uses RFC1924 character set, but does not encode it like
+# IPv6.
+mercurial_bytes = '\t\x91{W\xa80\xb1'
+mercurial_encoded = '36XnOs4%e'
+
+class Test_rfc1924_base85_encoding(unittest2.TestCase):
+    def test_encoding(self):
+        self.assertEqual(rfc1924_b85encode(mercurial_bytes), mercurial_encoded)
+
+    def test_decoding(self):
+        self.assertEqual(rfc1924_b85decode(mercurial_encoded), mercurial_bytes)
+
+    def test_codec_identity(self):
+        self.assertEqual(
+            rfc1924_b85decode(rfc1924_b85encode(mercurial_bytes)),
+            mercurial_bytes)
 
 class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_encoding(self):

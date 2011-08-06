@@ -82,12 +82,19 @@ def _base85_ord(char):
 BASE85_CHARS = "".join(map(_base85_chr, range(85)))
 BASE85_ORDS = dict((x, _base85_ord(x)) for x in BASE85_CHARS)
 
+# http://tools.ietf.org/html/rfc1924
+RFC1924_CHARS = string.digits + \
+                string.uppercase + \
+                string.lowercase +  "!#$%&()*+-;<=>?@^_`{|}~"
+WHITESPACE_CHARS = string.whitespace
+RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
+
 
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
               _padding=False,
-              _charset=BASE85_CHARS):
+              _base85_chars=BASE85_CHARS):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -114,7 +121,7 @@ def b85encode(raw_bytes,
         otherwise. You should not need to use this--the default value is
         usually the expected value. If you find a need to use this more
         often than not, *tell us* so that we can make this argument public.
-    :param _charset:
+    :param _base85_chars:
         (Internal) Character set to use.
     :returns:
         ASCII-85 encoded bytes.
@@ -144,16 +151,16 @@ def b85encode(raw_bytes,
     for x in unpack('>' + 'L' * num_uint32, raw_bytes):
 #        chars = list(range(5))
 #        for i in reversed(chars):
-#            chars[i] = base85_chr(x % 85)
+#            chars[i] = _base85_chars[x % 85]
 #            x //= 85
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
         ascii_chars.extend((
-            _charset[x // 52200625],      # 85**4 = 52200625
-            _charset[(x // 614125) % 85], # 85**3 = 614125
-            _charset[(x // 7225) % 85],   # 85**2 = 7225
-            _charset[(x // 85) % 85],     # 85**1 = 85
-            _charset[x % 85],             # 85**0 = 1
+            _base85_chars[x // 52200625],      # 85**4 = 52200625
+            _base85_chars[(x // 614125) % 85], # 85**3 = 614125
+            _base85_chars[(x // 7225) % 85],   # 85**2 = 7225
+            _base85_chars[(x // 85) % 85],     # 85**1 = 85
+            _base85_chars[x % 85],             # 85**0 = 1
         ))
     if padding_size and not _padding:
         # Only as much padding added before encoding is removed after encoding.
@@ -248,22 +255,47 @@ def b85decode(encoded,
     return raw_bytes
 
 
-# http://tools.ietf.org/html/rfc1924
-RFC1924_CHARS = string.digits + \
-                string.uppercase + \
-                string.lowercase +  "!#$%&()*+-;<=>?@^_`{|}~"
-WHITESPACE_CHARS = string.whitespace
-RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
+def rfc1924_b85encode(raw_bytes):
+    """
+    Base85 encodes using the RFC1924 character set.
+
+    This is the encoding used by Mercurial, for example. They chose the IPv6
+    character set and encode using the Adobe encoding method.
+
+    :see: http://tools.ietf.org/html/rfc1924
+    :param raw_bytes:
+        Raw bytes.
+    :returns:
+        RFC1924 base85 encoded string.
+    """
+    return b85encode(raw_bytes, _base85_chars=RFC1924_CHARS)
 
 
-def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
+def rfc1924_b85decode(encoded):
+    """
+    Base85 decodes using the RFC1924 character set.
+
+    This is the encoding used by Mercurial, for example. They chose the IPv6
+    character set and encode using the Adobe encoding method.
+
+    :see: http://tools.ietf.org/html/rfc1924
+    :param encoded:
+        RFC1924 Base85 encoded string.
+    :returns:
+        Decoded bytes.
+    """
+    return b85decode(encoded, _base85_ords=RFC1924_ORDS)
+
+
+def ipv6_b85encode(uint128,
+                   _base85_chars=RFC1924_CHARS):
     """
     Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
     Used to encode IPv6 addresses or 128-bit chunks.
 
     :param uint128:
         A 128-bit unsigned integer to be encoded.
-    :param _charset:
+    :param _base85_chars:
         (Internal) Base85 encoding charset lookup table.
     :returns:
         RFC1924 Base85-encoded string.
@@ -276,13 +308,13 @@ def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
                             uint128)
     encoded = list(range(20))
     for i in reversed(encoded):
-        encoded[i] = _charset[uint128 % 85]
+        encoded[i] = _base85_chars[uint128 % 85]
         uint128 //= 85
     return ''.join(encoded)
 
 
 def ipv6_b85decode(encoded,
-                   _lookup=RFC1924_ORDS,
+                   _base85_ords=RFC1924_ORDS,
                    _whitespace=WHITESPACE_CHARS):
     """
     Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
@@ -290,7 +322,7 @@ def ipv6_b85decode(encoded,
 
     :param encoded:
         RFC1924 Base85-encoded string.
-    :param _lookup:
+    :param _base85_ords:
         (Internal) Look up table.
     :param _whitespace:
         (Internal) Whitespace characters.
@@ -307,5 +339,5 @@ def ipv6_b85decode(encoded,
     for char in encoded:
         if char in _whitespace:
             raise ValueError("Whitespace is not allowed in encoded strings.")
-        uint128 = uint128 * 85 + _lookup[char]
+        uint128 = uint128 * 85 + _base85_ords[char]
     return uint128
