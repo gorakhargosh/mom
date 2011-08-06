@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import unittest2
 from mom.builtins import b
 
@@ -77,6 +78,7 @@ nJP~S%^2nctEE{RO%e*LA$c!dYgM}Y9tlPJ4E2cZsR6fKCO6~YSb`x62iVSbb}N}zi@Z(\
 k@dH-SoyjoEmHp<s3<?%{<7obj;ILU8yGE6lKRGRLY&4PWkYaXYUN6@$1xSt+uV<yCWj5\
 g$TWj7G_bnOj`Mv0;Ev;h~$@<!XU98nrk9{D8%tGk~Nj'''
 
+random_1024_bytes = os.urandom(1024)
 
 
 class Test_base85_encode(unittest2.TestCase):
@@ -131,7 +133,10 @@ class Test_codec_identity(unittest2.TestCase):
     def test_identity(self):
         zero_bytes = '\x00\x00\x00\x00\x00'
         self.assertEqual(b85decode(b85encode(zero_bytes)), zero_bytes)
-        self.assertEqual(b85decode(b85encode(random_256_bytes)), random_256_bytes)
+        self.assertEqual(b85decode(b85encode(random_256_bytes)),
+                         random_256_bytes)
+        self.assertEqual(b85decode(b85encode(random_1024_bytes)),
+                         random_1024_bytes)
 
 class Test_rfc1924_base85_encoding(unittest2.TestCase):
     def test_encoding(self):
@@ -151,6 +156,9 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
         self.assertEqual(
             rfc1924_b85decode(rfc1924_b85encode(random_256_bytes)),
             random_256_bytes)
+        self.assertEqual(
+            rfc1924_b85decode(rfc1924_b85encode(random_1024_bytes)),
+            random_1024_bytes)
 
 class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_encoding(self):

@@ -94,12 +94,13 @@ RFC1924_CHARS = string.digits + \
 WHITESPACE_CHARS = string.whitespace
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
-
+    
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
               _padding=False,
-              _base85_chars=ASCII85_CHARS):
+              _base85_chars=ASCII85_CHARS,
+              _compact_zero=True):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -128,6 +129,9 @@ def b85encode(raw_bytes,
         often than not, *tell us* so that we can make this argument public.
     :param _base85_chars:
         (Internal) Character set to use.
+    :param _compact_zero:
+        Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of '!!!!!'
+        if this is ``True`` (default).
     :returns:
         ASCII-85 encoded bytes.
     """
@@ -170,15 +174,17 @@ def b85encode(raw_bytes,
     if padding_size and not _padding:
         # Only as much padding added before encoding is removed after encoding.
         ascii_chars = ascii_chars[:-padding_size]
-    encoded = ''.join(ascii_chars).replace('!!!!!', 'z')
+    encoded = ''.join(ascii_chars)
+    encoded = encoded.replace('!!!!!', 'z') if _compact_zero else encoded
     return prefix + encoded + suffix
 
 
 def b85decode(encoded,
               prefix=None,
               suffix=None,
+              _base85_ords=ASCII85_ORDS,
               _ignore_pattern=WHITESPACE_PATTERN,
-              _base85_ords=ASCII85_ORDS):
+              _uncompact_zero=True):
     """
     Decodes a base85 encoded string into raw bytes.
 
@@ -194,6 +200,9 @@ def b85decode(encoded,
     :param _base85_ords:
         (Internal) A function to convert a base85 character to its ordinal
         value. You should not need to use this.
+    :param _uncompact_zero:
+        (Internal) Treats 'z' (a zero-group (\x00\x00\x00\x00)) as a '!!!!!'
+        if ``True`` (default).
     :returns:
         Base85-decoded raw bytes.
     """
@@ -214,7 +223,8 @@ def b85decode(encoded,
         encoded = encoded[:-len(suffix)]
 
     # Replace all the 'z' occurrences with '!!!!!'
-    encoded = encoded.replace('z', '!!!!!')
+    if _uncompact_zero:
+        encoded = encoded.replace('z', '!!!!!')
 
     # We want 5-tuple chunks, so pad with as many 'u' characters as
     # required to satisfy the length.
@@ -232,10 +242,13 @@ def b85decode(encoded,
     #for chunk in chunks(encoded, 5):
     for i in range(0, length, 5):
         a, b, c, d, e = chunk = encoded[i:i+5]
-        #uint32_value = 0
-        #for char in chunk:
-        #    uint32_value = uint32_value * 85 + _base85_ord(char)
-        # Above loop unrolled:
+#        uint32_value = 0
+#        try:
+#            for char in chunk:
+#                uint32_value = uint32_value * 85 + _base85_ords[char]
+#        except KeyError:
+#            raise OverflowError("Cannot decode chunk `%r`" % chunk)
+#        Above loop unrolled:
         try:
             uint32_value = ((((_base85_ords[a] *
                             85 + _base85_ords[b]) *
@@ -251,7 +264,6 @@ def b85decode(encoded,
         # Disabled because the KeyError above is raised when there is an
         # overflow anyway. See tests.
         uint32s.append(uint32_value)
-
 
     raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
     if padding_size:
@@ -273,7 +285,9 @@ def rfc1924_b85encode(raw_bytes):
     :returns:
         RFC1924 base85 encoded string.
     """
-    return b85encode(raw_bytes, _base85_chars=RFC1924_CHARS)
+    return b85encode(raw_bytes,
+                     _base85_chars=RFC1924_CHARS,
+                     _compact_zero=False)
 
 
 def rfc1924_b85decode(encoded):
@@ -289,7 +303,9 @@ def rfc1924_b85decode(encoded):
     :returns:
         Decoded bytes.
     """
-    return b85decode(encoded, _base85_ords=RFC1924_ORDS)
+    return b85decode(encoded,
+                     _base85_ords=RFC1924_ORDS,
+                     _uncompact_zero=False)
 
 
 def ipv6_b85encode(uint128,
