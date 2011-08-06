@@ -94,7 +94,7 @@ RFC1924_CHARS = string.digits + \
 WHITESPACE_CHARS = string.whitespace
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
-    
+
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
@@ -183,6 +183,7 @@ def b85decode(encoded,
               prefix=None,
               suffix=None,
               _base85_ords=ASCII85_ORDS,
+              _base85_chars=ASCII85_CHARS,
               _ignore_pattern=WHITESPACE_PATTERN,
               _uncompact_zero=True):
     """
@@ -231,8 +232,9 @@ def b85decode(encoded,
     length = len(encoded)
     num_uint32s, remainder = divmod(length, 5)
     if remainder:
+        padding_character = _base85_chars[84]   # 'u' for ASCII85.
         padding_size = 5 - remainder
-        encoded += 'u' * padding_size
+        encoded += padding_character * padding_size
         num_uint32s += 1
         length += padding_size
     else:
@@ -272,7 +274,7 @@ def b85decode(encoded,
     return raw_bytes
 
 
-def rfc1924_b85encode(raw_bytes):
+def rfc1924_b85encode(raw_bytes, padding=False):
     """
     Base85 encodes using the RFC1924 character set.
 
@@ -286,8 +288,8 @@ def rfc1924_b85encode(raw_bytes):
     :returns:
         RFC1924 base85 encoded string.
     """
-    # TODO: This needs to be re-implemented.
     return b85encode(raw_bytes,
+                     _padding=padding,
                      _base85_chars=RFC1924_CHARS,
                      _compact_zero=False)
 
@@ -306,9 +308,9 @@ def rfc1924_b85decode(encoded):
     :returns:
         Decoded bytes.
     """
-    # TODO: This needs to be re-implemented.
     return b85decode(encoded,
                      _base85_ords=RFC1924_ORDS,
+                     _base85_chars=RFC1924_CHARS,
                      _uncompact_zero=False)
 
 
