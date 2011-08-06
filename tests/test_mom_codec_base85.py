@@ -139,6 +139,10 @@ class Test_base85_decode(unittest2.TestCase):
     def test_decode_zero_groups(self):
         self.assertEqual(b85decode('!!!!!'), '\x00' * 4)
 
+    def test_ValueError_when_zero_char_in_middle_of_chunk(self):
+        self.assertRaises(ValueError, b85decode, 'zaz')
+
+
 class Test_codec_identity(unittest2.TestCase):
     def test_identity(self):
         zero_bytes = '\x00\x00\x00\x00\x00'
