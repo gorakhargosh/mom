@@ -225,9 +225,11 @@ def b85decode(encoded,
         #    uint32_value = uint32_value * 85 + _base85_ord(char)
         # Above loop unrolled:
         a, b, c, d, e = chunk
-        uint32_value = ((((_base85_ord(a)) * 85 + _base85_ord(b)) * 85 +
-                       _base85_ord(c)) * 85 + _base85_ord(d)) * 85 + \
-                       _base85_ord(e)
+        uint32_value = ((((_base85_ord(a) *
+                        85 + _base85_ord(b)) *
+                        85 + _base85_ord(c)) *
+                        85 + _base85_ord(d)) *
+                        85 + _base85_ord(e))
         # Groups of characters that decode to a value greater than 2**32 − 1
         # (encoded as "s8W-!") will cause a decoding error.
         if uint32_value > 4294967295:
