@@ -31,14 +31,16 @@ mathematical sense,
 
 where ``g`` is the decoder and ``f`` is the encoder.
 
-.. autofunction:: base64_decode
+.. autofunction:: base85_encode
+.. autofunction:: base85_decode
 .. autofunction:: base64_encode
-.. autofunction:: bin_decode
-.. autofunction:: bin_encode
-.. autofunction:: decimal_decode
-.. autofunction:: decimal_encode
-.. autofunction:: hex_decode
+.. autofunction:: base64_decode
 .. autofunction:: hex_encode
+.. autofunction:: hex_decode
+.. autofunction:: decimal_encode
+.. autofunction:: decimal_decode
+.. autofunction:: bin_encode
+.. autofunction:: bin_decode
 
 Number-bytes conversion
 -----------------------
@@ -61,6 +63,21 @@ from mom.builtins import bytes, is_bytes
 from mom.functional import leading, chunks
 from mom.codec.base85 import b85encode, b85decode
 
+
+__all__ = [
+    "base85_encode",
+    "base85_decode",
+    "base64_encode",
+    "base64_decode",
+    "hex_encode",
+    "hex_decode",
+    "decimal_encode",
+    "decimal_decode",
+    "bin_encode",
+    "bin_decode",
+    "bytes_to_long",
+    "long_to_bytes",
+]
 
 # Bytes base-encoding.
 
