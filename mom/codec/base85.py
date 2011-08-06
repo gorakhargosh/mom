@@ -130,8 +130,8 @@ def b85encode(raw_bytes,
     :param _base85_chars:
         (Internal) Character set to use.
     :param _compact_zero:
-        Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of '!!!!!'
-        if this is ``True`` (default).
+        (Internal) Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of
+        '!!!!!' if this is ``True`` (default).
     :returns:
         ASCII-85 encoded bytes.
     """
