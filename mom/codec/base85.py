@@ -245,6 +245,9 @@ def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
     :returns:
         RFC1924 Base85-encoded string.
     """
+    if uint128 < 0:
+        raise ValueError("Number is not a 128-bit unsigned integer: got %d" %
+                         uint128)
     if uint128 > 340282366920938463463374607431768211455L: # 2**128 - 1
         raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                             uint128)
