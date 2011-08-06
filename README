@@ -1,5 +1,7 @@
-Mother of all our Python projects—batteries Python should have had baked
-right into it.
+Extra batteries for Python.
+
+Every time you copy-and-paste code into a utils.py God kills a Unicorn.
+Please do not repeat yourself. Evolve this library instead.
 
 Please visit: http://gorakhargosh.github.com/mom/ for more information.
 
