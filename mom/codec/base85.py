@@ -240,8 +240,7 @@ RFC1924_CHAR_TO_INT = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
     """
     Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
-
-    Can be used to encode IPv6 addresses.
+    Used to encode IPv6 addresses or 128-bit chunks.
 
     :param uint128:
         A 128-bit unsigned integer to be encoded.
@@ -268,7 +267,7 @@ def ipv6_b85decode(encoded,
                    _whitespace=WHITESPACE_CHARS):
     """
     Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
-    representation.
+    representation. Used to base85-decode IPv6 addresses or 128-bit chunks.
 
     :param encoded:
         RFC1924 Base85-encoded string.
