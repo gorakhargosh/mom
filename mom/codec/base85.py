@@ -286,6 +286,7 @@ def rfc1924_b85encode(raw_bytes):
     :returns:
         RFC1924 base85 encoded string.
     """
+    # TODO: This needs to be re-implemented.
     return b85encode(raw_bytes,
                      _base85_chars=RFC1924_CHARS,
                      _compact_zero=False)
@@ -305,6 +306,7 @@ def rfc1924_b85decode(encoded):
     :returns:
         Decoded bytes.
     """
+    # TODO: This needs to be re-implemented.
     return b85decode(encoded,
                      _base85_ords=RFC1924_ORDS,
                      _uncompact_zero=False)
