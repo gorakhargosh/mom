@@ -124,7 +124,8 @@ def b85encode(raw_bytes,
     suffix = suffix or ''
 
     if not is_bytes(raw_bytes):
-        raise ValueError("Only raw bytes can be encoded.")
+        raise TypeError("argument must be raw bytes: got %r" %
+                        type(raw_bytes).__name__)
 
     # We need chunks of 32-bit (4 bytes chunk size) unsigned integers,
     # which means the length of the byte sequence must be divisible by 4.

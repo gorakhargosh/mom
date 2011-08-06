@@ -59,9 +59,38 @@ import binascii
 
 from mom.builtins import bytes, is_bytes
 from mom.functional import leading, chunks
+from mom.codec.base85 import b85encode, b85decode
 
 
 # Bytes base-encoding.
+
+def base85_encode(raw_bytes):
+    """
+    Encodes raw bytes into base85 representation.
+
+    Encode your Unicode strings to a byte encoding before base85-encoding them.
+
+    :param raw_bytes:
+        Bytes to encode.
+    :returns:
+        Base85 encoded string.
+    """
+    # The following function already checks for types.
+    return b85encode(raw_bytes, None, None)
+
+
+def base85_decode(encoded):
+    """
+    Decodes base85-encoded bytes into raw bytes.
+
+    :param encoded:
+        Base-85 encoded representation.
+    :returns:
+        Raw bytes.
+    """
+    # The following function already checks for types.
+    return b85decode(encoded, None, None)
+
 
 def base64_encode(raw_bytes):
     """

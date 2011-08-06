@@ -17,7 +17,7 @@ from mom.codec import \
     bin_encode, \
     bin_decode, \
     bytes_to_long, \
-    long_to_bytes, _bytes_to_long
+    long_to_bytes, _bytes_to_long, base85_encode, base85_decode
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -33,6 +33,29 @@ one_zero_byte = b('\x00')
 random_long_value = generate_random_ulong_between(0, 99999999999999999L)
 zero_long = 0L
 negative_long_value = -1L
+
+base85_raw = """Man is distinguished, not only by his reason, but by this
+singular passion from other animals, which is a lust of the
+mind, that by a perseverance of delight in the continued and
+indefatigable generation of knowledge, exceeds the short
+vehemence of any carnal pleasure.""".replace('\n', ' ')
+
+base85_encoded = """\
+9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,\
+O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKY\
+i(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIa\
+l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G\
+>uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c"""
+
+
+class Test_base85_codec(unittest2.TestCase):
+    def test_codec_identity(self):
+        self.assertEqual(base85_decode(base85_encode(base85_raw)), base85_raw)
+
+    def test_encoding_and_decoding(self):
+        self.assertEqual(base85_encode(base85_raw), base85_encoded)
+        self.assertEqual(base85_decode(base85_encoded), base85_raw)
+
 
 class Test_base64_codec(unittest2.TestCase):
     def test_encodes_without_trailing_newline(self):

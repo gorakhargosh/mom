@@ -53,8 +53,8 @@ class Test_base85_encode(unittest2.TestCase):
         self.assertEqual(b85encode(b("."), _padding=True), "/cYkO")
         self.assertEqual(b85encode(b(".")), "/c")
 
-    def test_ValueError_on_Unicode(self):
-        self.assertRaises(ValueError, b85encode, u"深入")
+    def test_TypeError_on_Unicode(self):
+        self.assertRaises(TypeError, b85encode, u"深入")
 
 class Test_base85_decode(unittest2.TestCase):
     def test_decoder(self):
