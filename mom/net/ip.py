@@ -28,15 +28,35 @@
 :module: mom.net.ip
 :synopsis: IP functions.
 
+.. autofunction:: parse_ipv4
 .. autofunction:: ipv4_to_integer
 .. autofunction:: integer_to_ipv4
 """
 
 
 __all__ = [
+    "parse_ipv4",
     "ipv4_to_integer",
     "integer_to_ipv4",
 ]
+
+
+def parse_ipv4(ip_addr):
+    """
+    Parses an IPv4 address into a 4-tuple.
+
+    :param ip_addr:
+        IPv4 address as a string.
+    :returns:
+        4-tuple of components.
+    """
+    a, b, c, d = map(int, ip_addr.split("."))
+    if a > 255 or b > 255 or c > 255 or d > 255:
+        raise OverflowError(
+            "IPv4 address component cannot be greater than 255: " \
+            "got %r." % repr((a, b, c, d))
+        )
+    return a, b, c, d
 
 
 def ipv4_to_integer(ip_addr):
@@ -48,12 +68,7 @@ def ipv4_to_integer(ip_addr):
     :returns:
         Integral representation.
     """
-    a, b, c, d = map(int, ip_addr.split("."))
-    if a > 255 or b > 255 or c > 255 or d > 255:
-        raise OverflowError(
-            "IPv4 address component cannot be greater than 255: " \
-            "got %r." % repr((a, b, c, d))
-        )
+    a, b, c, d = parse_ipv4(ip_addr)
     return (a << 24) | (b << 16) | (c << 8) | d
 
 
@@ -68,6 +83,7 @@ def integer_to_ipv4(num):
         IPv4 address string.
     """
     return '%d.%d.%d.%d' % (
+        # `& 0xff` is equivalent to `% 256`
         (num >> 24) & 0xff,
         (num >> 16) & 0xff,
         (num >> 8) & 0xff,
