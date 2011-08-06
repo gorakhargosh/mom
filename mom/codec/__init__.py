@@ -20,7 +20,7 @@
 :synopsis: Many different types of common encode/decode function.
 
 This module contains codecs for converting between long and bytes, and
-the hex, base64, decimal, and binary representations of bytes.
+the hex, base64, base85, decimal, and binary representations of bytes.
 
 Bytes base-encoding
 -------------------
