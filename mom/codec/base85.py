@@ -45,8 +45,6 @@ __all__ = [
     "ADOBE_PREFIX",
     "ADOBE_SUFFIX",
     "WHITESPACE_PATTERN",
-    "base85_chr",
-    "base85_ord",
     "ipv6_b85encode",
     "ipv6_b85decode",
 ]
@@ -59,7 +57,7 @@ ADOBE_SUFFIX = '~>'
 WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
 
 
-def base85_chr(num):
+def _base85_chr(num):
     """
     Converts an ordinal into its base85 character.
 
@@ -71,7 +69,7 @@ def base85_chr(num):
     return chr(num + 33)
 
 
-def base85_ord(char):
+def _base85_ord(char):
     """
     Converts a base85 character into its ordinal.
 
@@ -83,11 +81,15 @@ def base85_ord(char):
     return ord(char) - 33
 
 
+BASE85_CHARS = "".join(map(_base85_chr, range(85)))
+BASE85_ORDS = dict((x, _base85_ord(x)) for x in BASE85_CHARS)
+
+
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
               _padding=False,
-              _base85_chr=base85_chr):
+              _charset=BASE85_CHARS):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -114,9 +116,8 @@ def b85encode(raw_bytes,
         otherwise. You should not need to use this--the default value is
         usually the expected value. If you find a need to use this more
         often than not, *tell us* so that we can make this argument public.
-    :param _base85_chr:
-        (Internal) A function that converts an ordinal number into its base85
-        character representation.
+    :param _charset:
+        (Internal) Character set to use.
     :returns:
         ASCII-85 encoded bytes.
     """
@@ -150,11 +151,11 @@ def b85encode(raw_bytes,
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
         ascii_chars.extend((
-            _base85_chr(x // 52200625),      # 85**4 = 52200625
-            _base85_chr((x // 614125) % 85), # 85**3 = 614125
-            _base85_chr((x // 7225) % 85),   # 85**2 = 7225
-            _base85_chr((x // 85) % 85),     # 85**1 = 85
-            _base85_chr(x % 85),             # 85**0 = 1
+            _charset[x // 52200625],      # 85**4 = 52200625
+            _charset[(x // 614125) % 85], # 85**3 = 614125
+            _charset[(x // 7225) % 85],   # 85**2 = 7225
+            _charset[(x // 85) % 85],     # 85**1 = 85
+            _charset[x % 85],             # 85**0 = 1
         ))
     if padding_size and not _padding:
         # Only as much padding added before encoding is removed after encoding.
@@ -167,7 +168,7 @@ def b85decode(encoded,
               prefix=None,
               suffix=None,
               _ignore_pattern=WHITESPACE_PATTERN,
-              _base85_ord=base85_ord):
+              _base85_ords=BASE85_ORDS):
     """
     Decodes a base85 encoded string into raw bytes.
 
@@ -180,7 +181,7 @@ def b85decode(encoded,
     :param _ignore_pattern:
         (Internal) By default all whitespace is ignored. This must be an
         ``re.compile()`` instance. You should not need to use this.
-    :param _base85_ord:
+    :param _base85_ords:
         (Internal) A function to convert a base85 character to its ordinal
         value. You should not need to use this.
     :returns:
@@ -225,16 +226,20 @@ def b85decode(encoded,
         #for char in chunk:
         #    uint32_value = uint32_value * 85 + _base85_ord(char)
         # Above loop unrolled:
-        uint32_value = ((((_base85_ord(a) *
-                        85 + _base85_ord(b)) *
-                        85 + _base85_ord(c)) *
-                        85 + _base85_ord(d)) *
-                        85 + _base85_ord(e))
+        try:
+            uint32_value = ((((_base85_ords[a] *
+                            85 + _base85_ords[b]) *
+                            85 + _base85_ords[c]) *
+                            85 + _base85_ords[d]) *
+                            85 + _base85_ords[e])
+        except KeyError:
+            raise OverflowError("Cannot decode chunk `%r`" % chunk)
         # Groups of characters that decode to a value greater than 2**32 − 1
         # (encoded as "s8W-!") will cause a decoding error.
-        if uint32_value > 4294967295: # 2**32 - 1
-            raise OverflowError("Cannot decode chunk `%r`" % chunk)
+        #if uint32_value > 4294967295: # 2**32 - 1
+        #    raise OverflowError("Cannot decode chunk `%r`" % chunk)
         uint32s.append(uint32_value)
+
 
     raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
     if padding_size:
@@ -248,7 +253,7 @@ RFC1924_CHARS = string.digits + \
                 string.uppercase + \
                 string.lowercase +  "!#$%&()*+-;<=>?@^_`{|}~"
 WHITESPACE_CHARS = string.whitespace
-RFC1924_CHAR_TO_INT = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
+RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
 def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
@@ -277,7 +282,7 @@ def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
 
 
 def ipv6_b85decode(encoded,
-                   _lookup=RFC1924_CHAR_TO_INT,
+                   _lookup=RFC1924_ORDS,
                    _whitespace=WHITESPACE_CHARS):
     """
     Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
