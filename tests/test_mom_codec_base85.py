@@ -106,6 +106,11 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
         self.assertEqual(ipv6_b85decode(ipv6_encoded), ipv6_number)
         self.assertEqual(ipv6_b85decode(ipv6_encoded_2), ipv6_number_2)
 
+    def test_decoding_sequence(self):
+        self.assertEqual(ipv6_b85decode(list(ipv6_encoded)), ipv6_number)
+        self.assertEqual(ipv6_b85decode(list(ipv6_encoded_2)),
+                         ipv6_number_2)
+
     def test_codec_identity(self):
         self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number)),
                          ipv6_number)

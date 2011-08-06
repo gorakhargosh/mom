@@ -264,7 +264,7 @@ def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
     representation.
 
     :param encoded:
-        RFC1924 Base85-encoded string.
+        RFC1924 Base85-encoded string (or sequence for convenience).
     :param _lookup:
         (Internal) Look up table.
     :returns:
