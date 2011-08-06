@@ -219,12 +219,11 @@ def b85decode(encoded,
     uint32s = []
     #for chunk in chunks(encoded, 5):
     for i in range(0, length, 5):
-        chunk = encoded[i:i+5]
+        a, b, c, d, e = chunk = encoded[i:i+5]
         #uint32_value = 0
         #for char in chunk:
         #    uint32_value = uint32_value * 85 + _base85_ord(char)
         # Above loop unrolled:
-        a, b, c, d, e = chunk
         uint32_value = ((((_base85_ord(a) *
                         85 + _base85_ord(b)) *
                         85 + _base85_ord(c)) *
