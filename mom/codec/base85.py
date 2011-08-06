@@ -59,9 +59,9 @@ ADOBE_SUFFIX = '~>'
 WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
 
 
-def _base85_chr(num):
+def _ascii85_chr(num):
     """
-    Converts an ordinal into its base85 character.
+    Converts an ordinal into its ASCII85 character.
 
     :param num:
         Ordinal value.
@@ -71,9 +71,9 @@ def _base85_chr(num):
     return chr(num + 33)
 
 
-def _base85_ord(char):
+def _ascii85_ord(char):
     """
-    Converts a base85 character into its ordinal.
+    Converts an ASCII85 character into its ordinal.
 
     :param char:
         Base85 character
@@ -83,8 +83,9 @@ def _base85_ord(char):
     return ord(char) - 33
 
 
-BASE85_CHARS = "".join(map(_base85_chr, range(85)))
-BASE85_ORDS = dict((x, _base85_ord(x)) for x in BASE85_CHARS)
+# ASCII85 characters.
+ASCII85_CHARS = "".join(map(_ascii85_chr, range(85)))
+ASCII85_ORDS = dict((x, _ascii85_ord(x)) for x in ASCII85_CHARS)
 
 # http://tools.ietf.org/html/rfc1924
 RFC1924_CHARS = string.digits + \
@@ -98,7 +99,7 @@ def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
               _padding=False,
-              _base85_chars=BASE85_CHARS):
+              _base85_chars=ASCII85_CHARS):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -177,7 +178,7 @@ def b85decode(encoded,
               prefix=None,
               suffix=None,
               _ignore_pattern=WHITESPACE_PATTERN,
-              _base85_ords=BASE85_ORDS):
+              _base85_ords=ASCII85_ORDS):
     """
     Decodes a base85 encoded string into raw bytes.
 
