@@ -4,7 +4,9 @@
 import unittest2
 from mom.builtins import b
 
-from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, ipv6_b85decode, ADOBE_PREFIX, ADOBE_SUFFIX, rfc1924_b85encode, rfc1924_b85decode
+from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, \
+    ipv6_b85decode, ADOBE_PREFIX, ADOBE_SUFFIX, rfc1924_b85encode, \
+    rfc1924_b85decode
 
 raw = """Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
