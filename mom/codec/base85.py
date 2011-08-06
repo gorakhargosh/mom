@@ -35,6 +35,7 @@ from __future__ import absolute_import, division
 import re
 from struct import unpack, pack
 from mom.functional import chunks
+from mom._compat import range
 
 
 __all__ = [
@@ -245,7 +246,7 @@ def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
     if uint128 > 340282366920938463463374607431768211455L: # 2**128 - 1
         raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                             uint128)
-    encoded = range(20)
+    encoded = list(range(20))
     for i in reversed(encoded):
         encoded[i] = _charset[uint128 % 85]
         uint128 //= 85
