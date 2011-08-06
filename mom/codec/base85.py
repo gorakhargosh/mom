@@ -24,8 +24,6 @@ Functions
 ---------
 .. autofunction:: b85encode
 .. autofunction:: b85decode
-.. autofunction:: base85_chr
-.. autofunction:: base85_ord
 .. autofunction:: ipv6_b85encode
 .. autofunction:: ipv6_b85decode
 """
