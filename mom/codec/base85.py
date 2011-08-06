@@ -27,8 +27,8 @@ Functions
 .. autofunction:: b85decode
 .. autofunction:: base85_chr
 .. autofunction:: base85_ord
-.. autofunction:: b85_ipv6_encode
-.. autofunction:: b85_ipv6_decode
+.. autofunction:: ipv6_b85encode
+.. autofunction:: ipv6_b85decode
 """
 
 from __future__ import absolute_import, division
@@ -243,6 +243,9 @@ def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
     :returns:
         RFC1924 Base85-encoded string.
     """
+    if uint128 > 340282366920938463463374607431768211455L: # 2**128 - 1
+        raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
+                            uint128)
     encoded = range(20)
     for i in reversed(encoded):
         encoded[i] = _charset[uint128 % 85]
@@ -260,6 +263,11 @@ def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
     :returns:
         A 128-bit unsigned integer.
     """
+    if len(encoded) != 20:
+        raise ValueError(
+            "Encoded IPv6 value must be exactly 20 characters long: got %r" %
+            encoded
+        )
     uint128 = 0L
     for char in encoded:
         uint128 = uint128 * 85 + _lookup[char]

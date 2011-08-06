@@ -111,3 +111,11 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
                          ipv6_number)
         self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number_2)),
                          ipv6_number_2)
+
+    def test_OverflowError_when_greater_than_128_bit(self):
+        self.assertRaises(OverflowError, ipv6_b85encode, 2**128)
+
+    def test_ValueError_when_encoded_length_not_20(self):
+        self.assertRaises(ValueError, ipv6_b85decode,
+                          '=r54lj&NUUO~Hi%c2ym0=')
+    
