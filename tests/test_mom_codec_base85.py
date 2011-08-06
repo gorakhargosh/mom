@@ -4,7 +4,7 @@
 import unittest2
 from mom.builtins import b
 
-from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, ipv6_b85decode
+from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, ipv6_b85decode, ADOBE_PREFIX, ADOBE_SUFFIX
 
 raw = """Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
@@ -43,19 +43,19 @@ l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G
 
 class Test_base85_encode(unittest2.TestCase):
     def test_encoding(self):
-        self.assertEqual(b85encode(raw, None, None), encoded)
+        self.assertEqual(b85encode(raw), encoded)
 
     def test_encoding_wikipedia(self):
-        self.assertEqual(b85encode(b("Man "), None, None), "9jqo^")
-        self.assertEqual(b85encode(b("sure"), None, None), "F*2M7")
+        self.assertEqual(b85encode(b("Man ")), "9jqo^")
+        self.assertEqual(b85encode(b("sure")), "F*2M7")
 
     def test_check_padding(self):
-        self.assertEqual(b85encode(b("."), None, None, True), "/cYkO")
-        self.assertEqual(b85encode(b("."), None, None), "/c")
+        self.assertEqual(b85encode(b("."), _padding=True), "/cYkO")
+        self.assertEqual(b85encode(b(".")), "/c")
 
 class Test_base85_decode(unittest2.TestCase):
     def test_decoder(self):
-        self.assertEqual(b85decode(encoded), raw)
+        self.assertEqual(b85decode(encoded, ADOBE_PREFIX, ADOBE_SUFFIX), raw)
 
     def test_decoding_unicode_raises_UnicodeEncodeError(self):
         self.assertRaises(UnicodeEncodeError, b85decode, u"深入")
@@ -64,7 +64,8 @@ class Test_base85_decode(unittest2.TestCase):
         self.assertEqual(b85decode(encoded_with_whitespace), raw)
 
     def test_decoder_ignores_ends_by_default(self):
-        self.assertEqual(b85decode(encoded_with_ends_and_whitespace), raw)
+        self.assertEqual(b85decode(encoded_with_ends_and_whitespace,
+                                   ADOBE_PREFIX, ADOBE_SUFFIX), raw)
 
     def test_encoding_wikipedia(self):
         self.assertEqual(b85decode(b("9jqo^")), "Man ")

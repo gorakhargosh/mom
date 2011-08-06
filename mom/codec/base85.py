@@ -51,7 +51,8 @@ __all__ = [
     "ipv6_b85decode",
 ]
 
-
+# Use this if you want the base85 codec to encode/decode including
+# Adobe's prefixes/suffixes.
 ADOBE_PREFIX = '<~'
 ADOBE_SUFFIX = '~>'
 
@@ -83,8 +84,8 @@ def base85_ord(char):
 
 
 def b85encode(raw_bytes,
-              prefix=ADOBE_PREFIX,
-              suffix=ADOBE_SUFFIX,
+              prefix=None,
+              suffix=None,
               _padding=False,
               _base85_chr=base85_chr):
     """
@@ -105,9 +106,9 @@ def b85encode(raw_bytes,
     :param raw_bytes:
         Raw bytes.
     :param prefix:
-        The prefix used by the encoded text. Defaults to Adobe's prefix.
+        The prefix used by the encoded text. None by default.
     :param suffix:
-        The suffix used by the encoded text. Defaults to Adobe's suffix.
+        The suffix used by the encoded text. None by default.
     :param _padding:
         (Internal) ``True`` if padding should be included; ``False`` (default)
         otherwise. You should not need to use this--the default value is
@@ -158,8 +159,8 @@ def b85encode(raw_bytes,
 
 
 def b85decode(encoded,
-              prefix=ADOBE_PREFIX,
-              suffix=ADOBE_SUFFIX,
+              prefix=None,
+              suffix=None,
               _ignore_pattern=WHITESPACE_PATTERN,
               _base85_ord=base85_ord):
     """
@@ -168,9 +169,9 @@ def b85decode(encoded,
     :param encoded:
         Encoded ASCII string.
     :param prefix:
-        The prefix used by the encoded text. Defaults to Adobe's prefix.
+        The prefix used by the encoded text. None by default.
     :param suffix:
-        The suffix used by the encoded text. Defaults to Adobe's suffix.
+        The suffix used by the encoded text. None by default.
     :param _ignore_pattern:
         (Internal) By default all whitespace is ignored. This must be an
         ``re.compile()`` instance. You should not need to use this.
