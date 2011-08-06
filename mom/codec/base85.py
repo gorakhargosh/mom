@@ -240,6 +240,8 @@ def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
 
     :param uint128:
         A 128-bit unsigned integer to be encoded.
+    :param _charset:
+        (Internal) Base85 encoding charset lookup table.
     :returns:
         RFC1924 Base85-encoded string.
     """
@@ -260,6 +262,8 @@ def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
 
     :param encoded:
         RFC1924 Base85-encoded string.
+    :param _lookup:
+        (Internal) Look up table.
     :returns:
         A 128-bit unsigned integer.
     """
