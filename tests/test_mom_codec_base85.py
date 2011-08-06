@@ -151,6 +151,7 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
 
     def test_OverflowError_when_not_decodable_chunk_found(self):
         self.assertRaises(OverflowError, rfc1924_b85decode, b(']]]]]'))
+        self.assertRaises(OverflowError, rfc1924_b85decode, b('|NsC'))
 
     def test_codec_identity(self):
         self.assertEqual(

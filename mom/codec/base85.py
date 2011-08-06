@@ -257,12 +257,12 @@ def b85decode(encoded,
                             85 + _base85_ords[e])
         except KeyError:
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
+
         # Groups of characters that decode to a value greater than 2**32 − 1
         # (encoded as "s8W-!") will cause a decoding error.
-        #if uint32_value > 4294967295: # 2**32 - 1
-        #    raise OverflowError("Cannot decode chunk `%r`" % chunk)
-        # TODO: Disable because the KeyError above is raised when there is an
-        # overflow anyway. See tests.
+        if uint32_value > 4294967295: # 2**32 - 1
+            raise OverflowError("Cannot decode chunk `%r`" % chunk)
+
         uint32s.append(uint32_value)
 
     raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
