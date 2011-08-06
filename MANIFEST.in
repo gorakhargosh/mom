@@ -1,7 +1,7 @@
 include README
 include LICENSE
 include AUTHORS
-recursive-include mom *.py
+recursive-include mom *.py *.c *.pyx *.pyd
 include docs/*.txt
 include docs/*.xml
 include docs/Makefile
