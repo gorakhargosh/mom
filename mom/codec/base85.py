@@ -35,6 +35,7 @@ from __future__ import absolute_import, division
 import re
 import string
 from struct import unpack, pack
+from mom.builtins import is_bytes
 from mom.functional import chunks
 from mom._compat import range
 
@@ -122,6 +123,9 @@ def b85encode(raw_bytes,
     """
     prefix = prefix or ''
     suffix = suffix or ''
+
+    if not is_bytes(raw_bytes):
+        raise ValueError("Only raw bytes can be encoded.")
 
     # We need chunks of 32-bit (4 bytes chunk size) unsigned integers,
     # which means the length of the byte sequence must be divisible by 4.
