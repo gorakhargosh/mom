@@ -4,7 +4,7 @@
 import unittest2
 from mom.builtins import b
 
-from mom.codec.base85 import b85decode, b85encode, b85_rfc1924_encode, b85_rfc1924_decode
+from mom.codec.base85 import b85decode, b85encode, b85_ipv6_encode, b85_ipv6_decode
 
 raw = """Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
@@ -97,17 +97,17 @@ ipv6_number_2 = 2**128 - 1  # 340282366920938463463374607431768211455L
 ipv6_encoded_2 = '=r54lj&NUUO~Hi%c2ym0'
 
 
-class Test_base85_rfc1924_encoding(unittest2.TestCase):
+class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_encoding(self):
-        self.assertEqual(b85_rfc1924_encode(ipv6_number), ipv6_encoded)
-        self.assertEqual(b85_rfc1924_encode(ipv6_number_2), ipv6_encoded_2)
+        self.assertEqual(b85_ipv6_encode(ipv6_number), ipv6_encoded)
+        self.assertEqual(b85_ipv6_encode(ipv6_number_2), ipv6_encoded_2)
 
     def test_decoding(self):
-        self.assertEqual(b85_rfc1924_decode(ipv6_encoded), ipv6_number)
-        self.assertEqual(b85_rfc1924_decode(ipv6_encoded_2), ipv6_number_2)
+        self.assertEqual(b85_ipv6_decode(ipv6_encoded), ipv6_number)
+        self.assertEqual(b85_ipv6_decode(ipv6_encoded_2), ipv6_number_2)
 
     def test_codec_identity(self):
-        self.assertEqual(b85_rfc1924_decode(b85_rfc1924_encode(ipv6_number)),
+        self.assertEqual(b85_ipv6_decode(b85_ipv6_encode(ipv6_number)),
                          ipv6_number)
-        self.assertEqual(b85_rfc1924_decode(b85_rfc1924_encode(ipv6_number_2)),
+        self.assertEqual(b85_ipv6_decode(b85_ipv6_encode(ipv6_number_2)),
                          ipv6_number_2)

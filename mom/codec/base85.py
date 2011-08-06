@@ -27,8 +27,9 @@ Functions
 .. autofunction:: b85decode
 .. autofunction:: base85_chr
 .. autofunction:: base85_ord
+.. autofunction:: b85_ipv6_encode
+.. autofunction:: b85_ipv6_decode
 """
-
 
 from __future__ import absolute_import, division
 
@@ -45,6 +46,8 @@ __all__ = [
     "WHITESPACE_PATTERN",
     "base85_chr",
     "base85_ord",
+    "b85_ipv6_encode",
+    "b85_ipv6_decode",
 ]
 
 
@@ -222,14 +225,14 @@ def b85decode(encoded,
 
 # http://tools.ietf.org/html/rfc1924
 RFC1924_CHARS = "0123456789" \
-                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
-                             "abcdefghijklmnopqrstuvwxyz" \
-                             "!#$%&()*+-;<=>?@^_`{|}~"
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
+                "abcdefghijklmnopqrstuvwxyz" \
+                "!#$%&()*+-;<=>?@^_`{|}~"
 
 RFC1924_CHAR_TO_INT = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
-def b85_rfc1924_encode(uint128, _charset=RFC1924_CHARS):
+def b85_ipv6_encode(uint128, _charset=RFC1924_CHARS):
     """
     Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
 
@@ -247,7 +250,7 @@ def b85_rfc1924_encode(uint128, _charset=RFC1924_CHARS):
     return ''.join(encoded)
 
 
-def b85_rfc1924_decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
+def b85_ipv6_decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
     """
     Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
     representation.
