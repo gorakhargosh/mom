@@ -95,6 +95,20 @@ WHITESPACE_CHARS = string.whitespace
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
+def check_compact_char_occurrence(sequence, zero_char='z', chunk_size=5):
+    counter = 0
+    for i, x in enumerate(sequence):
+        if x == zero_char:
+            if counter % chunk_size:
+                raise ValueError(
+                    'zero char `%r` occurs in the middle of a chunk ' \
+                    'at index %d' % (zero_char, i)
+                )
+            else:
+                counter = 0
+        else:
+            counter += 1
+
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
@@ -229,8 +243,7 @@ def b85decode(encoded,
 
     # Replace all the 'z' occurrences with '!!!!!'
     if _uncompact_zero:
-        # TODO: We need to check whether z occurs in the middle of
-        # any 5-tuple chunk and raise an error if it does.
+        check_compact_char_occurrence(encoded, 'z', 5)
         encoded = encoded.replace('z', '!!!!!')
 
     # We want 5-tuple chunks, so pad with as many base85_ord == 84 characters

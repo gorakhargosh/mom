@@ -7,7 +7,7 @@ from mom.builtins import b
 
 from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, \
     ipv6_b85decode, ADOBE_PREFIX, ADOBE_SUFFIX, rfc1924_b85encode, \
-    rfc1924_b85decode
+    rfc1924_b85decode, check_compact_char_occurrence
 
 raw = """Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
@@ -78,8 +78,18 @@ nJP~S%^2nctEE{RO%e*LA$c!dYgM}Y9tlPJ4E2cZsR6fKCO6~YSb`x62iVSbb}N}zi@Z(\
 k@dH-SoyjoEmHp<s3<?%{<7obj;ILU8yGE6lKRGRLY&4PWkYaXYUN6@$1xSt+uV<yCWj5\
 g$TWj7G_bnOj`Mv0;Ev;h~$@<!XU98nrk9{D8%tGk~Nj'''
 
-random_1024_bytes = os.urandom(1024)
+random_odd_bytes = os.urandom(33333)
 
+
+class Test_check_compact_char_occurrence(unittest2.TestCase):
+    def test_valid(self):
+        self.assertEqual(
+            check_compact_char_occurrence('z12345z12345zz123!'), None
+        )
+
+    def test_ValueError_when_invalid_index(self):
+        self.assertRaises(ValueError, check_compact_char_occurrence,
+                          'z12345z12345zz123z!')
 
 class Test_base85_encode(unittest2.TestCase):
     def test_encoding(self):
@@ -135,8 +145,8 @@ class Test_codec_identity(unittest2.TestCase):
         self.assertEqual(b85decode(b85encode(zero_bytes)), zero_bytes)
         self.assertEqual(b85decode(b85encode(random_256_bytes)),
                          random_256_bytes)
-        self.assertEqual(b85decode(b85encode(random_1024_bytes)),
-                         random_1024_bytes)
+        self.assertEqual(b85decode(b85encode(random_odd_bytes)),
+                         random_odd_bytes)
 
 class Test_rfc1924_base85_encoding(unittest2.TestCase):
     def test_encoding(self):
@@ -163,8 +173,8 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
             rfc1924_b85decode(rfc1924_b85encode(random_256_bytes)),
             random_256_bytes)
         self.assertEqual(
-            rfc1924_b85decode(rfc1924_b85encode(random_1024_bytes)),
-            random_1024_bytes)
+            rfc1924_b85decode(rfc1924_b85encode(random_odd_bytes)),
+            random_odd_bytes)
 
 class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_encoding(self):
