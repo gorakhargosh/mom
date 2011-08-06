@@ -109,12 +109,13 @@ def b85encode(raw_bytes,
     :param suffix:
         The suffix used by the encoded text. Defaults to Adobe's suffix.
     :param _padding:
-        ``True`` if padding should be included; ``False`` (default) otherwise.
-        You should not need to use this--the default value is usually the
-        expected value.
+        (Internal) ``True`` if padding should be included; ``False`` (default)
+        otherwise. You should not need to use this--the default value is
+        usually the expected value. If you find a need to use this more
+        often than not, *tell us* so that we can make this argument public.
     :param _base85_chr:
-        A function that converts an ordinal number into its base85 character
-        representation.
+        (Internal) A function that converts an ordinal number into its base85
+        character representation.
     :returns:
         ASCII-85 encoded bytes.
     """
@@ -171,11 +172,11 @@ def b85decode(encoded,
     :param suffix:
         The suffix used by the encoded text. Defaults to Adobe's suffix.
     :param _ignore_pattern:
-        By default all whitespace is ignored. This must be an
+        (Internal) By default all whitespace is ignored. This must be an
         ``re.compile()`` instance. You should not need to use this.
     :param _base85_ord:
-        A function to convert a base85 character to its ordinal value.
-        You should not need to use this.
+        (Internal) A function to convert a base85 character to its ordinal
+        value. You should not need to use this.
     :returns:
         Base85-decoded raw bytes.
     """
@@ -228,11 +229,10 @@ def b85decode(encoded,
 
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_CHARS = "0123456789" \
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
-                "abcdefghijklmnopqrstuvwxyz" \
-                "!#$%&()*+-;<=>?@^_`{|}~"
-
+RFC1924_CHARS = string.digits + \
+                string.uppercase + \
+                string.lowercase +  "!#$%&()*+-;<=>?@^_`{|}~"
+WHITESPACE_CHARS = string.whitespace
 RFC1924_CHAR_TO_INT = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
@@ -262,7 +262,9 @@ def ipv6_b85encode(uint128, _charset=RFC1924_CHARS):
     return ''.join(encoded)
 
 
-def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
+def ipv6_b85decode(encoded,
+                   _lookup=RFC1924_CHAR_TO_INT,
+                   _whitespace=WHITESPACE_CHARS):
     """
     Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
     representation.
@@ -271,6 +273,8 @@ def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
         RFC1924 Base85-encoded string.
     :param _lookup:
         (Internal) Look up table.
+    :param _whitespace:
+        (Internal) Whitespace characters.
     :returns:
         A 128-bit unsigned integer.
     """
@@ -282,7 +286,7 @@ def ipv6_b85decode(encoded, _lookup=RFC1924_CHAR_TO_INT):
         )
     uint128 = 0L
     for char in encoded:
-        if char in string.whitespace:
+        if char in _whitespace:
             raise ValueError("Whitespace is not allowed in encoded strings.")
         uint128 = uint128 * 85 + _lookup[char]
     return uint128
