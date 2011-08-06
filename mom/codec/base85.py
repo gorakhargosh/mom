@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# base85.py: Adobe's version of ASCII-85 encoding/decoding.
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 #
@@ -18,7 +17,7 @@
 
 """
 :module: mom.codec.base85
-:synopsis: Adobe-version of ASCII-85 encoding and decoding functions.
+:synopsis: ASCII-85 and RFC1924 Base85 encoding and decoding functions.
 :see: http://en.wikipedia.org/wiki/Ascii85
 
 Functions
