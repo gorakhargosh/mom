@@ -227,8 +227,8 @@ def b85decode(encoded,
     if _uncompact_zero:
         encoded = encoded.replace('z', '!!!!!')
 
-    # We want 5-tuple chunks, so pad with as many 'u' characters as
-    # required to satisfy the length.
+    # We want 5-tuple chunks, so pad with as many base85_ord == 84 characters
+    # as required to satisfy the length.
     length = len(encoded)
     num_uint32s, remainder = divmod(length, 5)
     if remainder:
