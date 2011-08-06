@@ -156,6 +156,7 @@ def b85encode(raw_bytes,
             _base85_chr(x % 85),             # 85**0 = 1
         ))
     if padding_size and not _padding:
+        # Only as much padding added before encoding is removed after encoding.
         ascii_chars = ascii_chars[:-padding_size]
     encoded = ''.join(ascii_chars).replace('!!!!!', 'z')
     return prefix + encoded + suffix
@@ -235,6 +236,7 @@ def b85decode(encoded,
 
     raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
     if padding_size:
+        # Only as much padding added before decoding is removed after decoding.
         raw_bytes = raw_bytes[:-padding_size]
     return raw_bytes
 
