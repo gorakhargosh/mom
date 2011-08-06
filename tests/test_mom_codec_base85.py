@@ -149,6 +149,9 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
         self.assertEqual(rfc1924_b85decode(random_256_mercurial),
                          random_256_bytes)
 
+    def test_OverflowError_when_not_decodable_chunk_found(self):
+        self.assertRaises(OverflowError, rfc1924_b85decode, b(']]]]]'))
+
     def test_codec_identity(self):
         self.assertEqual(
             rfc1924_b85decode(rfc1924_b85encode(mercurial_bytes)),

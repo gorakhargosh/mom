@@ -261,7 +261,7 @@ def b85decode(encoded,
         # (encoded as "s8W-!") will cause a decoding error.
         #if uint32_value > 4294967295: # 2**32 - 1
         #    raise OverflowError("Cannot decode chunk `%r`" % chunk)
-        # Disabled because the KeyError above is raised when there is an
+        # TODO: Disable because the KeyError above is raised when there is an
         # overflow anyway. See tests.
         uint32s.append(uint32_value)
 
