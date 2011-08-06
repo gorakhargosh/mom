@@ -225,6 +225,8 @@ def b85decode(encoded,
 
     # Replace all the 'z' occurrences with '!!!!!'
     if _uncompact_zero:
+        # TODO: We need to check whether z occurs in the middle of
+        # any 5-tuple chunk and raise an error if it does.
         encoded = encoded.replace('z', '!!!!!')
 
     # We want 5-tuple chunks, so pad with as many base85_ord == 84 characters
