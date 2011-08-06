@@ -121,4 +121,7 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_ValueError_when_encoded_length_not_20(self):
         self.assertRaises(ValueError, ipv6_b85decode,
                           '=r54lj&NUUO~Hi%c2ym0=')
-    
+
+    def test_TypeError_when_not_number(self):
+        self.assertRaises(TypeError, ipv6_b85encode, None)
+        
