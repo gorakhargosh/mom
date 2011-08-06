@@ -59,16 +59,16 @@ ADOBE_SUFFIX = '~>'
 WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
 
 
-def base85_chr(value):
+def base85_chr(num):
     """
     Converts an ordinal into its base85 character.
 
-    :param value:
+    :param num:
         Ordinal value.
     :returns:
         base85 character.
     """
-    return chr(value + 33)
+    return chr(num + 33)
 
 
 def base85_ord(char):
