@@ -6,7 +6,7 @@ import unittest2
 from mom.builtins import b
 
 from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, \
-    ipv6_b85decode, ADOBE_PREFIX, ADOBE_SUFFIX, rfc1924_b85encode, \
+    ipv6_b85decode, ASCII85_PREFIX, ASCII85_SUFFIX, rfc1924_b85encode, \
     rfc1924_b85decode, check_compact_char_occurrence
 
 raw = """Man is distinguished, not only by his reason, but by this
@@ -108,7 +108,7 @@ class Test_base85_encode(unittest2.TestCase):
 
 class Test_base85_decode(unittest2.TestCase):
     def test_decoder(self):
-        self.assertEqual(b85decode(encoded, ADOBE_PREFIX, ADOBE_SUFFIX), raw)
+        self.assertEqual(b85decode(encoded, ASCII85_PREFIX, ASCII85_SUFFIX), raw)
 
     def test_decoding_unicode_raises_UnicodeEncodeError(self):
         self.assertRaises(UnicodeEncodeError, b85decode, u"深入")
@@ -118,7 +118,7 @@ class Test_base85_decode(unittest2.TestCase):
 
     def test_decoder_ignores_ends_by_default(self):
         self.assertEqual(b85decode(encoded_with_ends_and_whitespace,
-                                   ADOBE_PREFIX, ADOBE_SUFFIX), raw)
+                                   ASCII85_PREFIX, ASCII85_SUFFIX), raw)
 
     def test_encoding_wikipedia(self):
         self.assertEqual(b85decode(b("9jqo^")), "Man ")

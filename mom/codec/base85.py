@@ -44,17 +44,17 @@ __all__ = [
     "b85decode",
     "rfc1924_b85encode",
     "rfc1924_b85decode",
-    "ADOBE_PREFIX",
-    "ADOBE_SUFFIX",
+    "ASCII85_PREFIX",
+    "ASCII85_SUFFIX",
     "WHITESPACE_PATTERN",
     "ipv6_b85encode",
     "ipv6_b85decode",
 ]
 
 # Use this if you want the base85 codec to encode/decode including
-# Adobe's prefixes/suffixes.
-ADOBE_PREFIX = '<~'
-ADOBE_SUFFIX = '~>'
+# ASCII85 prefixes/suffixes.
+ASCII85_PREFIX = '<~'
+ASCII85_SUFFIX = '~>'
 
 WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
 
@@ -332,7 +332,8 @@ def b85decode(encoded,
     return raw_bytes
 
 
-def rfc1924_b85encode(raw_bytes, padding=False):
+def rfc1924_b85encode(raw_bytes,
+                      _padding=False):
     """
     Base85 encodes using the RFC1924 character set.
 
@@ -343,11 +344,14 @@ def rfc1924_b85encode(raw_bytes, padding=False):
     :see: http://tools.ietf.org/html/rfc1924
     :param raw_bytes:
         Raw bytes.
+    :param _padding:
+        (Internal) Whether padding should be included in the encoded output.
+        (Default ``False``, which is usually what you want.)
     :returns:
         RFC1924 base85 encoded string.
     """
     return b85encode(raw_bytes,
-                     _padding=padding,
+                     _padding=_padding,
                      _base85_chars=RFC1924_CHARS,
                      _compact_zero=False)
 
