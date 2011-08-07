@@ -4,6 +4,7 @@
 import os
 import unittest2
 from mom.builtins import b
+from tests.test_mom_builtins import unicode_string2
 
 from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, \
     ipv6_b85decode, ASCII85_PREFIX, ASCII85_SUFFIX, rfc1924_b85encode, \
@@ -121,14 +122,14 @@ class Test_base85_encode(unittest2.TestCase):
         self.assertEqual(b85encode(b(".")), "/c")
 
     def test_TypeError_on_Unicode(self):
-        self.assertRaises(TypeError, b85encode, u"深入")
+        self.assertRaises(TypeError, b85encode, unicode_string2)
 
 class Test_base85_decode(unittest2.TestCase):
     def test_decoder(self):
         self.assertEqual(b85decode(encoded, ASCII85_PREFIX, ASCII85_SUFFIX), raw)
 
     def test_decoding_unicode_raises_UnicodeEncodeError(self):
-        self.assertRaises(UnicodeEncodeError, b85decode, u"深入")
+        self.assertRaises(UnicodeEncodeError, b85decode, unicode_string2)
 
     def test_decoder_ignores_whitespace_by_default(self):
         self.assertEqual(b85decode(encoded_with_whitespace), raw)
@@ -213,7 +214,7 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
         self.assertEqual(ipv6_b85decode(ipv6_encoded_3), ipv6_number_3)
 
     def test_decoding_unicode_raises_UnicodeEncodeError(self):
-        self.assertRaises(UnicodeEncodeError, ipv6_b85decode, u"深入")
+        self.assertRaises(UnicodeEncodeError, ipv6_b85decode, unicode_string2)
 
     def test_codec_identity(self):
         self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number)),
