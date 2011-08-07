@@ -25,6 +25,7 @@
 """
 
 from __future__ import absolute_import
+from mom.builtins import is_bytes
 
 try:
     # Python 3.
@@ -62,6 +63,9 @@ def datauri_encode(raw_bytes,
     :returns:
         Data URI.
     """
+    if not is_bytes(raw_bytes):
+        raise TypeError(
+            "only raw bytes can be encoded: got %r" % type(raw_bytes).__name__)
     if encoder == "base64":
         encode = base64_encode
         codec = ";base64,"

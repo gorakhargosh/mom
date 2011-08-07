@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import unittest2
 from mom.net.http.datauri import datauri_encode, datauri_decode
+from tests.test_mom_builtins import unicode_string
 
 png = '''\
 \x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x05\x00\x00\x00\x05\
@@ -43,6 +44,12 @@ class Test_encoding(unittest2.TestCase):
                                         charset=None, encoder=None),
                          png_data_uri_quoted)
 
+    def test_raises_TypeError_when_not_raw_bytes(self):
+        self.assertRaises(TypeError,
+            datauri_encode, unicode_string, 'text/plain', "utf-8")
+        self.assertRaises(TypeError,
+            datauri_encode, None, 'text/plain', "utf-8")
+        
 class Test_identity(unittest2.TestCase):
     def test_identity(self):
         self.assertEqual(
