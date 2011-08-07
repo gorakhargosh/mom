@@ -462,32 +462,36 @@ def ipv6_b85decode(encoded,
             "Encoded IPv6 value must be exactly 20 characters long: got %r" %
             encoded
         )
-    uint128 = 0L
+    #uint128 = 0L
     #for char in encoded:
     #    uint128 = uint128 * 85 + _base85_ords[char]
     # Above loop unrolled to process 4 5-tuple chunks instead:
-    a, b, c, d, e = encoded[0:5]
-    uint128 = ((((_base85_ords[a] *
-                85 + _base85_ords[b]) *
-                85 + _base85_ords[c]) *
-                85 + _base85_ords[d]) *
-                85 + _base85_ords[e])
-    a, b, c, d, e = encoded[5:10]
-    uint128 = (((((uint128 * 85 + _base85_ords[a]) *
-                85 + _base85_ords[b]) *
-                85 + _base85_ords[c]) *
-                85 + _base85_ords[d]) *
-                85 + _base85_ords[e])
-    a, b, c, d, e = encoded[10:15]
-    uint128 = (((((uint128 * 85 + _base85_ords[a]) *
-                85 + _base85_ords[b]) *
-                85 + _base85_ords[c]) *
-                85 + _base85_ords[d]) *
-                85 + _base85_ords[e])
-    a, b, c, d, e = encoded[15:20]
-    uint128 = (((((uint128 * 85 + _base85_ords[a]) *
-                85 + _base85_ords[b]) *
-                85 + _base85_ords[c]) *
-                85 + _base85_ords[d]) *
-                85 + _base85_ords[e])
+    #a, b, c, d, e = encoded[0:5]
+    # a = encoded[0]..e = encoded[4]
+    uint128 = ((((_base85_ords[encoded[0]] *
+                85 + _base85_ords[encoded[1]]) *
+                85 + _base85_ords[encoded[2]]) *
+                85 + _base85_ords[encoded[3]]) *
+                85 + _base85_ords[encoded[4]])
+    #a, b, c, d, e = encoded[5:10]
+    # a = encoded[5]..e = encoded[9]
+    uint128 = (((((uint128 * 85 + _base85_ords[encoded[5]]) *
+                85 + _base85_ords[encoded[6]]) *
+                85 + _base85_ords[encoded[7]]) *
+                85 + _base85_ords[encoded[8]]) *
+                85 + _base85_ords[encoded[9]])
+    #a, b, c, d, e = encoded[10:15]
+    # a = encoded[10]..e = encoded[14]
+    uint128 = (((((uint128 * 85 + _base85_ords[encoded[10]]) *
+                85 + _base85_ords[encoded[11]]) *
+                85 + _base85_ords[encoded[12]]) *
+                85 + _base85_ords[encoded[13]]) *
+                85 + _base85_ords[encoded[14]])
+    #a, b, c, d, e = encoded[15:20]
+    # a = encoded[15]..e = encoded[19]
+    uint128 = (((((uint128 * 85 + _base85_ords[encoded[15]]) *
+                85 + _base85_ords[encoded[16]]) *
+                85 + _base85_ords[encoded[17]]) *
+                85 + _base85_ords[encoded[18]]) *
+                85 + _base85_ords[encoded[19]])
     return uint128
