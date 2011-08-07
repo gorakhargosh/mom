@@ -149,6 +149,10 @@ def b85encode(raw_bytes,
     """
     ASCII-85 encodes a sequence of raw bytes.
 
+    The character set in use is::
+
+        ASCII 33 ("!") to ASCII 117 ("u")
+
     If the number of raw bytes is not divisible by 4, the byte sequence
     is padded with up to 3 null bytes before encoding. After encoding,
     as many bytes as were added as padding are removed from the end of the
@@ -336,6 +340,14 @@ def rfc1924_b85encode(raw_bytes,
                       _padding=False):
     """
     Base85 encodes using the RFC1924 character set.
+
+    The character set is::
+
+        0–9, A–Z, a–z, and then !#$%&()*+-;<=>?@^_`{|}~
+
+    These characters are specifically not included::
+
+        "',./:[]\
 
     This is the encoding used by Mercurial, for example. They chose the IPv6
     character set and encode using the Adobe encoding method.
