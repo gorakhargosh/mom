@@ -58,7 +58,7 @@ where ``g`` is the decoder and ``f`` is a encoder.
 from __future__ import absolute_import
 
 import binascii
-
+from struct import pack, unpack
 from mom.builtins import bytes, is_bytes
 from mom.functional import leading, chunks
 from mom.codec.base85 import b85encode, b85decode
@@ -296,7 +296,46 @@ def bytes_to_long(raw_bytes):
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" % \
                         type(raw_bytes).__name__)
-    return long(hex_encode(raw_bytes), 16)
+    # binascii.b2a_hex is written in C as is long.
+    return long(binascii.b2a_hex(raw_bytes), 16)
+
+
+def _bytes_to_long(raw_bytes):
+    """
+    Converts bytes to long integer::
+
+        bytes_to_long(bytes) : long
+
+    This is (essentially) the inverse of long_to_bytes().
+
+    Encode your Unicode strings to a byte encoding before converting them.
+
+    .. WARNING: Does not preserve leading zero bytes.
+
+    :param raw_bytes:
+        Raw bytes.
+    :returns:
+        Long.
+    """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" % \
+                        type(raw_bytes).__name__)
+
+    length = len(raw_bytes)
+    remainder = length % 4
+    if remainder:
+        # Ensure we have a length that is a multiple of 4 by prefixing
+        # sufficient zero padding.
+        padding_size = 4 - remainder
+        length += padding_size
+        raw_bytes = '\x00' * padding_size + raw_bytes
+
+    # Now unpack integers and accumulate.
+    long_value = 0L
+    for i in range(0, length, 4):
+        chunk = raw_bytes[i:i+4]
+        long_value = (long_value << 32) + unpack('>I', chunk)[0]
+    return long_value
 
 
 # Taken from PyCrypto "as is".
@@ -319,63 +358,26 @@ def long_to_bytes(num, blocksize=0):
     :returns:
         Raw bytes.
     """
-    import struct
-
-    # After much testing, this algorithm was deemed to be the fastest
-    s = ''
+    raw_bytes = ''
     num = long(num)
-    pack = struct.pack
     while num > 0:
-        s = pack('>I', num & 0xffffffffL) + s
+        raw_bytes = pack('>I', num & 0xffffffffL) + raw_bytes
         num >>= 32
 
     # Strip off leading zeros
-    for i in range(len(s)):
-        if s[i] != '\x00':
+    for i in range(len(raw_bytes)):
+        if raw_bytes[i] != '\x00':
             break
     else:
-        # only happens when n == 0
-        s = '\x00'
+        # only happens when num == 0
+        raw_bytes = '\x00'
         i = 0
-    s = s[i:]
+    raw_bytes = raw_bytes[i:]
 
-    # Add back some pad bytes.  this could be done more efficiently w.r.t. the
+    # Add back some pad bytes. This could be done more efficiently w.r.t. the
     # de-padding being done above, but sigh...
-    if blocksize > 0 and len(s) % blocksize:
-        s = (blocksize - len(s) % blocksize) * '\x00' + s
-    return s
+    if blocksize > 0 and len(raw_bytes) % blocksize:
+        raw_bytes = (blocksize - len(raw_bytes) % blocksize) * '\x00'+raw_bytes
+    return raw_bytes
 
 
-def _bytes_to_long(raw_bytes):
-    """
-    Converts bytes to long integer::
-
-        bytes_to_long(bytes) : long
-
-    This is (essentially) the inverse of long_to_bytes().
-
-    Encode your Unicode strings to a byte encoding before converting them.
-
-    .. WARNING: Does not preserve leading zero bytes.
-
-    :param raw_bytes:
-        Raw bytes.
-    :returns:
-        Long.
-    """
-    import struct
-
-    if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" % \
-                        type(raw_bytes).__name__)
-
-    acc = 0L
-    unpack = struct.unpack
-    length = len(raw_bytes)
-    if length % 4:
-        extra = (4 - length % 4)
-        raw_bytes = '\x00' * extra + raw_bytes
-        length = length + extra
-    for i in range(0, length, 4):
-        acc = (acc << 32) + unpack('>I', raw_bytes[i:i+4])[0]
-    return acc
