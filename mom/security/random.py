@@ -94,8 +94,8 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     For example::
 
         f(x) -> y such that
-        f(16) ->           1111 1111 1111 1111; bytes_to_long(y) => 65535L
-        f(17) -> 0000 0001 1111 1111 1111 1111; bytes_to_long(y) => 131071L
+        f(16) ->           1111 1111 1111 1111; bytes_to_integer(y) => 65535L
+        f(17) -> 0000 0001 1111 1111 1111 1111; bytes_to_integer(y) => 131071L
 
     :param n_bits:
         Number of random bits.
@@ -126,7 +126,7 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
 
 def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
     """
-    Generates a random unsigned long with `n_bits` random bits.
+    Generates a random unsigned integer with `n_bits` random bits.
 
     :param n_bits:
         Number of random bits to be generated at most.
@@ -351,7 +351,7 @@ def generate_random_sequence_strong(entropy, pool,
 
     pool = list(set(pool))
     log_of_2 = 0.6931471805599453
-    length = long(ceil((log_of_2 / log(len(pool))) * entropy))
+    length = int(ceil((log_of_2 / log(len(pool))) * entropy))
 
     return generate_random_sequence(length, pool, rand_func)
 

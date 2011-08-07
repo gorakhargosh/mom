@@ -42,9 +42,14 @@ from __future__ import absolute_import, division
 import re
 from mom import string
 from struct import unpack, pack
-from mom.builtins import is_bytes
+from mom.builtins import is_bytes, b, bytes
 from mom._compat import range
 
+try:
+    unicode
+    have_python3 = False
+except NameError:
+    have_python3 = True
 
 __all__ = [
     "b85encode",
@@ -58,6 +63,12 @@ __all__ = [
 ]
 
 
+UINT128_MAX = (1 << 128) - 1
+ZERO_BYTE = b('\x00')
+EXCLAMATION_CHUNK = b('!!!!!')
+ZERO_GROUP_CHAR = b('z')
+
+
 def _ascii85_chr(num):
     """
     Converts an ordinal into its ASCII85 character.
@@ -67,7 +78,7 @@ def _ascii85_chr(num):
     :returns:
         base85 character.
     """
-    return chr(num + 33)
+    return chr(num + 33).encode("latin1")
 
 
 def _ascii85_ord(char):
@@ -83,20 +94,28 @@ def _ascii85_ord(char):
 
 # Use this if you want the base85 codec to encode/decode including
 # ASCII85 prefixes/suffixes.
-ASCII85_PREFIX = '<~'
-ASCII85_SUFFIX = '~>'
+ASCII85_PREFIX = b('<~')
+ASCII85_SUFFIX = b('~>')
 
-WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
+WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 # ASCII85 characters.
-ASCII85_CHARS = "".join(map(_ascii85_chr, range(85)))
-ASCII85_ORDS = dict((x, _ascii85_ord(x)) for x in ASCII85_CHARS)
+ASCII85_CHARS = tuple(_ascii85_chr(num) for num in range(85))
+#"".join(map(_ascii85_chr, range(85)))
+if have_python3:
+    # Python 3 bytes when indexed return integers, not single-character
+    # byte strings.
+    ASCII85_ORDS = dict((ord(x), _ascii85_ord(x)) for x in ASCII85_CHARS)
+else:
+    # Python 2 bytes when index return single-character byte strings.
+    ASCII85_ORDS = dict((x, _ascii85_ord(x)) for x in ASCII85_CHARS)
+
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_CHARS = string.digits + \
-                string.ascii_uppercase + \
-                string.ascii_lowercase + \
-                "!#$%&()*+-;<=>?@^_`{|}~"
+RFC1924_CHARS = (string.digits +
+                string.ascii_uppercase +
+                string.ascii_lowercase +
+                "!#$%&()*+-;<=>?@^_`{|}~").encode("latin1")
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
@@ -127,25 +146,24 @@ RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 #    53646409805556201900516510009765625L,
 #    4559944833472277161543903350830078125L
 #)
-POW_85 = tuple([85**x for x in range(20)])
-UINT128_MAX = (1 << 128) - 1
+POW_85 = tuple(85**power for power in range(20))
 
 
-def check_compact_char_occurrence(sequence, zero_char='z', chunk_size=5):
+def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
     """
     Ensures 'z' characters do not occur in the middle of 5-tuple chunks
     when decoding. It will raise a ``ValueError`` if such an occurrence is
     found.
 
-    :param sequence:
-        The encoded sequence.
+    :param encoded:
+        The encoded sequence. (Latin1 encoded string).
     :param zero_char:
         The 'z' character (default 'z').
     :param chunk_size:
         5 (default).
     """
     counter = 0
-    for i, x in enumerate(sequence):
+    for i, x in enumerate(encoded):
         if x == zero_char:
             if counter % chunk_size:
                 raise ValueError(
@@ -164,7 +182,7 @@ def b85encode(raw_bytes,
               _padding=False,
               _base85_chars=ASCII85_CHARS,
               _compact_zero=True,
-              _compact_char='z',
+              _compact_char=ZERO_GROUP_CHAR,
               _pow_85=POW_85):
     """
     ASCII-85 encodes a sequence of raw bytes.
@@ -208,11 +226,18 @@ def b85encode(raw_bytes,
     :returns:
         ASCII-85 encoded bytes.
     """
-    prefix = prefix or ''
-    suffix = suffix or ''
-
+    prefix = prefix or b("")
+    suffix = suffix or b("")
+    if not (is_bytes(prefix) and is_bytes(suffix)):
+        raise TypeError(
+            "Prefix/suffix must be bytes: got prefix %r, %r" %
+            (type(prefix).__name__, type(suffix).__name__)
+        )
+    if not is_bytes(_compact_char):
+        raise TypeError("compat character must be raw byte: got %r" %
+                        type(_compact_char).__name__)
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" %
+        raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
 
     # We need chunks of 32-bit (4 bytes chunk size) unsigned integers,
@@ -226,7 +251,7 @@ def b85encode(raw_bytes,
         # which means in the encoded output sans-padding, the final 5-tuple
         # chunk will have at least 2 characters.
         padding_size = 4 - remainder
-        raw_bytes += '\x00' * padding_size
+        raw_bytes += ZERO_BYTE * padding_size
         num_uint32 += 1
     else:
         padding_size = 0
@@ -251,8 +276,8 @@ def b85encode(raw_bytes,
     if padding_size and not _padding:
         # Only as much padding added before encoding is removed after encoding.
         ascii_chars = ascii_chars[:-padding_size]
-    encoded = ''.join(ascii_chars)
-    encoded = encoded.replace('!!!!!', _compact_char) \
+    encoded = b('').join(ascii_chars)
+    encoded = encoded.replace(EXCLAMATION_CHUNK, _compact_char) \
               if _compact_zero else encoded
     return prefix + encoded + suffix
 
@@ -264,7 +289,7 @@ def b85decode(encoded,
               _base85_chars=ASCII85_CHARS,
               _ignore_pattern=WHITESPACE_PATTERN,
               _uncompact_zero=True,
-              _compact_char='z'):
+              _compact_char=ZERO_GROUP_CHAR):
     """
     Decodes an ASCII85-encoded string into raw bytes.
 
@@ -288,15 +313,25 @@ def b85decode(encoded,
     :returns:
         ASCII85-decoded raw bytes.
     """
-    prefix = prefix or ""
-    suffix = suffix or ""
+    prefix = prefix or b("")
+    suffix = suffix or b("")
 
-    # Must be US-ASCII, not Unicode.
-    encoded = encoded.encode("latin1")
+    if not (is_bytes(prefix) and is_bytes(suffix)):
+        raise TypeError(
+            "Prefix/suffix must be bytes: got prefix %r, %r" %
+            (type(prefix).__name__, type(suffix).__name__)
+        )
+    if not is_bytes(_compact_char):
+        raise TypeError("compat character must be raw byte: got %r" %
+                        type(_compact_char).__name__)
+    if not is_bytes(encoded):
+        raise TypeError(
+            "Encoded sequence must be bytes: got %r" % type(encoded).__name__
+        )
 
     # ASCII-85 ignores whitespace.
     if _ignore_pattern:
-        encoded = re.sub(_ignore_pattern, '', encoded)
+        encoded = re.sub(_ignore_pattern, b(''), encoded)
 
     # Strip the prefix and suffix.
     if prefix and encoded.startswith(prefix):
@@ -306,15 +341,15 @@ def b85decode(encoded,
 
     # Replace all the 'z' occurrences with '!!!!!'
     if _uncompact_zero:
-        check_compact_char_occurrence(encoded, _compact_char, 5)
-        encoded = encoded.replace(_compact_char, '!!!!!')
+        _check_compact_char_occurrence(encoded, _compact_char, 5)
+        encoded = encoded.replace(_compact_char, EXCLAMATION_CHUNK)
 
     # We want 5-tuple chunks, so pad with as many base85_ord == 84 characters
     # as required to satisfy the length.
     length = len(encoded)
     num_uint32s, remainder = divmod(length, 5)
     if remainder:
-        padding_character = _base85_chars[84]   # 'u' for ASCII85.
+        padding_character = _base85_chars[84]   # b'u' for ASCII85.
         padding_size = 5 - remainder
         encoded += padding_character * padding_size
         num_uint32s += 1
@@ -325,7 +360,7 @@ def b85decode(encoded,
     uint32s = []
     #for chunk in chunks(encoded, 5):
     for i in range(0, length, 5):
-        a, b, c, d, e = chunk = encoded[i:i+5]
+        v, w, x, y, z = chunk = encoded[i:i+5]
 #        uint32_value = 0
 #        try:
 #            for char in chunk:
@@ -334,11 +369,11 @@ def b85decode(encoded,
 #            raise OverflowError("Cannot decode chunk `%r`" % chunk)
 #        Above loop unrolled:
         try:
-            uint32_value = ((((_base85_ords[a] *
-                            85 + _base85_ords[b]) *
-                            85 + _base85_ords[c]) *
-                            85 + _base85_ords[d]) *
-                            85 + _base85_ords[e])
+            uint32_value = ((((_base85_ords[v] *
+                            85 + _base85_ords[w]) *
+                            85 + _base85_ords[x]) *
+                            85 + _base85_ords[y]) *
+                            85 + _base85_ords[z])
         except KeyError:
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
 
@@ -458,7 +493,7 @@ def ipv6_b85encode(uint128,
         _base85_chars[(uint128 // 85) % 85],   #85**1 == 85
         _base85_chars[uint128 % 85],           #85**0 == 1
     )
-    return ''.join(encoded)
+    return b('').join(encoded)
 
 
 def ipv6_b85decode(encoded,
@@ -476,7 +511,10 @@ def ipv6_b85decode(encoded,
     :returns:
         A 128-bit unsigned integer.
     """
-    encoded = encoded.encode("latin1")
+    if not is_bytes(encoded):
+        raise TypeError(
+            "Encoded sequence must be bytes: got %r" % type(encoded).__name__
+        )
     if len(encoded) != 20:
         raise ValueError(
             "Encoded IPv6 value must be exactly 20 characters long: got %r" %
@@ -486,29 +524,29 @@ def ipv6_b85decode(encoded,
     #for char in encoded:
     #    uint128 = uint128 * 85 + _base85_ords[char]
     # Above loop unrolled to process 4 5-tuple chunks instead:
-    #a, b, c, d, e = encoded[0:5]
-    # a = encoded[0]..e = encoded[4]
+    #v, w, x, y, z = encoded[0:5]
+    # v = encoded[0]..z = encoded[4]
     uint128 = ((((_base85_ords[encoded[0]] *
                 85 + _base85_ords[encoded[1]]) *
                 85 + _base85_ords[encoded[2]]) *
                 85 + _base85_ords[encoded[3]]) *
                 85 + _base85_ords[encoded[4]])
-    #a, b, c, d, e = encoded[5:10]
-    # a = encoded[5]..e = encoded[9]
+    #v, w, x, y, z = encoded[5:10]
+    # v = encoded[5]..z = encoded[9]
     uint128 = (((((uint128 * 85 + _base85_ords[encoded[5]]) *
                 85 + _base85_ords[encoded[6]]) *
                 85 + _base85_ords[encoded[7]]) *
                 85 + _base85_ords[encoded[8]]) *
                 85 + _base85_ords[encoded[9]])
-    #a, b, c, d, e = encoded[10:15]
-    # a = encoded[10]..e = encoded[14]
+    #v, w, x, y, z = encoded[10:15]
+    # v = encoded[10]..z = encoded[14]
     uint128 = (((((uint128 * 85 + _base85_ords[encoded[10]]) *
                 85 + _base85_ords[encoded[11]]) *
                 85 + _base85_ords[encoded[12]]) *
                 85 + _base85_ords[encoded[13]]) *
                 85 + _base85_ords[encoded[14]])
-    #a, b, c, d, e = encoded[15:20]
-    # a = encoded[15]..e = encoded[19]
+    #v, w, x, y, z = encoded[15:20]
+    # v = encoded[15]..z = encoded[19]
     uint128 = (((((uint128 * 85 + _base85_ords[encoded[15]]) *
                 85 + _base85_ords[encoded[16]]) *
                 85 + _base85_ords[encoded[17]]) *

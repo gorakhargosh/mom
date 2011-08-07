@@ -17,6 +17,7 @@ from mom.functional import \
     loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never, partition_dict, occurrences, group_consecutive, flock
 
 
+
 class Test_some(unittest2.TestCase):
     def test_valid(self):
         self.assertTrue(some(lambda w: w > 0, [0, -1, 4, 6]))
@@ -399,10 +400,10 @@ class Test_seq(unittest2.TestCase):
         self.assertEqual(last(range(10)), 9)
 
     def test_irest(self):
-        self.assertEqual(list(irest(range(10))), range(1, 10))
+        self.assertEqual(list(irest(range(10))), list(range(1, 10)))
 
     def test_rest(self):
-        self.assertEqual(rest(range(10)), range(1, 10))
+        self.assertEqual(rest(range(10)), list(range(1, 10)))
 
 
 # Truthy and falsy tests.

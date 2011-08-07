@@ -69,15 +69,15 @@ class RSAPrivateKey(object):
     def private_key(self):
         asn = self._private_key_asn1
         return dict(
-            version          = long(asn.getComponentByName('version')),
-            modulus          = long(asn.getComponentByName('modulus')),
-            publicExponent   = long(asn.getComponentByName('publicExponent')),
-            privateExponent  = long(asn.getComponentByName('privateExponent')),
-            prime1           = long(asn.getComponentByName('prime1')),
-            prime2           = long(asn.getComponentByName('prime2')),
-            exponent1        = long(asn.getComponentByName('exponent1')),
-            exponent2        = long(asn.getComponentByName('exponent2')),
-            coefficient      = long(asn.getComponentByName('coefficient')),
+            version          = int(asn.getComponentByName('version')),
+            modulus          = int(asn.getComponentByName('modulus')),
+            publicExponent   = int(asn.getComponentByName('publicExponent')),
+            privateExponent  = int(asn.getComponentByName('privateExponent')),
+            prime1           = int(asn.getComponentByName('prime1')),
+            prime2           = int(asn.getComponentByName('prime2')),
+            exponent1        = int(asn.getComponentByName('exponent1')),
+            exponent2        = int(asn.getComponentByName('exponent2')),
+            coefficient      = int(asn.getComponentByName('coefficient')),
         )
 
 

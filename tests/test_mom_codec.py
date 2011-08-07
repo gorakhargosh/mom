@@ -34,18 +34,18 @@ random_long_value = generate_random_uint_between(0, 99999999999999999)
 zero_long = 0
 negative_long_value = -1
 
-base85_raw = """Man is distinguished, not only by his reason, but by this
+base85_raw = b("""Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
 mind, that by a perseverance of delight in the continued and
 indefatigable generation of knowledge, exceeds the short
-vehemence of any carnal pleasure.""".replace('\n', ' ')
+vehemence of any carnal pleasure.""").replace(b('\n'), b(' '))
 
-base85_encoded = """\
+base85_encoded = b("""\
 9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,\
 O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKY\
 i(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIa\
 l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G\
->uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c"""
+>uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c""")
 
 
 class Test_base85_codec(unittest2.TestCase):
@@ -59,10 +59,11 @@ class Test_base85_codec(unittest2.TestCase):
 
 class Test_base64_codec(unittest2.TestCase):
     def test_encodes_without_trailing_newline(self):
-        self.assertFalse(base64_encode(zero_bytes).endswith("\n"))
-        self.assertFalse(base64_encode(random_bytes_1024).endswith("\n"))
-        self.assertFalse(base64_encode(random_bytes_2048).endswith("\n"))
-        self.assertFalse(base64_encode(random_bytes_len_4093).endswith("\n"))
+        self.assertFalse(base64_encode(zero_bytes).endswith(b("\n")))
+        self.assertFalse(base64_encode(random_bytes_1024).endswith(b("\n")))
+        self.assertFalse(base64_encode(random_bytes_2048).endswith(b("\n")))
+        self.assertFalse(base64_encode(random_bytes_len_4093).endswith(
+            b("\n")))
 
     def test_codec_identity(self):
         # Not zero-destructive.
@@ -130,8 +131,8 @@ class Test_bin_codec(unittest2.TestCase):
 class Test_bytes_long_codec(unittest2.TestCase):
     def test_codec_equivalence(self):
         # Padding bytes are not preserved (it is acceptable here).
-        random_bytes = """\x00\xbcE\x9a\xda]"""
-        expected_bytes = """\xbcE\x9a\xda]"""
+        random_bytes = b("\x00\xbcE\x9a\xda]")
+        expected_bytes = b("\xbcE\x9a\xda]")
         self.assertEqual(integer_to_bytes(bytes_to_integer(zero_bytes)),
                          one_zero_byte)
         self.assertEqual(integer_to_bytes(bytes_to_integer(random_bytes)),
@@ -153,4 +154,4 @@ class Test_bytes_long_codec(unittest2.TestCase):
 class Test_long_to_bytes(unittest2.TestCase):
     def test_block_size(self):
         self.assertEqual(integer_to_bytes(299999999999, 4),
-                         '\x00\x00\x00E\xd9d\xb7\xff')
+                         b('\x00\x00\x00E\xd9d\xb7\xff'))

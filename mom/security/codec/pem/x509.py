@@ -33,8 +33,8 @@ from mom.security.codec.pem import \
 from mom.security.codec.asn1.x509 import Certificate
 
 
-def bitarray_to_long(bitarray):
-    return long(reduce((lambda a, b: (long(a) << 1) + long(b)), bitarray))
+def bitarray_to_integer(bitarray):
+    return int(reduce((lambda a, b: (int(a) << 1) + int(b)), bitarray))
 
 
 class X509Certificate(object):
@@ -82,7 +82,7 @@ class X509Certificate(object):
         :returns:
             Tuple of (modulus, exponent)
         """
-        public_key_hex = hex(bitarray_to_long(public_key_bitstring))[2:-1]
+        public_key_hex = hex(bitarray_to_integer(public_key_bitstring))[2:-1]
         public_key_asn1 = decoder.decode(public_key_hex.decode('hex'))
 
         if len(public_key_asn1) < 1:
@@ -92,7 +92,7 @@ class X509Certificate(object):
             raise ValueError(
                 "Couldn't obtain RSA modulus and exponent from public key.")
 
-        return long(public_key_asn1[0][0]), long(public_key_asn1[0][1])
+        return int(public_key_asn1[0][0]), int(public_key_asn1[0][1])
 
     @classmethod
     def decode_from_pem_certificate(cls, certificate):

@@ -25,17 +25,19 @@ from mom.builtins import \
 
 try:
     unicode
-    from tests.constants import unicode_string, unicode_string2
+    from tests.constants import unicode_string, unicode_string2, \
+        utf8_bytes, utf8_bytes2, latin1_bytes
 except NameError:
-    from tests.py3kconstants import unicode_string, unicode_string2
+    from tests.py3kconstants import unicode_string, unicode_string2, \
+        utf8_bytes, utf8_bytes2, latin1_bytes
 
 unicode_string = unicode_string
 unicode_string2 = unicode_string2
-random_bytes = generate_random_bytes(100)
-utf8_bytes = '\xc2\xae'
-utf8_bytes2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
-latin1_bytes = b("\xe9")
+utf8_bytes = utf8_bytes
+utf8_bytes2 = utf8_bytes2
+latin1_bytes = latin1_bytes
 
+random_bytes = generate_random_bytes(100)
 
 class Test_bin(unittest2.TestCase):
     def test_binary_0_1_and_minus_1(self):

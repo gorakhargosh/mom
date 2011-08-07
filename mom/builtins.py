@@ -157,9 +157,9 @@ def bin(num, prefix="0b"):
         prefix = "-" + prefix
     bit_string = ''
     while num > 1:
-        bit_string = bytes(num & 1) + bit_string
+        bit_string = str(num & 1) + bit_string
         num >>= 1
-    bit_string = bytes(num) + bit_string
+    bit_string = str(num) + bit_string
     return prefix + bit_string
 
 

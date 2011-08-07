@@ -36,6 +36,8 @@ Primes
 from __future__ import absolute_import, division
 from mom.security.random import generate_random_uint_between
 from mom._prime_sieve import sieve
+from mom._compat import range
+
 
 __all__ = [
     "gcd",
@@ -132,7 +134,8 @@ def _pure_pow_mod(base, power, modulus):
         power *= -1
         negative_result = True
 
-    exp2 = 2**n_bit_scan
+    #exp2 = 2**n_bit_scan
+    exp2 = 1 << n_bit_scan
     mask = exp2 - 1
 
     # Break power into a list of digits of nBitScan bits.
@@ -144,7 +147,7 @@ def _pure_pow_mod(base, power, modulus):
 
     # Make a table of powers of base up to 2**nBitScan - 1
     low_powers = [1]
-    for i in xrange(1, exp2):
+    for i in range(1, exp2):
         low_powers.append((low_powers[i-1] * base) % modulus)
 
     # To exponentiate by the first nibble, look it up in the table
@@ -155,7 +158,7 @@ def _pure_pow_mod(base, power, modulus):
     # base^nibble
     while nibbles:
         nib, nibbles = nibbles
-        for i in xrange(n_bit_scan):
+        for i in range(n_bit_scan):
             prod = (prod * prod) % modulus
         if nib: prod = (prod * low_powers[nib]) % modulus
 
@@ -266,8 +269,10 @@ def generate_random_safe_prime(bits):
     #
     #Since 30 is lcm(2,3,5), we'll set our test numbers to
     #29 % 30 and keep them there
-    low = (2 ** (bits-2)) * 3 // 2
-    high = (2 ** (bits-1)) - 30
+    #low = (2 ** (bits-2)) * 3 // 2
+    #high = (2 ** (bits-1)) - 30
+    low = (1 << (bits - 2)) * 3 // 2
+    high = (1 << (bits - 1)) - 30
     q = generate_random_uint_between(low, high)
     q += 29 - (q % 30)
     while 1:

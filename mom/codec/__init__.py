@@ -59,10 +59,11 @@ from __future__ import absolute_import
 
 import binascii
 from struct import pack, unpack
-from mom.builtins import bytes, is_bytes
+from mom.builtins import bytes, is_bytes, b
 from mom.functional import leading, chunks
 from mom.codec.base85 import b85encode, b85decode
 
+ZERO_BYTE = b('\x00')
 
 __all__ = [
     "base85_encode",
@@ -183,7 +184,7 @@ def decimal_encode(raw_bytes):
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" % \
                         type(raw_bytes).__name__)
-    padding = "0" * leading((lambda w: w == "\x00"), raw_bytes)
+    padding = b("0") * leading((lambda w: w == ZERO_BYTE), raw_bytes)
     int_val = bytes_to_integer(raw_bytes)
     return padding + bytes(int_val) if int_val else padding
 
@@ -198,46 +199,46 @@ def decimal_decode(encoded):
     :returns:
         Raw bytes.
     """
-    padding = '\x00' * leading((lambda x: x == "0"), encoded)
+    padding = ZERO_BYTE * leading((lambda x: x == b("0")), encoded)
     int_val = int(encoded)
     return padding + integer_to_bytes(int_val) if int_val else padding
 
 
 _HEX_TO_BIN_LOOKUP = {
-    '0': '0000',
-    '1': '0001',
-    '2': '0010',
-    '3': '0011',
-    '4': '0100',
-    '5': '0101',
-    '6': '0110',
-    '7': '0111',
-    '8': '1000',
-    '9': '1001',
-    'a': '1010', 'A': '1010',
-    'b': '1011', 'B': '1011',
-    'c': '1100', 'C': '1100',
-    'd': '1101', 'D': '1101',
-    'e': '1110', 'E': '1110',
-    'f': '1111', 'F': '1111',
+    b('0'): b('0000'),
+    b('1'): b('0001'),
+    b('2'): b('0010'),
+    b('3'): b('0011'),
+    b('4'): b('0100'),
+    b('5'): b('0101'),
+    b('6'): b('0110'),
+    b('7'): b('0111'),
+    b('8'): b('1000'),
+    b('9'): b('1001'),
+    b('a'): b('1010'), b('A'): b('1010'),
+    b('b'): b('1011'), b('B'): b('1011'),
+    b('c'): b('1100'), b('C'): b('1100'),
+    b('d'): b('1101'), b('D'): b('1101'),
+    b('e'): b('1110'), b('E'): b('1110'),
+    b('f'): b('1111'), b('F'): b('1111'),
 }
 _BIN_TO_HEX_LOOKUP = {
-    '0000': '0',
-    '0001': '1',
-    '0010': '2',
-    '0011': '3',
-    '0100': '4',
-    '0101': '5',
-    '0110': '6',
-    '0111': '7',
-    '1000': '8',
-    '1001': '9',
-    '1010': 'a',
-    '1011': 'b',
-    '1100': 'c',
-    '1101': 'd',
-    '1110': 'e',
-    '1111': 'f',
+    b('0000'): b('0'),
+    b('0001'): b('1'),
+    b('0010'): b('2'),
+    b('0011'): b('3'),
+    b('0100'): b('4'),
+    b('0101'): b('5'),
+    b('0110'): b('6'),
+    b('0111'): b('7'),
+    b('1000'): b('8'),
+    b('1001'): b('9'),
+    b('1010'): b('a'),
+    b('1011'): b('b'),
+    b('1100'): b('c'),
+    b('1101'): b('d'),
+    b('1110'): b('e'),
+    b('1111'): b('f'),
 }
 def bin_encode(raw_bytes):
     """
@@ -253,7 +254,7 @@ def bin_encode(raw_bytes):
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" % \
                         type(raw_bytes).__name__)
-    return ''.join(_HEX_TO_BIN_LOOKUP[hex_char]
+    return b('').join(_HEX_TO_BIN_LOOKUP[hex_char]
                    for hex_char in hex_encode(raw_bytes))
 
     # Prefixed zero-bytes destructive. '\x00\x00' treated as '\x00'
@@ -269,7 +270,7 @@ def bin_decode(encoded):
     :returns:
         Raw bytes.
     """
-    return hex_decode(''.join(_BIN_TO_HEX_LOOKUP[nibble]
+    return hex_decode(b('').join(_BIN_TO_HEX_LOOKUP[nibble]
                               for nibble in chunks(encoded, 4)))
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
@@ -328,7 +329,7 @@ def _bytes_to_integer(raw_bytes):
         # sufficient zero padding.
         padding_size = 4 - remainder
         length += padding_size
-        raw_bytes = '\x00' * padding_size + raw_bytes
+        raw_bytes = ZERO_BYTE * padding_size + raw_bytes
 
     # Now unpack integers and accumulate.
     int_value = 0
@@ -355,7 +356,7 @@ def _integer_to_bytes(num, blocksize=0):
     :returns:
         Raw bytes.
     """
-    raw_bytes = ''
+    raw_bytes = b('')
     num = int(num)
     while num > 0:
         raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
@@ -363,18 +364,19 @@ def _integer_to_bytes(num, blocksize=0):
 
     # Strip off leading zeros
     for i in range(len(raw_bytes)):
-        if raw_bytes[i] != '\x00':
+        if raw_bytes[i] != ZERO_BYTE:
             break
     else:
         # only happens when num == 0
-        raw_bytes = '\x00'
+        raw_bytes = ZERO_BYTE
         i = 0
     raw_bytes = raw_bytes[i:]
 
     # Add back some pad bytes. This could be done more efficiently w.r.t. the
     # de-padding being done above, but sigh...
     if blocksize > 0 and len(raw_bytes) % blocksize:
-        raw_bytes = (blocksize - len(raw_bytes) % blocksize) * '\x00'+raw_bytes
+        raw_bytes = (blocksize - len(raw_bytes) % blocksize) * \
+                    ZERO_BYTE + raw_bytes
     return raw_bytes
 
 
@@ -397,9 +399,9 @@ def integer_to_bytes(num, chunk_size=0):
         Raw bytes.
     """
     num = int(num)
-    raw_bytes = ''
+    raw_bytes = b('')
     if not num:
-        raw_bytes = '\x00'
+        raw_bytes = ZERO_BYTE
     while num > 0:
         raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
         num >>= 32
@@ -408,12 +410,12 @@ def integer_to_bytes(num, chunk_size=0):
     if chunk_size > 0:
         remainder = length % chunk_size
         if remainder:
-            raw_bytes = (chunk_size - remainder) * '\x00' + raw_bytes
+            raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
     else:
         # Count the number of leading zeros.
         leading_zeros = 0
         for leading_zeros in range(length):
-            if raw_bytes[leading_zeros] != '\x00':
+            if raw_bytes[leading_zeros] != ZERO_BYTE:
                 break
         raw_bytes = raw_bytes[leading_zeros:]
     return raw_bytes

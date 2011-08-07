@@ -11,6 +11,7 @@ Borrowed from brownie.itools.
 
 from __future__ import absolute_import
 from mom.builtins import is_bytes_or_unicode
+from mom._compat import range
 
 try:
     # Python 2.x
@@ -182,7 +183,7 @@ def combinations_with_replacement(iterable, r):
     """
     pool = tuple(iterable)
     n = len(pool)
-    for indices in product(xrange(n), repeat=r):
+    for indices in product(range(n), repeat=r):
         if sorted(indices) == list(indices):
             yield tuple(pool[i] for i in indices)
 

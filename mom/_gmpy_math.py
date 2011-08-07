@@ -32,10 +32,7 @@ if have_gmpy:
         power = gmpy.mpz(power)
         modulus = gmpy.mpz(modulus)
         result = pow(base, power, modulus)
-        try:
-            return long(result)
-        except NameError:
-            return int(result)
+        return int(result)
 
     def is_prime(num, *args, **kwargs):
         return gmpy.is_prime(num)
