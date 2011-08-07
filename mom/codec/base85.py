@@ -40,7 +40,6 @@ Functions
 from __future__ import absolute_import, division
 
 import re
-import string
 from struct import unpack, pack
 from mom.builtins import is_bytes
 from mom._compat import range
@@ -53,17 +52,9 @@ __all__ = [
     "rfc1924_b85decode",
     "ASCII85_PREFIX",
     "ASCII85_SUFFIX",
-    "WHITESPACE_PATTERN",
     "ipv6_b85encode",
     "ipv6_b85decode",
 ]
-
-# Use this if you want the base85 codec to encode/decode including
-# ASCII85 prefixes/suffixes.
-ASCII85_PREFIX = '<~'
-ASCII85_SUFFIX = '~>'
-
-WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
 
 
 def _ascii85_chr(num):
@@ -89,16 +80,22 @@ def _ascii85_ord(char):
     """
     return ord(char) - 33
 
+# Use this if you want the base85 codec to encode/decode including
+# ASCII85 prefixes/suffixes.
+ASCII85_PREFIX = '<~'
+ASCII85_SUFFIX = '~>'
+
+WHITESPACE_PATTERN = re.compile(r'(\s)*', re.MULTILINE)
 
 # ASCII85 characters.
 ASCII85_CHARS = "".join(map(_ascii85_chr, range(85)))
 ASCII85_ORDS = dict((x, _ascii85_ord(x)) for x in ASCII85_CHARS)
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_CHARS = string.digits + \
-                string.uppercase + \
-                string.lowercase +  "!#$%&()*+-;<=>?@^_`{|}~"
-WHITESPACE_CHARS = string.whitespace
+RFC1924_CHARS = "0123456789" \
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
+                "abcdefghijklmnopqrstuvwxyz" \
+                "!#$%&()*+-;<=>?@^_`{|}~"
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
