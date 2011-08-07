@@ -134,8 +134,6 @@ bytes = bytes_type
 # Fake byte literal support.
 b = byte_literal
 
-# Bastards! See comment in mom._compat. I called them bastards there too.
-int = int_type
 
 
 def bin(num, prefix="0b"):

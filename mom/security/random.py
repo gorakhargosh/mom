@@ -62,9 +62,9 @@ __all__ = [
     "generate_random_bits",
     "generate_random_bytes",
     "generate_random_hex_string",
-    "generate_random_ulong_atmost",
-    "generate_random_ulong_exactly",
-    "generate_random_ulong_between",
+    "generate_random_uint_atmost",
+    "generate_random_uint_exactly",
+    "generate_random_uint_between",
     "generate_random_string",
     "generate_random_password",
     "generate_random_sequence",
@@ -124,7 +124,7 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     return random_bytes
 
 
-def generate_random_ulong_atmost(n_bits, rand_func=generate_random_bytes):
+def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
     """
     Generates a random unsigned long with `n_bits` random bits.
 
@@ -150,7 +150,7 @@ def generate_random_ulong_atmost(n_bits, rand_func=generate_random_bytes):
     return mask & bytes_to_integer(random_bytes)
 
 
-def generate_random_ulong_exactly(n_bits, rand_func=generate_random_bytes):
+def generate_random_uint_exactly(n_bits, rand_func=generate_random_bytes):
     """
     Generates a random unsigned long with `n_bits` random bits.
 
@@ -174,7 +174,7 @@ def generate_random_ulong_exactly(n_bits, rand_func=generate_random_bytes):
 
 
 # Taken from PyCrypto.
-def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
+def generate_random_uint_between(low, high, rand_func=generate_random_bytes):
     """
     Generates a random long integer between low and high, not including high.
 
@@ -194,9 +194,9 @@ def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
         raise ValueError("high value must be greater than low value.")
     r = high - low - 1
     bits = integer_bit_length(r)
-    value = generate_random_ulong_atmost(bits, rand_func=rand_func)
+    value = generate_random_uint_atmost(bits, rand_func=rand_func)
     while value > r:
-        value = generate_random_ulong_atmost(bits, rand_func=rand_func)
+        value = generate_random_uint_atmost(bits, rand_func=rand_func)
     return low + value
 
 
@@ -229,7 +229,7 @@ def random_choice(sequence, rand_func=generate_random_bytes):
     :returns:
         Randomly chosen element.
     """
-    return sequence[generate_random_ulong_between(0, len(sequence), rand_func)]
+    return sequence[generate_random_uint_between(0, len(sequence), rand_func)]
 
 
 def generate_random_sequence(length, pool, rand_func=generate_random_bytes):

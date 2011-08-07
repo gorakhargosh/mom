@@ -34,7 +34,7 @@ Primes
 """
 
 from __future__ import absolute_import, division
-from mom.security.random import generate_random_ulong_between
+from mom.security.random import generate_random_uint_between
 from mom._prime_sieve import sieve
 
 __all__ = [
@@ -204,7 +204,7 @@ def _pure_is_prime(num, iterations=5, _sieve=sieve):
                 return False
             else:
                 v, i = _pure_pow_mod(v, 2, num), i+1
-        a = generate_random_ulong_between(2, num)
+        a = generate_random_uint_between(2, num)
     return True
 
 try:
@@ -237,12 +237,12 @@ def generate_random_prime(bits):
     #high = 2 ** bits - 30
     low = (1 << (bits - 1)) * 3 // 2
     high = (1 << bits) - 30
-    p = generate_random_ulong_between(low, high)
+    p = generate_random_uint_between(low, high)
     p += 29 - (p % 30)
     while 1:
         p += 30
         if p >= high:
-            p = generate_random_ulong_between(low, high)
+            p = generate_random_uint_between(low, high)
             p += 29 - (p % 30)
         if is_prime(p):
             return p
@@ -268,12 +268,12 @@ def generate_random_safe_prime(bits):
     #29 % 30 and keep them there
     low = (2 ** (bits-2)) * 3 // 2
     high = (2 ** (bits-1)) - 30
-    q = generate_random_ulong_between(low, high)
+    q = generate_random_uint_between(low, high)
     q += 29 - (q % 30)
     while 1:
         q += 30
         if q >= high:
-            q = generate_random_ulong_between(low, high)
+            q = generate_random_uint_between(low, high)
             q += 29 - (q % 30)
         #Ideas from Tom Wu's SRP code
         #Do trial division on p and q before Rabin-Miller

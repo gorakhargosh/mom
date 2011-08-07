@@ -6,7 +6,7 @@ from __future__ import absolute_import
 import unittest2
 from mom.builtins import b
 from mom.security.random import \
-    generate_random_bytes, generate_random_ulong_between
+    generate_random_bytes, generate_random_uint_between
 from mom.codec import \
     base64_encode, \
     base64_decode, \
@@ -30,7 +30,7 @@ random_bytes_len_4093 = generate_random_bytes(4093)
 zero_bytes = b('\x00\x00\x00\x00')
 one_zero_byte = b('\x00')
 
-random_long_value = generate_random_ulong_between(0, 99999999999999999)
+random_long_value = generate_random_uint_between(0, 99999999999999999)
 zero_long = 0
 negative_long_value = -1
 
