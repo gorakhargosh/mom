@@ -233,8 +233,10 @@ def generate_random_prime(bits):
     #
     #Since 30 is lcm(2,3,5), we'll set our test numbers to
     #29 % 30 and keep them there
-    low = (2L ** (bits-1)) * 3 // 2
-    high = 2L ** bits - 30
+    #low = (2 ** (bits-1)) * 3 // 2
+    #high = 2 ** bits - 30
+    low = (1 << (bits - 1)) * 3 // 2
+    high = (1 << bits) - 30
     p = generate_random_ulong_between(low, high)
     p += 29 - (p % 30)
     while 1:

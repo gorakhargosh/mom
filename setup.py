@@ -35,8 +35,9 @@ install_requires = [
     # compatibility problems on that platform.
     #"PyCrypto >=2.3",
 
-    "pyasn1 >=0.0.13b",
 ]
+if sys.version_info < (3, 0, 0):
+    install_requires.append("pyasn1 >=0.0.13b")
 if sys.version_info < (2, 6, 0):
     install_requires.append("simplejson >=2.1.6")
 

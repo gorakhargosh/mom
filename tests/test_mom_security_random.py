@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import unittest2
 from mom.builtins import is_bytes, is_bytes_or_unicode
-from mom.codec import bytes_to_long
+from mom.codec import bytes_to_integer
 from mom.security.random import \
     generate_random_hex_string, generate_random_ulong_between, \
     generate_random_bits, generate_random_ulong_atmost, \
@@ -19,8 +19,8 @@ class Test_generate_random_bits(unittest2.TestCase):
     def test_range(self):
         for i in range(999):
             n_bits = 4
-            value = bytes_to_long(generate_random_bits(n_bits))
-            self.assertTrue(value >= 0 and value < (2L ** n_bits))
+            value = bytes_to_integer(generate_random_bits(n_bits))
+            self.assertTrue(value >= 0 and value < (1 << n_bits))
 
     def test_uniqueness(self):
         # The likelyhood of recurrence should be tiny if a large enough
@@ -46,9 +46,9 @@ class Test_generate_random_ulong_exactly(unittest2.TestCase):
             for j in range(128):
                 x = generate_random_ulong_exactly(n_bits)
                 # Ensure high bit is set
-                #self.assertTrue(x & (2L ** (n_bits - 1)))
-                self.assertTrue(x >= (2L ** (n_bits - 1)) and
-                                x < (2L ** n_bits), "huh? x=%d" % x)
+                #self.assertTrue(x & (2 ** (n_bits - 1)))
+                self.assertTrue(x >= (1 << (n_bits - 1)) and
+                                x < (1 << n_bits), "huh? x=%d" % x)
 
     def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_ulong_exactly, 0)
@@ -66,7 +66,7 @@ class Test_generate_random_ulong_atmost(unittest2.TestCase):
             n_bits = i + 1
             for j in range(128):
                 x = generate_random_ulong_atmost(n_bits)
-                self.assertTrue(x >= 0 and x < (2L ** n_bits),
+                self.assertTrue(x >= 0 and x < (1 << n_bits),
                                 "huh? x=%d" % x)
 
     def test_ValueError_when_0_bits(self):

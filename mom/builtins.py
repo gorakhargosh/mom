@@ -63,8 +63,8 @@ Encodings
 
 Size counting
 -------------
-.. autofunction:: long_bit_length
-.. autofunction:: long_byte_count
+.. autofunction:: integer_bit_length
+.. autofunction:: integer_byte_count
 
 Type detection predicates
 -------------------------
@@ -86,16 +86,16 @@ People screw these up too. Useful in functional programming.
 """
 
 from __future__ import absolute_import
-from exceptions import TypeError
 from mom._compat import \
-    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, next
+    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
+    next, long_type, int_type
 
 __all__ = [
     "bytes",
     "bin",
     "hex",
-    "long_byte_count",
-    "long_bit_length",
+    "integer_byte_count",
+    "integer_bit_length",
     "is_sequence",
     "is_unicode",
     "is_bytes",
@@ -133,6 +133,9 @@ bytes = bytes_type
 
 # Fake byte literal support.
 b = byte_literal
+
+# Bastards! See comment in mom._compat. I called them bastards there too.
+int = int_type
 
 
 def bin(num, prefix="0b"):
@@ -209,10 +212,10 @@ def bin(num, prefix="0b"):
 
 def hex(num, prefix="0x"):
     """
-    Converts a long value to its hexadecimal representation.
+    Converts a integer value to its hexadecimal representation.
 
     :param num:
-        Long value.
+        Integer value.
     :param prefix:
         The prefix to use for the hexadecimal string. Default "0x" to mimic
         ``hex()``.
@@ -299,40 +302,35 @@ def is_integer(obj):
     :returns:
         ``True`` if yes; ``False`` otherwise.
     """
-    return isinstance(obj, (int, long)) and not isinstance(obj, bool)
+    return isinstance(obj, (int_type, long_type)) and not isinstance(obj, bool)
 
 
-def long_byte_count(num):
+def integer_byte_count(num):
     """
-    Number of bytes needed to represent a long integer.
+    Number of bytes needed to represent a integer.
 
     :param num:
-        Long value. If num is 0, then :func:`long_byte_count` returns 0.
+        Integer value. If num is 0, returns 0.
     :returns:
-        The number of bytes in the long integer.
+        The number of bytes in the integer.
     """
     import math
 
     if num == 0:
         return 0
-    bits = long_bit_length(num)
+    bits = integer_bit_length(num)
     return int(math.ceil(bits / 8.0))
 
 
-#if getattr(long, 'bit_length'):
-#    # Use the python 2.7+ or 3.1+ built-in if available.
-#    def long_bit_length(num):
-#        return num.bit_length()
-#else:
-def long_bit_length(num):
+def integer_bit_length(num):
     """
-    Number of bits needed to represent a long integer excluding any prefix
+    Number of bits needed to represent a integer excluding any prefix
     0 bits.
 
     :param num:
-        Long value. If num is 0, then :func:`long_bit_length` returns 0.
+        Integer value. If num is 0, returns 0.
     :returns:
-        Returns the number of bits in the long integer.
+        Returns the number of bits in the integer.
     """
     bits = 0
     if num < 0:
@@ -342,15 +340,15 @@ def long_bit_length(num):
     return bits
 
 
-def _long_bit_length(num):
+def _integer_bit_length(num):
     """
-    Number of bits needed to represent a long integer excluding any prefix
+    Number of bits needed to represent a integer excluding any prefix
     0 bits.
 
     :param num:
-        Long value. If num is 0, then :func:`long_bit_length` returns 0.
+        Integer value. If num is 0, returns 0.
     :returns:
-        Returns the number of bits in the long integer.
+        Returns the number of bits in the integer.
     """
     # import math
     if num is None:
@@ -379,7 +377,7 @@ def is_even(num):
     :returns:
         ``True`` if even; ``False`` otherwise.
     """
-    return not (num & 1L)
+    return not (num & 1)
 
 
 def is_odd(num):
@@ -391,7 +389,7 @@ def is_odd(num):
     :returns:
         ``True`` if odd; ``False`` otherwise.
     """
-    return bool(num & 1L)
+    return bool(num & 1)
 
 
 def is_positive(num):
@@ -403,7 +401,7 @@ def is_positive(num):
     :returns:
         ``True`` if positive; ``False`` otherwise.
     """
-    if not isinstance(num, (int, long, bool, float)):
+    if not isinstance(num, (int, long_type, bool, float)):
         raise TypeError("unsupported operand type: %r", type(num).__name__)
     return num > 0
 
@@ -417,6 +415,6 @@ def is_negative(num):
     :returns:
         ``True`` if positive; ``False`` otherwise.
     """
-    if not isinstance(num, (int, long, bool, float)):
+    if not isinstance(num, (int, long_type, bool, float)):
         raise TypeError("unsupported operand type: %r", type(num).__name__)
     return num < 0

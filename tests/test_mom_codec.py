@@ -16,8 +16,8 @@ from mom.codec import \
     decimal_encode, \
     bin_encode, \
     bin_decode, \
-    bytes_to_long, \
-    long_to_bytes, _bytes_to_long, base85_encode, base85_decode
+    bytes_to_integer, \
+    integer_to_bytes, _bytes_to_integer, base85_encode, base85_decode
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -30,9 +30,9 @@ random_bytes_len_4093 = generate_random_bytes(4093)
 zero_bytes = b('\x00\x00\x00\x00')
 one_zero_byte = b('\x00')
 
-random_long_value = generate_random_ulong_between(0, 99999999999999999L)
-zero_long = 0L
-negative_long_value = -1L
+random_long_value = generate_random_ulong_between(0, 99999999999999999)
+zero_long = 0
+negative_long_value = -1
 
 base85_raw = """Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
@@ -132,25 +132,25 @@ class Test_bytes_long_codec(unittest2.TestCase):
         # Padding bytes are not preserved (it is acceptable here).
         random_bytes = """\x00\xbcE\x9a\xda]"""
         expected_bytes = """\xbcE\x9a\xda]"""
-        self.assertEqual(long_to_bytes(bytes_to_long(zero_bytes)),
+        self.assertEqual(integer_to_bytes(bytes_to_integer(zero_bytes)),
                          one_zero_byte)
-        self.assertEqual(long_to_bytes(bytes_to_long(random_bytes)),
+        self.assertEqual(integer_to_bytes(bytes_to_integer(random_bytes)),
                          expected_bytes)
 
-        self.assertEqual(long_to_bytes(_bytes_to_long(zero_bytes)),
+        self.assertEqual(integer_to_bytes(_bytes_to_integer(zero_bytes)),
                          one_zero_byte)
-        self.assertEqual(long_to_bytes(_bytes_to_long(random_bytes)),
+        self.assertEqual(integer_to_bytes(_bytes_to_integer(random_bytes)),
                          expected_bytes)
 
     def test_TypeError_non_bytes_argument(self):
-        self.assertRaises(TypeError, bytes_to_long, unicode_string)
-        self.assertRaises(TypeError, bytes_to_long, None)
+        self.assertRaises(TypeError, bytes_to_integer, unicode_string)
+        self.assertRaises(TypeError, bytes_to_integer, None)
 
-        self.assertRaises(TypeError, _bytes_to_long, unicode_string)
-        self.assertRaises(TypeError, _bytes_to_long, None)
+        self.assertRaises(TypeError, _bytes_to_integer, unicode_string)
+        self.assertRaises(TypeError, _bytes_to_integer, None)
 
 
 class Test_long_to_bytes(unittest2.TestCase):
     def test_block_size(self):
-        self.assertEqual(long_to_bytes(299999999999L, blocksize=4),
+        self.assertEqual(integer_to_bytes(299999999999, 4),
                          '\x00\x00\x00E\xd9d\xb7\xff')

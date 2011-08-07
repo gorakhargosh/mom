@@ -10,8 +10,15 @@ Borrowed from brownie.itools.
 """
 
 from __future__ import absolute_import
+from mom.builtins import is_bytes_or_unicode
 
-from itertools import repeat, izip, chain
+try:
+    # Python 2.x
+    from itertools import izip
+except ImportError:
+    # Python 3.x
+    izip = zip
+from itertools import repeat, chain
 
 
 if getattr(chain, "from_iterable", None):
@@ -248,7 +255,7 @@ def unique(iterable, seen=None):
                 yield item
 
 
-def flatten(iterable, ignore=(basestring, )):
+def flatten(iterable, ignore=None):
     """
     Flattens a nested `iterable`.
 
@@ -261,9 +268,9 @@ def flatten(iterable, ignore=(basestring, )):
     while stack:
         try:
             item = stack[-1].next()
-            if isinstance(item, ignore):
+            if ignore and isinstance(item, ignore):
                 yield item
-            elif isinstance(item, basestring) and len(item) == 1:
+            elif is_bytes_or_unicode(item) and len(item) == 1:
                 yield item
             else:
                 try:

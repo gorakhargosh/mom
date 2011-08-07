@@ -30,7 +30,12 @@ Functions
 
 from __future__ import absolute_import
 
-from itertools import imap
+try:
+    # Python 2.x
+    from itertools import imap
+except ImportError:
+    # Python 3.x
+    imap = map
 from functools import partial
 from fnmatch import fnmatch, fnmatchcase
 from mom.functional import some, identity

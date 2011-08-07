@@ -14,21 +14,26 @@ from mom.builtins import \
     b, \
     bin, \
     hex, \
-    long_byte_count, \
-    long_bit_length, \
+    integer_byte_count, \
+    integer_bit_length, \
     is_sequence, \
-    _long_bit_length, \
+    _integer_bit_length, \
     is_odd, \
     is_even, \
     is_negative, \
     is_positive
 
+try:
+    unicode
+    from tests.constants import unicode_string, unicode_string2
+except NameError:
+    from tests.py3kconstants import unicode_string, unicode_string2
 
+unicode_string = unicode_string
+unicode_string2 = unicode_string2
 random_bytes = generate_random_bytes(100)
 utf8_bytes = '\xc2\xae'
-unicode_string = u'\u00ae'
 utf8_bytes2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
-unicode_string2 = u'深入 Python'
 latin1_bytes = b("\xe9")
 
 
@@ -115,7 +120,7 @@ class Test_hex(unittest2.TestCase):
 
 class Test_long_byte_count(unittest2.TestCase):
     def test_byte_count_zero_if_zero(self):
-        self.assertEqual(long_byte_count(0), 0)
+        self.assertEqual(integer_byte_count(0), 0)
 
     def test_byte_count_correct(self):
         numbers = [-12, 12, 1200, 120091, 123456789]
@@ -125,17 +130,17 @@ class Test_long_byte_count(unittest2.TestCase):
             else:
                 bit_length = len(bin(num, None))
             count = int(math.ceil(bit_length / 8.0))
-            self.assertEqual(long_byte_count(num), count)
+            self.assertEqual(integer_byte_count(num), count)
 
     def test_raises_TypeError_when_invalid_argument(self):
-        self.assertRaises(TypeError, long_byte_count, None)
-        self.assertRaises(TypeError, long_byte_count, object)
+        self.assertRaises(TypeError, integer_byte_count, None)
+        self.assertRaises(TypeError, integer_byte_count, object)
 
 
 class Test_long_bit_length(unittest2.TestCase):
     def test_bit_length_zero_if_zero(self):
-        self.assertEqual(long_bit_length(0), 0)
-        self.assertEqual(_long_bit_length(0), 0)
+        self.assertEqual(integer_bit_length(0), 0)
+        self.assertEqual(_integer_bit_length(0), 0)
 
     def test_bit_length_correct(self):
         numbers = [
@@ -150,19 +155,19 @@ class Test_long_bit_length(unittest2.TestCase):
                 length = len(bin(num, None)) - 1
             else:
                 length = len(bin(num, None))
-            self.assertEqual(long_bit_length(num), length)
-            self.assertEqual(_long_bit_length(num), length)
+            self.assertEqual(integer_bit_length(num), length)
+            self.assertEqual(_integer_bit_length(num), length)
 
-        self.assertEqual(long_bit_length(2L**32-1), 32)
-        self.assertEqual(long_bit_length(2L**64-1), 64)
-        self.assertEqual(_long_bit_length(2L**32-1), 32)
-        self.assertEqual(_long_bit_length(2L**64-1), 64)
+        self.assertEqual(integer_bit_length(2**32-1), 32)
+        self.assertEqual(integer_bit_length(2**64-1), 64)
+        self.assertEqual(_integer_bit_length(2**32-1), 32)
+        self.assertEqual(_integer_bit_length(2**64-1), 64)
 
     def test_raises_TypeError_when_invalid_argument(self):
-        self.assertRaises(TypeError, long_bit_length, None)
-        self.assertRaises(TypeError, long_bit_length, object)
-        self.assertRaises(TypeError, _long_bit_length, None)
-        self.assertRaises(TypeError, _long_bit_length, object)
+        self.assertRaises(TypeError, integer_bit_length, None)
+        self.assertRaises(TypeError, integer_bit_length, object)
+        self.assertRaises(TypeError, _integer_bit_length, None)
+        self.assertRaises(TypeError, _integer_bit_length, object)
 
 
 class Test_is_bytes(unittest2.TestCase):
@@ -241,10 +246,10 @@ class Test_is_sequence(unittest2.TestCase):
 
 class Test_is_even(unittest2.TestCase):
     def test_parity(self):
-        self.assertTrue(is_even(2l))
-        self.assertFalse(is_even(1L))
-        self.assertTrue(is_even(-2l))
-        self.assertFalse(is_even(-1L))
+        self.assertTrue(is_even(2))
+        self.assertFalse(is_even(1))
+        self.assertTrue(is_even(-2))
+        self.assertFalse(is_even(-1))
 
         self.assertTrue(is_even(0))
 
@@ -261,11 +266,10 @@ class Test_is_even(unittest2.TestCase):
 
 class Test_is_odd(unittest2.TestCase):
     def test_parity(self):
-        self.assertTrue(is_odd(1l))
-        self.assertFalse(is_odd(2L))
-        self.assertTrue(is_odd(-1l))
-        self.assertFalse(is_odd(-2L))
-
+        self.assertTrue(is_odd(1))
+        self.assertFalse(is_odd(2))
+        self.assertTrue(is_odd(-1))
+        self.assertFalse(is_odd(-2))
         self.assertFalse(is_odd(0))
 
     def test_boolean(self):

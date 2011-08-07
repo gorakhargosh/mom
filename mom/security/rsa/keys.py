@@ -21,7 +21,7 @@
 """
 
 from __future__ import absolute_import
-from mom.codec import long_to_bytes, bytes_to_long
+from mom.codec import integer_to_bytes, bytes_to_integer
 
 
 def pkcs1_v1_5_encode(key_size, data):
@@ -42,7 +42,7 @@ def pkcs1_v1_5_encode(key_size, data):
         "emsa-pkcs1-v1_5" encoding.
     """
     SHA1_DIGESTINFO = '\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14'
-    size = len(long_to_bytes(key_size))
+    size = len(integer_to_bytes(key_size))
     filler = '\xff' * (size - len(SHA1_DIGESTINFO) - len(data) - 3)
     return '\x00\x01' + filler + '\x00' + SHA1_DIGESTINFO + data
 
@@ -102,7 +102,7 @@ class Key(object):
         :returns:
             Signature byte string.
         """
-        return long_to_bytes(self._sign(digest))
+        return integer_to_bytes(self._sign(digest))
 
     def verify(self, digest, signature_bytes):
         """
@@ -118,7 +118,7 @@ class Key(object):
         :returns:
             ``True`` if the signature matches; ``False`` otherwise.
         """
-        return self._verify(digest, bytes_to_long(signature_bytes))
+        return self._verify(digest, bytes_to_integer(signature_bytes))
 
     def pkcs1_v1_5_sign(self, digest):
         """

@@ -40,6 +40,7 @@ Functions
 from __future__ import absolute_import, division
 
 import re
+from mom import string
 from struct import unpack, pack
 from mom.builtins import is_bytes
 from mom._compat import range
@@ -92,9 +93,9 @@ ASCII85_CHARS = "".join(map(_ascii85_chr, range(85)))
 ASCII85_ORDS = dict((x, _ascii85_ord(x)) for x in ASCII85_CHARS)
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_CHARS = "0123456789" \
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
-                "abcdefghijklmnopqrstuvwxyz" \
+RFC1924_CHARS = string.digits + \
+                string.ascii_uppercase + \
+                string.ascii_lowercase + \
                 "!#$%&()*+-;<=>?@^_`{|}~"
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
@@ -103,30 +104,32 @@ RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 # Therefore, 85**i is equivalent to POW_85[i] for index 0 through 19
 # (inclusive).
 #
-# Calculated using:
-# POW_85 = tuple([85**x for x in range(20)]).
-POW_85 = (
-    1,
-    85,
-    7225,
-    614125,
-    52200625,
-    4437053125,
-    377149515625,
-    32057708828125,
-    2724905250390625,
-    231616946283203125,
-    19687440434072265625L,
-    1673432436896142578125L,
-    142241757136172119140625L,
-    12090549356574630126953125L,
-    1027696695308843560791015625L,
-    87354219101251702667236328125L,
-    7425108623606394726715087890625L,
-    631134233006543551770782470703125L,
-    53646409805556201900516510009765625L,
-    4559944833472277161543903350830078125L
-)
+# Disabled because Python 3 complains. Calculate instead.
+#POW_85 = (
+#    1,
+#    85,
+#    7225,
+#    614125,
+#    52200625,
+#    4437053125,
+#    377149515625,
+#    32057708828125,
+#    2724905250390625,
+#    231616946283203125,
+#    19687440434072265625L,
+#    1673432436896142578125L,
+#    142241757136172119140625L,
+#    12090549356574630126953125L,
+#    1027696695308843560791015625L,
+#    87354219101251702667236328125L,
+#    7425108623606394726715087890625L,
+#    631134233006543551770782470703125L,
+#    53646409805556201900516510009765625L,
+#    4559944833472277161543903350830078125L
+#)
+POW_85 = tuple([85**x for x in range(20)])
+UINT128_MAX = (1 << 128) - 1
+
 
 def check_compact_char_occurrence(sequence, zero_char='z', chunk_size=5):
     """
@@ -425,7 +428,7 @@ def ipv6_b85encode(uint128,
     if uint128 < 0:
         raise ValueError("Number is not a 128-bit unsigned integer: got %d" %
                          uint128)
-    if uint128 > 340282366920938463463374607431768211455L: # 2**128 - 1
+    if uint128 > UINT128_MAX:
         raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                             uint128)
 #    encoded = list(range(20))

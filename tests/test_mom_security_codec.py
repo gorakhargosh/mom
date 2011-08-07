@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pyasn1.error import SubstrateUnderrunError
 
-import unittest2
-from mom.security.codec import public_key_pem_decode, private_key_pem_decode
+try:
+    unicode
+    have_py3 = False
+except NameError:
+    have_py3 = True
 
-private_key='''
+if not have_py3:
+    import unittest2
+    from pyasn1.error import SubstrateUnderrunError
+    from mom.security.codec import public_key_pem_decode, private_key_pem_decode
+
+    private_key='''
 -----BEGIN PRIVATE KEY-----
 MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALRiMLAh9iimur8V
 A7qVvdqxevEuUkW4K+2KdMXmnQbG9Aa7k7eBjK1S+0LYmVjPKlJGNXHDGuy5Fw/d
@@ -23,19 +30,19 @@ AO/0isr/3aa6O6NLQxISLKcPDk2NOccAfS/xOtfOz4sJYM3+Bs4Io9+dZGSDCA54
 Lw03eHTNQghS0A==
 -----END PRIVATE KEY-----'''
 
-private_key_decoded = {
-    'coefficient': 6263309813628295397107400643432350851721956841159071320214251700452060114366343340155171376140395643703716902907125213041289999255650845147022475122987728L,
-    'exponent1': 3822093812252919639580364669476622791207236895386024347699409509479994135036937701181018285803044904622661246121518351058015126950695870028830018671348955L,
-    'exponent2': 7663489069477237650921539283392475888713419180290444291436091339476564305244313755637841647317265985369733335137037584327090234814990380934645339788127361L,
-    'modulus': 126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731L,
-    'prime1': 11286827475943747777190031061302637221977591331181628336645618033739934917672950305154796350050653535540726809672687251533778100075147804897014055497868539L,
-    'prime2': 11222785197227603770299537898098245716808441026517135491773487623240874036306681055667617716308358528851810278532267433054266015352833942512376019701789929L,
-    'privateExponent': 62040813352054762141560911837894865241805540983262892236320038195704523334585811305536472791220833007152520122572927352660293042970033721732272250245220614325662189223664266754362230405256661079259461762606569479150278994918928461540639220666195615058859592860192738580413744039865489807787295497665583162801L,
-    'publicExponent': 65537L,
-    'version': 0L,
-}
+    private_key_decoded = {
+        'coefficient': 6263309813628295397107400643432350851721956841159071320214251700452060114366343340155171376140395643703716902907125213041289999255650845147022475122987728,
+        'exponent1': 3822093812252919639580364669476622791207236895386024347699409509479994135036937701181018285803044904622661246121518351058015126950695870028830018671348955,
+        'exponent2': 7663489069477237650921539283392475888713419180290444291436091339476564305244313755637841647317265985369733335137037584327090234814990380934645339788127361,
+        'modulus': 126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731,
+        'prime1': 11286827475943747777190031061302637221977591331181628336645618033739934917672950305154796350050653535540726809672687251533778100075147804897014055497868539,
+        'prime2': 11222785197227603770299537898098245716808441026517135491773487623240874036306681055667617716308358528851810278532267433054266015352833942512376019701789929,
+        'privateExponent': 62040813352054762141560911837894865241805540983262892236320038195704523334585811305536472791220833007152520122572927352660293042970033721732272250245220614325662189223664266754362230405256661079259461762606569479150278994918928461540639220666195615058859592860192738580413744039865489807787295497665583162801,
+        'publicExponent': 65537,
+        'version': 0,
+    }
 
-certificate='''\
+    certificate='''\
 -----BEGIN CERTIFICATE-----
 MIIBpjCCAQ+gAwIBAgIBATANBgkqhkiG9w0BAQUFADAZMRcwFQYDVQQDDA5UZXN0
 IFByaW5jaXBhbDAeFw03MDAxMDEwODAwMDBaFw0zODEyMzEwODAwMDBaMBkxFzAV
@@ -48,12 +55,12 @@ DQEBBQUAA4GBAGZLPEuJ5SiJ2ryq+CmEGOXfvlTtEL2nuGtr9PewxkgnOjZpUy+d
 WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
 -----END CERTIFICATE-----'''
 
-public_key_decoded = {
-    'exponent': 65537L,
-    'modulus': 126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731L,
-}
+    public_key_decoded = {
+        'exponent': 65537,
+        'modulus': 126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731,
+    }
 
-public_key='''\
+    public_key='''\
 -----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC0YjCwIfYoprq/FQO6lb3asXrx
 LlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlYzypSRjVxwxrsuRcP3e641SdASwfr
@@ -62,7 +69,7 @@ yQkdgcMv11l4KoBkcwIDAQAB
 -----END PUBLIC KEY-----'''
 
 
-junk = """\
+    junk = """\
 eqp1iAIIh89/WHE3rfwNVPeBl2ZU9ywUk9vvhUot8yuCrlprR6avhfIkUm1LCSqi
 tqEwJqVmtJHmkM4VDFr6uiLknVaJYJ+SvK0mRlml5ACre1FH1rMBgvs3G+cvPNA9
 13Vh5VW/eHAzCLiqXEc74azybwhrQWeiRTlEE6BSlQ0Zg5zz2VhsAQN4KPxrD1lP
@@ -86,39 +93,39 @@ cTfUdnrMUw7Q/Jxa1VCpn7RzeHlTLrSXkdq3xVB9gq6DG+umJRfsKPLmw9t5TbD1
 CIfb09GR/D1+6ogCfayqZoXe/xaRRjM3nzOLP4Z4ouMyZC7krj/UsItg0Y8FS0Wq
 gZU88x/X78LlryEvfB0KH/GuULo6ziAzsSsB5Okfm68lFLdaNWA2d3f8lPvQNmL3
 bZI="""
-junk_private_key = """\
------BEGIN PRIVATE KEY-----
-%s
------END PRIVATE KEY-----""" % junk
-junk_public_key = """\
------BEGIN PUBLIC KEY-----
-%s
------END PUBLIC KEY-----""" % junk
-junk_certificate = """\
------BEGIN CERTIFICATE-----
-%s
------END CERTIFICATE-----""" % junk
+    junk_private_key = """\
+    -----BEGIN PRIVATE KEY-----
+    %s
+    -----END PRIVATE KEY-----""" % junk
+    junk_public_key = """\
+    -----BEGIN PUBLIC KEY-----
+    %s
+    -----END PUBLIC KEY-----""" % junk
+    junk_certificate = """\
+    -----BEGIN CERTIFICATE-----
+    %s
+    -----END CERTIFICATE-----""" % junk
 
 
-class Test_public_key_pem_decode(unittest2.TestCase):
-    def test_decode(self):
-        self.assertDictEqual(public_key_pem_decode(public_key), public_key_decoded)
-        self.assertDictEqual(public_key_pem_decode(certificate), public_key_decoded)
+    class Test_public_key_pem_decode(unittest2.TestCase):
+        def test_decode(self):
+            self.assertDictEqual(public_key_pem_decode(public_key), public_key_decoded)
+            self.assertDictEqual(public_key_pem_decode(certificate), public_key_decoded)
 
-    def test_NotImplementedError_when_not_public_key(self):
-        self.assertRaises(NotImplementedError, public_key_pem_decode, private_key)
+        def test_NotImplementedError_when_not_public_key(self):
+            self.assertRaises(NotImplementedError, public_key_pem_decode, private_key)
 
-    def test_fails_on_junk(self):
-        self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_public_key)
-        self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_certificate)
+        def test_fails_on_junk(self):
+            self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_public_key)
+            self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_certificate)
 
-class Test_private_key_pem_decode(unittest2.TestCase):
-    def test_decode(self):
-        self.assertDictEqual(private_key_pem_decode(private_key), private_key_decoded)
+    class Test_private_key_pem_decode(unittest2.TestCase):
+        def test_decode(self):
+            self.assertDictEqual(private_key_pem_decode(private_key), private_key_decoded)
 
-    def test_NotImplementedError_when_not_private_key(self):
-        self.assertRaises(NotImplementedError, private_key_pem_decode, public_key)
-        self.assertRaises(NotImplementedError, private_key_pem_decode, certificate)
+        def test_NotImplementedError_when_not_private_key(self):
+            self.assertRaises(NotImplementedError, private_key_pem_decode, public_key)
+            self.assertRaises(NotImplementedError, private_key_pem_decode, certificate)
 
-    def test_fails_on_junk(self):
-        self.assertRaises(SubstrateUnderrunError, private_key_pem_decode, junk_private_key)
+        def test_fails_on_junk(self):
+            self.assertRaises(SubstrateUnderrunError, private_key_pem_decode, junk_private_key)

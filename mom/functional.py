@@ -200,13 +200,24 @@ Predicates, transforms, and walkers
 from __future__ import absolute_import
 
 from functools import partial
-from itertools import\
-    ifilter, islice, takewhile,\
-    ifilterfalse, dropwhile,\
-    cycle, imap, repeat, groupby
+try:
+    # Python 2.x
+    from itertools import \
+        ifilter as _ifilter, ifilterfalse as _ifilterfalse, imap as _imap
+except ImportError:
+    # Python 3 nuisance.
+    _ifilter = filter
+    def _ifilterfalse(predicate, iterable):
+        def _complement(item):
+            return not predicate(item)
+        return filter(_complement, iterable)
+    _imap = map
+from itertools import islice, takewhile,\
+    dropwhile,\
+    cycle, repeat, groupby
 
 from mom.itertools import chain, starmap
-from mom.builtins import is_bytes_or_unicode
+from mom.builtins import is_bytes_or_unicode, is_bytes
 from mom._compat import range, dict_each, reduce as _reduce, next
 
 
@@ -407,7 +418,7 @@ def some(predicate, iterable):
 
 def _some1(predicate, iterable):
     """Alternative implementation of :func:`some`."""
-    return any(imap(predicate, iterable))
+    return any(_imap(predicate, iterable))
 
 
 def _some2(predicate, iterable):
@@ -432,7 +443,7 @@ def every(predicate, iterable):
         ``True`` if the predicate is true for all elements in the iterable.
     """
     # Equivalent to
-    # return all(imap(predicate, iterable))
+    # return all(_imap(predicate, iterable))
     # but the following short-circuits.
     for x in iterable:
         if not predicate(x):
@@ -492,9 +503,9 @@ def leading(predicate, iterable, start=0):
     :param start:
         Start index. (Number of items to skip before starting counting.)
     """
-    i = 0L
+    i = 0
     for _ in takewhile(predicate, islice(iterable, start, None, 1)):
-        i += 1L
+        i += 1
     return i
 
 
@@ -538,14 +549,14 @@ def tally(predicate, iterable):
     :returns:
         The number of times a predicate is true.
     """
-    return sum(imap(predicate, iterable))
+    return sum(_imap(predicate, iterable))
 
 
 def select(predicate, iterable):
     """
     Select all items from the sequence for which the predicate is true.
 
-        select(function or None, sequence) -> list, tuple, or string
+        select(function or None, sequence) -> tuple, list or string.
 
     :param predicate:
         Predicate function. If ``None``, select all truthy items.
@@ -554,14 +565,20 @@ def select(predicate, iterable):
     :returns:
         A sequence of all items for which the predicate is true.
     """
-    return filter(predicate, iterable)
+    if isinstance(iterable, list):
+        transform = list
+    elif is_bytes_or_unicode(iterable):
+        transform = lambda w: w[:]
+    else:
+        transform = tuple
+    return transform(filter(predicate, iterable))
 
 
 def iselect(predicate, iterable):
     """
     Select all items from the sequence for which the predicate is true.
 
-        iselect(function or None, sequence) --> ifilter object
+        iselect(function or None, sequence) --> iterator
 
     :param predicate:
         Predicate function. If ``None``, select all truthy items.
@@ -570,7 +587,7 @@ def iselect(predicate, iterable):
     :yields:
         A sequence of all items for which the predicate is true.
     """
-    return ifilter(predicate, iterable)
+    return _ifilter(predicate, iterable)
 
 
 def reject(predicate, iterable):
@@ -587,14 +604,14 @@ def reject(predicate, iterable):
     :returns:
         A sequence of all items for which the predicate is false.
     """
-    return filter(complement(predicate or bool), iterable)
+    return select(complement(predicate or bool), iterable)
 
 
 def ireject(predicate, iterable):
     """
     Reject all items from the sequence for which the predicate is true.
 
-        ireject(function or None, sequence) --> ifilterfalse object
+        ireject(function or None, sequence) --> iterator
 
     :param predicate:
         Predicate function. If ``None``, reject all truthy items.
@@ -604,7 +621,7 @@ def ireject(predicate, iterable):
     :yields:
         A sequence of all items for which the predicate is false.
     """
-    return ifilterfalse(predicate, iterable)
+    return _ifilterfalse(predicate, iterable)
 
 
 def partition(predicate, iterable):
@@ -646,7 +663,10 @@ def partition_dict(predicate, dictionary):
     :returns:
         Tuple (selected_dict, rejected_dict)
     """
-    a, b = partition(lambda (k, v): predicate(k, v), dictionary.items())
+    def _pred(tup):
+        return predicate(*tup)
+
+    a, b = partition(_pred, dictionary.items())
     return dict(a), dict(b)
 
 
@@ -674,8 +694,10 @@ def select_dict(predicate, dictionary):
     :returns:
         New dictionary of selected ``key=value`` pairs.
     """
-    _predicate = (lambda (k, v): predicate(k, v)) if predicate else all
-    return dict(ifilter(_predicate, dictionary.items()))
+    def _pred(tup):
+        return predicate(*tup)
+    _predicate = _pred if predicate else all
+    return dict(_ifilter(_predicate, dictionary.items()))
 
 
 def reject_dict(predicate, dictionary):
@@ -688,8 +710,11 @@ def reject_dict(predicate, dictionary):
     :returns:
         New dictionary of selected ``key=value`` pairs.
     """
-    _predicate = (lambda (k, v): predicate(k, v)) if predicate else all
-    return dict(ifilterfalse(_predicate, dictionary.items()))
+    def _pred(tup):
+        return predicate(*tup)
+
+    _predicate = _pred if predicate else all
+    return dict(ireject(_predicate, dictionary.items()))
 
 
 def invert_dict(dictionary):
@@ -743,7 +768,7 @@ def ipluck(dicts, key, *args, **kwargs):
             return d.get(key, default)
     else:
         _get_value_from_dict = lambda w: w[key]
-    return imap(_get_value_from_dict, dicts)
+    return _imap(_get_value_from_dict, dicts)
 
 
 # Sequences
@@ -831,7 +856,7 @@ def difference(iterable1, iterable2):
         Iterable sequence containing the difference between the two given
         iterables.
     """
-    return filter(partial(omits, iterable2), iterable1)
+    return select(partial(omits, iterable2), iterable1)
 
 
 def idifference(iterable1, iterable2):
@@ -848,7 +873,7 @@ def idifference(iterable1, iterable2):
     :yields:
         Generator for the difference between the two given iterables.
     """
-    return ifilter(partial(omits, iterable2), iterable1)
+    return _ifilter(partial(omits, iterable2), iterable1)
 
 
 def without(iterable, *values):
@@ -1087,7 +1112,7 @@ def truthy(iterable):
     :returns:
         Iterable with truthy values.
     """
-    return filter(bool, iterable)
+    return select(bool, iterable)
 
 
 def itruthy(iterable):
@@ -1103,7 +1128,7 @@ def itruthy(iterable):
     :yields:
         Iterator for an iterable with truthy values.
     """
-    return ifilter(bool, iterable)
+    return _ifilter(bool, iterable)
 
 
 def falsy(iterable):
@@ -1119,7 +1144,7 @@ def falsy(iterable):
     :returns:
         Iterable with falsy values.
     """
-    return filter(loob, iterable)
+    return select(loob, iterable)
 
 
 def ifalsy(iterable):
@@ -1135,7 +1160,7 @@ def ifalsy(iterable):
     :yields:
         Iterator for an iterable with falsy values.
     """
-    return ifilterfalse(bool, iterable)
+    return ireject(bool, iterable)
 
 
 def flatten(iterable):
@@ -1311,7 +1336,7 @@ def intersection(iterable, *iterables):
     def _does_other_contain(item):
         return every(partial(contains, item=item), iterables)
 
-    return filter(_does_other_contain, unique(iterable))
+    return select(_does_other_contain, unique(iterable))
 
 
 def take(iterable, n):

@@ -29,6 +29,17 @@ from __future__ import absolute_import
 import os
 
 try:
+    long_type = long
+except NameError:
+    long_type = int
+
+# They fucking removed long too! Should I call them bastards? No? Bastards!
+try:
+    int_type = long
+except NameError:
+    int_type = int
+
+try:
     # Python 2.6 or higher.
     bytes_type = bytes
 except NameError:
@@ -58,7 +69,7 @@ except NameError:
 # to convert our string literals.  b() should only be applied to literal
 # latin1 strings.  Once we drop support for 2.5, we can remove this function
 # and just use byte literals.
-if str is unicode:
+if str is unicode_type:
     def byte_literal(s):
         return s.encode('latin1')
 else:

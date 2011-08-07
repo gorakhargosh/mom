@@ -50,12 +50,12 @@ Utility
 
 from __future__ import absolute_import, division
 
-import string
+from mom import string
 from mom._compat import generate_random_bytes as _generate_random_bytes
-from mom.builtins import long_bit_length, is_integer
+from mom.builtins import integer_bit_length, is_integer
 from mom.codec import \
     hex_encode, \
-    bytes_to_long
+    bytes_to_integer
 
 
 __all__ = [
@@ -111,8 +111,8 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     :returns:
         Bytes.
     """
-    if not is_integer(n_bits):
-        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
+#    if not is_integer(n_bits):
+#        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
     # Doesn't perform any floating-point operations.
@@ -137,8 +137,8 @@ def generate_random_ulong_atmost(n_bits, rand_func=generate_random_bytes):
         The generated unsigned long integer will be between 0 and
         (2**n_bits)-1 both inclusive.
     """
-    if not is_integer(n_bits):
-        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
+#    if not is_integer(n_bits):
+#        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
     # Doesn't perform any floating-point operations.
@@ -146,8 +146,8 @@ def generate_random_ulong_atmost(n_bits, rand_func=generate_random_bytes):
     if r:
         q += 1
     random_bytes = rand_func(q)
-    mask = (1L << n_bits) - 1
-    return mask & bytes_to_long(random_bytes)
+    mask = (1 << n_bits) - 1
+    return mask & bytes_to_integer(random_bytes)
 
 
 def generate_random_ulong_exactly(n_bits, rand_func=generate_random_bytes):
@@ -164,11 +164,11 @@ def generate_random_ulong_exactly(n_bits, rand_func=generate_random_bytes):
          (2**n_bits)-1 both inclusive.
     """
     # Doesn't perform any floating-point operations.
-    value = bytes_to_long(generate_random_bits(n_bits, rand_func=rand_func))
+    value = bytes_to_integer(generate_random_bits(n_bits, rand_func=rand_func))
     #assert(value >= 0 and value < (2L ** n_bits))
     # Set the high bit to ensure bit length.
-    #value |= 2L ** (n_bits - 1)
-    value |= 1L << (n_bits - 1)
+    #value |= 2 ** (n_bits - 1)
+    value |= 1 << (n_bits - 1)
     #assert(long_bit_length(value) >= n_bits)
     return value
 
@@ -187,13 +187,13 @@ def generate_random_ulong_between(low, high, rand_func=generate_random_bytes):
     :returns:
         Random unsigned long integer value.
     """
-    if not (is_integer(low) and is_integer(high)):
-        raise TypeError("unsupported operand types(s): %r and %r" \
-                        % (type(low).__name__, type(high).__name__))
+#    if not (is_integer(low) and is_integer(high)):
+#        raise TypeError("unsupported operand types(s): %r and %r" \
+#                        % (type(low).__name__, type(high).__name__))
     if low >= high:
         raise ValueError("high value must be greater than low value.")
     r = high - low - 1
-    bits = long_bit_length(r)
+    bits = integer_bit_length(r)
     value = generate_random_ulong_atmost(bits, rand_func=rand_func)
     while value > r:
         value = generate_random_ulong_atmost(bits, rand_func=rand_func)
@@ -213,7 +213,7 @@ def generate_random_hex_string(length=8, rand_func=generate_random_bytes):
         A string representation of a randomly-generated hexadecimal string.
     """
     #if length % 2 or length <= 0:
-    if length & 1L or length <= 0:
+    if length & 1 or length <= 0:
         raise ValueError(
             "This function expects a positive even number "\
             "length: got length `%r`." % length)
@@ -245,9 +245,9 @@ def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
     :returns:
         A list of elements randomly chosen from the pool.
     """
-    if not is_integer(length):
-        raise TypeError("Length must be a positive integer: got `%r`" % \
-                        type(length).__name__)
+#    if not is_integer(length):
+#        raise TypeError("Length must be a positive integer: got `%r`" % \
+#                        type(length).__name__)
     if length <= 0:
         raise ValueError("length must be a positive integer: got %d" % length)
     return [random_choice(pool, rand_func) for _ in range(length)]
@@ -255,13 +255,13 @@ def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
 
 HEXADECIMAL_DIGITS = string.digits + "abcdef"
 DIGITS = string.digits
-LOWERCASE_ALPHA = string.lowercase
-UPPERCASE_ALPHA = string.uppercase
-LOWERCASE_ALPHANUMERIC = string.lowercase + string.digits
-UPPERCASE_ALPHANUMERIC = string.uppercase + string.digits
-ALPHA = string.letters
-ALPHANUMERIC = string.letters + string.digits
-ASCII_PRINTABLE = string.letters + string.digits + string.punctuation
+LOWERCASE_ALPHA = string.ascii_lowercase
+UPPERCASE_ALPHA = string.ascii_uppercase
+LOWERCASE_ALPHANUMERIC = LOWERCASE_ALPHA + string.digits
+UPPERCASE_ALPHANUMERIC = UPPERCASE_ALPHA + string.digits
+ALPHA = string.ascii_letters
+ALPHANUMERIC = ALPHA + string.digits
+ASCII_PRINTABLE = ALPHA + string.digits + string.punctuation
 ALL_PRINTABLE = string.printable
 PUNCTUATION = string.punctuation
 

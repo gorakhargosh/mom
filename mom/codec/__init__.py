@@ -19,7 +19,7 @@
 :module: mom.codec
 :synopsis: Many different types of common encode/decode function.
 
-This module contains codecs for converting between long and bytes, and
+This module contains codecs for converting between integers and bytes, and
 the hex, base64, base85, decimal, and binary representations of bytes.
 
 Bytes base-encoding
@@ -51,8 +51,8 @@ In a more mathematical sense,
 
 where ``g`` is the decoder and ``f`` is a encoder.
 
-.. autofunction:: bytes_to_long
-.. autofunction:: long_to_bytes
+.. autofunction:: bytes_to_integer
+.. autofunction:: integer_to_bytes
 """
 
 from __future__ import absolute_import
@@ -75,8 +75,8 @@ __all__ = [
     "decimal_decode",
     "bin_encode",
     "bin_decode",
-    "bytes_to_long",
-    "long_to_bytes",
+    "bytes_to_integer",
+    "integer_to_bytes",
 ]
 
 # Bytes base-encoding.
@@ -184,8 +184,8 @@ def decimal_encode(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" % \
                         type(raw_bytes).__name__)
     padding = "0" * leading((lambda w: w == "\x00"), raw_bytes)
-    long_val = bytes_to_long(raw_bytes)
-    return padding + bytes(long_val) if long_val else padding
+    int_val = bytes_to_integer(raw_bytes)
+    return padding + bytes(int_val) if int_val else padding
 
 
 def decimal_decode(encoded):
@@ -199,8 +199,8 @@ def decimal_decode(encoded):
         Raw bytes.
     """
     padding = '\x00' * leading((lambda x: x == "0"), encoded)
-    long_val = long(encoded)
-    return padding + long_to_bytes(long_val) if long_val else padding
+    int_val = int(encoded)
+    return padding + integer_to_bytes(int_val) if int_val else padding
 
 
 _HEX_TO_BIN_LOOKUP = {
@@ -257,7 +257,7 @@ def bin_encode(raw_bytes):
                    for hex_char in hex_encode(raw_bytes))
 
     # Prefixed zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return bin(bytes_to_long(byte_string))[2:]
+    #return bin(bytes_to_integer(byte_string))[2:]
 
 
 def bin_decode(encoded):
@@ -273,16 +273,16 @@ def bin_decode(encoded):
                               for nibble in chunks(encoded, 4)))
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
-    #return long_to_bytes(long(encoded, 2))
+    #return integer_to_bytes(int(encoded, 2))
 
 
-def bytes_to_long(raw_bytes):
+def bytes_to_integer(raw_bytes):
     """
-    Converts bytes to long integer::
+    Converts bytes to integer::
 
-        bytes_to_long(bytes) : long
+        bytes_to_integer(bytes) : integer
 
-    This is (essentially) the inverse of long_to_bytes().
+    This is (essentially) the inverse of integer_to_bytes().
 
     Encode your Unicode strings to a byte encoding before converting them.
 
@@ -291,22 +291,22 @@ def bytes_to_long(raw_bytes):
     :param raw_bytes:
         Raw bytes.
     :returns:
-        Long.
+        Integer.
     """
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" % \
                         type(raw_bytes).__name__)
-    # binascii.b2a_hex is written in C as is long.
-    return long(binascii.b2a_hex(raw_bytes), 16)
+    # binascii.b2a_hex is written in C as is int.
+    return int(binascii.b2a_hex(raw_bytes), 16)
 
 
-def _bytes_to_long(raw_bytes):
+def _bytes_to_integer(raw_bytes):
     """
-    Converts bytes to long integer::
+    Converts bytes to integer::
 
-        bytes_to_long(bytes) : long
+        bytes_to_integer(bytes) : integer
 
-    This is (essentially) the inverse of long_to_bytes().
+    This is (essentially) the inverse of integer_to_bytes().
 
     Encode your Unicode strings to a byte encoding before converting them.
 
@@ -315,7 +315,7 @@ def _bytes_to_long(raw_bytes):
     :param raw_bytes:
         Raw bytes.
     :returns:
-        Long.
+        Integer.
     """
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" % \
@@ -331,26 +331,23 @@ def _bytes_to_long(raw_bytes):
         raw_bytes = '\x00' * padding_size + raw_bytes
 
     # Now unpack integers and accumulate.
-    long_value = 0L
+    int_value = 0
     for i in range(0, length, 4):
         chunk = raw_bytes[i:i+4]
-        long_value = (long_value << 32) + unpack('>I', chunk)[0]
-    return long_value
+        int_value = (int_value << 32) + unpack('>I', chunk)[0]
+    return int_value
 
 
-# Taken from PyCrypto "as is".
-# Improved conversion functions contributed by Barry Warsaw, after
-# careful benchmarking.
-def long_to_bytes(num, blocksize=0):
+def _integer_to_bytes(num, blocksize=0):
     """
-    Convert a long integer to bytes::
+    Convert a integer to bytes::
 
-        long_to_bytes(n:long, blocksize:int) : string
+        integer_to_bytes(n:int, blocksize:int) : string
 
     .. WARNING: Does not preserve leading zeros.
 
     :param num:
-        Long value
+        Integer value
     :param blocksize:
         If optional blocksize is given and greater than zero, pad the front of
         the byte string with binary zeros so that the length is a multiple of
@@ -359,9 +356,9 @@ def long_to_bytes(num, blocksize=0):
         Raw bytes.
     """
     raw_bytes = ''
-    num = long(num)
+    num = int(num)
     while num > 0:
-        raw_bytes = pack('>I', num & 0xffffffffL) + raw_bytes
+        raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
         num >>= 32
 
     # Strip off leading zeros
@@ -381,3 +378,42 @@ def long_to_bytes(num, blocksize=0):
     return raw_bytes
 
 
+def integer_to_bytes(num, chunk_size=0):
+    """
+    Convert a integer to bytes::
+
+        integer_to_bytes(n:int, chunk_size:int) : string
+
+    .. WARNING:
+        Does not preserve leading zeros if you don't specify a chunk size.
+
+    :param num:
+        Integer value
+    :param chunk_size:
+        If optional chunk size is given and greater than zero, pad the front of
+        the byte string with binary zeros so that the length is a multiple of
+        ``chunk_size``.
+    :returns:
+        Raw bytes.
+    """
+    num = int(num)
+    raw_bytes = ''
+    if not num:
+        raw_bytes = '\x00'
+    while num > 0:
+        raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
+        num >>= 32
+
+    length = len(raw_bytes)
+    if chunk_size > 0:
+        remainder = length % chunk_size
+        if remainder:
+            raw_bytes = (chunk_size - remainder) * '\x00' + raw_bytes
+    else:
+        # Count the number of leading zeros.
+        leading_zeros = 0
+        for leading_zeros in range(length):
+            if raw_bytes[leading_zeros] != '\x00':
+                break
+        raw_bytes = raw_bytes[leading_zeros:]
+    return raw_bytes

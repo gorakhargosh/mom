@@ -46,7 +46,7 @@ l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G
 
 
 ipv6_address = '1080:0:0:0:8:800:200C:417A'
-ipv6_number = 21932261930451111902915077091070067066L
+ipv6_number = 21932261930451111902915077091070067066
 ipv6_raw_bytes = '\x10\x80\x00\x00\x00\x00\x00\x00\x00\x08\x08\x00 \x0cAz'
 ipv6_encoded = '4)+k&C#VzJ4br>0wv%Yp'
 
@@ -55,7 +55,7 @@ ipv6_number_2 = 2**128 - 1  # 340282366920938463463374607431768211455L
 ipv6_encoded_2 = '=r54lj&NUUO~Hi%c2ym0'
 
 ipv6_address_3 = '2607:f8f0:610:4000:214:38ff:feee:b65a'
-ipv6_number_3 = 50552058972053811105097158630017250906L
+ipv6_number_3 = 50552058972053811105097158630017250906
 ipv6_encoded_3 = 'B7RDhRib#Y+VwlwuPBOG'
 
 
