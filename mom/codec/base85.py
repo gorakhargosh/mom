@@ -95,6 +95,31 @@ WHITESPACE_CHARS = string.whitespace
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
+# Pre-calculated powers (array index) of 85 used to unroll loops encoding
+# loops. POW_85 = tuple([85**x for x in range(20)])
+POW_85 = (
+    1,
+    85,
+    7225,
+    614125,
+    52200625,
+    4437053125,
+    377149515625,
+    32057708828125,
+    2724905250390625,
+    231616946283203125,
+    19687440434072265625L,
+    1673432436896142578125L,
+    142241757136172119140625L,
+    12090549356574630126953125L,
+    1027696695308843560791015625L,
+    87354219101251702667236328125L,
+    7425108623606394726715087890625L,
+    631134233006543551770782470703125L,
+    53646409805556201900516510009765625L,
+    4559944833472277161543903350830078125L
+)
+
 def check_compact_char_occurrence(sequence, zero_char='z', chunk_size=5):
     counter = 0
     for i, x in enumerate(sequence):
@@ -114,7 +139,8 @@ def b85encode(raw_bytes,
               suffix=None,
               _padding=False,
               _base85_chars=ASCII85_CHARS,
-              _compact_zero=True):
+              _compact_zero=True,
+              _pow_85=POW_85):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -183,9 +209,9 @@ def b85encode(raw_bytes,
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
         ascii_chars.extend((
-            _base85_chars[x // 52200625],      # 85**4 = 52200625
-            _base85_chars[(x // 614125) % 85], # 85**3 = 614125
-            _base85_chars[(x // 7225) % 85],   # 85**2 = 7225
+            _base85_chars[x // _pow_85[4]],      # 85**4 = 52200625
+            _base85_chars[(x // _pow_85[3]) % 85], # 85**3 = 614125
+            _base85_chars[(x // _pow_85[2]) % 85],   # 85**2 = 7225
             _base85_chars[(x // 85) % 85],     # 85**1 = 85
             _base85_chars[x % 85],             # 85**0 = 1
         ))
@@ -203,7 +229,8 @@ def b85decode(encoded,
               _base85_ords=ASCII85_ORDS,
               _base85_chars=ASCII85_CHARS,
               _ignore_pattern=WHITESPACE_PATTERN,
-              _uncompact_zero=True):
+              _uncompact_zero=True,
+              _compact_char='z'):
     """
     Decodes a base85 encoded string into raw bytes.
 
@@ -243,8 +270,8 @@ def b85decode(encoded,
 
     # Replace all the 'z' occurrences with '!!!!!'
     if _uncompact_zero:
-        check_compact_char_occurrence(encoded, 'z', 5)
-        encoded = encoded.replace('z', '!!!!!')
+        check_compact_char_occurrence(encoded, _compact_char, 5)
+        encoded = encoded.replace(_compact_char, '!!!!!')
 
     # We want 5-tuple chunks, so pad with as many base85_ord == 84 characters
     # as required to satisfy the length.
@@ -333,8 +360,10 @@ def rfc1924_b85decode(encoded):
                      _uncompact_zero=False)
 
 
+
 def ipv6_b85encode(uint128,
-                   _base85_chars=RFC1924_CHARS):
+                   _base85_chars=RFC1924_CHARS,
+                   _pow_85=POW_85):
     """
     Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
     Used to encode IPv6 addresses or 128-bit chunks.
@@ -352,10 +381,33 @@ def ipv6_b85encode(uint128,
     if uint128 > 340282366920938463463374607431768211455L: # 2**128 - 1
         raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                             uint128)
-    encoded = list(range(20))
-    for i in reversed(encoded):
-        encoded[i] = _base85_chars[uint128 % 85]
-        uint128 //= 85
+#    encoded = list(range(20))
+#    for i in reversed(encoded):
+#        encoded[i] = _base85_chars[uint128 % 85]
+#        uint128 //= 85
+    # Above loop unrolled:
+    encoded = (
+        _base85_chars[(uint128 // _pow_85[19])],
+        _base85_chars[(uint128 // _pow_85[18]) % 85],
+        _base85_chars[(uint128 // _pow_85[17]) % 85],
+        _base85_chars[(uint128 // _pow_85[16]) % 85],
+        _base85_chars[(uint128 // _pow_85[15]) % 85],
+        _base85_chars[(uint128 // _pow_85[14]) % 85],
+        _base85_chars[(uint128 // _pow_85[13]) % 85],
+        _base85_chars[(uint128 // _pow_85[12]) % 85],
+        _base85_chars[(uint128 // _pow_85[11]) % 85],
+        _base85_chars[(uint128 // _pow_85[10]) % 85],
+        _base85_chars[(uint128 // _pow_85[9]) % 85],
+        _base85_chars[(uint128 // _pow_85[8]) % 85],
+        _base85_chars[(uint128 // _pow_85[7]) % 85],
+        _base85_chars[(uint128 // _pow_85[6]) % 85],
+        _base85_chars[(uint128 // _pow_85[5]) % 85],
+        _base85_chars[(uint128 // _pow_85[4]) % 85],
+        _base85_chars[(uint128 // _pow_85[3]) % 85],
+        _base85_chars[(uint128 // _pow_85[2]) % 85],
+        _base85_chars[(uint128 // 85) % 85],
+        _base85_chars[uint128 % 85],
+    )
     return ''.join(encoded)
 
 
