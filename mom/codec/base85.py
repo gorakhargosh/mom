@@ -95,8 +95,12 @@ WHITESPACE_CHARS = string.whitespace
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
 
-# Pre-calculated powers (array index) of 85 used to unroll loops encoding
-# loops. POW_85 = tuple([85**x for x in range(20)])
+# Pre-computed powers (array index) of 85 used to unroll encoding loops
+# Therefore, 85**i is equivalent to POW_85[i] for index 0 through 19
+# (inclusive).
+#
+# Calculated using:
+# POW_85 = tuple([85**x for x in range(20)]).
 POW_85 = (
     1,
     85,
@@ -140,6 +144,7 @@ def b85encode(raw_bytes,
               _padding=False,
               _base85_chars=ASCII85_CHARS,
               _compact_zero=True,
+              _compact_char='z',
               _pow_85=POW_85):
     """
     ASCII-85 encodes a sequence of raw bytes.
@@ -172,6 +177,10 @@ def b85encode(raw_bytes,
     :param _compact_zero:
         (Internal) Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of
         '!!!!!' if this is ``True`` (default).
+    :param _compact_char:
+        (Internal) Character used to represent compact groups ('z' default)
+    :param _pow_85:
+        (Internal) Powers of 85 lookup table.
     :returns:
         ASCII-85 encoded bytes.
     """
@@ -209,9 +218,9 @@ def b85encode(raw_bytes,
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
         ascii_chars.extend((
-            _base85_chars[x // _pow_85[4]],      # 85**4 = 52200625
-            _base85_chars[(x // _pow_85[3]) % 85], # 85**3 = 614125
-            _base85_chars[(x // _pow_85[2]) % 85],   # 85**2 = 7225
+            _base85_chars[x // _pow_85[4]], # Don't need %85. Already <85.
+            _base85_chars[(x // _pow_85[3]) % 85],
+            _base85_chars[(x // _pow_85[2]) % 85],
             _base85_chars[(x // 85) % 85],     # 85**1 = 85
             _base85_chars[x % 85],             # 85**0 = 1
         ))
@@ -219,7 +228,8 @@ def b85encode(raw_bytes,
         # Only as much padding added before encoding is removed after encoding.
         ascii_chars = ascii_chars[:-padding_size]
     encoded = ''.join(ascii_chars)
-    encoded = encoded.replace('!!!!!', 'z') if _compact_zero else encoded
+    encoded = encoded.replace('!!!!!', _compact_char) \
+              if _compact_zero else encoded
     return prefix + encoded + suffix
 
 
@@ -249,6 +259,8 @@ def b85decode(encoded,
     :param _uncompact_zero:
         (Internal) Treats 'z' (a zero-group (\x00\x00\x00\x00)) as a '!!!!!'
         if ``True`` (default).
+    :param _compact_char:
+        (Internal) Character used to represent compact groups ('z' default)
     :returns:
         Base85-decoded raw bytes.
     """
@@ -372,6 +384,8 @@ def ipv6_b85encode(uint128,
         A 128-bit unsigned integer to be encoded.
     :param _base85_chars:
         (Internal) Base85 encoding charset lookup table.
+    :param _pow_85:
+        (Internal) Powers of 85 lookup table.
     :returns:
         RFC1924 Base85-encoded string.
     """
@@ -387,7 +401,7 @@ def ipv6_b85encode(uint128,
 #        uint128 //= 85
     # Above loop unrolled:
     encoded = (
-        _base85_chars[(uint128 // _pow_85[19])],
+        _base85_chars[(uint128 // _pow_85[19])], # Don't need %85. Already < 85
         _base85_chars[(uint128 // _pow_85[18]) % 85],
         _base85_chars[(uint128 // _pow_85[17]) % 85],
         _base85_chars[(uint128 // _pow_85[16]) % 85],
@@ -405,8 +419,8 @@ def ipv6_b85encode(uint128,
         _base85_chars[(uint128 // _pow_85[4]) % 85],
         _base85_chars[(uint128 // _pow_85[3]) % 85],
         _base85_chars[(uint128 // _pow_85[2]) % 85],
-        _base85_chars[(uint128 // 85) % 85],
-        _base85_chars[uint128 % 85],
+        _base85_chars[(uint128 // 85) % 85],   #85**1 == 85
+        _base85_chars[uint128 % 85],           #85**0 == 1
     )
     return ''.join(encoded)
 
