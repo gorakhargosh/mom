@@ -53,6 +53,11 @@ ipv6_encoded = '4)+k&C#VzJ4br>0wv%Yp'
 ipv6_number_2 = 2**128 - 1  # 340282366920938463463374607431768211455L
 ipv6_encoded_2 = '=r54lj&NUUO~Hi%c2ym0'
 
+ipv6_address_3 = '2607:f8f0:610:4000:214:38ff:feee:b65a'
+ipv6_number_3 = 50552058972053811105097158630017250906L
+ipv6_encoded_3 = 'B7RDhRib#Y+VwlwuPBOG'
+
+
 # Mercurial uses RFC1924 character set, but does not encode it like
 # IPv6.
 mercurial_bytes = '\t\x91{W\xa80\xb1'
@@ -200,10 +205,12 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_encoding(self):
         self.assertEqual(ipv6_b85encode(ipv6_number), ipv6_encoded)
         self.assertEqual(ipv6_b85encode(ipv6_number_2), ipv6_encoded_2)
+        self.assertEqual(ipv6_b85encode(ipv6_number_3), ipv6_encoded_3)
 
     def test_decoding(self):
         self.assertEqual(ipv6_b85decode(ipv6_encoded), ipv6_number)
         self.assertEqual(ipv6_b85decode(ipv6_encoded_2), ipv6_number_2)
+        self.assertEqual(ipv6_b85decode(ipv6_encoded_3), ipv6_number_3)
 
     def test_decoding_unicode_raises_UnicodeEncodeError(self):
         self.assertRaises(UnicodeEncodeError, ipv6_b85decode, u"深入")
@@ -213,6 +220,8 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
                          ipv6_number)
         self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number_2)),
                          ipv6_number_2)
+        self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number_3)),
+                         ipv6_number_3)
 
     def test_ValueError_when_negative(self):
         self.assertRaises(ValueError, ipv6_b85encode, -1)
