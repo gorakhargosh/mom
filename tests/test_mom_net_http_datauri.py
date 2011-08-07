@@ -4,7 +4,7 @@
 from __future__ import absolute_import
 
 import unittest2
-from mom.http.datauri import datauri_encode, datauri_decode
+from mom.net.http.datauri import datauri_encode, datauri_decode
 
 png = '''\
 \x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x05\x00\x00\x00\x05\

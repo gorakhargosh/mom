@@ -16,7 +16,7 @@
 # limitations under the License.
 
 """
-:module: mom.http.datauri
+:module: mom.net.http.datauri
 :synopsis: Makes working with Data-URI schemes easier.
 :see: http://en.wikipedia.org/wiki/Data_URI_scheme
 
@@ -33,7 +33,7 @@ except ImportError:
     # Python 2.5+
     from urllib import quote_plus, unquote_plus
 
-from mom.http.mimeparse import parse_mime_type
+from mom.net.http.mimeparse import parse_mime_type
 from mom.codec import base64_encode, base64_decode
 
 
