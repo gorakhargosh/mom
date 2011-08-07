@@ -211,6 +211,6 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_TypeError_when_not_number(self):
         self.assertRaises(TypeError, ipv6_b85encode, None)
 
-    def test_ValueError_when_whitespace_found(self):
-        self.assertRaises(ValueError, ipv6_b85decode, '=r54lj&\nUUO Hi%c2ym0')
+    def test_KeyError_when_whitespace_found(self):
+        self.assertRaises(KeyError, ipv6_b85decode, '=r54lj&\nUUO Hi%c2ym0')
         

@@ -442,8 +442,7 @@ def ipv6_b85encode(uint128,
 
 
 def ipv6_b85decode(encoded,
-                   _base85_ords=RFC1924_ORDS,
-                   _whitespace=WHITESPACE_CHARS):
+                   _base85_ords=RFC1924_ORDS):
     """
     Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
     representation. Used to base85-decode IPv6 addresses or 128-bit chunks.
@@ -464,8 +463,31 @@ def ipv6_b85decode(encoded,
             encoded
         )
     uint128 = 0L
-    for char in encoded:
-        if char in _whitespace:
-            raise ValueError("Whitespace is not allowed in encoded strings.")
-        uint128 = uint128 * 85 + _base85_ords[char]
+    #for char in encoded:
+    #    uint128 = uint128 * 85 + _base85_ords[char]
+    # Above loop unrolled to process 4 5-tuple chunks instead:
+    a, b, c, d, e = encoded[0:5]
+    uint128 = ((((_base85_ords[a] *
+                85 + _base85_ords[b]) *
+                85 + _base85_ords[c]) *
+                85 + _base85_ords[d]) *
+                85 + _base85_ords[e])
+    a, b, c, d, e = encoded[5:10]
+    uint128 = (((((uint128 * 85 + _base85_ords[a]) *
+                85 + _base85_ords[b]) *
+                85 + _base85_ords[c]) *
+                85 + _base85_ords[d]) *
+                85 + _base85_ords[e])
+    a, b, c, d, e = encoded[10:15]
+    uint128 = (((((uint128 * 85 + _base85_ords[a]) *
+                85 + _base85_ords[b]) *
+                85 + _base85_ords[c]) *
+                85 + _base85_ords[d]) *
+                85 + _base85_ords[e])
+    a, b, c, d, e = encoded[15:20]
+    uint128 = (((((uint128 * 85 + _base85_ords[a]) *
+                85 + _base85_ords[b]) *
+                85 + _base85_ords[c]) *
+                85 + _base85_ords[d]) *
+                85 + _base85_ords[e])
     return uint128
