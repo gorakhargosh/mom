@@ -63,7 +63,8 @@ __all__ = [
 ]
 
 
-UINT128_MAX = (1 << 128) - 1
+UINT128_MAX = (1 << 128) - 1    # 340282366920938463463374607431768211455L
+UINT32_MAX = 0xffffffff # (1 << 32) - 1      # 4294967295
 ZERO_BYTE = b('\x00')
 EXCLAMATION_CHUNK = b('!!!!!')
 ZERO_GROUP_CHAR = b('z')
@@ -375,11 +376,13 @@ def b85decode(encoded,
                             85 + _base85_ords[y]) *
                             85 + _base85_ords[z])
         except KeyError:
+            # Showing the chunk provides more context, which makes debugging
+            # easier.
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
 
         # Groups of characters that decode to a value greater than 2**32 − 1
         # (encoded as "s8W-!") will cause a decoding error.
-        if uint32_value > 4294967295: # 2**32 - 1
+        if uint32_value > UINT32_MAX: # 2**32 - 1
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
 
         uint32s.append(uint32_value)
