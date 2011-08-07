@@ -80,6 +80,18 @@ g$TWj7G_bnOj`Mv0;Ev;h~$@<!XU98nrk9{D8%tGk~Nj'''
 
 random_odd_bytes = os.urandom(33333)
 
+# 31 bytes each.
+random_bytes_list = [
+    'a)X\xfb$$\xd1Q\xbe\xad\xb7\n\xf9\x99_\xc9\x90\xaf\rT\
+\xcf\x8d\xaaF\x0cz\xa8\xf2\x11\xd0\x1e',
+    'Ep\xf7a&\xbd\xce.\x16BV~N;\xbe|\x80\xadZ\xc9\xbc\xf1\
+\xf7\xec\x15>\x1c\xb0\xd9\xcd&'
+]
+rfc_encoded_bytes_list = [
+    'VJTSqBqY&MzOA<k`I%qIkgp9?&yA`^40@>Y5zrn',
+    'MR50FCcVxs7D85jPCLGQfUR1|yz%$!6+RrW+07;',
+]
+
 
 class Test_check_compact_char_occurrence(unittest2.TestCase):
     def test_valid(self):
@@ -157,12 +169,16 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
         self.assertEqual(rfc1924_b85encode(mercurial_bytes), mercurial_encoded)
         self.assertEqual(rfc1924_b85encode(random_256_bytes),
                          random_256_mercurial)
-
+        for a, e in zip(random_bytes_list, rfc_encoded_bytes_list):
+            self.assertEqual(rfc1924_b85encode(a), e)
+        
     def test_decoding(self):
         self.assertEqual(rfc1924_b85decode(mercurial_encoded), mercurial_bytes)
         self.assertEqual(rfc1924_b85decode(random_256_mercurial),
                          random_256_bytes)
         self.assertEqual(rfc1924_b85decode(b('|NsC0')), '\xff\xff\xff\xff')
+        for a, e in zip(random_bytes_list, rfc_encoded_bytes_list):
+            self.assertEqual(rfc1924_b85decode(e), a)
 
     def test_OverflowError_when_not_decodable_chunk_found(self):
         self.assertRaises(OverflowError, rfc1924_b85decode, b(']]]]]'))
