@@ -47,60 +47,60 @@ __all__ = [
     "generate_random_safe_prime",
 ]
 
-def gcd(a, b):
+def gcd(num_a, num_b):
     """
     Calculates the greatest common divisor.
 
     Non-recursive fast implementation.
 
-    :param a:
+    :param num_a:
         Long value.
-    :param b:
+    :param num_b:
         Long value.
     :returns:
         Greatest common divisor.
     """
-    a, b = max(a, b), min(a, b)
-    while b:
-        a, b = b, (a % b)
-    return a
+    num_a, num_b = max(num_a, num_b), min(num_a, num_b)
+    while num_b:
+        num_a, num_b = num_b, (num_a % num_b)
+    return num_a
 
 
-def lcm(a, b):
+def lcm(num_a, num_b):
     """
     Least common multiple.
 
-    :param a:
+    :param num_a:
         Long value.
     :param v:
         Long value.
     :returns:
         Least common multiple.
     """
-    return (a * b) // gcd(a, b)
+    return (num_a * num_b) // gcd(num_a, num_b)
 
 
-def inverse_mod(a, b):
+def inverse_mod(num_a, num_b):
     """
     Returns inverse of a mod b, zero if none
 
     Uses Extended Euclidean Algorithm
 
-    :param a:
+    :param num_a:
         Long value
-    :param b:
+    :param num_b:
         Long value
     :returns:
         Inverse of a mod b, zero if none.
     """
-    c, d = a, b
+    num_c, num_d = num_a, num_b
     uc, ud = 1, 0
-    while c:
-        q = d // c
-        c, d = d - (q * c), c
-        uc, ud = ud - (q * uc), uc
-    if d == 1:
-        return ud % b
+    while num_c:
+        quotient = num_d // num_c
+        num_c, num_d = num_d - (quotient * num_c), num_c
+        uc, ud = ud - (quotient * uc), uc
+    if num_d == 1:
+        return ud % num_b
     return 0
 
 
@@ -124,15 +124,15 @@ def _pure_pow_mod(base, power, modulus):
     :returns:
         base**pow mod modulus
     """
-    nBitScan = 5
+    n_bit_scan = 5
 
     #TREV - Added support for negative exponents
-    negativeResult = False
+    negative_result = False
     if power < 0:
         power *= -1
-        negativeResult = True
+        negative_result = True
 
-    exp2 = 2**nBitScan
+    exp2 = 2**n_bit_scan
     mask = exp2 - 1
 
     # Break power into a list of digits of nBitScan bits.
@@ -140,27 +140,27 @@ def _pure_pow_mod(base, power, modulus):
     nibbles = None
     while power:
         nibbles = int(power & mask), nibbles
-        power >>= nBitScan
+        power >>= n_bit_scan
 
     # Make a table of powers of base up to 2**nBitScan - 1
-    lowPowers = [1]
+    low_powers = [1]
     for i in xrange(1, exp2):
-        lowPowers.append((lowPowers[i-1] * base) % modulus)
+        low_powers.append((low_powers[i-1] * base) % modulus)
 
     # To exponentiate by the first nibble, look it up in the table
     nib, nibbles = nibbles
-    prod = lowPowers[nib]
+    prod = low_powers[nib]
 
     # For the rest, square nBitScan times, then multiply by
     # base^nibble
     while nibbles:
         nib, nibbles = nibbles
-        for i in xrange(nBitScan):
+        for i in xrange(n_bit_scan):
             prod = (prod * prod) % modulus
-        if nib: prod = (prod * lowPowers[nib]) % modulus
+        if nib: prod = (prod * low_powers[nib]) % modulus
 
     #TREV - Added support for negative exponents
-    if negativeResult:
+    if negative_result:
         prodInv = inverse_mod(prod, modulus)
         #Check to make sure the inverse is correct
         assert (prod * prodInv) % modulus == 1
