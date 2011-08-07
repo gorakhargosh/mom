@@ -132,6 +132,18 @@ POW_85 = (
 )
 
 def check_compact_char_occurrence(sequence, zero_char='z', chunk_size=5):
+    """
+    Ensures 'z' characters do not occur in the middle of 5-tuple chunks
+    when decoding. It will raise a ``ValueError`` if such an occurrence is
+    found.
+
+    :param sequence:
+        The encoded sequence.
+    :param zero_char:
+        The 'z' character (default 'z').
+    :param chunk_size:
+        5 (default).
+    """
     counter = 0
     for i, x in enumerate(sequence):
         if x == zero_char:
@@ -145,6 +157,7 @@ def check_compact_char_occurrence(sequence, zero_char='z', chunk_size=5):
         else:
             counter += 1
 
+            
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
