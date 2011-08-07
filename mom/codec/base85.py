@@ -229,7 +229,7 @@ def b85encode(raw_bytes,
         padding_size = 0
 
     ascii_chars = []
-    # Ascii85 uses a big-endian convention.
+    # ASCII85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
     for x in unpack('>' + 'L' * num_uint32, raw_bytes):
 #        chars = list(range(5))
@@ -263,7 +263,7 @@ def b85decode(encoded,
               _uncompact_zero=True,
               _compact_char='z'):
     """
-    Decodes a base85 encoded string into raw bytes.
+    Decodes an ASCII85-encoded string into raw bytes.
 
     :param encoded:
         Encoded ASCII string.
@@ -283,7 +283,7 @@ def b85decode(encoded,
     :param _compact_char:
         (Internal) Character used to represent compact groups ('z' default)
     :returns:
-        Base85-decoded raw bytes.
+        ASCII85-decoded raw bytes.
     """
     prefix = prefix or ""
     suffix = suffix or ""
