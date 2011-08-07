@@ -339,7 +339,7 @@ def rfc1924_b85encode(raw_bytes,
 
     This is the encoding used by Mercurial, for example. They chose the IPv6
     character set and encode using the Adobe encoding method.
-    This implementation also does not compact zero sequences.
+    This implementation also does not compact zero-byte sequences.
 
     :see: http://tools.ietf.org/html/rfc1924
     :param raw_bytes:
@@ -362,7 +362,7 @@ def rfc1924_b85decode(encoded):
 
     This is the encoding used by Mercurial, for example. They chose the IPv6
     character set and encode using the Adobe encoding method.
-    This implementation also does not uncompact zero sequences.
+    This implementation also does not uncompact zero-byte sequences.
 
     :see: http://tools.ietf.org/html/rfc1924
     :param encoded:
