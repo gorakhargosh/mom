@@ -14,6 +14,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# WARNING:
+# --------
+# Before you begin fiddling with the source code, know that this is not
+# how clean and legible Python software is written. This code employs a few
+# common tricks to reduce computation time. Ensure that you understand them
+# before working with this code.
 
 """
 :module: mom.codec.base85
