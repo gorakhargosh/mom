@@ -50,10 +50,12 @@ try:
     # Not Python3
     unicode_type = unicode
     basestring_type = basestring
+    have_python3 = False
 except NameError:
     # Python3.
     unicode_type = str
     basestring_type = (str, bytes)
+    have_python3 = True
 
 # Integral range.
 try:

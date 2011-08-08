@@ -59,11 +59,15 @@ from __future__ import absolute_import
 
 import binascii
 from struct import pack, unpack
+from mom._compat import have_python3
 from mom.builtins import bytes, is_bytes, b
 from mom.functional import leading, chunks
 from mom.codec.base85 import b85encode, b85decode
 
 ZERO_BYTE = b('\x00')
+if have_python3:
+    # Indexing into Python 3 bytes yields ords.
+    ZERO_BYTE = ZERO_BYTE[0]
 
 __all__ = [
     "base85_encode",
@@ -84,14 +88,14 @@ __all__ = [
 
 def base85_encode(raw_bytes):
     """
-    Encodes raw bytes into base85 representation.
+    Encodes raw bytes into ASCII85 representation.
 
     Encode your Unicode strings to a byte encoding before base85-encoding them.
 
     :param raw_bytes:
         Bytes to encode.
     :returns:
-        Base85 encoded string.
+        ASCII85 encoded string.
     """
     # The following function already checks for types.
     return b85encode(raw_bytes, None, None)
@@ -99,10 +103,10 @@ def base85_encode(raw_bytes):
 
 def base85_decode(encoded):
     """
-    Decodes base85-encoded bytes into raw bytes.
+    Decodes ASCII85-encoded bytes into raw bytes.
 
     :param encoded:
-        Base-85 encoded representation.
+        ASCII85 encoded representation.
     :returns:
         Raw bytes.
     """
@@ -222,6 +226,10 @@ _HEX_TO_BIN_LOOKUP = {
     b('e'): b('1110'), b('E'): b('1110'),
     b('f'): b('1111'), b('F'): b('1111'),
 }
+if have_python3:
+    # Indexing into Python 3 bytes yields ords, not single-byte strings.
+    _HEX_TO_BIN_LOOKUP = \
+        dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())
 _BIN_TO_HEX_LOOKUP = {
     b('0000'): b('0'),
     b('0001'): b('1'),
