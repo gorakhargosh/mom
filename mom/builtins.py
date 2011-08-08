@@ -60,6 +60,7 @@ Encodings
 ---------
 .. autofunction:: bin
 .. autofunction:: hex
+.. autofunction:: byte
 
 Size counting
 -------------
@@ -142,7 +143,15 @@ def byte(num):
     """
     Converts a number between 0 and 255 (both inclusive) to a bytes instance.
     
-    Use it as a replacement for ``chr`` where you are expecting a byte.
+    Use it as a replacement for ``chr`` where you are expecting a byte::
+
+        byte(0) -> b'\x00'
+        byte(255) -> b'\xff'
+
+    :param num:
+        An unsigned integer between 0 and 255 (both inclusive).
+    :returns:
+        A single byte.
     """
     return pack("B", num)
 
