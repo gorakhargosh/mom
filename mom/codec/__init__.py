@@ -64,10 +64,6 @@ from mom.builtins import bytes, is_bytes, b
 from mom.functional import leading, chunks
 from mom.codec.base85 import b85encode, b85decode
 
-ZERO_BYTE = b('\x00')
-if have_python3:
-    # Indexing into Python 3 bytes yields ords.
-    ZERO_BYTE = ZERO_BYTE[0]
 
 __all__ = [
     "base85_encode",
@@ -188,9 +184,9 @@ def decimal_encode(raw_bytes):
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" % \
                         type(raw_bytes).__name__)
-    padding = b("0") * leading((lambda w: w == ZERO_BYTE), raw_bytes)
+    padding = b("0") * leading((lambda w: w == b('\x00')[0]), raw_bytes)
     int_val = bytes_to_integer(raw_bytes)
-    return padding + bytes(int_val) if int_val else padding
+    return padding + str(int_val).encode("ascii") if int_val else padding
 
 
 def decimal_decode(encoded):
@@ -203,7 +199,7 @@ def decimal_decode(encoded):
     :returns:
         Raw bytes.
     """
-    padding = ZERO_BYTE * leading((lambda x: x == b("0")), encoded)
+    padding = b('\x00') * leading((lambda x: x == b("0")[0]), encoded)
     int_val = int(encoded)
     return padding + integer_to_bytes(int_val) if int_val else padding
 
@@ -337,7 +333,7 @@ def _bytes_to_integer(raw_bytes):
         # sufficient zero padding.
         padding_size = 4 - remainder
         length += padding_size
-        raw_bytes = ZERO_BYTE * padding_size + raw_bytes
+        raw_bytes = b('\x00') * padding_size + raw_bytes
 
     # Now unpack integers and accumulate.
     int_value = 0
@@ -372,11 +368,11 @@ def _integer_to_bytes(num, blocksize=0):
 
     # Strip off leading zeros
     for i in range(len(raw_bytes)):
-        if raw_bytes[i] != ZERO_BYTE:
+        if raw_bytes[i] != b('\x00')[0]:
             break
     else:
         # only happens when num == 0
-        raw_bytes = ZERO_BYTE
+        raw_bytes = b('\x00')
         i = 0
     raw_bytes = raw_bytes[i:]
 
@@ -384,7 +380,7 @@ def _integer_to_bytes(num, blocksize=0):
     # de-padding being done above, but sigh...
     if blocksize > 0 and len(raw_bytes) % blocksize:
         raw_bytes = (blocksize - len(raw_bytes) % blocksize) * \
-                    ZERO_BYTE + raw_bytes
+                    b('\x00') + raw_bytes
     return raw_bytes
 
 
@@ -409,7 +405,7 @@ def integer_to_bytes(num, chunk_size=0):
     num = int(num)
     raw_bytes = b('')
     if not num:
-        raw_bytes = ZERO_BYTE
+        raw_bytes = b('\x00')
     while num > 0:
         raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
         num >>= 32
@@ -418,12 +414,12 @@ def integer_to_bytes(num, chunk_size=0):
     if chunk_size > 0:
         remainder = length % chunk_size
         if remainder:
-            raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
+            raw_bytes = (chunk_size - remainder) * b('\x00') + raw_bytes
     else:
         # Count the number of leading zeros.
         leading_zeros = 0
         for leading_zeros in range(length):
-            if raw_bytes[leading_zeros] != ZERO_BYTE:
+            if raw_bytes[leading_zeros] != b('\x00')[0]:
                 break
         raw_bytes = raw_bytes[leading_zeros:]
     return raw_bytes
