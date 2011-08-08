@@ -16,7 +16,7 @@
 # limitations under the License.
 
 """
-:module: mom.net.datauri
+:module: mom.net.scheme.datauri
 :synopsis: Makes working with Data-URI schemes easier.
 :see: http://en.wikipedia.org/wiki/Data_URI_scheme
 
@@ -36,7 +36,7 @@ except ImportError:
     # Python 2.5+
     from urllib import quote, unquote
 
-from mom.net.http.mimeparse import parse_mime_type
+from mom.net.mimeparse import parse_mime_type
 from mom.codec import base64_encode, base64_decode
 
 
@@ -56,10 +56,13 @@ def datauri_encode(raw_bytes,
     :param raw_bytes:
         Raw bytes
     :param mime_type:
-        The mime type, e.g. "text/css" or "image/png". Default "text/plain".
+        The mime type, e.g. b"text/css" or b"image/png". Default b"text/plain".
     :param charset:
         "utf-8" if you want the data-uri to contain a "charset=utf-8"
-        component. Default 'US-ASCII'
+        component. Default 'US-ASCII'. This does not mean however, that your
+        raw_bytes will be encoded by this function. You must ensure that
+        if you specify, "utf-8" (or anything else) as the encoding, you
+        have encoded your raw data appropriately.
     :param encoder:
         "base64" or None.
     :returns:
@@ -74,7 +77,7 @@ def datauri_encode(raw_bytes,
         codec = b(";base64,")
     else:
         # We want ASCII bytes.
-        encode = quote
+        encode = lambda data: quote(data).encode('ascii')
         codec = b(",")
     mime_type = mime_type or b("")
 

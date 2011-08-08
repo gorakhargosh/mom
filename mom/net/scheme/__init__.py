@@ -15,9 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from mom.net.http import datauri, mimeparse
+from mom.net.scheme import datauri
 
 __all__ = [
     "datauri",
-    "mimeparse",
 ]

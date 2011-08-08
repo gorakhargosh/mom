@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import unittest2
 from mom.builtins import b
-from mom.net.http.datauri import datauri_encode, datauri_decode
+from mom.net.scheme.datauri import datauri_encode, datauri_decode
 from tests.test_mom_builtins import unicode_string
 
 png = b('''\
@@ -21,10 +21,9 @@ E0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==''')
 
 png_data_uri_quoted = b('''\
 data:image/png,\
-%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%00%05%08\
-%06%00%00%00%8Do%26%E5%00%00%00%1CIDAT%08%D7c%F8%FF%FF%3F%C3\
-%7F%06+%05%C3+%12%84%D01%F1%82X%CD%04%00%0E%F55%CB%D1%8E%0E%1F\
-%00%00%00%00IEND%AEB%60%82''')
+%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%00%05%08%06%00%00%00%8\
+Do%26%E5%00%00%00%1CIDAT%08%D7c%F8%FF%FF%3F%C3%7F%06%20%05%C3%20%12%84%D01\
+%F1%82X%CD%04%00%0E%F55%CB%D1%8E%0E%1F%00%00%00%00IEND%AEB%60%82''')
 
 sample_data_uri = b('''\
 data:text/css;charset=utf-8;base64,\
