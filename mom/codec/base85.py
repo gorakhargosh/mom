@@ -27,6 +27,7 @@
 :synopsis: ASCII-85 and RFC1924 Base85 encoding and decoding functions.
 :see: http://en.wikipedia.org/wiki/Ascii85
 :see: http://tools.ietf.org/html/rfc1924
+:see: http://www.piclist.com/techref/method/encode.htm
 
 Functions
 ---------
