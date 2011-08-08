@@ -73,7 +73,8 @@ from struct import pack, unpack
 from mom._compat import have_python3
 from mom.builtins import is_bytes, b, byte
 from mom.functional import leading, chunks
-from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode, rfc1924_b85decode
+from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode, \
+    rfc1924_b85decode
 
 
 __all__ = [
@@ -154,10 +155,10 @@ def base64_urlsafe_encode(raw_bytes):
         Base64 encoded string without newline characters.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" %
                         type(raw_bytes).__name__)
     # This is 3-4x faster than urlsafe_b64decode() -Guido.
-    # We're not using the base64.py wrapper around binascii, because
+    # We're not using the base64.py wrapper around binascii because
     # this module itself is a wrapper. binascii is implemented in C, so
     # we avoid module overhead however small.
     encoded = binascii.b2a_base64(raw_bytes)[:-1]
@@ -174,13 +175,13 @@ def base64_urlsafe_decode(encoded):
         Raw bytes.
     """
     if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" %
                         type(encoded).__name__)
     remainder = len(encoded) % 4
     if remainder:
         encoded += b('=') * (4 - remainder)
     # This is 3-4x faster than urlsafe_b64decode() -Guido.
-    # We're not using the base64.py wrapper around binascii, because
+    # We're not using the base64.py wrapper around binascii because
     # this module itself is a wrapper. binascii is implemented in C, so
     # we avoid module overhead however small.
     encoded = encoded.replace(b('-'), b('+')).replace(b('_'),b('/'))
@@ -200,7 +201,7 @@ def base64_encode(raw_bytes):
         Base64 encoded bytes without newline characters.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" %
                         type(raw_bytes).__name__)
     return binascii.b2a_base64(raw_bytes)[:-1]
 
@@ -215,7 +216,7 @@ def base64_decode(encoded):
         Raw bytes.
     """
     if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" %
                         type(encoded).__name__)
     return binascii.a2b_base64(encoded)
 
@@ -232,7 +233,7 @@ def hex_encode(raw_bytes):
         Hex-encoded representation.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" % \
+        raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     return binascii.b2a_hex(raw_bytes)
 
@@ -247,7 +248,7 @@ def hex_decode(encoded):
         Raw bytes.
     """
     if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" %
                         type(encoded).__name__)
     return binascii.a2b_hex(encoded)
 
@@ -265,7 +266,7 @@ def decimal_encode(raw_bytes):
         Decimal-encoded representation.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" % \
+        raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     padding = b("0") * leading((lambda w: w == ZERO_BYTE[0]), raw_bytes)
     int_val = bytes_to_integer(raw_bytes)
@@ -283,7 +284,7 @@ def decimal_decode(encoded):
         Raw bytes.
     """
     if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" %
                         type(encoded).__name__)
     padding = ZERO_BYTE * leading((lambda x: x == b("0")[0]), encoded)
     int_val = int(encoded)
@@ -342,7 +343,7 @@ def bin_encode(raw_bytes):
         Binary representation.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" % \
+        raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     return b('').join(_HEX_TO_BIN_LOOKUP[hex_char]
                    for hex_char in hex_encode(raw_bytes))
@@ -361,7 +362,7 @@ def bin_decode(encoded):
         Raw bytes.
     """
     if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" %
                         type(encoded).__name__)
     return hex_decode(b('').join(_BIN_TO_HEX_LOOKUP[nibble]
                               for nibble in chunks(encoded, 4)))
@@ -388,7 +389,7 @@ def bytes_to_integer(raw_bytes):
         Integer.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" % \
+        raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     # binascii.b2a_hex is written in C as is int.
     return int(binascii.b2a_hex(raw_bytes), 16)
@@ -412,7 +413,7 @@ def _bytes_to_integer(raw_bytes):
         Integer.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" % \
+        raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
 
     length = len(raw_bytes)
