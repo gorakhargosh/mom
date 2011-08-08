@@ -68,46 +68,32 @@ UINT32_MAX = 0xffffffff # (1 << 32) - 1      # 4294967295
 ZERO_BYTE = b('\x00')
 EXCLAMATION_CHUNK = b('!!!!!')
 ZERO_GROUP_CHAR = b('z')
-
-
-def _ascii85_chr(num):
-    """
-    Converts an ordinal into its ASCII85 character.
-
-    :param num:
-        Ordinal value.
-    :returns:
-        base85 character.
-    """
-    return chr(num + 33).encode("ascii")
-
+WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 # Use this if you want the base85 codec to encode/decode including
 # ASCII85 prefixes/suffixes.
 ASCII85_PREFIX = b('<~')
 ASCII85_SUFFIX = b('~>')
 
-WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
-
 # ASCII85 characters.
-#ASCII85_CHARS = b('').join(_ascii85_chr(num) for num in range(85))
-ASCII85_CHARS = b('!"#$%&\'()*+,-./0123456789:;<=>?@'
+#ASCII85_CHARSET = b('').join(chr(num + 33).encode("ascii") for num in range(85))
+ASCII85_CHARSET = b('!"#$%&\'()*+,-./0123456789:;<=>?@'
                   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                   '[\\]^_`'
                   'abcdefghijklmnopqrstu')
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_CHARS = (string.digits +
+RFC1924_CHARSET = (string.digits +
                 string.ascii_uppercase +
                 string.ascii_lowercase +
                 "!#$%&()*+-;<=>?@^_`{|}~").encode("ascii")
-RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
+RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARSET))
 
 if have_python3:
-    # Python 3 bytes when indexed return integers, not single-character
+    # Python 3 bytes when indexed yield integers, not single-character
     # byte strings.
-    ASCII85_ORDS = dict((x, x - 33) for x in ASCII85_CHARS)
-    ASCII85_CHARS = {
+    ASCII85_ORDS = dict((x, x - 33) for x in ASCII85_CHARSET)
+    ASCII85_CHARSET = {
         0: b('!'),
         1: b('"'),
         2: b('#'),
@@ -194,7 +180,7 @@ if have_python3:
         83: b('t'),
         84: b('u'),
     }
-    RFC1924_CHARS = {
+    RFC1924_CHARSET = {
         0: b('0'),
         1: b('1'),
         2: b('2'),
@@ -283,7 +269,7 @@ if have_python3:
     }
 else:
     # Indexing into Python 2 bytes yields single-character byte strings.
-    ASCII85_ORDS = dict((x, ord(x) - 33) for x in ASCII85_CHARS)
+    ASCII85_ORDS = dict((x, ord(x) - 33) for x in ASCII85_CHARSET)
     #                 Notice ^. In Python 3, you don't need this.
 
 # Pre-computed powers (array index) of 85 used to unroll encoding loops
@@ -347,7 +333,7 @@ def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
               _padding=False,
-              _base85_chars=ASCII85_CHARS,
+              _base85_chars=ASCII85_CHARSET,
               _compact_zero=True,
               _compact_char=ZERO_GROUP_CHAR,
               _pow_85=POW_85):
@@ -453,7 +439,7 @@ def b85decode(encoded,
               prefix=None,
               suffix=None,
               _base85_ords=ASCII85_ORDS,
-              _base85_chars=ASCII85_CHARS,
+              _base85_chars=ASCII85_CHARSET,
               _ignore_pattern=WHITESPACE_PATTERN,
               _uncompact_zero=True,
               _compact_char=ZERO_GROUP_CHAR):
@@ -588,7 +574,7 @@ def rfc1924_b85encode(raw_bytes,
     """
     return b85encode(raw_bytes,
                      _padding=_padding,
-                     _base85_chars=RFC1924_CHARS,
+                     _base85_chars=RFC1924_CHARSET,
                      _compact_zero=False)
 
 
@@ -608,13 +594,13 @@ def rfc1924_b85decode(encoded):
     """
     return b85decode(encoded,
                      _base85_ords=RFC1924_ORDS,
-                     _base85_chars=RFC1924_CHARS,
+                     _base85_chars=RFC1924_CHARSET,
                      _uncompact_zero=False)
 
 
 
 def ipv6_b85encode(uint128,
-                   _base85_chars=RFC1924_CHARS,
+                   _base85_chars=RFC1924_CHARSET,
                    _pow_85=POW_85):
     """
     Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
