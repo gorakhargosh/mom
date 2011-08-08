@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from mom.net.scheme import dataurl
+from mom.net.scheme import data
 
 __all__ = [
-    "dataurl",
+    "data",
 ]
