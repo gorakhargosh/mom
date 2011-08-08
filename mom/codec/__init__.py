@@ -71,7 +71,7 @@ from __future__ import absolute_import
 import binascii
 from struct import pack, unpack
 from mom._compat import have_python3
-from mom.builtins import is_bytes, b
+from mom.builtins import is_bytes, b, byte
 from mom.functional import leading, chunks
 from mom.codec.base85 import b85encode, b85decode
 
@@ -93,7 +93,7 @@ __all__ = [
     "integer_to_bytes",
 ]
 
-ZERO_BYTE = b('\x00')
+ZERO_BYTE = byte(0)
 
 # Bytes base-encoding.
 
