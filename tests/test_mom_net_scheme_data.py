@@ -97,8 +97,8 @@ class Test_identity(unittest2.TestCase):
         )
 
 
-class Test_decoding(unittest2.TestCase):
-    def test_decoding(self):
+class Test_parsing(unittest2.TestCase):
+    def test_parsing(self):
         raw_bytes, mime_type = data_urlparse(sample_data_url)
         self.assertEqual(raw_bytes, png)
         self.assertEqual(mime_type[:2], (b('text'), b('css')))
@@ -113,7 +113,7 @@ class Test_decoding(unittest2.TestCase):
         })
 
 
-    def test_decoding_no_metadata(self):
+    def test_parsing_no_metadata(self):
         raw_bytes, mime_type = data_urlparse(no_meta_data_url)
         self.assertEqual(raw_bytes, png)
         self.assertEqual(mime_type[:2], (b('text'), b('plain')))

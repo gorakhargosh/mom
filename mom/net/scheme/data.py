@@ -90,7 +90,7 @@ def data_urlencode(raw_bytes,
 
 def data_urlparse(data_url):
     """
-    Decodes a data URL into raw bytes and metadata.
+    Parses a data URL into raw bytes and metadata.
 
     :param data_url:
         The data url string.
