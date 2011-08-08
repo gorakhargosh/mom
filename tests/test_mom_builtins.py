@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import unittest2
 import math
+import struct
 
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
@@ -21,7 +22,7 @@ from mom.builtins import \
     is_odd, \
     is_even, \
     is_negative, \
-    is_positive
+    is_positive, byte
 
 try:
     unicode
@@ -38,6 +39,17 @@ utf8_bytes2 = utf8_bytes2
 latin1_bytes = latin1_bytes
 
 random_bytes = generate_random_bytes(100)
+
+class Test_byte(unittest2.TestCase):
+    def test_byte(self):
+        for i in range(256):
+            byt = byte(i)
+            self.assertTrue(is_bytes(byt))
+            self.assertEqual(ord(byt), i)
+
+    def test_raises_Error_on_overflow(self):
+        self.assertRaises(struct.error, byte, 256)
+        self.assertRaises(struct.error, byte, -1)
 
 class Test_bin(unittest2.TestCase):
     def test_binary_0_1_and_minus_1(self):

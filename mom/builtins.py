@@ -89,8 +89,11 @@ from __future__ import absolute_import
 from mom._compat import \
     byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
     next, long_type, int_type
+from struct import pack
+
 
 __all__ = [
+    "byte",
     "bytes",
     "bin",
     "hex",
@@ -134,6 +137,14 @@ bytes = bytes_type
 # Fake byte literal support.
 b = byte_literal
 
+
+def byte(num):
+    """
+    Converts a number between 0 and 255 (both inclusive) to a bytes instance.
+    
+    Use it as a replacement for ``chr`` where you are expecting a byte.
+    """
+    return pack("B", num)
 
 
 def bin(num, prefix="0b"):
