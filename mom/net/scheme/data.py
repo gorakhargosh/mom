@@ -27,17 +27,16 @@
 
 
 from __future__ import absolute_import
-from mom.builtins import is_bytes, b
 
 try:
     # Python 3.
     from urllib.parse import quote_from_bytes as quote, \
         unquote_to_bytes as unquote
-    from functools import partial
 except ImportError:
     # Python 2.5+
     from urllib import quote, unquote
 
+from mom.builtins import is_bytes, b
 from mom.net.mimeparse import parse_mime_type
 from mom.codec import base64_encode, base64_decode
 
@@ -106,7 +105,7 @@ def data_urlparse(data_url):
     if not is_bytes(data_url):
         raise TypeError(
             "data URLs must be ASCII-encoded bytes: got %r" %
-            type(raw_bytes).__name__
+            type(data_url).__name__
         )
     metadata, encoded = data_url.rsplit(b(","), 1)
     _, metadata = metadata.split(b("data:"), 1)
