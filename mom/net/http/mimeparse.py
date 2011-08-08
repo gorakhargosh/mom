@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007 Joe Gregorio
+# Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +42,8 @@ Contents:
                           from a list of candidates.
 """
 
+from mom.builtins import b
+
 __version__ = '0.1.3'
 __author__ = 'Joe Gregorio'
 __email__ = 'joe@bitworking.org'
@@ -53,21 +56,21 @@ def parse_mime_type(mime_type):
 
     Carves up a mime-type and returns a tuple of the (type, subtype, params)
     where 'params' is a dictionary of all the parameters for the media range.
-    For example, the media range 'application/xhtml;q=0.5' would get parsed
+    For example, the media range b'application/xhtml;q=0.5' would get parsed
     into:
 
-       ('application', 'xhtml', {'q', '0.5'})
+       (b'application', b'xhtml', {b'q', b'0.5'})
        """
-    parts = mime_type.split(';')
-    params = dict([tuple([s.strip() for s in param.split('=', 1)])\
+    parts = mime_type.split(b(';'))
+    params = dict([tuple([s.strip() for s in param.split(b('='), 1)])\
             for param in parts[1:]
                   ])
     full_type = parts[0].strip()
     # Java URLConnection class sends an Accept header that includes a
     # single '*'. Turn it into a legal wildcard.
-    if full_type == '*':
-        full_type = '*/*'
-    (type, subtype) = full_type.split('/')
+    if full_type == b('*'):
+        full_type = b('*/*')
+    (type, subtype) = full_type.split(b('/'))
 
     return type.strip(), subtype.strip(), params
 
@@ -80,17 +83,17 @@ def parse_media_range(range):
     range.  For example, the media range 'application/*;q=0.5' would get parsed
     into:
 
-       ('application', '*', {'q', '0.5'})
+       ('application', '*', {b'q', '0.5'})
 
     In addition this function also guarantees that there is a value for 'q'
     in the params dictionary, filling it in with a proper default if
     necessary.
     """
     (type, subtype, params) = parse_mime_type(range)
-    if not params.has_key('q') or not params['q'] or \
-            not float(params['q']) or float(params['q']) > 1\
-            or float(params['q']) < 0:
-        params['q'] = '1'
+    if not params.has_key(b('q')) or not params[b('q')] or \
+            not float(params[b('q')]) or float(params[b('q')]) > 1\
+            or float(params[b('q')]) < 0:
+        params[b('q')] = '1'
 
     return type, subtype, params
 
@@ -110,21 +113,21 @@ def fitness_and_quality_parsed(mime_type, parsed_ranges):
             parse_media_range(mime_type)
     for (type, subtype, params) in parsed_ranges:
         type_match = (type == target_type or\
-                      type == '*' or\
-                      target_type == '*')
+                      type == b('*') or\
+                      target_type == b('*'))
         subtype_match = (subtype == target_subtype or\
-                         subtype == '*' or\
-                         target_subtype == '*')
+                         subtype == b('*') or\
+                         target_subtype == b('*'))
         if type_match and subtype_match:
             param_matches = reduce(lambda x, y: x + y, [1 for (key, value) in \
-                    target_params.iteritems() if key != 'q' and \
+                    target_params.iteritems() if key != b('q') and \
                     params.has_key(key) and value == params[key]], 0)
             fitness = (type == target_type) and 100 or 0
             fitness += (subtype == target_subtype) and 10 or 0
             fitness += param_matches
             if fitness > best_fitness:
                 best_fitness = fitness
-                best_fit_q = params['q']
+                best_fit_q = params[b('q')]
 
     return best_fitness, float(best_fit_q)
 
@@ -148,12 +151,12 @@ def quality(mime_type, ranges):
     Returns the quality 'q' of a mime-type when compared against the
     media-ranges in ranges. For example:
 
-    >>> quality('text/html','text/*;q=0.3, text/html;q=0.7,
+    >>> quality(b'text/html',b'text/*;q=0.3, text/html;q=0.7,
                   text/html;level=1, text/html;level=2;q=0.4, */*;q=0.5')
     0.7
 
     """
-    parsed_ranges = [parse_media_range(r) for r in ranges.split(',')]
+    parsed_ranges = [parse_media_range(r) for r in ranges.split(b(','))]
 
     return quality_parsed(mime_type, parsed_ranges)
 
@@ -168,11 +171,11 @@ def best_match(supported, header):
     in order of increasing desirability, in case of a situation where there is
     a tie.
 
-    >>> best_match(['application/xbel+xml', 'text/xml'],
-                   'text/*;q=0.5,*/*; q=0.1')
-    'text/xml'
+    >>> best_match([b'application/xbel+xml', b'text/xml'],
+                   b'text/*;q=0.5,*/*; q=0.1')
+    b'text/xml'
     """
-    split_header = _filter_blank(header.split(','))
+    split_header = _filter_blank(header.split(b(',')))
     parsed_header = [parse_media_range(r) for r in split_header]
     weighted_matches = []
     pos = 0
@@ -182,7 +185,7 @@ def best_match(supported, header):
         pos += 1
     weighted_matches.sort()
 
-    return weighted_matches[-1][0][1] and weighted_matches[-1][2] or ''
+    return weighted_matches[-1][0][1] and weighted_matches[-1][2] or b('')
 
 
 def _filter_blank(i):

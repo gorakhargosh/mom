@@ -16,7 +16,7 @@
 # limitations under the License.
 
 """
-:module: mom.net.http.datauri
+:module: mom.net.datauri
 :synopsis: Makes working with Data-URI schemes easier.
 :see: http://en.wikipedia.org/wiki/Data_URI_scheme
 
@@ -25,14 +25,16 @@
 """
 
 from __future__ import absolute_import
-from mom.builtins import is_bytes
+from mom.builtins import is_bytes, b
 
 try:
     # Python 3.
-    from urllib.parse import quote_plus, unquote_plus
+    from urllib.parse import quote_from_bytes as quote, \
+        unquote_to_bytes as unquote
+    from functools import partial
 except ImportError:
     # Python 2.5+
-    from urllib import quote_plus, unquote_plus
+    from urllib import quote, unquote
 
 from mom.net.http.mimeparse import parse_mime_type
 from mom.codec import base64_encode, base64_decode
@@ -45,8 +47,8 @@ __all__ = [
 
 
 def datauri_encode(raw_bytes,
-                   mime_type='text/plain',
-                   charset='US-ASCII',
+                   mime_type=b('text/plain'),
+                   charset=b('US-ASCII'),
                    encoder="base64"):
     """
     Encodes raw bytes into a data-uri scheme string.
@@ -65,18 +67,20 @@ def datauri_encode(raw_bytes,
     """
     if not is_bytes(raw_bytes):
         raise TypeError(
-            "only raw bytes can be encoded: got %r" % type(raw_bytes).__name__)
+            "only raw bytes can be encoded: got %r" % type(raw_bytes).__name__
+        )
     if encoder == "base64":
         encode = base64_encode
-        codec = ";base64,"
+        codec = b(";base64,")
     else:
-        encode = quote_plus
-        codec = ","
-    mime_type = mime_type or ""
+        # We want ASCII bytes.
+        encode = quote
+        codec = b(",")
+    mime_type = mime_type or b("")
 
-    charset = ";charset=" + charset if charset else ""
-    data = encode(raw_bytes)
-    return ''.join(("data:", mime_type, charset, codec, data))
+    charset = b(";charset=") + charset if charset else b("")
+    encoded = encode(raw_bytes)
+    return b('').join((b("data:"), mime_type, charset, codec, encoded))
 
 
 def datauri_decode(data_uri):
@@ -94,16 +98,16 @@ def datauri_decode(data_uri):
         See :func:`mom.http.mimeparse.parse_mime_type` for what ``mime_type``
         looks like.
     """
-    metadata, data = data_uri.rsplit(",", 1)
-    _, metadata = metadata.split("data:", 1)
-    parts = metadata.rsplit(";", 1)
-    if parts[-1] == "base64":
+    metadata, encoded = data_uri.rsplit(b(","), 1)
+    _, metadata = metadata.split(b("data:"), 1)
+    parts = metadata.rsplit(b(";"), 1)
+    if parts[-1] == b("base64"):
         decode = base64_decode
         parts = parts[:-1]
     else:
-        decode = unquote_plus
-    raw_bytes = decode(data)
+        decode = unquote
     if not parts or not parts[0]:
-        parts = ["text/plain;charset=US-ASCII"]
+        parts = [b("text/plain;charset=US-ASCII")]
     mime_type = parse_mime_type(parts[0])
+    raw_bytes = decode(encoded)
     return raw_bytes, mime_type
