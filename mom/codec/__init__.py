@@ -97,7 +97,16 @@ ZERO_BYTE = byte(0)
 
 # Bytes base-encoding.
 
-def base85_encode(raw_bytes, charset="ASCII85"):
+_B85_DECODE_MAP = {
+    "ASCII85": b85decode,
+    "RFC1924": rfc1924_b85decode,
+}
+_B85_ENCODE_MAP = {
+    "ASCII85": b85encode,
+    "RFC1924": rfc1924_b85encode,
+}
+
+def base85_encode(raw_bytes, charset="ASCII85", _encode_map=_B85_ENCODE_MAP):
     """
     Encodes raw bytes into ASCII85 representation.
 
@@ -110,16 +119,13 @@ def base85_encode(raw_bytes, charset="ASCII85"):
     :returns:
         ASCII85 encoded string.
     """
-    charset = charset.upper()
-    if charset == "ASCII85":
-        return b85encode(raw_bytes)
-    elif charset == "RFC1924":
-        return rfc1924_b85encode(raw_bytes)
-    else:
+    try:
+        return _encode_map[charset.upper()](raw_bytes)
+    except KeyError:
         raise ValueError("Invalid character set specified: %r" % charset)
 
 
-def base85_decode(encoded, charset="ASCII85"):
+def base85_decode(encoded, charset="ASCII85", _decode_map=_B85_DECODE_MAP):
     """
     Decodes ASCII85-encoded bytes into raw bytes.
 
@@ -130,12 +136,9 @@ def base85_decode(encoded, charset="ASCII85"):
     :returns:
         Raw bytes.
     """
-    charset = charset.upper()
-    if charset == "ASCII85":
-        return b85decode(encoded)
-    elif charset == "RFC1924":
-        return rfc1924_b85decode(encoded)
-    else:
+    try:
+        return _decode_map[charset.upper()](encoded)
+    except KeyError:
         raise ValueError("Invalid character set specified: %r" % charset)
 
 
