@@ -33,6 +33,7 @@ Numbers
 Sequences and choices
 ---------------------
 .. autofunction:: random_choice
+.. autofunction:: random_shuffle
 .. autofunction:: generate_random_sequence
 .. autofunction:: generate_random_sequence_strong
 
@@ -51,7 +52,7 @@ Utility
 from __future__ import absolute_import, division
 
 from mom import string
-from mom._compat import generate_random_bytes as _generate_random_bytes
+from mom._compat import range, generate_random_bytes as _generate_random_bytes
 from mom.builtins import integer_bit_length, is_integer
 from mom.codec import \
     hex_encode, \
@@ -70,6 +71,7 @@ __all__ = [
     "generate_random_sequence",
     "generate_random_sequence_strong",
     "random_choice",
+    "random_shuffle",
     "calculate_entropy",
     "HEXADECIMAL_DIGITS",
     "DIGITS",
@@ -230,6 +232,25 @@ def random_choice(sequence, rand_func=generate_random_bytes):
         Randomly chosen element.
     """
     return sequence[generate_random_uint_between(0, len(sequence), rand_func)]
+
+
+def random_shuffle(sequence, rand_func=generate_random_bytes):
+    """
+    Randomly shuffles the sequence in-place.
+
+    :param sequence:
+        Sequence to shuffle in-place.
+    :returns:
+        The shuffled sequence itself (for convenience).
+    """
+    copy = list(sequence)
+    # Choose a random item (without replacement) until all the items have been
+    # chosen.
+    for i in range(len(sequence)):
+        p = random_choice(copy, rand_func)
+        sequence[i] = copy[p]
+        del copy[p]
+    return sequence
 
 
 def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
