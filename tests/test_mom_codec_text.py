@@ -3,7 +3,7 @@
 
 import unittest2
 
-from mom.builtins import is_bytes, is_unicode
+from mom.builtins import is_bytes, is_unicode, b
 from mom.codec.text import utf8_encode_if_unicode, \
     to_unicode_if_bytes, bytes_to_unicode, utf8_encode, \
     utf8_encode_recursive, bytes_to_unicode_recursive, \
@@ -175,38 +175,38 @@ class Test_unicode_to_utf8(unittest2.TestCase):
 
 class Test_bytes_to_unicode_recursive(unittest2.TestCase):
     def test_converts_all_bytes_to_unicode_recursively(self):
-        p = dict(
-            l=[utf8_bytes2, utf8_bytes],
-            t=(utf8_bytes2, utf8_bytes),
-            d=dict(another=[utf8_bytes, utf8_bytes2]),
-            b=utf8_bytes,
-            n=None
-        )
-        e = dict(
-            l=[unicode_string2, unicode_string],
-            t=(unicode_string2, unicode_string),
-            d=dict(another=[unicode_string, unicode_string2]),
-            b=unicode_string,
-            n=None
-        )
+        p = {
+            "l": [utf8_bytes2, utf8_bytes],
+            "t": (utf8_bytes2, utf8_bytes),
+            "d": dict(another=[utf8_bytes, utf8_bytes2]),
+            "b": utf8_bytes,
+            "n": None,
+        }
+        e = {
+            "l": [unicode_string2, unicode_string],
+            "t": (unicode_string2, unicode_string),
+            "d": dict(another=[unicode_string, unicode_string2]),
+            "b": unicode_string,
+            "n": None,
+        }
         self.assertDictEqual(bytes_to_unicode_recursive(p), e)
 
 
 class Test_unicode_to_utf8_recursive(unittest2.TestCase):
     def test_converts_all_unicode_to_utf8_bytes_recursively(self):
-        p = dict(
-            l=[utf8_bytes2, utf8_bytes],
-            t=(utf8_bytes2, utf8_bytes),
-            d=dict(another=[utf8_bytes, utf8_bytes2]),
-            b=utf8_bytes,
-            n=None
-        )
-        e = dict(
-            l=[unicode_string2, unicode_string],
-            t=(unicode_string2, unicode_string),
-            d=dict(another=[unicode_string, unicode_string2]),
-            b=unicode_string,
-            n=None
-        )
-        self.assertDictEqual(utf8_encode_recursive(e), p)
+        e = {
+            b("l"): [utf8_bytes2, utf8_bytes],
+            b("t"): (utf8_bytes2, utf8_bytes),
+            b("d"): {b('another'): [utf8_bytes, utf8_bytes2]},
+            b("b"): utf8_bytes,
+            b("n"): None,
+        }
+        p = {
+            "l": [unicode_string2, unicode_string],
+            "t": (unicode_string2, unicode_string),
+            "d": dict(another=[unicode_string, unicode_string2]),
+            "b": unicode_string,
+            "n": None,
+        }
+        self.assertDictEqual(utf8_encode_recursive(p), e)
 
