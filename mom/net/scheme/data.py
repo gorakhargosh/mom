@@ -16,13 +16,13 @@
 # limitations under the License.
 
 """
-:module: mom.net.scheme.dataurl
-:synopsis: Makes working with Data-URL schemes easier.
+:module: mom.net.scheme.data
+:synopsis: Makes working with Data URL-schemes easier.
 :see: http://en.wikipedia.org/wiki/Data_URI_scheme
 :see: https://tools.ietf.org/html/rfc2397
 
-.. autofunction:: dataurl_encode
-.. autofunction:: dataurl_decode
+.. autofunction:: data_urlencode
+.. autofunction:: data_urlparse
 """
 
 
@@ -43,12 +43,12 @@ from mom.codec import base64_encode, base64_decode
 
 
 __all__ = [
-    "dataurl_encode",
-    "dataurl_decode",
+    "data_urlencode",
+    "data_urlparse",
 ]
 
 
-def dataurl_encode(raw_bytes,
+def data_urlencode(raw_bytes,
                    mime_type=b('text/plain'),
                    charset=b('US-ASCII'),
                    encoder="base64"):
@@ -88,7 +88,7 @@ def dataurl_encode(raw_bytes,
     return b('').join((b("data:"), mime_type, charset, codec, encoded))
 
 
-def dataurl_decode(data_url):
+def data_urlparse(data_url):
     """
     Decodes a data URL into raw bytes and metadata.
 
