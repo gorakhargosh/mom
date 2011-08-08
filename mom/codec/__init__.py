@@ -73,7 +73,7 @@ from struct import pack, unpack
 from mom._compat import have_python3
 from mom.builtins import is_bytes, b, byte
 from mom.functional import leading, chunks
-from mom.codec.base85 import b85encode, b85decode
+from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode, rfc1924_b85decode
 
 
 __all__ = [
@@ -97,8 +97,7 @@ ZERO_BYTE = byte(0)
 
 # Bytes base-encoding.
 
-# TODO: Add charset argument to enable ASCII85 as well as RFC1924 charsets.
-def base85_encode(raw_bytes):
+def base85_encode(raw_bytes, charset="ASCII85"):
     """
     Encodes raw bytes into ASCII85 representation.
 
@@ -106,24 +105,38 @@ def base85_encode(raw_bytes):
 
     :param raw_bytes:
         Bytes to encode.
+    :param charset:
+        "ASCII85" (default) or "RFC1924".
     :returns:
         ASCII85 encoded string.
     """
-    # The following function already checks for types.
-    return b85encode(raw_bytes, None, None)
+    charset = charset.upper()
+    if charset == "ASCII85":
+        return b85encode(raw_bytes)
+    elif charset == "RFC1924":
+        return rfc1924_b85encode(raw_bytes)
+    else:
+        raise ValueError("Invalid character set specified: %r" % charset)
 
 
-def base85_decode(encoded):
+def base85_decode(encoded, charset="ASCII85"):
     """
     Decodes ASCII85-encoded bytes into raw bytes.
 
     :param encoded:
         ASCII85 encoded representation.
+    :param charset:
+        "ASCII85" (default) or "RFC1924".
     :returns:
         Raw bytes.
     """
-    # The following function already checks for types.
-    return b85decode(encoded, None, None)
+    charset = charset.upper()
+    if charset == "ASCII85":
+        return b85decode(encoded)
+    elif charset == "RFC1924":
+        return rfc1924_b85decode(encoded)
+    else:
+        raise ValueError("Invalid character set specified: %r" % charset)
 
 
 def base64_urlsafe_encode(raw_bytes):
