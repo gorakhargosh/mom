@@ -17,7 +17,7 @@
 
 """
 :module: mom.net.scheme.dataurl
-:synopsis: Makes working with Data-URI schemes easier.
+:synopsis: Makes working with Data-URL schemes easier.
 :see: http://en.wikipedia.org/wiki/Data_URI_scheme
 :see: https://tools.ietf.org/html/rfc2397
 
