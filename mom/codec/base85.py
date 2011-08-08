@@ -29,6 +29,23 @@
 :see: http://tools.ietf.org/html/rfc1924
 :see: http://www.piclist.com/techref/method/encode.htm
 
+Where should you use base85?
+----------------------------
+Base85-encoding is used to compactly represent binary data in 7-bit ASCII.
+It is, therefore, 7-bit MIME-safe but not safe to use in URLs, SGML, HTTP cookies,
+and other similar places. Example scenarios where Base85 encoding
+can be put to use are Adobe PDF documents, Adobe PostScript format, binary
+diffs (patches), efficiently storing RSA PEM keys, etc.
+
+The ASCII85 character set-based encoding is mostly used by Adobe PDF and
+PostScript formats. It may also be used to store PEM keys or binary data
+with a lot of zero byte sequences. The RFC1924 character set-based encoding,
+however, may be used to compactly represent 128-bit unsigned numbers (like
+IPv6 addresses) or binary diffs. Encoding based on RFC1924 does not compact
+zero byte sequences, so this form of encoding is less efficient than the
+ASCII85 version where a lot of redundant zero byte sequences are expected.
+
+
 Functions
 ---------
 .. autofunction:: b85encode
