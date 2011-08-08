@@ -16,13 +16,15 @@
 # limitations under the License.
 
 """
-:module: mom.net.scheme.datauri
+:module: mom.net.scheme.dataurl
 :synopsis: Makes working with Data-URI schemes easier.
 :see: http://en.wikipedia.org/wiki/Data_URI_scheme
+:see: https://tools.ietf.org/html/rfc2397
 
-.. autofunction:: datauri_encode
-.. autofunction:: datauri_decode
+.. autofunction:: dataurl_encode
+.. autofunction:: dataurl_decode
 """
+
 
 from __future__ import absolute_import
 from mom.builtins import is_bytes, b
@@ -41,32 +43,32 @@ from mom.codec import base64_encode, base64_decode
 
 
 __all__ = [
-    "datauri_encode",
-    "datauri_decode",
+    "dataurl_encode",
+    "dataurl_decode",
 ]
 
 
-def datauri_encode(raw_bytes,
+def dataurl_encode(raw_bytes,
                    mime_type=b('text/plain'),
                    charset=b('US-ASCII'),
                    encoder="base64"):
     """
-    Encodes raw bytes into a data-uri scheme string.
+    Encodes raw bytes into a data URL scheme string.
 
     :param raw_bytes:
         Raw bytes
     :param mime_type:
         The mime type, e.g. b"text/css" or b"image/png". Default b"text/plain".
     :param charset:
-        "utf-8" if you want the data-uri to contain a "charset=utf-8"
-        component. Default 'US-ASCII'. This does not mean however, that your
+        b"utf-8" if you want the data URL to contain a b"charset=utf-8"
+        component. Default b'US-ASCII'. This does not mean however, that your
         raw_bytes will be encoded by this function. You must ensure that
-        if you specify, "utf-8" (or anything else) as the encoding, you
+        if you specify, b"utf-8" (or anything else) as the encoding, you
         have encoded your raw data appropriately.
     :param encoder:
         "base64" or None.
     :returns:
-        Data URI.
+        Data URL.
     """
     if not is_bytes(raw_bytes):
         raise TypeError(
@@ -86,12 +88,12 @@ def datauri_encode(raw_bytes,
     return b('').join((b("data:"), mime_type, charset, codec, encoded))
 
 
-def datauri_decode(data_uri):
+def dataurl_decode(data_url):
     """
-    Decodes a data-uri into raw bytes and metadata.
+    Decodes a data URL into raw bytes and metadata.
 
-    :param data_uri:
-        The data-uri string.
+    :param data_url:
+        The data url string.
         If a mime-type definition is missing in the metadata,
         "text/plain;charset=US-ASCII" will be used as default mime-type.
     :returns:
@@ -101,7 +103,7 @@ def datauri_decode(data_uri):
         See :func:`mom.http.mimeparse.parse_mime_type` for what ``mime_type``
         looks like.
     """
-    metadata, encoded = data_uri.rsplit(b(","), 1)
+    metadata, encoded = data_url.rsplit(b(","), 1)
     _, metadata = metadata.split(b("data:"), 1)
     parts = metadata.rsplit(b(";"), 1)
     if parts[-1] == b("base64"):
