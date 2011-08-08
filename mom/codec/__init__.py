@@ -60,7 +60,7 @@ from __future__ import absolute_import
 import binascii
 from struct import pack, unpack
 from mom._compat import have_python3
-from mom.builtins import bytes, is_bytes, b
+from mom.builtins import is_bytes, b
 from mom.functional import leading, chunks
 from mom.codec.base85 import b85encode, b85decode
 
@@ -82,6 +82,7 @@ __all__ = [
 
 # Bytes base-encoding.
 
+# TODO: Add charset argument to enable ASCII85 as well as RFC1924 charsets.
 def base85_encode(raw_bytes):
     """
     Encodes raw bytes into ASCII85 representation.
