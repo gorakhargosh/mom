@@ -42,7 +42,7 @@ from __future__ import absolute_import, division
 import re
 from mom import string
 from struct import unpack, pack
-from mom.builtins import is_bytes, b, bytes
+from mom.builtins import is_bytes, b
 from mom._compat import range, have_python3
 
 
