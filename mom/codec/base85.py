@@ -506,8 +506,8 @@ def b85decode(encoded,
     else:
         padding_size = 0
 
-    uint32s = []
-    #for chunk in chunks(encoded, 5):
+    uint32s = [0] * num_uint32s
+    j = 0
     for i in range(0, length, 5):
         v, w, x, y, z = chunk = encoded[i:i+5]
 #        uint32_value = 0
@@ -533,7 +533,8 @@ def b85decode(encoded,
         if uint32_value > UINT32_MAX: # 2**32 - 1
             raise OverflowError("Cannot decode chunk `%r`" % chunk)
 
-        uint32s.append(uint32_value)
+        uint32s[j] = uint32_value
+        j += 1
 
     raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
     if padding_size:
