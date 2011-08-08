@@ -557,14 +557,14 @@ def select(predicate, iterable):
     """
     Select all items from the sequence for which the predicate is true.
 
-        select(function or None, sequence) -> tuple, list or string.
+        select(function or None, sequence) -> list
 
     :param predicate:
         Predicate function. If ``None``, select all truthy items.
     :param iterable:
         Iterable.
     :returns:
-        A sequence of all items for which the predicate is true.
+        A list of all items for which the predicate is true.
     """
     return list(filter(predicate, iterable))
 
@@ -580,7 +580,7 @@ def iselect(predicate, iterable):
     :param iterable:
         Iterable.
     :yields:
-        A sequence of all items for which the predicate is true.
+        A iterable of all items for which the predicate is true.
     """
     return _ifilter(predicate, iterable)
 
@@ -589,15 +589,14 @@ def reject(predicate, iterable):
     """
     Reject all items from the sequence for which the predicate is true.
 
-        select(function or None, sequence) -> list, tuple, or string
+        reject(function or None, sequence) -> list
 
     :param predicate:
         Predicate function. If ``None``, reject all truthy items.
     :param iterable:
-        If sequence is a tuple or string, return the same type, else return a
-        list.
+        The iterable to filter through.
     :returns:
-        A sequence of all items for which the predicate is false.
+        A list of all items for which the predicate is false.
     """
     return select(complement(predicate or bool), iterable)
 
