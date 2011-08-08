@@ -208,6 +208,7 @@ except ImportError:
     # Python 3 nuisance.
     _ifilter = filter
     def _ifilterfalse(predicate, iterable):
+        predicate = predicate or bool
         def _complement(item):
             return not predicate(item)
         return filter(_complement, iterable)
@@ -511,8 +512,8 @@ def leading(predicate, iterable, start=0):
 
 def _leading(predicate, iterable, start=0):
     """Alternative implementation of :func:`leading`."""
-    return len(map(identity,
-                   takewhile(predicate, islice(iterable, start, None, 1))))
+    return len(tuple(map(identity,
+                   takewhile(predicate, islice(iterable, start, None, 1)))))
 
 
 def trailing(predicate, iterable, start=-1):
@@ -565,13 +566,7 @@ def select(predicate, iterable):
     :returns:
         A sequence of all items for which the predicate is true.
     """
-    if isinstance(iterable, list):
-        transform = list
-    elif is_bytes_or_unicode(iterable):
-        transform = lambda w: w[:]
-    else:
-        transform = tuple
-    return transform(filter(predicate, iterable))
+    return list(filter(predicate, iterable))
 
 
 def iselect(predicate, iterable):
@@ -1355,6 +1350,13 @@ def take(iterable, n):
     return tuple(islice(iterable, n))
 
 
+def _get_iter_next(it):
+    attr = getattr(it, "next", None)
+    if not attr:
+        attr = getattr(it, "__next__")
+    return attr
+
+
 def round_robin(*iterables):
     """
     Returns items from the iterables in a round-robin fashion.
@@ -1372,7 +1374,7 @@ def round_robin(*iterables):
         Items from the iterable sequences in a round-robin fashion.
     """
     pending = len(iterables)
-    nexts = cycle(iter(it).next for it in iterables)
+    nexts = cycle(_get_iter_next(iter(it)) for it in iterables)
     while pending:
         try:
             for next_ in nexts:

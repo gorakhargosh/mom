@@ -291,40 +291,40 @@ class Test_pluck(unittest2.TestCase):
 class Test_ichunks(unittest2.TestCase):
     def test_valid_grouping(self):
         got = ichunks("aaaabbbbccccdddd", 4)
-        expected = [("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4]
-        self.assertEqual(map(tuple, got), expected)
+        expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
+        self.assertEqual(tuple(map(tuple, got)), expected)
 
         got = ichunks([1, 1, 1, 2, 2, 2, 3, 3, 3], 3)
-        expected = [(1, 1, 1), (2, 2, 2), (3, 3, 3)]
-        self.assertEqual(map(tuple, got), expected)
+        expected = ((1, 1, 1), (2, 2, 2), (3, 3, 3))
+        self.assertEqual(tuple(map(tuple, got)), expected)
 
     def test_filler(self):
         got = ichunks("aaaabbbccccddd", 4, "-")
-        expected = [("a", "a", "a", "a"),
+        expected = (("a", "a", "a", "a"),
                     ("b", "b", "b", "c"),
                     ("c", "c", "c", "d"),
-                    ("d", "d", "-", "-")]
-        self.assertEqual(map(tuple, got), expected)
+                    ("d", "d", "-", "-"))
+        self.assertEqual(tuple(map(tuple, got)), expected)
 
         got = ichunks("aaaabbbbccccdddd", 4, None)
-        expected = [("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4]
-        self.assertEqual(map(tuple, got), expected)
+        expected = (("a", ) * 4, ("b",) * 4, ("c",) * 4, ("d",) * 4)
+        self.assertEqual(tuple(map(tuple, got)), expected)
 
     def test_filler_None(self):
         got = ichunks("aaaabbbccccddd", 4, None)
-        expected = [("a", "a", "a", "a"),
+        expected = (("a", "a", "a", "a"),
                     ("b", "b", "b", "c"),
                     ("c", "c", "c", "d"),
-                    ("d", "d", None, None)]
-        self.assertEqual(map(tuple, got), expected)
+                    ("d", "d", None, None))
+        self.assertEqual(tuple(map(tuple, got)), expected)
 
     def test_returns_generator_object(self):
         self.assertEqual(type(ichunks("aaaabbbb", 4)).__name__, "generator")
 
     def test_odd_ball_grouping(self):
         got = ichunks("aaabb", 3)
-        expected = [("a",) * 3, ("b",) * 2]
-        self.assertEqual(map(tuple, got), expected)
+        expected = (("a",) * 3, ("b",) * 2)
+        self.assertEqual(tuple(map(tuple, got)), expected)
 
 
 class Test_chunks(unittest2.TestCase):
@@ -403,7 +403,7 @@ class Test_seq(unittest2.TestCase):
         self.assertEqual(list(irest(range(10))), list(range(1, 10)))
 
     def test_rest(self):
-        self.assertEqual(rest(range(10)), list(range(1, 10)))
+        self.assertEqual(rest(list(range(10))), list(range(1, 10)))
 
 
 # Truthy and falsy tests.
@@ -411,13 +411,13 @@ class Test_truthy(unittest2.TestCase):
     def test_truthy(self):
         self.assertEqual(truthy([1, 0, 0, 1, None, True, False, {}]),
             [1, 1, True])
-        self.assertEqual(truthy((0, 1, 2, False, None, True)), (1, 2, True))
+        self.assertEqual(truthy((0, 1, 2, False, None, True)), [1, 2, True])
 
 class Test_falsy(unittest2.TestCase):
     def test_falsy(self):
         self.assertEqual(falsy([1, 0, 0, 1, None, True, False, {}]),
             [0, 0, None, False, {}])
-        self.assertEqual(falsy((0, 1, 2, False, None, True)), (0, False, None))
+        self.assertEqual(falsy((0, 1, 2, False, None, True)), [0, False, None])
 
 class Test_itruthy(unittest2.TestCase):
     def test_itruthy(self):
@@ -538,8 +538,8 @@ class Test__contains(unittest2.TestCase):
 class Test_difference(unittest2.TestCase):
     def test_difference(self):
         self.assertEqual(difference(range(1, 6), [5, 2, 10]), [1, 3, 4])
-        self.assertEqual(difference("abcdefg", "abc"), "defg")
-        self.assertEqual(difference("abcdefg", "xyz"), "abcdefg")
+        self.assertEqual(difference("abcdefg", "abc"), list("defg"))
+        self.assertEqual(difference("abcdefg", "xyz"), list("abcdefg"))
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, difference, None, None)
@@ -566,8 +566,8 @@ class Test_idifference(unittest2.TestCase):
 class Test_without(unittest2.TestCase):
     def test_without(self):
         self.assertEqual(without(range(1, 6), *[5, 2, 10]), [1, 3, 4])
-        self.assertEqual(without("abcdefg", *list("abc")), "defg")
-        self.assertEqual(without("abcdefg", *list("xyz")), "abcdefg")
+        self.assertEqual(without("abcdefg", *list("abc")), list("defg"))
+        self.assertEqual(without("abcdefg", *list("xyz")), list("abcdefg"))
 
     def test_TypeError_when_not_iterable(self):
         self.assertRaises(TypeError, without, None, None)
