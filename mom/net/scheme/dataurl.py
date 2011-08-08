@@ -103,6 +103,11 @@ def dataurl_decode(data_url):
         See :func:`mom.http.mimeparse.parse_mime_type` for what ``mime_type``
         looks like.
     """
+    if not is_bytes(data_url):
+        raise TypeError(
+            "data URLs must be ASCII-encoded bytes: got %r" %
+            type(raw_bytes).__name__
+        )
     metadata, encoded = data_url.rsplit(b(","), 1)
     _, metadata = metadata.split(b("data:"), 1)
     parts = metadata.rsplit(b(";"), 1)
