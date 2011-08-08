@@ -31,10 +31,21 @@ mathematical sense,
 
 where ``g`` is the decoder and ``f`` is the encoder.
 
+Why have we reproduced base64 encoding/decoding functions here when the
+standard library has them? Well, those functions behave differently in
+Python 2.x and Python 3.x. The Python 3.x equivalents do not accept Unicode
+strings as their arguments, whereas the Python 2.x versions would happily
+encode your Unicode strings without warning you-you know that you are supposed
+to encode them to UTF-8 or another byte encoding before you base64-encode them
+right? These wrappers are re-implemented so that you do not make these mistakes.
+Use them. They will help prevent unexpected bugs.
+
 .. autofunction:: base85_encode
 .. autofunction:: base85_decode
 .. autofunction:: base64_encode
 .. autofunction:: base64_decode
+.. autofunction:: base64_urlsafe_encode
+.. autofunction:: base64_urlsafe_decode
 .. autofunction:: hex_encode
 .. autofunction:: hex_decode
 .. autofunction:: decimal_encode
@@ -70,6 +81,8 @@ __all__ = [
     "base85_decode",
     "base64_encode",
     "base64_decode",
+    "base64_urlsafe_encode",
+    "base64_urlsafe_decode",
     "hex_encode",
     "hex_decode",
     "decimal_encode",
@@ -113,10 +126,9 @@ def base85_decode(encoded):
     return b85decode(encoded, None, None)
 
 
-def base64_encode(raw_bytes):
+def base64_urlsafe_encode(raw_bytes):
     """
-    Encodes raw bytes into base64 representation without appending a trailing
-    newline character.
+    Encodes raw bytes into URL-safe base64 bytes.
 
     Encode your Unicode strings to a byte encoding before base64-encoding them.
 
@@ -126,20 +138,69 @@ def base64_encode(raw_bytes):
         Base64 encoded string without newline characters.
     """
     if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" % \
+        raise TypeError("argument must be bytes: got %r" % \
                         type(raw_bytes).__name__)
-    return binascii.b2a_base64(raw_bytes)[:-1]
+    # This is 3-4x faster than urlsafe_b64decode() -Guido.
+    # We're not using the base64.py wrapper around binascii, because
+    # this module itself is a wrapper. binascii is implemented in C, so
+    # we avoid module overhead however small.
+    encoded = binascii.b2a_base64(raw_bytes)[:-1]
+    return encoded.rstrip(b('=')).replace(b('+'), b('-')).replace(b('/'),b('_'))
 
 
-def base64_decode(encoded):
+def base64_urlsafe_decode(encoded):
     """
-    Decodes base64-encoded bytes into raw bytes.
+    Decodes URL-safe base64-encoded bytes into raw bytes.
 
     :param encoded:
         Base-64 encoded representation.
     :returns:
         Raw bytes.
     """
+    if not is_bytes(encoded):
+        raise TypeError("argument must be bytes: got %r" % \
+                        type(encoded).__name__)
+    remainder = len(encoded) % 4
+    if remainder:
+        encoded += b('=') * (4 - remainder)
+    # This is 3-4x faster than urlsafe_b64decode() -Guido.
+    # We're not using the base64.py wrapper around binascii, because
+    # this module itself is a wrapper. binascii is implemented in C, so
+    # we avoid module overhead however small.
+    encoded = encoded.replace(b('-'), b('+')).replace(b('_'),b('/'))
+    return binascii.a2b_base64(encoded)
+
+
+def base64_encode(raw_bytes):
+    """
+    Encodes raw bytes into base64 representation without appending a trailing
+    newline character. Not URL-safe.
+
+    Encode your Unicode strings to a byte encoding before base64-encoding them.
+
+    :param raw_bytes:
+        Bytes to encode.
+    :returns:
+        Base64 encoded bytes without newline characters.
+    """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be bytes: got %r" % \
+                        type(raw_bytes).__name__)
+    return binascii.b2a_base64(raw_bytes)[:-1]
+
+
+def base64_decode(encoded):
+    """
+    Decodes base64-encoded bytes into raw bytes. Not URL-safe.
+
+    :param encoded:
+        Base-64 encoded representation.
+    :returns:
+        Raw bytes.
+    """
+    if not is_bytes(encoded):
+        raise TypeError("argument must be bytes: got %r" % \
+                        type(encoded).__name__)
     return binascii.a2b_base64(encoded)
 
 
@@ -169,6 +230,9 @@ def hex_decode(encoded):
     :returns:
         Raw bytes.
     """
+    if not is_bytes(encoded):
+        raise TypeError("argument must be bytes: got %r" % \
+                        type(encoded).__name__)
     return binascii.a2b_hex(encoded)
 
 
@@ -202,6 +266,9 @@ def decimal_decode(encoded):
     :returns:
         Raw bytes.
     """
+    if not is_bytes(encoded):
+        raise TypeError("argument must be bytes: got %r" % \
+                        type(encoded).__name__)
     padding = ZERO_BYTE * leading((lambda x: x == b("0")[0]), encoded)
     int_val = int(encoded)
     return padding + integer_to_bytes(int_val) if int_val else padding
@@ -277,6 +344,9 @@ def bin_decode(encoded):
     :returns:
         Raw bytes.
     """
+    if not is_bytes(encoded):
+        raise TypeError("argument must be bytes: got %r" % \
+                        type(encoded).__name__)
     return hex_decode(b('').join(_BIN_TO_HEX_LOOKUP[nibble]
                               for nibble in chunks(encoded, 4)))
 
