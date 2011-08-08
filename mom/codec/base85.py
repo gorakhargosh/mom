@@ -43,13 +43,8 @@ import re
 from mom import string
 from struct import unpack, pack
 from mom.builtins import is_bytes, b, bytes
-from mom._compat import range
+from mom._compat import range, have_python3
 
-try:
-    unicode
-    have_python3 = False
-except NameError:
-    have_python3 = True
 
 __all__ = [
     "b85encode",
