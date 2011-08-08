@@ -404,9 +404,11 @@ def b85encode(raw_bytes,
     else:
         padding_size = 0
 
-    ascii_chars = []
+    ascii_chars = [0] * num_uint32 * 5
     # ASCII85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
+    i = 0
+#    ascii_chars = []
     for x in unpack('>' + 'L' * num_uint32, raw_bytes):
 #        chars = list(range(5))
 #        for i in reversed(chars):
@@ -414,13 +416,12 @@ def b85encode(raw_bytes,
 #            x //= 85
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
-        ascii_chars.extend((
-            _base85_chars[x // _pow_85[4]], # Don't need %85. Already <85.
-            _base85_chars[(x // _pow_85[3]) % 85],
-            _base85_chars[(x // _pow_85[2]) % 85],
-            _base85_chars[(x // 85) % 85],     # 85**1 = 85
-            _base85_chars[x % 85],             # 85**0 = 1
-        ))
+        ascii_chars[i]   = _base85_chars[x // _pow_85[4]] # Don't need %85. Already <85.
+        ascii_chars[i+1] = _base85_chars[(x // _pow_85[3]) % 85]
+        ascii_chars[i+2] = _base85_chars[(x // _pow_85[2]) % 85]
+        ascii_chars[i+3] = _base85_chars[(x // 85) % 85]     # 85**1 = 85
+        ascii_chars[i+4] = _base85_chars[x % 85]             # 85**0 = 1
+        i += 5
     if padding_size and not _padding:
         # Only as much padding added before encoding is removed after encoding.
         ascii_chars = ascii_chars[:-padding_size]
