@@ -79,19 +79,8 @@ def _ascii85_chr(num):
     :returns:
         base85 character.
     """
-    return chr(num + 33).encode("latin1")
+    return chr(num + 33).encode("ascii")
 
-
-def _ascii85_ord(char):
-    """
-    Converts an ASCII85 character into its ordinal.
-
-    :param char:
-        Base85 character
-    :returns:
-        Ordinal value.
-    """
-    return ord(char) - 33
 
 # Use this if you want the base85 codec to encode/decode including
 # ASCII85 prefixes/suffixes.
@@ -101,24 +90,201 @@ ASCII85_SUFFIX = b('~>')
 WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 # ASCII85 characters.
-ASCII85_CHARS = tuple(_ascii85_chr(num) for num in range(85))
-#"".join(map(_ascii85_chr, range(85)))
-if have_python3:
-    # Python 3 bytes when indexed return integers, not single-character
-    # byte strings.
-    ASCII85_ORDS = dict((ord(x), _ascii85_ord(x)) for x in ASCII85_CHARS)
-else:
-    # Python 2 bytes when index return single-character byte strings.
-    ASCII85_ORDS = dict((x, _ascii85_ord(x)) for x in ASCII85_CHARS)
-
+#ASCII85_CHARS = b('').join(_ascii85_chr(num) for num in range(85))
+ASCII85_CHARS = b('!"#$%&\'()*+,-./0123456789:;<=>?@'
+                  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                  '[\\]^_`'
+                  'abcdefghijklmnopqrstu')
 
 # http://tools.ietf.org/html/rfc1924
 RFC1924_CHARS = (string.digits +
                 string.ascii_uppercase +
                 string.ascii_lowercase +
-                "!#$%&()*+-;<=>?@^_`{|}~").encode("latin1")
+                "!#$%&()*+-;<=>?@^_`{|}~").encode("ascii")
 RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_CHARS))
 
+if have_python3:
+    # Python 3 bytes when indexed return integers, not single-character
+    # byte strings.
+    ASCII85_ORDS = dict((x, x - 33) for x in ASCII85_CHARS)
+    ASCII85_CHARS = {
+        0: b('!'),
+        1: b('"'),
+        2: b('#'),
+        3: b('$'),
+        4: b('%'),
+        5: b('&'),
+        6: b("'"),
+        7: b('('),
+        8: b(')'),
+        9: b('*'),
+        10: b('+'),
+        11: b(','),
+        12: b('-'),
+        13: b('.'),
+        14: b('/'),
+        15: b('0'),
+        16: b('1'),
+        17: b('2'),
+        18: b('3'),
+        19: b('4'),
+        20: b('5'),
+        21: b('6'),
+        22: b('7'),
+        23: b('8'),
+        24: b('9'),
+        25: b(':'),
+        26: b(';'),
+        27: b('<'),
+        28: b('='),
+        29: b('>'),
+        30: b('?'),
+        31: b('@'),
+        32: b('A'),
+        33: b('B'),
+        34: b('C'),
+        35: b('D'),
+        36: b('E'),
+        37: b('F'),
+        38: b('G'),
+        39: b('H'),
+        40: b('I'),
+        41: b('J'),
+        42: b('K'),
+        43: b('L'),
+        44: b('M'),
+        45: b('N'),
+        46: b('O'),
+        47: b('P'),
+        48: b('Q'),
+        49: b('R'),
+        50: b('S'),
+        51: b('T'),
+        52: b('U'),
+        53: b('V'),
+        54: b('W'),
+        55: b('X'),
+        56: b('Y'),
+        57: b('Z'),
+        58: b('['),
+        59: b('\\'),
+        60: b(']'),
+        61: b('^'),
+        62: b('_'),
+        63: b('`'),
+        64: b('a'),
+        65: b('b'),
+        66: b('c'),
+        67: b('d'),
+        68: b('e'),
+        69: b('f'),
+        70: b('g'),
+        71: b('h'),
+        72: b('i'),
+        73: b('j'),
+        74: b('k'),
+        75: b('l'),
+        76: b('m'),
+        77: b('n'),
+        78: b('o'),
+        79: b('p'),
+        80: b('q'),
+        81: b('r'),
+        82: b('s'),
+        83: b('t'),
+        84: b('u'),
+    }
+    RFC1924_CHARS = {
+        0: b('0'),
+        1: b('1'),
+        2: b('2'),
+        3: b('3'),
+        4: b('4'),
+        5: b('5'),
+        6: b('6'),
+        7: b('7'),
+        8: b('8'),
+        9: b('9'),
+        10: b('A'),
+        11: b('B'),
+        12: b('C'),
+        13: b('D'),
+        14: b('E'),
+        15: b('F'),
+        16: b('G'),
+        17: b('H'),
+        18: b('I'),
+        19: b('J'),
+        20: b('K'),
+        21: b('L'),
+        22: b('M'),
+        23: b('N'),
+        24: b('O'),
+        25: b('P'),
+        26: b('Q'),
+        27: b('R'),
+        28: b('S'),
+        29: b('T'),
+        30: b('U'),
+        31: b('V'),
+        32: b('W'),
+        33: b('X'),
+        34: b('Y'),
+        35: b('Z'),
+        36: b('a'),
+        37: b('b'),
+        38: b('c'),
+        39: b('d'),
+        40: b('e'),
+        41: b('f'),
+        42: b('g'),
+        43: b('h'),
+        44: b('i'),
+        45: b('j'),
+        46: b('k'),
+        47: b('l'),
+        48: b('m'),
+        49: b('n'),
+        50: b('o'),
+        51: b('p'),
+        52: b('q'),
+        53: b('r'),
+        54: b('s'),
+        55: b('t'),
+        56: b('u'),
+        57: b('v'),
+        58: b('w'),
+        59: b('x'),
+        60: b('y'),
+        61: b('z'),
+        62: b('!'),
+        63: b('#'),
+        64: b('$'),
+        65: b('%'),
+        66: b('&'),
+        67: b('('),
+        68: b(')'),
+        69: b('*'),
+        70: b('+'),
+        71: b('-'),
+        72: b(';'),
+        73: b('<'),
+        74: b('='),
+        75: b('>'),
+        76: b('?'),
+        77: b('@'),
+        78: b('^'),
+        79: b('_'),
+        80: b('`'),
+        81: b('{'),
+        82: b('|'),
+        83: b('}'),
+        84: b('~'),
+    }
+else:
+    # Indexing into Python 2 bytes yields single-character byte strings.
+    ASCII85_ORDS = dict((x, ord(x) - 33) for x in ASCII85_CHARS)
+    #                 Notice ^. In Python 3, you don't need this.
 
 # Pre-computed powers (array index) of 85 used to unroll encoding loops
 # Therefore, 85**i is equivalent to POW_85[i] for index 0 through 19
@@ -157,7 +323,7 @@ def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
     found.
 
     :param encoded:
-        The encoded sequence. (Latin1 encoded string).
+        The encoded sequence. (ASCII encoded string).
     :param zero_char:
         The 'z' character (default 'z').
     :param chunk_size:
@@ -165,7 +331,7 @@ def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
     """
     counter = 0
     for i, x in enumerate(encoded):
-        if x == zero_char:
+        if x == zero_char[0]:
             if counter % chunk_size:
                 raise ValueError(
                     'zero char `%r` occurs in the middle of a chunk ' \
@@ -378,7 +544,7 @@ def b85decode(encoded,
         except KeyError:
             # Showing the chunk provides more context, which makes debugging
             # easier.
-            raise OverflowError("Cannot decode chunk `%r`" % chunk)
+            raise KeyError("Invalid Base85 byte in chunk `%r` -- " % chunk)
 
         # Groups of characters that decode to a value greater than 2**32 − 1
         # (encoded as "s8W-!") will cause a decoding error.
@@ -407,9 +573,9 @@ def rfc1924_b85encode(raw_bytes,
 
         "',./:[]\
 
-    This is the encoding used by Mercurial, for example. They chose the IPv6
-    character set and encode using the Adobe encoding method.
-    This implementation also does not compact zero-byte sequences.
+    This is the encoding method used by Mercurial (and git?) to generate
+    binary diffs, for example. They chose the IPv6 character set and encode
+    using the ASCII85 encoding method while not compacting zero-byte sequences.
 
     :see: http://tools.ietf.org/html/rfc1924
     :param raw_bytes:
@@ -430,9 +596,9 @@ def rfc1924_b85decode(encoded):
     """
     Base85 decodes using the RFC1924 character set.
 
-    This is the encoding used by Mercurial, for example. They chose the IPv6
-    character set and encode using the Adobe encoding method.
-    This implementation also does not uncompact zero-byte sequences.
+    This is the encoding method used by Mercurial (and git?) to generate
+    binary diffs, for example. They chose the IPv6 character set and encode
+    using the ASCII85 encoding method while not compacting zero-byte sequences.
 
     :see: http://tools.ietf.org/html/rfc1924
     :param encoded:

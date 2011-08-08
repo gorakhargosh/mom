@@ -152,8 +152,8 @@ class Test_base85_decode(unittest2.TestCase):
     def test_decode_boundary(self):
         self.assertEqual(b85decode(b("s8W-!")), b("\xff\xff\xff\xff"))
 
-    def test_OverflowError_when_not_decodable_chunk_found(self):
-        self.assertRaises(OverflowError, b85decode, b('xy!!!'))
+    def test_KeyError_when_invalid_base85_byte_found(self):
+        self.assertRaises(KeyError, b85decode, b('xy!!!'))
 
     def test_decodes_z_into_zero_bytes(self):
         self.assertEqual(b85decode(b('zzz')), b('\x00') * 4 * 3)
@@ -190,8 +190,10 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
         for a, e in zip(random_bytes_list, rfc_encoded_bytes_list):
             self.assertEqual(rfc1924_b85decode(e), a)
 
+    def test_KeyError_when_invalid_base85_byte_found(self):
+        self.assertRaises(KeyError, rfc1924_b85decode, b(']]]]]'))
+
     def test_OverflowError_when_not_decodable_chunk_found(self):
-        self.assertRaises(OverflowError, rfc1924_b85decode, b(']]]]]'))
         self.assertRaises(OverflowError, rfc1924_b85decode,
                           b('|NsC')) # 0x03030303
 
