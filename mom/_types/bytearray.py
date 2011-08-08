@@ -133,7 +133,7 @@ def bytearray_to_long(byte_array):
         Long.
     """
     total = 0L
-    multiplier = 1L
+    multiplier = 1
     for count in range(len(byte_array)-1, -1, -1):
         byte_val = byte_array[count]
         total += multiplier * byte_val
