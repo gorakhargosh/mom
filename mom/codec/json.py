@@ -25,11 +25,19 @@
 """
 
 from __future__ import absolute_import
+from mom._compat import have_python3
+from mom.builtins import is_bytes
 from mom.codec.text import utf8_decode_recursive
-from mom.codec._json_compat import json_dumps, json_loads
+from mom.codec._json_compat import json_dumps as _json_dumps, json_loads
 
 
-def encode(obj):
+if have_python3:
+    json_dumps = _json_dumps
+else:
+    json_dumps = lambda o: _json_dumps(o).decode('utf-8')
+
+    
+def json_encode(obj):
     """
     Encodes a Python value into its equivalent JSON string.
 
@@ -45,10 +53,12 @@ def encode(obj):
     :returns:
         JSON string.
     """
+    if is_bytes(obj):
+        raise TypeError("Cannot work with bytes.")
     return json_dumps(utf8_decode_recursive(obj)).replace("</", "<\\/")
 
 
-def decode(encoded):
+def json_decode(encoded):
     """
     Decodes a JSON string into its equivalent Python value.
 
@@ -57,5 +67,6 @@ def decode(encoded):
     :returns:
         Decoded Python value.
     """
+    if is_bytes(encoded):
+        raise TypeError("Cannot work with bytes.")
     return json_loads(encoded)
-
