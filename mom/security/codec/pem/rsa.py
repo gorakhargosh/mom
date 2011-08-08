@@ -86,8 +86,7 @@ class RSAPrivateKey(object):
         keyType = rsadsa.RSAPrivateKey()
         try:
             der = pem_to_der_private_rsa_key(key)
-        except Exception, e:
-            #logging.exception(e)
+        except Exception:
             der = pem_to_der_private_key(key)
 
         cover_asn1 = decoder.decode(der)[0]
