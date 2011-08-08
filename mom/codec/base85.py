@@ -668,10 +668,7 @@ def ipv6_b85decode(encoded,
             "Encoded sequence must be bytes: got %r" % type(encoded).__name__
         )
     if len(encoded) != 20:
-        raise ValueError(
-            "Encoded IPv6 value must be exactly 20 characters long: got %r" %
-            encoded
-        )
+        raise ValueError("Not 20 encoded bytes: %r" % encoded)
     #uint128 = 0L
     #for char in encoded:
     #    uint128 = uint128 * 85 + _base85_ords[char]
