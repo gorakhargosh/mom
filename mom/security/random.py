@@ -53,7 +53,7 @@ from __future__ import absolute_import, division
 
 from mom import string
 from mom._compat import range, generate_random_bytes as _generate_random_bytes
-from mom.builtins import integer_bit_length, is_integer
+from mom.builtins import integer_bit_length, is_integer, byte
 from mom.codec import \
     hex_encode, \
     bytes_to_integer
@@ -122,7 +122,7 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     random_bytes = rand_func(q)
     if r:
         offset = ord(rand_func(1)) >> (8 - r)
-        random_bytes = chr(offset) + random_bytes
+        random_bytes = byte(offset) + random_bytes
     return random_bytes
 
 
