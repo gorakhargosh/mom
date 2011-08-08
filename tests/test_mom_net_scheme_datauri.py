@@ -6,7 +6,7 @@ from __future__ import absolute_import
 import unittest2
 from mom.builtins import b
 from mom.codec import base64_decode
-from mom.net.scheme.datauri import dataurl_encode, dataurl_decode
+from mom.net.scheme.dataurl import dataurl_encode, dataurl_decode
 from tests.test_mom_builtins import unicode_string
 
 png = b('''\
