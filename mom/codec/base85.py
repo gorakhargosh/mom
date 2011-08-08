@@ -32,8 +32,8 @@
 Where should you use base85?
 ----------------------------
 Base85-encoding is used to compactly represent binary data in 7-bit ASCII.
-It is, therefore, 7-bit MIME-safe but not safe to use in URLs, SGML, HTTP cookies,
-and other similar places. Example scenarios where Base85 encoding
+It is, therefore, 7-bit MIME-safe but not safe to use in URLs, SGML, HTTP
+cookies, and other similar places. Example scenarios where Base85 encoding
 can be put to use are Adobe PDF documents, Adobe PostScript format, binary
 diffs (patches), efficiently storing RSA PEM keys, etc.
 
