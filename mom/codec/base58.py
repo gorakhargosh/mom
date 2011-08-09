@@ -50,9 +50,9 @@ characters omitted to make them visually-legible and unambiguously printable.
 The characters omitted are:
 
 * 0 (ASCII NUMERAL ZERO)
-* O (UPPERCASE ASCII ALPHABET O)
-* I (UPPERCASE ASCII ALPHABET I)
-* l (LOWERCASE ASCII ALPHABET L)
+* O (ASCII UPPERCASE ALPHABET O)
+* I (ASCII UPPERCASE ALPHABET I)
+* l (ASCII LOWERCASE ALPHABET L)
 
 A practical example (shortened static asset URLs):
 --------------------------------------------------
