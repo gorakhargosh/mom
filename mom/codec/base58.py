@@ -93,7 +93,7 @@ which can then be reduced utilizing base-58 or base-62 encoding to::
     http://s.example.com/js/2QxqmqiFm/file.js
 
 This is a much shorter URL than the original. Notice that we have not
-renamed the file ``filename.js`` to ``2QxqmqiFm.js`` because that would
+renamed the file ``file.js`` to ``2QxqmqiFm.js`` because that would
 cause an unnecessary explosion of files on the server as new files would
 be generated every time the source files changed. Instead, we have
 chosen to make use of Web server URL-rewriting rules to strip the hashed
@@ -101,7 +101,10 @@ identifier and serve the file fresh as it is on the server file system. The
 hashed-identifier is not part of the query string for this asset URL because
 certain proxies do not cache files served from URLs that include query
 strings. If you wish to support versioned assets, however, then you
-may need to rename files to include their hashed identifiers instead.
+may need to rename files to include their hashed identifiers instead. For
+example::
+
+    http://s.example.com/js/2QxqmqiFm-file.js
 
 The following benefits are therefore achieved::
 
@@ -111,6 +114,7 @@ The following benefits are therefore achieved::
   asset URLs.
 * Shorter URLs also implies that fewer bytes are transferred in HTTP responses.
 * Bandwidth consumption is reduced by a noticeably large factor.
+* Multiple versions of assets (if required).
 
 Essentially, URLs shortened using base-85 encoding can result in a faster
 Web-browsing experience for end-users.
