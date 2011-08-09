@@ -30,7 +30,7 @@ cookie-safe, and **human being-safe**. Base-58 representation can:
   ambiguously glyphs--namely, "0OIl");
 * not contain punctuation characters.
 
-Example scenarios where base85 encoding may be used:
+Example scenarios where base-58 encoding may be used:
 
 * Visually-legible account numbers
 * Shortened URL paths
