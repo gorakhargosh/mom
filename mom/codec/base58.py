@@ -80,6 +80,7 @@ reduced to::
 
     http://s.example.com/js/3HzsRcRETLZ3qFgDzG1QE7CJJNeh/file.js
 
+
 The first 12 characters of a SHA-1 hash are sufficiently strong for serving
 static assets while minimizing collision overhead in the context of a
 small-to-medium-sized Website and considering these are URLs for static served
@@ -107,6 +108,11 @@ URL-rewriting instead. For example::
 
     http://s.example.com/js/file-2QxqmqiFm.js
 
+.. NOTE::
+    Do note that the base-58 encoded version of the SHA-1 hash (40 characters
+    in hexadecimal representation) may have length of either 27 or 28.
+    So please ensure your rewriting rules take variable length into account.
+
 The following benefits are therefore achieved:
 
 * Client-side caching is fully utilized
@@ -119,6 +125,7 @@ The following benefits are therefore achieved:
 
 Essentially, URLs shortened using base-85 encoding can result in a faster
 Web-browsing experience for end-users.
+
 
 Functions
 ---------
