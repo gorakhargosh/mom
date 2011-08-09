@@ -254,8 +254,8 @@ def b85encode(raw_bytes,
     for x in unpack('>' + 'L' * num_uint32, raw_bytes):
 #        chars = list(range(5))
 #        for i in reversed(chars):
-#            chars[i] = _base85_chars[x % 85]
-#            x //= 85
+#            x, mod = divmod(x, 85)
+#            chars[i] = _base85_chars[mod]
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
         ascii_chars[i]   = _base85_chars[x // _pow_85[4]] # Don't need %85. Already <85.
@@ -462,8 +462,8 @@ def ipv6_b85encode(uint128,
                             uint128)
 #    encoded = list(range(20))
 #    for i in reversed(encoded):
-#        encoded[i] = _base85_chars[uint128 % 85]
-#        uint128 //= 85
+#        uint128, remainder = divmod(uint128, 85)
+#        encoded[i] = _base85_chars[remainder]
     # Above loop unrolled:
     encoded = (
         _base85_chars[(uint128 // _pow_85[19])], # Don't need %85. Already < 85
