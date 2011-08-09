@@ -40,7 +40,7 @@ Example scenarios where base-58 encoding may be used:
   net-banking PINs, verification codes sent via SMS, etc.)
 * Bitcoin decentralized crypto-currency addresses
 * CAPTCHAs
-* Revision control changset identifiers
+* Revision control changeset identifiers
 
 In general, use base-58 in any 7-bit ASCII-safe compact communication where
 both human beings, paper, and communication devices may be significantly
