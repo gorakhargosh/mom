@@ -89,8 +89,9 @@ People screw these up too. Useful in functional programming.
 from __future__ import absolute_import
 from mom._compat import \
     byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
-    next, long_type, int_type
+    next, long_type
 from struct import pack
+from mom._compat import integer_types
 
 
 __all__ = [
@@ -312,6 +313,7 @@ def is_bytes_or_unicode(obj):
     return isinstance(obj, basestring_type)
 
 
+
 def is_integer(obj):
     """
     Determines whether the object value is actually an integer and not a bool.
@@ -321,7 +323,7 @@ def is_integer(obj):
     :returns:
         ``True`` if yes; ``False`` otherwise.
     """
-    return isinstance(obj, (int_type, long_type)) and not isinstance(obj, bool)
+    return isinstance(obj, integer_types) and not isinstance(obj, bool)
 
 
 def integer_byte_count(num):
@@ -420,7 +422,7 @@ def is_positive(num):
     :returns:
         ``True`` if positive; ``False`` otherwise.
     """
-    if not isinstance(num, (int, long_type, bool, float)):
+    if not isinstance(num, integer_types + (bool, float)):
         raise TypeError("unsupported operand type: %r", type(num).__name__)
     return num > 0
 
@@ -434,6 +436,6 @@ def is_negative(num):
     :returns:
         ``True`` if positive; ``False`` otherwise.
     """
-    if not isinstance(num, (int, long_type, bool, float)):
+    if not isinstance(num, integer_types + (bool, float)):
         raise TypeError("unsupported operand type: %r", type(num).__name__)
     return num < 0

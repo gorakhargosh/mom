@@ -36,8 +36,10 @@ except NameError:
 # They fucking removed long too! Should I call them bastards? No? Bastards!
 try:
     int_type = long
+    integer_types = (int, long)
 except NameError:
     int_type = int
+    integer_types = (int,)
 
 try:
     # Python 2.6 or higher.

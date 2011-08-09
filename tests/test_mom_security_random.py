@@ -30,12 +30,12 @@ class Test_generate_random_bits(unittest2.TestCase):
     def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_bits, 0)
 
-#    def test_TypeError_when_invalid_argument(self):
-#        self.assertRaises(TypeError, generate_random_bits, None)
-#        self.assertRaises(TypeError, generate_random_bits, {})
-#        self.assertRaises(TypeError, generate_random_bits, object)
-#        self.assertRaises(TypeError, generate_random_bits, True)
-#        self.assertRaises(TypeError, generate_random_bits, "")
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_bits, None)
+        self.assertRaises(TypeError, generate_random_bits, {})
+        self.assertRaises(TypeError, generate_random_bits, object)
+        self.assertRaises(TypeError, generate_random_bits, True)
+        self.assertRaises(TypeError, generate_random_bits, "")
 
 
 
@@ -53,13 +53,14 @@ class Test_generate_random_ulong_exactly(unittest2.TestCase):
     def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_uint_exactly, 0)
 
-#    def test_TypeError_when_invalid_argument(self):
-#        self.assertRaises(TypeError, generate_random_uint_exactly, None)
-#        self.assertRaises(TypeError, generate_random_uint_exactly, {})
-#        self.assertRaises(TypeError, generate_random_uint_exactly, object)
-#        self.assertRaises(TypeError, generate_random_uint_exactly, True)
-#        self.assertRaises(TypeError, generate_random_uint_exactly, "")
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_uint_exactly, None)
+        self.assertRaises(TypeError, generate_random_uint_exactly, {})
+        self.assertRaises(TypeError, generate_random_uint_exactly, object)
+        self.assertRaises(TypeError, generate_random_uint_exactly, True)
+        self.assertRaises(TypeError, generate_random_uint_exactly, "")
 
+        
 class Test_generate_random_ulong_atmost(unittest2.TestCase):
     def test_range(self):
         for i in range(128):
@@ -72,12 +73,12 @@ class Test_generate_random_ulong_atmost(unittest2.TestCase):
     def test_ValueError_when_0_bits(self):
         self.assertRaises(ValueError, generate_random_uint_atmost, 0)
 
-#    def test_TypeError_when_invalid_argument(self):
-#        self.assertRaises(TypeError, generate_random_uint_atmost, None)
-#        self.assertRaises(TypeError, generate_random_uint_atmost, {})
-#        self.assertRaises(TypeError, generate_random_uint_atmost, object)
-#        self.assertRaises(TypeError, generate_random_uint_atmost, True)
-#        self.assertRaises(TypeError, generate_random_uint_atmost, "")
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_uint_atmost, None)
+        self.assertRaises(TypeError, generate_random_uint_atmost, {})
+        self.assertRaises(TypeError, generate_random_uint_atmost, object)
+        self.assertRaises(TypeError, generate_random_uint_atmost, True)
+        self.assertRaises(TypeError, generate_random_uint_atmost, "")
 
 
 class Test_generate_random_hex_string(unittest2.TestCase):
@@ -124,12 +125,12 @@ class Test_generate_random_ulong_between(unittest2.TestCase):
         low, high = 4, 3
         self.assertRaises(ValueError, generate_random_uint_between, low, high)
 
-#    def test_TypeError_when_invalid_argument(self):
-#        self.assertRaises(TypeError, generate_random_uint_between, None, None)
-#        self.assertRaises(TypeError, generate_random_uint_between, {}, {})
-#        self.assertRaises(TypeError, generate_random_uint_between, object, object)
-#        self.assertRaises(TypeError, generate_random_uint_between, True, True)
-#        self.assertRaises(TypeError, generate_random_uint_between, "", "")
+    def test_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, generate_random_uint_between, None, None)
+        self.assertRaises(TypeError, generate_random_uint_between, {}, {})
+        self.assertRaises(TypeError, generate_random_uint_between, object, object)
+        self.assertRaises(TypeError, generate_random_uint_between, True, True)
+        self.assertRaises(TypeError, generate_random_uint_between, "", "")
 
 
 class Test_generate_random_string(unittest2.TestCase):

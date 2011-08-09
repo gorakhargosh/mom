@@ -113,8 +113,8 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     :returns:
         Bytes.
     """
-#    if not is_integer(n_bits):
-#        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
+    if not is_integer(n_bits):
+        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
     # Doesn't perform any floating-point operations.
@@ -139,8 +139,8 @@ def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
         The generated unsigned long integer will be between 0 and
         (2**n_bits)-1 both inclusive.
     """
-#    if not is_integer(n_bits):
-#        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
+    if not is_integer(n_bits):
+        raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
     # Doesn't perform any floating-point operations.
@@ -189,9 +189,9 @@ def generate_random_uint_between(low, high, rand_func=generate_random_bytes):
     :returns:
         Random unsigned long integer value.
     """
-#    if not (is_integer(low) and is_integer(high)):
-#        raise TypeError("unsupported operand types(s): %r and %r" \
-#                        % (type(low).__name__, type(high).__name__))
+    if not (is_integer(low) and is_integer(high)):
+        raise TypeError("unsupported operand types(s): %r and %r" \
+                        % (type(low).__name__, type(high).__name__))
     if low >= high:
         raise ValueError("high value must be greater than low value.")
     r = high - low - 1
@@ -266,9 +266,9 @@ def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
     :returns:
         A list of elements randomly chosen from the pool.
     """
-#    if not is_integer(length):
-#        raise TypeError("Length must be a positive integer: got `%r`" % \
-#                        type(length).__name__)
+    if not is_integer(length):
+        raise TypeError("Length must be a positive integer: got `%r`" % \
+                        type(length).__name__)
     if length <= 0:
         raise ValueError("length must be a positive integer: got %d" % length)
     return [random_choice(pool, rand_func) for _ in range(length)]
