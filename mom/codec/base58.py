@@ -80,7 +80,10 @@ reduced to::
     http://s.example.com/js/3HzsRcRETLZ3qFgDzG1QE7CJJNeh/file.js
 
 The first 12 characters of a SHA-1 hash are sufficiently strong for serving
-static assets while minimizing collision overhead. So we can shorten the
+static assets while minimizing collision overhead in the context of a
+small-to-medium size Website and considering these are URLs for static served
+assets that can change over periods of time. You may want to consider
+using the full hash for large-scale Websites. Therefore, we can shorten the
 original asset URL to::
 
     http://s.example.com/js/a497f210fc9c/file.js
