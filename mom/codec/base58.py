@@ -107,7 +107,7 @@ URL-rewriting instead. For example::
 
     http://s.example.com/js/file-2QxqmqiFm.js
 
-The following benefits are therefore achieved::
+The following benefits are therefore achieved:
 
 * Client-side caching is fully utilized
 * The number of HTTP requests sent to Web servers by clients is reduced.
