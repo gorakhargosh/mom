@@ -93,7 +93,7 @@ which can then be reduced utilizing base-58 or base-62 encoding to::
     http://s.example.com/js/2QxqmqiFm/file.js
 
 This is a much shorter URL than the original. Notice that we have not
-renamed the file ``filename.js`` as ``2QxqmqiFm.js`` because that would
+renamed the file ``filename.js`` to ``2QxqmqiFm.js`` because that would
 cause an unnecessary explosion of files on the server as new files would
 be generated every time the source files changed. Instead, we have
 chosen to make use of Web server URL-rewriting rules to strip the hashed
