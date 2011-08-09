@@ -101,7 +101,7 @@ identifier and serve the file fresh as it is on the server file system. The
 hashed-identifier is not part of the query string for this asset URL because
 certain proxies do not cache files served from URLs that include query
 strings. If you wish to support versioned assets, however, then you
-may need to rename files to their hashed identifiers instead.
+may need to rename files to include their hashed identifiers instead.
 
 The following benefits are therefore achieved::
 
