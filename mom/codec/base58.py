@@ -19,6 +19,7 @@
 :module: mom.codec.base58
 :synopsis: Base-58 representation for unambiguous display & compact human-input.
 
+
 Where should you use base-58?
 -----------------------------
 Base-85 representation is 7 bit-ASCII safe, MIME-safe, URL-safe, HTTP
@@ -228,8 +229,6 @@ def b58decode(encoded,
         # We don't want to convert to b'\x00' when we get number == 0.
         # That would add an off-by-one extra zero byte in the result.
         raw_bytes = b('')
-
-
 
     # Add prefixed padding if required.
     # 0 byte is represented using the first character in the character set.
