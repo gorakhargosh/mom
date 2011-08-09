@@ -82,7 +82,7 @@ reduced to::
 
 The first 12 characters of a SHA-1 hash are sufficiently strong for serving
 static assets while minimizing collision overhead in the context of a
-small-to-medium size Website and considering these are URLs for static served
+small-to-medium-sized Website and considering these are URLs for static served
 assets that can change over periods of time. You may want to consider
 using the full hash for large-scale Websites. Therefore, we can shorten the
 original asset URL to::
