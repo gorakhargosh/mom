@@ -131,7 +131,7 @@ from __future__ import absolute_import, division
 import re
 from mom._compat import have_python3
 from mom.builtins import byte, is_bytes, b
-from mom.codec import bytes_to_integer
+from mom.codec import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
 
 
@@ -216,4 +216,26 @@ def b58decode(encoded,
     if _ignore_pattern:
         encoded = re.sub(_ignore_pattern, b(''), encoded)
 
-    pass
+    # Convert to big integer.
+    number = 0
+    for i, x in enumerate(reversed(encoded)):
+        number += _lookup[x] * (58**i)
+
+    # Obtain raw bytes.
+    if number:
+        raw_bytes = integer_to_bytes(number)
+    else:
+        # We don't want to convert to b'\x00' when we get number == 0.
+        # That would add an off-by-one extra zero byte in the result.
+        raw_bytes = b('')
+
+    # Add prefixed padding if required.
+    # 0 byte is represented using the first character in the character set.
+    # The extra [0] index in _charset[0][0] is for Python2.x-Python3.x
+    # compatibility. Indexing into Python 3 bytes yields an integer, whereas
+    # in Python 2.x it yields a single-byte string.
+    zero_leading = leading(lambda w: w == _charset[0][0], encoded)
+    if zero_leading:
+        padding = ZERO_BYTE * zero_leading
+        raw_bytes = padding + raw_bytes
+    return raw_bytes
