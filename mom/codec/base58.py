@@ -105,7 +105,7 @@ strings. If you wish to support versioned assets, however, then you
 may need to rename files to include their hashed identifiers instead. For
 example::
 
-    http://s.example.com/js/2QxqmqiFm-file.js
+    http://s.example.com/js/file-2QxqmqiFm.js
 
 The following benefits are therefore achieved::
 
