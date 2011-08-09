@@ -98,6 +98,8 @@ Read these before you begin to use these functions
 .. autofunction:: bytes_to_unicode
 .. autofunction:: bytes_to_unicode_recursive
 .. autofunction:: to_unicode_if_bytes
+.. autofunction:: ascii_encode
+.. autofunction:: latin1_encode
 """
 
 from __future__ import absolute_import
@@ -115,6 +117,8 @@ __all__ = [
     "bytes_to_unicode",
     "bytes_to_unicode_recursive",
     "to_unicode_if_bytes",
+    "ascii_encode",
+    "latin1_encode",
 ]
 
 
@@ -283,3 +287,26 @@ def utf8_decode_recursive(obj):
     """
     return bytes_to_unicode_recursive(obj)
 
+
+def ascii_encode(obj):
+    """
+    Encodes a string using ASCII encoding.
+
+    :param obj:
+        String to encode.
+    :returns:
+        ASCII-encoded bytes.
+    """
+    return obj.encode("ascii")
+
+
+def latin1_encode(obj):
+    """
+    Encodes a string using LATIN-1 encoding.
+
+    :param obj:
+        String to encode.
+    :returns:
+        LATIN-1 encoded bytes.
+    """
+    return obj.encode("latin1")
