@@ -258,7 +258,7 @@ def b85encode(raw_bytes,
 #            chars[i] = _base85_chars[mod]
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
-        ascii_chars[i]   = _base85_chars[x // _pow_85[4]] # Don't need %85. Already <85.
+        ascii_chars[i]   = _base85_chars[x // _pow_85[4]] # Don't need %85.is<85
         ascii_chars[i+1] = _base85_chars[(x // _pow_85[3]) % 85]
         ascii_chars[i+2] = _base85_chars[(x // _pow_85[2]) % 85]
         ascii_chars[i+3] = _base85_chars[(x // 85) % 85]     # 85**1 = 85

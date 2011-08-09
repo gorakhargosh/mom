@@ -141,7 +141,8 @@ b = byte_literal
 
 def byte(num):
     """
-    Converts a number between 0 and 255 (both inclusive) to a bytes instance.
+    Converts a number between 0 and 255 (both inclusive) to a base-256 (byte)
+    representation.
     
     Use it as a replacement for ``chr`` where you are expecting a byte::
 

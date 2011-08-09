@@ -22,6 +22,8 @@
 This module contains codecs for converting between integers and bytes, and
 the hex, base64, base85, decimal, and binary representations of bytes.
 
+Understand that bytes are simply base-256 representation.
+
 Bytes base-encoding
 -------------------
 These codecs preserve bytes "as is" when decoding back to bytes. In a more
@@ -384,7 +386,7 @@ def bytes_to_integer(raw_bytes):
     .. WARNING: Does not preserve leading zero bytes.
 
     :param raw_bytes:
-        Raw bytes.
+        Raw bytes (base-256 representation).
     :returns:
         Integer.
     """
@@ -397,7 +399,7 @@ def bytes_to_integer(raw_bytes):
 
 def _bytes_to_integer(raw_bytes):
     """
-    Converts bytes to integer::
+    Converts bytes (base-256 representation) to integer::
 
         bytes_to_integer(bytes) : integer
 
@@ -408,7 +410,7 @@ def _bytes_to_integer(raw_bytes):
     .. WARNING: Does not preserve leading zero bytes.
 
     :param raw_bytes:
-        Raw bytes.
+        Raw bytes (base-256 representation).
     :returns:
         Integer.
     """
@@ -448,7 +450,7 @@ def _integer_to_bytes(num, blocksize=0):
         the byte string with binary zeros so that the length is a multiple of
         blocksize.
     :returns:
-        Raw bytes.
+        Raw bytes (base-256 representation).
     """
     raw_bytes = b('')
     num = int(num)
@@ -476,7 +478,7 @@ def _integer_to_bytes(num, blocksize=0):
 
 def integer_to_bytes(num, chunk_size=0):
     """
-    Convert a integer to bytes::
+    Convert a integer to bytes (base-256 representation)::
 
         integer_to_bytes(n:int, chunk_size:int) : string
 
@@ -490,7 +492,7 @@ def integer_to_bytes(num, chunk_size=0):
         the byte string with binary zeros so that the length is a multiple of
         ``chunk_size``.
     :returns:
-        Raw bytes.
+        Raw bytes (base-256 representation).
     """
     num = int(num)
     raw_bytes = b('')
