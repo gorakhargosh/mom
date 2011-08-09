@@ -229,12 +229,15 @@ def b58decode(encoded,
         # That would add an off-by-one extra zero byte in the result.
         raw_bytes = b('')
 
+
+
     # Add prefixed padding if required.
     # 0 byte is represented using the first character in the character set.
-    # The extra [0] index in _charset[0][0] is for Python2.x-Python3.x
+    zero_byte_char = _charset[0]
+    # The extra [0] index in zero_byte_char[0] is for Python2.x-Python3.x
     # compatibility. Indexing into Python 3 bytes yields an integer, whereas
     # in Python 2.x it yields a single-byte string.
-    zero_leading = leading(lambda w: w == _charset[0][0], encoded)
+    zero_leading = leading(lambda w: w == zero_byte_char[0], encoded)
     if zero_leading:
         padding = ZERO_BYTE * zero_leading
         raw_bytes = padding + raw_bytes
