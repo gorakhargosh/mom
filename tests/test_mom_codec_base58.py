@@ -13,6 +13,10 @@ zero_bytes = b('\x00\x00\x00\x00')
 one_zero_byte = b('\x00')
 raw_data = hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
 encoded = b('19TbMSWwHvnxAKy12iNm3KdbGfzfaMFViT')
+encoded_with_whitespace = b('''
+19TbMSWwHvnxAKy12iN
+m3KdbGfzfaMFViT
+''')
 
 padding_raw = b('''\
 \x00\x00\xa4\x97\xf2\x10\xfc\x9c]\x02\xfc}\xc7\xbd!\x1c\xb0\xc7M\xa0\xae\x16\
@@ -37,3 +41,4 @@ class Test_base58_codec(unittest2.TestCase):
     def test_encoding_and_decoding(self):
         self.assertEqual(b58encode(raw_data), encoded)
         self.assertEqual(b58decode(encoded), raw_data)
+        self.assertEqual(b58decode(encoded_with_whitespace), raw_data)
