@@ -43,7 +43,7 @@ Example scenarios where base-58 encoding may be used:
 * Revision control changeset identifiers
 
 In general, use base-58 in any 7-bit ASCII-safe compact communication where
-both human beings, paper, and communication devices may be significantly
+human beings, paper, and communication devices may be significantly
 involved.
 
 The default base-58 character set is ``[0-9A-Za-z]`` (base-62) with some
