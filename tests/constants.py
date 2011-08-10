@@ -1,15 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-unicode_string = u'\u00ae'
-unicode_string2 = u'深入 Python'
-foo = 'foo'
-ufoo = u'foo'
-json_foo = '"foo"'
-json_ufoo = u'"foo"'
-json_unicode_value = u'"\u00e9"'
-unicode_value = u'\u00e9'
-x_byte = "\xe9"
-utf8_bytes = '\xc2\xae'
-utf8_bytes2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
-latin1_bytes = "\xe9"
+from __future__ import absolute_import
+
+from mom._compat import have_python3
+
+if have_python3:
+    from tests.py3kconstants import \
+        unicode_string, unicode_string2, foo, ufoo, \
+        json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte, \
+        utf8_bytes, utf8_bytes2, latin1_bytes
+else:
+    from tests.py2kconstants import \
+        unicode_string, unicode_string2, foo, ufoo, \
+        json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte, \
+        utf8_bytes, utf8_bytes2, latin1_bytes
+
+unicode_string = unicode_string
+unicode_string2 = unicode_string2
+foo = foo
+ufoo = ufoo
+json_foo = json_foo
+json_ufoo = json_ufoo
+json_unicode_value = json_unicode_value
+unicode_value = unicode_value
+x_byte = x_byte
+utf8_bytes = utf8_bytes
+utf8_bytes2 = utf8_bytes2
+latin1_bytes = latin1_bytes
