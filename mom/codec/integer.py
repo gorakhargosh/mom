@@ -21,7 +21,7 @@ where ``g`` is the decoder and ``f`` is a encoder.
 
 import binascii
 from struct import pack, unpack
-from mom.builtins import is_bytes, byte, b, integer_byte_count
+from mom.builtins import is_bytes, byte, b, integer_byte_count, is_integer
 
 
 __all__ = [
@@ -94,7 +94,7 @@ def _bytes_to_integer(raw_bytes):
     return int_value
 
 
-def _integer_to_bytes(num, chunk_size=0):
+def _integer_to_bytes(number, chunk_size=0):
     """
     Convert a integer to bytes::
 
@@ -102,7 +102,9 @@ def _integer_to_bytes(num, chunk_size=0):
 
     .. WARNING: Does not preserve leading zeros.
 
-    :param num:
+    This is based on the PyCrypto implementation by Barry Warsaw.
+
+    :param number:
         Integer value
     :param chunk_size:
         If optional chunk_size is given and greater than zero, pad the front of
@@ -112,12 +114,16 @@ def _integer_to_bytes(num, chunk_size=0):
     :returns:
         Raw bytes (base-256 representation).
     """
+    number = int(number)
+
+    if number < 0:
+        raise ValueError('Number must be unsigned integer: %d' % number)
+
     raw_bytes = b('')
-    num = int(num)
-    number = num
-    while num > 0:
-        raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
-        num >>= 32
+    number = number
+    while number > 0:
+        raw_bytes = pack('>I', number & 0xffffffff) + raw_bytes
+        number >>= 32
 
     # Strip off leading zeros
     for i in range(len(raw_bytes)):
@@ -167,16 +173,22 @@ def integer_to_bytes(number, chunk_size=0):
     :returns:
         Raw bytes (base-256 representation).
     """
-    number = int(number)
+
+    if not is_integer(number):
+        raise TypeError("You must pass an integer for 'number', not %s" %
+            type(number).__name__)
+
+    if number < 0:
+        raise ValueError('Number must be unsigned integer: %d' % number)
+
     raw_bytes = b('')
     if not number:
         raw_bytes = ZERO_BYTE
+
     num = number
     while num > 0:
         raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
         num >>= 32
-
-    length = len(raw_bytes)
 
     # Count the number of zero prefix bytes.
     zero_leading = 0
@@ -188,6 +200,7 @@ def integer_to_bytes(number, chunk_size=0):
         # Bounds checking. We're not doing this up-front because the
         # most common use case is not specifying a chunk size. In the worst
         # case, the number will already have been converted to bytes above.
+        length = len(raw_bytes)
         bytes_needed = length - zero_leading
         if bytes_needed > chunk_size:
             raise OverflowError(

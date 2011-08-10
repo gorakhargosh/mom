@@ -267,3 +267,10 @@ class Test_integer_to_bytes(unittest2.TestCase):
         self.assertRaises(OverflowError, _integer_to_bytes, 123456789, 3)
         self.assertRaises(OverflowError, integer_to_bytes, 299999999999, 4)
         self.assertRaises(OverflowError, _integer_to_bytes, 299999999999, 4)
+
+    def test_raises_ValueError_when_negative_integer(self):
+        self.assertRaises(ValueError, integer_to_bytes, -1)
+        self.assertRaises(ValueError, _integer_to_bytes, -1)
+
+    def test_raises_TypeError_when_not_integer(self):
+        self.assertRaises(TypeError, integer_to_bytes, None)
