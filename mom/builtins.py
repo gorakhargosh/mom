@@ -267,7 +267,7 @@ def is_sequence(obj):
     :param obj:
         The value to test.
     :returns:
-        ``True`` if the value is a sequence; ``False`` otherwise.
+        ``True`` if value is a sequence; ``False`` otherwise.
     """
     try:
         list(obj)
@@ -284,19 +284,19 @@ def is_unicode(obj):
     :param obj:
         The value to test.
     :returns:
-        ``True`` if ``value`` is a Unicode string; ``False`` otherwise.
+        ``True`` if value is a Unicode string; ``False`` otherwise.
     """
     return isinstance(obj, unicode_type)
 
 
 def is_bytes(obj):
     """
-    Determines whether the given value is a byte string.
+    Determines whether the given value is a bytes instance.
 
     :param obj:
         The value to test.
     :returns:
-        ``True`` if ``value`` is a byte string; ``False`` otherwise.
+        ``True`` if value is a bytes instance; ``False`` otherwise.
     """
     return isinstance(obj, bytes_type)
 
@@ -309,10 +309,9 @@ def is_bytes_or_unicode(obj):
     :param obj:
         The value to test.
     :returns:
-        ``True`` if ``value`` is a string; ``False`` otherwise.
+        ``True`` if value is any type of string; ``False`` otherwise.
     """
     return isinstance(obj, basestring_type)
-
 
 
 def is_integer(obj):
