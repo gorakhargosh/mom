@@ -16,11 +16,12 @@ from mom.codec import \
     decimal_encode, \
     bin_encode, \
     bin_decode, \
-    base85_encode, base85_decode, base58_encode, base58_decode, base64_urlsafe_encode, base64_urlsafe_decode
+    base85_encode, base85_decode, base58_encode, base58_decode, \
+    base64_urlsafe_encode, base64_urlsafe_decode
 from mom.codec.integer import \
     bytes_to_integer, \
     integer_to_bytes, \
-    _bytes_to_integer
+    _bytes_to_integer, _integer_to_bytes
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -72,13 +73,17 @@ class Test_base85_codec(unittest2.TestCase):
         self.assertEqual(base85_decode(base85_encoded), base85_raw)
 
     def test_raises_KeyError_when_invalid_charset(self):
-        self.assertRaises(ValueError, base85_encode, base85_raw, "BADCHARSET")
-        self.assertRaises(ValueError, base85_decode, base85_encoded, "BADCHARSET")
+        self.assertRaises(ValueError,
+                          base85_encode, base85_raw, "BADCHARSET")
+        self.assertRaises(ValueError,
+                          base85_decode, base85_encoded, "BADCHARSET")
         
 class Test_base58_codec(unittest2.TestCase):
     def test_codec_identity(self):
-        self.assertEqual(base58_decode(base58_encode(random_bytes_1024)), random_bytes_1024)
-        self.assertEqual(base58_decode(base58_encode(random_bytes_len_4093)), random_bytes_len_4093)
+        self.assertEqual(base58_decode(base58_encode(random_bytes_1024)),
+                         random_bytes_1024)
+        self.assertEqual(base58_decode(base58_encode(random_bytes_len_4093)),
+                         random_bytes_len_4093)
 
     def test_raises_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, base58_encode, unicode_string)
@@ -115,14 +120,20 @@ class Test_base64_codec(unittest2.TestCase):
 class Test_base64_urlsafe_codec(unittest2.TestCase):
     def test_encodes_without_trailing_newline(self):
         self.assertFalse(base64_urlsafe_encode(zero_bytes).endswith(b("\n")))
-        self.assertFalse(base64_urlsafe_encode(random_bytes_1024).endswith(b("\n")))
+        self.assertFalse(
+            base64_urlsafe_encode(random_bytes_1024).endswith(b("\n")))
 
 
     def test_codec_identity(self):
         # Not zero-destructive.
-        self.assertEqual(base64_urlsafe_decode(base64_urlsafe_encode(zero_bytes)), zero_bytes)
-        self.assertEqual(base64_urlsafe_decode(base64_urlsafe_encode(random_bytes_1024)),
-                         random_bytes_1024)
+        self.assertEqual(
+            base64_urlsafe_decode(base64_urlsafe_encode(zero_bytes)),
+            zero_bytes
+        )
+        self.assertEqual(
+            base64_urlsafe_decode(base64_urlsafe_encode(random_bytes_1024)),
+            random_bytes_1024
+        )
 
     def test_correctness(self):
         self.assertEqual(base64_urlsafe_encode(url_safety_test_bytes),
@@ -136,8 +147,10 @@ class Test_base64_urlsafe_codec(unittest2.TestCase):
 
         # Tests whether this decoder can decode standard encoded base64
         # representation too.
-        self.assertEqual(base64_urlsafe_decode(url_safety_test_standard_encoded),
-                         url_safety_test_bytes)
+        self.assertEqual(
+            base64_urlsafe_decode(url_safety_test_standard_encoded),
+            url_safety_test_bytes
+        )
         
     def test_TypeError_non_bytes_argument(self):
         self.assertRaises(TypeError, base64_urlsafe_encode, unicode_string)
@@ -155,7 +168,8 @@ class Test_hex_codec(unittest2.TestCase):
                          random_bytes_1024)
         self.assertEqual(hex_decode(hex_encode(random_bytes_2048)),
                          random_bytes_2048)
-        self.assertEqual(hex_decode(hex_encode(random_bytes_len_4093)),
+        self.assertEqual(
+            hex_decode(hex_encode(random_bytes_len_4093)),
                          random_bytes_len_4093)
 
     def test_TypeError_non_bytes_argument(self):
@@ -223,6 +237,12 @@ class Test_bytes_integer_codec(unittest2.TestCase):
         self.assertEqual(integer_to_bytes(_bytes_to_integer(random_bytes)),
                          expected_bytes)
 
+        self.assertEqual(_integer_to_bytes(bytes_to_integer(zero_bytes)),
+                         one_zero_byte)
+        self.assertEqual(_integer_to_bytes(bytes_to_integer(random_bytes)),
+                         expected_bytes)
+
+
     def test_TypeError_non_bytes_argument(self):
         self.assertRaises(TypeError, bytes_to_integer, unicode_string)
         self.assertRaises(TypeError, bytes_to_integer, None)
@@ -232,6 +252,18 @@ class Test_bytes_integer_codec(unittest2.TestCase):
 
 
 class Test_integer_to_bytes(unittest2.TestCase):
-    def test_block_size(self):
-        self.assertEqual(integer_to_bytes(299999999999, 4),
-                         b('\x00\x00\x00E\xd9d\xb7\xff'))
+    def test_chunk_size(self):
+        self.assertEqual(integer_to_bytes(123456789, 6),
+                         b('\x00\x00\x07[\xcd\x15'))
+        self.assertEqual(_integer_to_bytes(123456789, 6),
+                         b('\x00\x00\x07[\xcd\x15'))
+        self.assertEqual(integer_to_bytes(123456789, 7),
+                         b('\x00\x00\x00\x07[\xcd\x15'))
+        self.assertEqual(_integer_to_bytes(123456789, 7),
+                         b('\x00\x00\x00\x07[\xcd\x15'))
+
+    def test_raises_OverflowError_when_chunk_size_is_insufficient(self):
+        self.assertRaises(OverflowError, integer_to_bytes, 123456789, 3)
+        self.assertRaises(OverflowError, _integer_to_bytes, 123456789, 3)
+        self.assertRaises(OverflowError, integer_to_bytes, 299999999999, 4)
+        self.assertRaises(OverflowError, _integer_to_bytes, 299999999999, 4)

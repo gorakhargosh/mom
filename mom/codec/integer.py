@@ -21,7 +21,7 @@ where ``g`` is the decoder and ``f`` is a encoder.
 
 import binascii
 from struct import pack, unpack
-from mom.builtins import is_bytes, byte, b
+from mom.builtins import is_bytes, byte, b, integer_byte_count
 
 
 __all__ = [
@@ -94,7 +94,7 @@ def _bytes_to_integer(raw_bytes):
     return int_value
 
 
-def _integer_to_bytes(num, blocksize=0):
+def _integer_to_bytes(num, chunk_size=0):
     """
     Convert a integer to bytes::
 
@@ -104,15 +104,17 @@ def _integer_to_bytes(num, blocksize=0):
 
     :param num:
         Integer value
-    :param blocksize:
-        If optional blocksize is given and greater than zero, pad the front of
+    :param chunk_size:
+        If optional chunk_size is given and greater than zero, pad the front of
         the byte string with binary zeros so that the length is a multiple of
-        blocksize.
+        chunk_size. Raises an OverflowError if the chunk_size is not sufficient
+        to represent the integer.
     :returns:
         Raw bytes (base-256 representation).
     """
     raw_bytes = b('')
     num = int(num)
+    number = num
     while num > 0:
         raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
         num >>= 32
@@ -129,13 +131,19 @@ def _integer_to_bytes(num, blocksize=0):
 
     # Add back some pad bytes. This could be done more efficiently w.r.t. the
     # de-padding being done above, but sigh...
-    if blocksize > 0 and len(raw_bytes) % blocksize:
-        raw_bytes = (blocksize - len(raw_bytes) % blocksize) * \
+    if chunk_size > 0 and len(raw_bytes) % chunk_size:
+        bytes_needed = integer_byte_count(number)
+        if bytes_needed > chunk_size:
+            raise OverflowError(
+                "Need %d bytes for number, but chunk size is %d" %
+                (bytes_needed, chunk_size)
+            )
+        raw_bytes = (chunk_size - len(raw_bytes) % chunk_size) * \
                     ZERO_BYTE + raw_bytes
     return raw_bytes
 
 
-def integer_to_bytes(num, chunk_size=0):
+def integer_to_bytes(number, chunk_size=0):
     """
     Convert a integer to bytes (base-256 representation)::
 
@@ -144,25 +152,36 @@ def integer_to_bytes(num, chunk_size=0):
     .. WARNING:
         Does not preserve leading zeros if you don't specify a chunk size.
 
-    :param num:
+    :param number:
         Integer value
     :param chunk_size:
         If optional chunk size is given and greater than zero, pad the front of
         the byte string with binary zeros so that the length is a multiple of
-        ``chunk_size``.
+        ``chunk_size``. Raises an OverflowError if the chunk_size is not
+        sufficient to represent the integer.
     :returns:
         Raw bytes (base-256 representation).
     """
-    num = int(num)
+    number = int(number)
     raw_bytes = b('')
-    if not num:
+    if not number:
         raw_bytes = ZERO_BYTE
+    num = number
     while num > 0:
         raw_bytes = pack('>I', num & 0xffffffff) + raw_bytes
         num >>= 32
 
     length = len(raw_bytes)
     if chunk_size > 0:
+        # Bounds checking. We're not doing this up-front because the
+        # most common use case is not specifying a chunk size. In the worst
+        # case, the number will already have been converted to bytes above.
+        bytes_needed = integer_byte_count(number)
+        if bytes_needed > chunk_size:
+            raise OverflowError(
+                "Need %d bytes for number, but chunk size is %d" %
+                (bytes_needed, chunk_size)
+            )
         remainder = length % chunk_size
         if remainder:
             raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes

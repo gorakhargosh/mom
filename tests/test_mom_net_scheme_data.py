@@ -122,3 +122,6 @@ class Test_parsing(unittest2.TestCase):
         })
 
 
+    def test_raises_TypeError_when_not_raw_bytes(self):
+        self.assertRaises(TypeError, data_urlparse, unicode_string)
+        self.assertRaises(TypeError, data_urlparse, None)
