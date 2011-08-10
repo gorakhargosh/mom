@@ -175,7 +175,7 @@ def integer_to_bytes(number, chunk_size=0):
     """
 
     if not is_integer(number):
-        raise TypeError("You must pass an integer for 'number', not %s" %
+        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
             type(number).__name__)
 
     if number < 0:
