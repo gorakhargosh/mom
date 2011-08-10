@@ -340,7 +340,12 @@ def integer_byte_count(num):
     if num == 0:
         return 0
     bits = integer_bit_length(num)
-    return int(math.ceil(bits / 8.0))
+    quanta, remainder = divmod(bits, 8)
+    if remainder:
+        quanta += 1
+    return quanta
+    # The following does floating point division.
+    #return int(math.ceil(bits / 8.0))
 
 
 def integer_bit_length(num):
@@ -349,13 +354,17 @@ def integer_bit_length(num):
     0 bits.
 
     :param num:
-        Integer value. If num is 0, returns 0.
+        Integer value. If num is 0, returns 1. Only the absolute value of the
+        number is considered. Therefore, signed integers will be abs(num)
+        before the number's bit length is determined.
     :returns:
         Returns the number of bits in the integer.
     """
     bits = 0
     if num < 0:
         num = -num
+    if num == 0:
+        return 1
     while num >> bits:
         bits += 1
     return bits
@@ -367,7 +376,9 @@ def _integer_bit_length(num):
     0 bits.
 
     :param num:
-        Integer value. If num is 0, returns 0.
+        Integer value. If num is 0, returns 1. Only the absolute value of the
+        number is considered. Therefore, signed integers will be abs(num)
+        before the number's bit length is determined.
     :returns:
         Returns the number of bits in the integer.
     """
@@ -376,7 +387,7 @@ def _integer_bit_length(num):
         raise TypeError("'%r' object cannot be interpreted as an index" \
                         % type(num).__name__)
     if num == 0:
-        return 0
+        return 1
     if num < 0:
         num = -num
     hex_num = hex(num, None)

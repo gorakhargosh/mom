@@ -146,15 +146,20 @@ class Test_long_byte_count(unittest2.TestCase):
             count = int(math.ceil(bit_length / 8.0))
             self.assertEqual(integer_byte_count(num), count)
 
+        self.assertEqual(integer_byte_count(1 << 1023), 128)
+        self.assertEqual(integer_byte_count((1 << 1024) - 1), 128)
+        self.assertEqual(integer_byte_count(1 << 1024), 129)
+
+
     def test_raises_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, integer_byte_count, None)
         self.assertRaises(TypeError, integer_byte_count, object)
 
 
 class Test_long_bit_length(unittest2.TestCase):
-    def test_bit_length_zero_if_zero(self):
-        self.assertEqual(integer_bit_length(0), 0)
-        self.assertEqual(_integer_bit_length(0), 0)
+    def test_bit_length_1_if_zero(self):
+        self.assertEqual(integer_bit_length(0), 1)
+        self.assertEqual(_integer_bit_length(0), 1)
 
     def test_bit_length_correct(self):
         numbers = [
@@ -172,10 +177,16 @@ class Test_long_bit_length(unittest2.TestCase):
             self.assertEqual(integer_bit_length(num), length)
             self.assertEqual(_integer_bit_length(num), length)
 
-        self.assertEqual(integer_bit_length(2**32-1), 32)
-        self.assertEqual(integer_bit_length(2**64-1), 64)
-        self.assertEqual(_integer_bit_length(2**32-1), 32)
-        self.assertEqual(_integer_bit_length(2**64-1), 64)
+        self.assertEqual(integer_bit_length(1023), 10)
+        self.assertEqual(integer_bit_length(1024), 11)
+        self.assertEqual(integer_bit_length(1025), 11)
+        self.assertEqual(integer_bit_length(1 << 1024), 1025)
+        self.assertEqual(integer_bit_length((1 << 1024) + 1), 1025)
+        self.assertEqual(integer_bit_length((1 << 1024) - 1), 1024)
+        self.assertEqual(integer_bit_length((1<<32)-1), 32)
+        self.assertEqual(integer_bit_length((1<<64)-1), 64)
+        self.assertEqual(_integer_bit_length((1<<32)-1), 32)
+        self.assertEqual(_integer_bit_length((1<<64)-1), 64)
 
     def test_raises_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, integer_bit_length, None)
