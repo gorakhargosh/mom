@@ -87,11 +87,12 @@ People screw these up too. Useful in functional programming.
 """
 
 from __future__ import absolute_import
+
+from struct import pack
+
 from mom._compat import \
     byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
-    next, long_type
-from struct import pack
-from mom._compat import integer_types
+    next, integer_types
 
 
 __all__ = [
@@ -335,8 +336,6 @@ def integer_byte_count(num):
     :returns:
         The number of bytes in the integer.
     """
-    import math
-
     if num == 0:
         return 0
     bits = integer_bit_length(num)
@@ -354,7 +353,7 @@ def integer_bit_length(num):
     0 bits.
 
     :param num:
-        Integer value. If num is 0, returns 1. Only the absolute value of the
+        Integer value. If num is 0, returns 0. Only the absolute value of the
         number is considered. Therefore, signed integers will be abs(num)
         before the number's bit length is determined.
     :returns:
@@ -364,7 +363,7 @@ def integer_bit_length(num):
     if num < 0:
         num = -num
     if num == 0:
-        return 1
+        return 0
     while num >> bits:
         bits += 1
     return bits
@@ -376,7 +375,7 @@ def _integer_bit_length(num):
     0 bits.
 
     :param num:
-        Integer value. If num is 0, returns 1. Only the absolute value of the
+        Integer value. If num is 0, returns 0. Only the absolute value of the
         number is considered. Therefore, signed integers will be abs(num)
         before the number's bit length is determined.
     :returns:
@@ -387,7 +386,7 @@ def _integer_bit_length(num):
         raise TypeError("'%r' object cannot be interpreted as an index" \
                         % type(num).__name__)
     if num == 0:
-        return 1
+        return 0
     if num < 0:
         num = -num
     hex_num = hex(num, None)

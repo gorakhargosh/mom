@@ -158,8 +158,8 @@ class Test_long_byte_count(unittest2.TestCase):
 
 class Test_long_bit_length(unittest2.TestCase):
     def test_bit_length_1_if_zero(self):
-        self.assertEqual(integer_bit_length(0), 1)
-        self.assertEqual(_integer_bit_length(0), 1)
+        self.assertEqual(integer_bit_length(0), 0)
+        self.assertEqual(_integer_bit_length(0), 0)
 
     def test_bit_length_correct(self):
         numbers = [
