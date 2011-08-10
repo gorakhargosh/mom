@@ -177,14 +177,17 @@ def integer_to_bytes(number, chunk_size=0):
         num >>= 32
 
     length = len(raw_bytes)
+
+    # Count the number of zero prefix bytes.
+    zero_leading = 0
+    for zero_leading, x in enumerate(raw_bytes):
+        if x != ZERO_BYTE[0]:
+            break
+
     if chunk_size > 0:
         # Bounds checking. We're not doing this up-front because the
         # most common use case is not specifying a chunk size. In the worst
         # case, the number will already have been converted to bytes above.
-        zero_leading = 0
-        for zero_leading, x in enumerate(raw_bytes):
-            if x != ZERO_BYTE[0]:
-                break
         bytes_needed = length - zero_leading
         if bytes_needed > chunk_size:
             raise OverflowError(
@@ -195,10 +198,5 @@ def integer_to_bytes(number, chunk_size=0):
         if remainder:
             raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
     else:
-        # Count the number of leading zeros.
-        leading_zeros = 0
-        for leading_zeros in range(length):
-            if raw_bytes[leading_zeros] != ZERO_BYTE[0]:
-                break
-        raw_bytes = raw_bytes[leading_zeros:]
+        raw_bytes = raw_bytes[zero_leading:]
     return raw_bytes
