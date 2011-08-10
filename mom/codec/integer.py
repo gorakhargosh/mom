@@ -187,8 +187,10 @@ def integer_to_bytes(number, chunk_size=0):
                 break
         bytes_needed = length - zero_leading
         if bytes_needed > chunk_size:
-            raise OverflowError('Needed %i bytes for number, but block size '
-                'is %i' % (bytes_needed, chunk_size))
+            raise OverflowError(
+                "Need %d bytes for number, but chunk size is %d" %
+                (bytes_needed, chunk_size)
+            )
         remainder = length % chunk_size
         if remainder:
             raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
