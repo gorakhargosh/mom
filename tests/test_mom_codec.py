@@ -21,7 +21,7 @@ from mom.codec import \
 from mom.codec.integer import \
     bytes_to_integer, \
     integer_to_bytes, \
-    _bytes_to_integer, _integer_to_bytes
+    _bytes_to_integer
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -237,12 +237,6 @@ class Test_bytes_integer_codec(unittest2.TestCase):
         self.assertEqual(integer_to_bytes(_bytes_to_integer(random_bytes)),
                          expected_bytes)
 
-        self.assertEqual(_integer_to_bytes(bytes_to_integer(zero_bytes)),
-                         one_zero_byte)
-        self.assertEqual(_integer_to_bytes(bytes_to_integer(random_bytes)),
-                         expected_bytes)
-
-
     def test_TypeError_non_bytes_argument(self):
         self.assertRaises(TypeError, bytes_to_integer, unicode_string)
         self.assertRaises(TypeError, bytes_to_integer, None)
@@ -255,22 +249,15 @@ class Test_integer_to_bytes(unittest2.TestCase):
     def test_chunk_size(self):
         self.assertEqual(integer_to_bytes(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes(123456789, 6),
-                         b('\x00\x00\x07[\xcd\x15'))
         self.assertEqual(integer_to_bytes(123456789, 7),
-                         b('\x00\x00\x00\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
 
     def test_raises_OverflowError_when_chunk_size_is_insufficient(self):
         self.assertRaises(OverflowError, integer_to_bytes, 123456789, 3)
-        self.assertRaises(OverflowError, _integer_to_bytes, 123456789, 3)
         self.assertRaises(OverflowError, integer_to_bytes, 299999999999, 4)
-        self.assertRaises(OverflowError, _integer_to_bytes, 299999999999, 4)
 
     def test_raises_ValueError_when_negative_integer(self):
         self.assertRaises(ValueError, integer_to_bytes, -1)
-        self.assertRaises(ValueError, _integer_to_bytes, -1)
 
     def test_raises_TypeError_when_not_integer(self):
         self.assertRaises(TypeError, integer_to_bytes, None)

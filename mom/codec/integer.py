@@ -107,66 +107,6 @@ def _bytes_to_integer(raw_bytes):
     return int_value
 
 
-def _integer_to_bytes(number, chunk_size=0):
-    """
-    Convert a integer to bytes::
-
-        integer_to_bytes(n:int, blocksize:int) : string
-
-    .. WARNING: Does not preserve leading zeros.
-
-    This is based on the PyCrypto implementation by Barry Warsaw.
-
-    :param number:
-        Integer value
-    :param chunk_size:
-        If optional chunk_size is given and greater than zero, pad the front of
-        the byte string with binary zeros so that the length is a multiple of
-        chunk_size. Raises an OverflowError if the chunk_size is not sufficient
-        to represent the integer.
-    :returns:
-        Raw bytes (base-256 representation).
-    """
-    number = int(number)
-
-    if number < 0:
-        raise ValueError('Number must be unsigned integer: %d' % number)
-
-    raw_bytes = b('')
-    number = number
-    while number > 0:
-        raw_bytes = pack('>I', number & 0xffffffff) + raw_bytes
-        number >>= 32
-
-    # Strip off leading zeros
-    for i in range(len(raw_bytes)):
-        if raw_bytes[i] != ZERO_BYTE[0]:
-            break
-    else:
-        # only happens when num == 0
-        raw_bytes = ZERO_BYTE
-        i = 0
-    raw_bytes = raw_bytes[i:]
-
-    # Add back some pad bytes. This could be done more efficiently w.r.t. the
-    # de-padding being done above, but sigh...
-    length = len(raw_bytes)
-    if chunk_size > 0 and length % chunk_size:
-        zero_leading = 0
-        for zero_leading, x in enumerate(raw_bytes):
-            if x != ZERO_BYTE[0]:
-                break
-        bytes_needed = length - zero_leading
-        if bytes_needed > chunk_size:
-            raise OverflowError(
-                "Need %d bytes for number, but chunk size is %d" %
-                (bytes_needed, chunk_size)
-            )
-        raw_bytes = (chunk_size - len(raw_bytes) % chunk_size) * \
-                    ZERO_BYTE + raw_bytes
-    return raw_bytes
-
-
 def integer_to_bytes(number, chunk_size=0):
     """
     Convert a integer to bytes (base-256 representation)::
