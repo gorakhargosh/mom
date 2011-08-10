@@ -146,10 +146,13 @@ def byte(num):
     Converts a number between 0 and 255 (both inclusive) to a base-256 (byte)
     representation.
     
-    Use it as a replacement for ``chr`` where you are expecting a byte::
+    Use it as a replacement for ``chr`` where you are expecting a byte
+    because this will work on all versions of Python::
 
         byte(0) -> b'\x00'
         byte(255) -> b'\xff'
+
+    Raises ``struct.error`` on overflow.
 
     :param num:
         An unsigned integer between 0 and 255 (both inclusive).
