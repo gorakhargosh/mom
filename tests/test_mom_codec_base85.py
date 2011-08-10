@@ -4,6 +4,7 @@
 import os
 import unittest2
 from mom.builtins import b
+from tests.constants import unicode_string
 from tests.test_mom_builtins import unicode_string2
 
 from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, \
@@ -165,7 +166,9 @@ class Test_base85_decode(unittest2.TestCase):
         self.assertRaises(ValueError, b85decode, b('zaz'))
 
 
-class Test_codec_identity(unittest2.TestCase):
+
+
+class Test_codec(unittest2.TestCase):
     def test_identity(self):
         zero_bytes = b('\x00\x00\x00\x00\x00')
         self.assertEqual(b85decode(b85encode(zero_bytes)), zero_bytes)
@@ -173,6 +176,26 @@ class Test_codec_identity(unittest2.TestCase):
                          random_256_bytes)
         self.assertEqual(b85decode(b85encode(random_odd_bytes)),
                          random_odd_bytes)
+
+    def test_raises_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, b85encode, unicode_string)
+        self.assertRaises(TypeError, b85encode, None)
+        self.assertRaises(TypeError, b85decode, unicode_string)
+        self.assertRaises(TypeError, b85decode, None)
+
+    def test_raises_TypeError_when_bad_arg_types(self):
+        # Prefix/suffix.
+        self.assertRaises(TypeError, b85encode, b('foo'), unicode_string, None)
+        self.assertRaises(TypeError, b85encode, b('foo'), None, unicode_string)
+        self.assertRaises(TypeError, b85decode, b('foo'), unicode_string, None)
+        self.assertRaises(TypeError, b85decode, b('foo'), None, unicode_string)
+
+        # Compact char.
+        self.assertRaises(TypeError, b85encode, b('foo'),
+                          _compact_char=unicode_string)
+        self.assertRaises(TypeError, b85decode, b('foo'),
+                          _compact_char=unicode_string)
+
 
 class Test_rfc1924_base85_encoding(unittest2.TestCase):
     def test_encoding(self):
