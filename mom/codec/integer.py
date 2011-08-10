@@ -32,15 +32,17 @@ where ``g`` is the decoder and ``f`` is a encoder.
 .. autofunction:: integer_to_bytes
 """
 
+from __future__ import absolute_import, division
+
 import binascii
 from struct import pack, unpack
-from mom.builtins import is_bytes, byte, b, integer_byte_count, is_integer
-
+from mom.builtins import is_bytes, byte, b, is_integer
 
 __all__ = [
     "bytes_to_integer",
     "integer_to_bytes",
 ]
+
 
 ZERO_BYTE = byte(0)
 
@@ -69,7 +71,7 @@ def bytes_to_integer(raw_bytes):
     return int(binascii.b2a_hex(raw_bytes), 16)
 
 
-def _bytes_to_integer(raw_bytes):
+def _bytes_to_integer(raw_bytes, _zero_byte=ZERO_BYTE):
     """
     Converts bytes (base-256 representation) to integer::
 
@@ -97,7 +99,7 @@ def _bytes_to_integer(raw_bytes):
         # sufficient zero padding.
         padding_size = 4 - remainder
         length += padding_size
-        raw_bytes = ZERO_BYTE * padding_size + raw_bytes
+        raw_bytes = _zero_byte * padding_size + raw_bytes
 
     # Now unpack integers and accumulate.
     int_value = 0
@@ -107,7 +109,7 @@ def _bytes_to_integer(raw_bytes):
     return int_value
 
 
-def integer_to_bytes(number, chunk_size=0):
+def integer_to_bytes(number, chunk_size=0, _zero_byte=ZERO_BYTE):
     """
     Convert a integer to bytes (base-256 representation)::
 
@@ -136,7 +138,7 @@ def integer_to_bytes(number, chunk_size=0):
 
     raw_bytes = b('')
     if not number:
-        raw_bytes = ZERO_BYTE
+        raw_bytes = _zero_byte
 
     num = number
     while num > 0:
@@ -146,7 +148,7 @@ def integer_to_bytes(number, chunk_size=0):
     # Count the number of zero prefix bytes.
     zero_leading = 0
     for zero_leading, x in enumerate(raw_bytes):
-        if x != ZERO_BYTE[0]:
+        if x != _zero_byte[0]:
             break
 
     if chunk_size > 0:
@@ -162,7 +164,7 @@ def integer_to_bytes(number, chunk_size=0):
             )
         remainder = length % chunk_size
         if remainder:
-            raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
+            raw_bytes = (chunk_size - remainder) * _zero_byte + raw_bytes
     else:
         raw_bytes = raw_bytes[zero_leading:]
     return raw_bytes
