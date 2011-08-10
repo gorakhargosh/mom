@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import unittest2
 from mom.builtins import is_bytes, is_bytes_or_unicode
-from mom.codec import bytes_to_integer
+from mom.codec.integer import bytes_to_integer
 from mom.security.random import \
     generate_random_hex_string, generate_random_uint_between, \
     generate_random_bits, generate_random_uint_atmost, \

@@ -16,8 +16,11 @@ from mom.codec import \
     decimal_encode, \
     bin_encode, \
     bin_decode, \
+    base85_encode, base85_decode
+from mom.codec.integer import \
     bytes_to_integer, \
-    integer_to_bytes, _bytes_to_integer, base85_encode, base85_decode
+    integer_to_bytes, \
+    _bytes_to_integer
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -128,7 +131,7 @@ class Test_bin_codec(unittest2.TestCase):
         self.assertRaises(TypeError, bin_encode, unicode_string)
         self.assertRaises(TypeError, bin_encode, None)
 
-class Test_bytes_long_codec(unittest2.TestCase):
+class Test_bytes_integer_codec(unittest2.TestCase):
     def test_codec_equivalence(self):
         # Padding bytes are not preserved (it is acceptable here).
         random_bytes = b("\x00\xbcE\x9a\xda]")
@@ -151,7 +154,7 @@ class Test_bytes_long_codec(unittest2.TestCase):
         self.assertRaises(TypeError, _bytes_to_integer, None)
 
 
-class Test_long_to_bytes(unittest2.TestCase):
+class Test_integer_to_bytes(unittest2.TestCase):
     def test_block_size(self):
         self.assertEqual(integer_to_bytes(299999999999, 4),
                          b('\x00\x00\x00E\xd9d\xb7\xff'))

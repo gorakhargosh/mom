@@ -21,7 +21,7 @@
 """
 
 from __future__ import absolute_import
-from mom.codec import integer_to_bytes, bytes_to_integer
+from mom.codec.integer import integer_to_bytes, bytes_to_integer
 
 
 def pkcs1_v1_5_encode(key_size, data):

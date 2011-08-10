@@ -139,7 +139,7 @@ from __future__ import absolute_import, division
 import re
 from mom._compat import have_python3
 from mom.builtins import byte, is_bytes, b
-from mom.codec import bytes_to_integer, integer_to_bytes
+from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
 
 

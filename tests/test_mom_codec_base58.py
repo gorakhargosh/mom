@@ -3,7 +3,7 @@
 
 import unittest2
 from mom.builtins import b
-from mom.codec import hex_decode
+from mom.codec import hex_decode, base58_decode, base58_encode
 from mom.codec.base58 import b58encode, b58decode
 from mom.security.random import generate_random_bytes
 
@@ -28,9 +28,14 @@ class Test_base58_codec(unittest2.TestCase):
             b58decode(b58encode(random_bytes_len_4093)),
             random_bytes_len_4093
         )
+        self.assertEqual(
+            base58_decode(base58_encode(random_bytes_len_4093)),
+            random_bytes_len_4093
+        )
 
     def test_padding(self):
         self.assertEqual(b58decode(b58encode(padding_raw)), padding_raw)
+        self.assertEqual(base58_decode(base58_encode(padding_raw)), padding_raw)
 
     def test_zero_bytes(self):
         self.assertEqual(b58encode(zero_bytes), b('1111'))
@@ -38,7 +43,16 @@ class Test_base58_codec(unittest2.TestCase):
         self.assertEqual(b58encode(one_zero_byte), b('1'))
         self.assertEqual(b58decode(b('1')), one_zero_byte)
 
+        self.assertEqual(base58_encode(zero_bytes), b('1111'))
+        self.assertEqual(base58_decode(b('1111')), zero_bytes)
+        self.assertEqual(base58_encode(one_zero_byte), b('1'))
+        self.assertEqual(base58_decode(b('1')), one_zero_byte)
+
     def test_encoding_and_decoding(self):
         self.assertEqual(b58encode(raw_data), encoded)
         self.assertEqual(b58decode(encoded), raw_data)
         self.assertEqual(b58decode(encoded_with_whitespace), raw_data)
+
+        self.assertEqual(base58_encode(raw_data), encoded)
+        self.assertEqual(base58_decode(encoded), raw_data)
+        self.assertEqual(base58_decode(encoded_with_whitespace), raw_data)
