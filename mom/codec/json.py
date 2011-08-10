@@ -20,8 +20,8 @@
 :module: mom.codec.json
 :synopsis: More portable JSON encoding and decoding routines.
 
-.. autofunction:: encode
-.. autofunction:: decode
+.. autofunction:: json_encode
+.. autofunction:: json_decode
 """
 
 from __future__ import absolute_import
