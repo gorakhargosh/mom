@@ -234,3 +234,19 @@ def get_machine_alignment(num):
     else:
         # 8-bit unsigned integer.
         return 8, max_uint8, "B"
+
+    
+def get_machine_array_alignment(num):
+    max_uint32 = 0xffffffff
+    max_uint16 = 0xffff
+    max_uint8 = 0xff
+
+    if num > max_uint16:
+        # 32-bit unsigned integer
+        return 32, max_uint32, "L"
+    elif num > max_uint8:
+        # 16-bit unsigned integer.
+        return 16, max_uint16, "H"
+    else:
+        # 8-bit unsigned integer.
+        return 8, max_uint8, "B"

@@ -17,6 +17,10 @@
 #
 # Optimization notes:
 # -------------------
+#
+# I think a machine-aligned array-based implementation can go even faster.
+# But since we're happy with this result right now, we're sticking to it.
+#
 # For the following test:
 # 1. integer_to_bytes (is clearly at least 20x-50x faster than others).
 # 2. _integer_to_bytes
@@ -68,7 +72,7 @@ import binascii
 from struct import pack, unpack
 from array import array
 from mom.builtins import is_bytes, byte, b, is_integer, integer_byte_count
-from mom._compat import get_machine_alignment
+from mom._compat import get_machine_alignment, get_machine_array_alignment
 
 
 __all__ = [
@@ -300,4 +304,3 @@ def integer_to_bytes(number, chunk_size=0,
     else:
         raw_bytes = raw_bytes[zero_leading:]
     return raw_bytes
-
