@@ -33,28 +33,30 @@ try:
     MAX_INT = sys.maxsize
 except AttributeError:
     MAX_INT = sys.maxint
-    
-MAX_INT32 = ((1 << 31) - 1)
-MAX_INT64 = ((1 << 63) - 1)
-MAX_UINT32 = ((1 << 32) - 1)
-MAX_UINT64 = ((1 << 32) - 1)
+
+
+MAX_INT64 = (1 << 63) - 1
+MAX_INT32 = (1 << 31) - 1
+MAX_INT16 = (1 << 15) - 1
+MAX_UINT64 = 0xffffffffffffffff # ((1 << 64) - 1)
+MAX_UINT32 = 0xffffffff # ((1 << 32) - 1)
+MAX_UINT16 = 0xffff # ((1 << 16) - 1)
+MAX_UINT8 = 0xff
+
 
 # Determine the word size of the processor.
 if MAX_INT == MAX_INT64:
     # 64-bit processor.
-    WORD_SIZE = 64
-    MAX_UINT = MAX_INT64
-    PACK_FORMAT = ">Q"
+    MACHINE_WORD_SIZE = 64
+    MAX_UINT = MAX_UINT64
 elif MAX_INT == MAX_INT32:
     # 32-bit processor.
-    WORD_SIZE = 32
-    MAX_UINT = MAX_INT32
-    PACK_FORMAT = ">I"
+    MACHINE_WORD_SIZE = 32
+    MAX_UINT = MAX_UINT32
 else:
     # Else we just assume 64-bit processor keeping up with modern times.
-    WORD_SIZE = 64
+    MACHINE_WORD_SIZE = 64
     MAX_UINT = MAX_UINT64
-    PACK_FORMAT = ">Q"
 
 try:
     long_type = long
@@ -213,3 +215,22 @@ except AttributeError:
                 """
                 raise NotImplementedError("What the fuck?! No PRNG available.")
 
+
+def get_machine_alignment(num):
+    max_uint64 = 0xffffffffffffffff
+    max_uint32 = 0xffffffff
+    max_uint16 = 0xffff
+    max_uint8 = 0xff
+
+    if MACHINE_WORD_SIZE >= 64 and num > max_uint32:
+        # 64-bit unsigned integer.
+        return 64, max_uint64, "Q"
+    elif num > max_uint16:
+        # 32-bit unsigned integer
+        return 32, max_uint32, "L"
+    elif num > max_uint8:
+        # 16-bit unsigned integer.
+        return 16, max_uint16, "H"
+    else:
+        # 8-bit unsigned integer.
+        return 8, max_uint8, "B"

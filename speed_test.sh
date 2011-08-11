@@ -13,3 +13,6 @@ python2.7 -mtimeit -s'from mom.codec.integer import _integer_to_bytes; n = 1<<40
 echo "python3.2"
 python3 -mtimeit -s'from mom.codec.integer import integer_to_bytes; n = 1<<4096' 'integer_to_bytes(n)'
 python3 -mtimeit -s'from mom.codec.integer import _integer_to_bytes; n = 1<<4096' '_integer_to_bytes(n)'
+echo "pypy"
+pypy -mtimeit -s'from mom.codec.integer import integer_to_bytes; n = 1<<4096' 'integer_to_bytes(n)'
+pypy -mtimeit -s'from mom.codec.integer import _integer_to_bytes; n = 1<<4096' '_integer_to_bytes(n)'

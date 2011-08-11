@@ -34,10 +34,11 @@ where ``g`` is the decoder and ``f`` is a encoder.
 
 from __future__ import absolute_import, division
 
+
 import binascii
 from struct import pack, unpack
 from mom.builtins import is_bytes, byte, b, is_integer, integer_byte_count
-from mom._compat import WORD_SIZE, MAX_UINT, PACK_FORMAT
+from mom._compat import get_machine_alignment
 
 __all__ = [
     "bytes_to_integer",
@@ -155,14 +156,8 @@ def _integer_to_bytes(number, block_size=0):
     return padding + b('').join(raw_bytes)
 
 
-WORD_SIZE = 32
-MAX_UINT = 0xffffffff
-PACK_FORMAT = ">I"
 def integer_to_bytes(number, chunk_size=0,
-                     _zero_byte=ZERO_BYTE,
-                     _word_size=WORD_SIZE,
-                     _max_uint=MAX_UINT,
-                     _pack_format=PACK_FORMAT):
+                     _zero_byte=ZERO_BYTE):
     """
     Convert a integer to bytes (base-256 representation)::
 
@@ -199,10 +194,13 @@ def integer_to_bytes(number, chunk_size=0,
     if not number:
         raw_bytes = _zero_byte
 
+    # Align packing to machine word size.
     num = number
+    word_size, max_uint, pack_type = get_machine_alignment(num)
+    pack_format = ">" + pack_type
     while num > 0:
-        raw_bytes = pack(_pack_format, num & _max_uint) + raw_bytes
-        num >>= _word_size
+        raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
+        num >>= word_size
 
     # Count the number of zero prefix bytes.
     zero_leading = 0
@@ -227,3 +225,4 @@ def integer_to_bytes(number, chunk_size=0,
     else:
         raw_bytes = raw_bytes[zero_leading:]
     return raw_bytes
+
