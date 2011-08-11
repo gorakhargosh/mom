@@ -610,8 +610,7 @@ def ireject(predicate, iterable):
     :param predicate:
         Predicate function. If ``None``, reject all truthy items.
     :param iterable:
-        If sequence is a tuple or string, return the same type, else return a
-        list.
+        Iterable to filter through.
     :yields:
         A sequence of all items for which the predicate is false.
     """
