@@ -101,7 +101,7 @@ import binascii
 from struct import pack, unpack, pack_into
 from array import array
 from mom.builtins import is_bytes, byte, b, integer_byte_count
-from mom._compat import get_machine_alignment
+from mom._compat import get_machine_alignment, range
 
 
 __all__ = [
@@ -307,11 +307,11 @@ def integer_to_bytes(number, chunk_size=0,
     if number < 0:
         raise ValueError('Number must be unsigned integer: %d' % number)
 
-    count = 0
+#    count = 0
     raw_bytes = b('')
     if not number:
         # Count the zero byte as well.
-        count = 1
+#        count = 1
         raw_bytes = _zero_byte
 
     # Align packing to machine word size.
@@ -320,7 +320,7 @@ def integer_to_bytes(number, chunk_size=0,
     pack_format = ">" + pack_type
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
-        count += 1
+#        count += 1
         num >>= word_bits
 
     # Count the number of zero prefix bytes.
@@ -333,8 +333,8 @@ def integer_to_bytes(number, chunk_size=0,
         # Bounds checking. We're not doing this up-front because the
         # most common use case is not specifying a chunk size. In the worst
         # case, the number will already have been converted to bytes above.
-        length = count * word_bytes
-        #length = len(raw_bytes)
+        #length = count * word_bytes
+        length = len(raw_bytes)
         #assert l == length
         bytes_needed = length - zero_leading
         if bytes_needed > chunk_size:
@@ -351,7 +351,8 @@ def integer_to_bytes(number, chunk_size=0,
 
 
 def integer_to_bytes_a(number, chunk_size=0,
-                     _get_machine_alignment=get_machine_alignment):
+                       _zero_byte=ZERO_BYTE,
+                       _get_machine_alignment=get_machine_alignment):
     """
     Convert a integer to bytes (base-256 representation)::
 
@@ -373,13 +374,17 @@ def integer_to_bytes_a(number, chunk_size=0,
         ``OverflowError`` when block_size is given and the number takes up more
         bytes than fit into the block.
     """
+    # Machine word aligned byte array based implementation.
+
     if number < 0:
         raise ValueError('Number must be unsigned integer: %d' % number)
 
-    count = 0
+#    count = 0
+    raw_bytes = b('')
     if not number:
-        # Count the zero byte as well.
-        count = 1
+#        # Count the zero byte as well.
+#        count = 1
+        raw_bytes = ZERO_BYTE
 
     # Align packing to machine word size.
     num = number
@@ -387,25 +392,27 @@ def integer_to_bytes_a(number, chunk_size=0,
     pack_format = ">" + pack_type
 
     temp_buffer = array("B", [0] * word_bytes)
-    a = array("B", [0] * count)
+    #a = array("B", [0] * count)
+    a = array("B", raw_bytes)
     while num > 0:
         pack_into(pack_format, temp_buffer, 0, num & max_uint)
         a = temp_buffer + a
-        count += 1
+        #count += 1
         num >>= word_bits
 
     # Count the number of zero prefix bytes.
     zero_leading = 0
-    for zero_leading, x in enumerate(a):
-        if x:
+    length = len(a)
+    for zero_leading in range(length):
+        if a[zero_leading]:
             break
 
+    raw_bytes = a.tostring()
     if chunk_size > 0:
         # Bounds checking. We're not doing this up-front because the
         # most common use case is not specifying a chunk size. In the worst
         # case, the number will already have been converted to bytes above.
-        length = count * word_bytes
-        #length = len(a)
+        #length = count * word_bytes
         #assert l == length
         bytes_needed = length - zero_leading
         if bytes_needed > chunk_size:
@@ -415,8 +422,7 @@ def integer_to_bytes_a(number, chunk_size=0,
             )
         remainder = length % chunk_size
         if remainder:
-            padding_size = (chunk_size - remainder)
-            a = array("B", [0] * padding_size) + a
+            raw_bytes = (chunk_size - remainder) * _zero_byte + raw_bytes
     else:
-        a = a[zero_leading:]
-    return a.tostring()
+        raw_bytes = raw_bytes[zero_leading:]
+    return raw_bytes
