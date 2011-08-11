@@ -41,6 +41,9 @@ Example scenarios where base-58 encoding may be used:
 * Bitcoin decentralized crypto-currency addresses
 * CAPTCHAs
 * Revision control changeset identifiers
+* Encoding email addresses compactly into JavaScript that decodes by itself
+  to display on Web pages in order to reduce spam by stopping email harvesters
+  from scraping email addresses from Web pages.
 
 In general, use base-58 in any 7-bit ASCII-safe compact communication where
 human beings, paper, and communication devices may be significantly
