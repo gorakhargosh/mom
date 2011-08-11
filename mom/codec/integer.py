@@ -182,7 +182,8 @@ def integer_to_bytes(number, chunk_size=0,
     # Machine word-aligned implementation.
     # ~19x faster than naive implementation on 32-bit processors.
     # ~33x faster than naive implementation on 64-bit processors.
-
+    # ~50x faster on 64-bit pypy 1.5
+    
     if not is_integer(number):
         raise TypeError("Expected unsigned integer as argument 1, got: %r" %
             type(number).__name__)
