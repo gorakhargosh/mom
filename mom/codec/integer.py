@@ -157,10 +157,10 @@ def _integer_to_bytes_array_based(number, chunk_size=0):
     :returns:
         Long.
     """
-    # Type checking
-    if not is_integer(number):
-        raise TypeError("You must pass an integer for 'number', not %s" %
-            number.__class__)
+# Even without this check a type error will be raised. Reduces overhead.
+#    if not is_integer(number):
+#        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
+#            type(number).__name__)
 
     if number < 0:
         raise ValueError('Negative numbers cannot be used: %i' % number)
@@ -205,13 +205,13 @@ def _integer_to_bytes(number, block_size=0):
         bytes than fit into the block.
     """
 
-    # Type checking
-    if not is_integer(number):
-        raise TypeError("You must pass an integer for 'number', not %s" %
-            number.__class__)
+# Even without this check a type error will be raised. Reduces overhead.
+#    if not is_integer(number):
+#        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
+#            type(number).__name__)
 
     if number < 0:
-        raise ValueError('Negative numbers cannot be used: %i' % number)
+        raise ValueError('Negative numbers cannot be used: %d' % number)
 
     # Do some bounds checking
     needed_bytes = integer_byte_count(number)
@@ -262,9 +262,10 @@ def integer_to_bytes(number, chunk_size=0,
     # ~33x faster than naive implementation on 64-bit processors.
     # ~50x faster on 64-bit pypy 1.5
     
-    if not is_integer(number):
-        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
-            type(number).__name__)
+# Even without this check a type error will be raised. Reduces overhead.
+#    if not is_integer(number):
+#        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
+#            type(number).__name__)
 
     if number < 0:
         raise ValueError('Number must be unsigned integer: %d' % number)
