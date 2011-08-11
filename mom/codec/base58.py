@@ -165,7 +165,8 @@ if have_python3:
     FLICKR58_CHARSET = tuple(byte(x) for x in FLICKR58_CHARSET)
 
 
-def b58encode(raw_bytes, _charset=ASCII58_CHARSET, _padding=True):
+def b58encode(raw_bytes,
+              _charset=ASCII58_CHARSET, _padding=True, _zero_byte=ZERO_BYTE):
     """
     Base58 encodes a sequence of raw bytes. Zero-byte sequences are
     preserved by default.
@@ -190,7 +191,7 @@ def b58encode(raw_bytes, _charset=ASCII58_CHARSET, _padding=True):
         number, remainder = divmod(number, 58)
         encoded = _charset[remainder] + encoded
     if _padding:
-        zero_leading = leading(lambda w: w == ZERO_BYTE[0], raw_bytes)
+        zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
         encoded = (_charset[0] * zero_leading) + encoded
     return encoded
 
@@ -198,7 +199,8 @@ def b58encode(raw_bytes, _charset=ASCII58_CHARSET, _padding=True):
 def b58decode(encoded,
               _charset=ASCII58_CHARSET,
               _lookup=ASCII58_ORDS,
-              _ignore_pattern=WHITESPACE_PATTERN):
+              _ignore_pattern=WHITESPACE_PATTERN,
+              _zero_byte=ZERO_BYTE):
     """
     Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
     
@@ -239,12 +241,12 @@ def b58decode(encoded,
 
     # Add prefixed padding if required.
     # 0 byte is represented using the first character in the character set.
-    zero_byte_char = _charset[0]
+    zero_char = _charset[0]
     # The extra [0] index in zero_byte_char[0] is for Python2.x-Python3.x
     # compatibility. Indexing into Python 3 bytes yields an integer, whereas
     # in Python 2.x it yields a single-byte string.
-    zero_leading = leading(lambda w: w == zero_byte_char[0], encoded)
+    zero_leading = leading(lambda w: w == zero_char[0], encoded)
     if zero_leading:
-        padding = ZERO_BYTE * zero_leading
+        padding = _zero_byte * zero_leading
         raw_bytes = padding + raw_bytes
     return raw_bytes

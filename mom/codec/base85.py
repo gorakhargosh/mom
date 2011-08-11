@@ -173,7 +173,8 @@ def b85encode(raw_bytes,
               _base85_chars=ASCII85_CHARSET,
               _compact_zero=True,
               _compact_char=ZERO_GROUP_CHAR,
-              _pow_85=POW_85):
+              _pow_85=POW_85,
+              _zero_byte=ZERO_BYTE):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -241,7 +242,7 @@ def b85encode(raw_bytes,
         # which means in the encoded output sans-padding, the final 5-tuple
         # chunk will have at least 2 characters.
         padding_size = 4 - remainder
-        raw_bytes += ZERO_BYTE * padding_size
+        raw_bytes += _zero_byte * padding_size
         num_uint32 += 1
     else:
         padding_size = 0
