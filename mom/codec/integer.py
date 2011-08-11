@@ -14,6 +14,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Optimization notes:
+# -------------------
+# For the following test:
+# 1. integer_to_bytes (is clearly at least 20x-50x faster than others).
+# 2. _integer_to_bytes
+# 3. _integer_to_bytes_array_based
+#
+# integer_to_bytes speed test
+# python2.5
+# 1000 loops, best of 3: 322 usec per loop
+# 100 loops, best of 3: 4.68 msec per loop
+# 100 loops, best of 3: 3.74 msec per loop
+# python2.6
+# 10000 loops, best of 3: 90.6 usec per loop
+# 100 loops, best of 3: 3.34 msec per loop
+# 100 loops, best of 3: 2.74 msec per loop
+# python2.7
+# 10000 loops, best of 3: 86.9 usec per loop
+# 100 loops, best of 3: 2.67 msec per loop
+# 100 loops, best of 3: 2.11 msec per loop
+# python3.2
+# 10000 loops, best of 3: 92.5 usec per loop
+# 100 loops, best of 3: 3.05 msec per loop
+# 100 loops, best of 3: 2.48 msec per loop
+# pypy
+# 10000 loops, best of 3: 69.2 usec per loop
+# 100 loops, best of 3: 3.3 msec per loop
+# 100 loops, best of 3: 2.96 msec per loop
 
 """
 :module: mom.codec.integer
@@ -37,8 +66,10 @@ from __future__ import absolute_import, division
 
 import binascii
 from struct import pack, unpack
+from array import array
 from mom.builtins import is_bytes, byte, b, is_integer, integer_byte_count
 from mom._compat import get_machine_alignment
+
 
 __all__ = [
     "bytes_to_integer",
@@ -109,6 +140,49 @@ def _bytes_to_integer(raw_bytes, _zero_byte=ZERO_BYTE):
         chunk = raw_bytes[i:i+4]
         int_value = (int_value << 32) + unpack('>I', chunk)[0]
     return int_value
+
+
+def _integer_to_bytes_array_based(number, chunk_size=0):
+    """
+    Converts an integer into a byte array.
+
+    [Simplest possible implementation]
+    
+    :param number:
+        Long value
+    :returns:
+        Long.
+    """
+    # Type checking
+    if not is_integer(number):
+        raise TypeError("You must pass an integer for 'number', not %s" %
+            number.__class__)
+
+    if number < 0:
+        raise ValueError('Negative numbers cannot be used: %i' % number)
+
+    bytes_count = integer_byte_count(number)
+    byte_array = array('B', [0] * bytes_count)
+    for count in range(bytes_count - 1, -1, -1):
+        byte_array[count] = number & 0xff
+        number >>= 8
+    raw_bytes =  byte_array.tostring()
+
+    if chunk_size > 0:
+        # Bounds checking. We're not doing this up-front because the
+        # most common use case is not specifying a chunk size. In the worst
+        # case, the number will already have been converted to bytes above.
+        length = len(raw_bytes)
+        bytes_needed = bytes_count
+        if bytes_needed > chunk_size:
+            raise OverflowError(
+                "Need %d bytes for number, but chunk size is %d" %
+                (bytes_needed, chunk_size)
+            )
+        remainder = length % chunk_size
+        if remainder:
+            raw_bytes = (chunk_size - remainder) * b('\x00') + raw_bytes
+    return raw_bytes
 
 
 def _integer_to_bytes(number, block_size=0):
