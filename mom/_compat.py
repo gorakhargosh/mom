@@ -27,6 +27,27 @@ Should not be used in public code. Use the wrappers in mom.
 from __future__ import absolute_import
 
 import os
+import sys
+
+try:
+    MAX_INT = sys.maxsize
+except AttributeError:
+    MAX_INT = sys.maxint
+    
+MAX_INT32 = ((1 << 31) - 1)
+MAX_INT64 = ((1 << 63) - 1)
+
+# Determine the word size of the processor.
+if MAX_INT == MAX_INT64:
+    # 64-bit processor.
+    WORD_SIZE = 64
+elif MAX_INT == MAX_INT32:
+    # 32-bit processor.
+    WORD_SIZE = 32
+else:
+    # Else we just assume 64-bit processor keeping up with modern times.
+    WORD_SIZE = 64
+
 
 try:
     long_type = long
@@ -87,6 +108,8 @@ except NameError:
     # Python 3k
     from functools import reduce
 reduce = reduce
+
+
 
 
 
