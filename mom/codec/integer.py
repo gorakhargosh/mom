@@ -37,7 +37,7 @@ from __future__ import absolute_import, division
 import binascii
 from struct import pack, unpack
 from mom.builtins import is_bytes, byte, b, is_integer, integer_byte_count
-from mom._compat import WORD_SIZE, MAX_INT
+from mom._compat import WORD_SIZE, MAX_UINT, PACK_FORMAT
 
 __all__ = [
     "bytes_to_integer",
@@ -46,10 +46,6 @@ __all__ = [
 
 
 ZERO_BYTE = byte(0)
-if WORD_SIZE == 64:
-    PACK_FORMAT = '>Q'
-else:
-    PACK_FORMAT = '>I'
 
 
 def bytes_to_integer(raw_bytes):
@@ -159,11 +155,13 @@ def _integer_to_bytes(number, block_size=0):
     return padding + b('').join(raw_bytes)
 
 
-
+WORD_SIZE = 32
+MAX_UINT = 0xffffffff
+PACK_FORMAT = ">I"
 def integer_to_bytes(number, chunk_size=0,
                      _zero_byte=ZERO_BYTE,
                      _word_size=WORD_SIZE,
-                     _max_int=MAX_INT,
+                     _max_uint=MAX_UINT,
                      _pack_format=PACK_FORMAT):
     """
     Convert a integer to bytes (base-256 representation)::
@@ -203,7 +201,7 @@ def integer_to_bytes(number, chunk_size=0,
 
     num = number
     while num > 0:
-        raw_bytes = pack(_pack_format, num & _max_int) + raw_bytes
+        raw_bytes = pack(_pack_format, num & _max_uint) + raw_bytes
         num >>= _word_size
 
     # Count the number of zero prefix bytes.

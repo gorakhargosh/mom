@@ -36,18 +36,25 @@ except AttributeError:
     
 MAX_INT32 = ((1 << 31) - 1)
 MAX_INT64 = ((1 << 63) - 1)
+MAX_UINT32 = ((1 << 32) - 1)
+MAX_UINT64 = ((1 << 32) - 1)
 
 # Determine the word size of the processor.
 if MAX_INT == MAX_INT64:
     # 64-bit processor.
     WORD_SIZE = 64
+    MAX_UINT = MAX_INT64
+    PACK_FORMAT = ">Q"
 elif MAX_INT == MAX_INT32:
     # 32-bit processor.
     WORD_SIZE = 32
+    MAX_UINT = MAX_INT32
+    PACK_FORMAT = ">I"
 else:
     # Else we just assume 64-bit processor keeping up with modern times.
     WORD_SIZE = 64
-
+    MAX_UINT = MAX_UINT64
+    PACK_FORMAT = ">Q"
 
 try:
     long_type = long
