@@ -72,7 +72,7 @@ import binascii
 from struct import pack, unpack
 from array import array
 from mom.builtins import is_bytes, byte, b, is_integer, integer_byte_count
-from mom._compat import get_machine_alignment, get_machine_array_alignment
+from mom._compat import get_machine_alignment
 
 
 __all__ = [
