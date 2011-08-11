@@ -13,7 +13,7 @@ sys.path.insert(0, os.curdir)
 
 def report(stmt, setup, number=0, verbose=0, precision=3,
            repeat=default_repeat, timer=default_timer):
-    sys.stdout.write("%-40s -- " % stmt)
+    sys.stdout.write("%50s -- " % stmt)
     t = Timer(stmt, setup, timer)
     if number == 0:
         # determine number so that 0.2 <= total time < 2.0
