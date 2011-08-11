@@ -216,24 +216,36 @@ except AttributeError:
                 raise NotImplementedError("What the fuck?! No PRNG available.")
 
 
-def get_machine_alignment(num):
+def get_machine_alignment(num, arch=64):
+    """
+    Returns alignment details for the given number based on the platform
+    Python is running on.
+
+    :param num:
+        Unsigned integral number.
+    :returns:
+        4-tuple::
+        
+            (word_bits, word_bytes,
+             max_uint, packing_format_type)
+    """
     max_uint64 = 0xffffffffffffffff
     max_uint32 = 0xffffffff
     max_uint16 = 0xffff
     max_uint8 = 0xff
 
-    if MACHINE_WORD_SIZE >= 64 and num > max_uint32:
+    if arch == 64 and MACHINE_WORD_SIZE >= 64 and num > max_uint32:
         # 64-bit unsigned integer.
-        return 64, max_uint64, "Q"
+        return 64, 8, max_uint64, "Q"
     elif num > max_uint16:
         # 32-bit unsigned integer
-        return 32, max_uint32, "L"
+        return 32, 4, max_uint32, "L"
     elif num > max_uint8:
         # 16-bit unsigned integer.
-        return 16, max_uint16, "H"
+        return 16, 2, max_uint16, "H"
     else:
         # 8-bit unsigned integer.
-        return 8, max_uint8, "B"
+        return 8, 1, max_uint8, "B"
 
     
 def get_machine_array_alignment(num):

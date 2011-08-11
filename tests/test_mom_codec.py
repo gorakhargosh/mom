@@ -22,7 +22,7 @@ from mom.codec.integer import \
     bytes_to_integer, \
     integer_to_bytes, \
     _bytes_to_integer, _integer_to_bytes, \
-    _integer_to_bytes_array_based
+    _integer_to_bytes_array_based, integer_to_bytes_a
 from mom._prime_sieve import make_prime_sieve
 from tests.test_mom_builtins import unicode_string
 
@@ -255,6 +255,11 @@ class Test_integer_to_bytes(unittest2.TestCase):
         self.assertEqual(integer_to_bytes(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
 
+        self.assertEqual(integer_to_bytes_a(123456789, 6),
+                         b('\x00\x00\x07[\xcd\x15'))
+        self.assertEqual(integer_to_bytes_a(123456789, 7),
+                         b('\x00\x00\x00\x07[\xcd\x15'))
+
         self.assertEqual(_integer_to_bytes(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
         self.assertEqual(_integer_to_bytes(123456789, 7),
@@ -267,11 +272,16 @@ class Test_integer_to_bytes(unittest2.TestCase):
 
     def test_zero(self):
         self.assertEqual(integer_to_bytes(0, 4), b('\x00') * 4)
+        self.assertEqual(integer_to_bytes_a(0, 4), b('\x00') * 4)
         self.assertEqual(_integer_to_bytes(0, 4), b('\x00') * 4)
+
         self.assertEqual(integer_to_bytes(0, 7), b('\x00') * 7)
         self.assertEqual(_integer_to_bytes(0, 7), b('\x00') * 7)
+        self.assertEqual(integer_to_bytes_a(0, 7), b('\x00') * 7)
+
         self.assertEqual(integer_to_bytes(0), b('\x00'))
         self.assertEqual(_integer_to_bytes(0), b('\x00'))
+        self.assertEqual(integer_to_bytes_a(0), b('\x00'))
 
     def test_correctness_against_base_implementation(self):
         # Slow test.
@@ -282,6 +292,8 @@ class Test_integer_to_bytes(unittest2.TestCase):
         ]
         for value in values:
             self.assertEqual(integer_to_bytes(value), _integer_to_bytes(value),
+                             "Boom %d" % value)
+            self.assertEqual(integer_to_bytes_a(value), _integer_to_bytes(value),
                              "Boom %d" % value)
             self.assertEqual(integer_to_bytes(value),
                              _integer_to_bytes_array_based(value),
@@ -294,10 +306,15 @@ class Test_integer_to_bytes(unittest2.TestCase):
         for prime in sieve:
             self.assertEqual(integer_to_bytes(prime), _integer_to_bytes(prime),
                              "Boom %d" % prime)
+            self.assertEqual(integer_to_bytes_a(prime), _integer_to_bytes(prime),
+                             "Boom %d" % prime)
 
     def test_raises_OverflowError_when_chunk_size_is_insufficient(self):
         self.assertRaises(OverflowError, integer_to_bytes, 123456789, 3)
         self.assertRaises(OverflowError, integer_to_bytes, 299999999999, 4)
+
+        self.assertRaises(OverflowError, integer_to_bytes_a, 123456789, 3)
+        self.assertRaises(OverflowError, integer_to_bytes_a, 299999999999, 4)
 
         self.assertRaises(OverflowError, _integer_to_bytes, 123456789, 3)
         self.assertRaises(OverflowError, _integer_to_bytes, 299999999999, 4)
@@ -307,10 +324,12 @@ class Test_integer_to_bytes(unittest2.TestCase):
 
     def test_raises_ValueError_when_negative_integer(self):
         self.assertRaises(ValueError, integer_to_bytes, -1)
+        self.assertRaises(ValueError, integer_to_bytes_a, -1)
         self.assertRaises(ValueError, _integer_to_bytes, -1)
         self.assertRaises(ValueError, _integer_to_bytes_array_based, -1)
 
     def test_raises_TypeError_when_not_integer(self):
         self.assertRaises(TypeError, integer_to_bytes, None)
+        self.assertRaises(TypeError, integer_to_bytes_a, None)
         self.assertRaises(TypeError, _integer_to_bytes, None)
         self.assertRaises(TypeError, _integer_to_bytes_array_based, None)

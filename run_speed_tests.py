@@ -6,6 +6,7 @@ from tests.speed import report
 
 setups = [
     "from mom.codec.integer import integer_to_bytes; n=1<<4096",
+    "from mom.codec.integer import integer_to_bytes_a; n=1<<4096",
     "from mom.codec.integer import _integer_to_bytes; n=1<<4096",
     "from mom.codec.integer import _integer_to_bytes_array_based; n=1<<4096",
     None,
@@ -14,6 +15,7 @@ setups = [
 ]
 statements = [
     "integer_to_bytes(n)",
+    "integer_to_bytes_a(n)",
     "_integer_to_bytes(n)",
     "_integer_to_bytes_array_based(n)",
     None,
