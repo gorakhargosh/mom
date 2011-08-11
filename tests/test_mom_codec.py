@@ -23,6 +23,7 @@ from mom.codec.integer import \
     integer_to_bytes, \
     _bytes_to_integer, _integer_to_bytes, \
     _integer_to_bytes_array_based
+from mom._prime_sieve import make_prime_sieve
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -64,6 +65,7 @@ url_safety_test_standard_encoded = \
 url_safety_test_safe_encoded = \
     b('R4FZmkud8umBBsa-NqUOwGuRSQXe2NzWp_KfCYyhpvMZxwv9PXoCWr5SwMZ-YN1mekE')
 
+sieve = make_prime_sieve(10000)
 
 class Test_base85_codec(unittest2.TestCase):
     def test_codec_identity(self):
@@ -262,6 +264,36 @@ class Test_integer_to_bytes(unittest2.TestCase):
                          b('\x00\x00\x07[\xcd\x15'))
         self.assertEqual(_integer_to_bytes_array_based(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
+
+    def test_zero(self):
+        self.assertEqual(integer_to_bytes(0, 4), b('\x00') * 4)
+        self.assertEqual(_integer_to_bytes(0, 4), b('\x00') * 4)
+        self.assertEqual(integer_to_bytes(0, 7), b('\x00') * 7)
+        self.assertEqual(_integer_to_bytes(0, 7), b('\x00') * 7)
+        self.assertEqual(integer_to_bytes(0), b('\x00'))
+        self.assertEqual(_integer_to_bytes(0), b('\x00'))
+
+    def test_correctness_against_base_implementation(self):
+        # Slow test.
+        values = [
+            1 << 512,
+            1 << 8192,
+            1 << 77,
+        ]
+        for value in values:
+            self.assertEqual(integer_to_bytes(value), _integer_to_bytes(value),
+                             "Boom %d" % value)
+            self.assertEqual(integer_to_bytes(value),
+                             _integer_to_bytes_array_based(value),
+                             "Boom %d" % value)
+            self.assertEqual(bytes_to_integer(integer_to_bytes(value)),
+                             value,
+                             "Boom %d" % value)
+
+    def test_correctness_for_primes(self):
+        for prime in sieve:
+            self.assertEqual(integer_to_bytes(prime), _integer_to_bytes(prime),
+                             "Boom %d" % prime)
 
     def test_raises_OverflowError_when_chunk_size_is_insufficient(self):
         self.assertRaises(OverflowError, integer_to_bytes, 123456789, 3)

@@ -212,7 +212,7 @@ def _integer_to_bytes_array_based(number, chunk_size=0):
 
 def _integer_to_bytes(number, block_size=0):
     """
-    [naive implementation]
+    Naive slow and accurate implementation. Base for all our tests.
 
     Converts a number to a string of bytes.
 
@@ -242,14 +242,21 @@ def _integer_to_bytes(number, block_size=0):
                 'is %i' % (needed_bytes, block_size))
 
     # Convert the number to bytes.
-    raw_bytes = []
-    while number > 0:
-        raw_bytes.insert(0, byte(number & 0xFF))
-        number >>= 8
+    if number == 0:
+        raw_bytes = [ZERO_BYTE]
+    else:
+        raw_bytes = []
+        num = number
+        while num > 0:
+            raw_bytes.insert(0, byte(num & 0xFF))
+            num >>= 8
 
     # Pad with zeroes to fill the block
     if block_size > 0:
-        padding = (block_size - needed_bytes) * ZERO_BYTE
+        padding_size = (block_size - needed_bytes)
+        if number == 0:
+            padding_size -= 1
+        padding =  ZERO_BYTE * padding_size
     else:
         padding = b('')
     return padding + b('').join(raw_bytes)
