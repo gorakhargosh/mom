@@ -29,7 +29,7 @@ def main(setups, statements):
             print("")
         else:
             report(statement, setup)
-    print("\n------------------------------------------------------\n")
+    print("\n%s" % ("-" * 100))
 
 if __name__ == "__main__":
     main(setups, statements)
