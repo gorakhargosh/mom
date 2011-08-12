@@ -44,10 +44,11 @@ API Documentation
 .. toctree::
    :maxdepth: 2
 
-   api/functional
    api/general
    api/codec
    api/security
+   api/net
+   api/os
 
 
 Contribute

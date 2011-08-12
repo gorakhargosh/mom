@@ -15,6 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+:module: mom.net
+
+.. automodule:: mom.net.scheme
+"""
+
 from mom.net import scheme, mimeparse
 
 __all__ = [

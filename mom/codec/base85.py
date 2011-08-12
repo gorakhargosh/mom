@@ -396,7 +396,7 @@ def rfc1924_b85encode(raw_bytes,
 
     These characters are specifically not included::
 
-        "',./:[]\
+        "',./:[]\\
 
     This is the encoding method used by Mercurial (and git?) to generate
     binary diffs, for example. They chose the IPv6 character set and encode
@@ -421,7 +421,7 @@ def rfc1924_b85decode(encoded):
     """
     Base85 decodes using the RFC1924 character set.
 
-    This is the encoding method used by Mercurial (and git?) to generate
+    This is the encoding method used by Mercurial (and git) to generate
     binary diffs, for example. They chose the IPv6 character set and encode
     using the ASCII85 encoding method while not compacting zero-byte sequences.
 

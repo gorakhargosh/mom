@@ -32,4 +32,13 @@ If you have a ``utils`` module, chances are you're duplicating
 and wasting effort whereas instead you could use tested code
 provided by this library. If there's something not included in
 this library and think it should, speak up.
+
+.. automodule:: mom.builtins
+.. automodule:: mom.collections
+.. automodule:: mom.decorators
+.. automodule:: mom.functional
+.. automodule:: mom.itertools
+.. automodule:: mom.math
+.. automodule:: mom.string
+
 """

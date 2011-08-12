@@ -153,16 +153,16 @@ def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
 
 def generate_random_uint_exactly(n_bits, rand_func=generate_random_bytes):
     """
-    Generates a random unsigned long with `n_bits` random bits.
+    Generates a random unsigned long with ``n_bits`` random bits.
 
     :param n_bits:
         Number of random bits.
     :param rand_func:
         Random bytes generator function.
     :returns:
-        Returns an unsigned long integer with `n_bits` random bits.
+        Returns an unsigned long integer with ``n_bits`` random bits.
         The generated unsigned long integer will be between 2**(n_bits-1) and
-         (2**n_bits)-1 both inclusive.
+        (2**n_bits)-1 both inclusive.
     """
     # Doesn't perform any floating-point operations.
     value = bytes_to_integer(generate_random_bits(n_bits, rand_func=rand_func))

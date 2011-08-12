@@ -16,8 +16,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """
 :module: mom.security
 :synopsis: Cryptography primitives.
+
+
+.. automodule:: mom.security.hash
+.. automodule:: mom.security.random
+.. automodule:: mom.security.rsa
+.. automodule:: mom.security.codec
 
 """

@@ -19,6 +19,9 @@
 """
 :module: mom.os
 :synopsis: Operating system specific functions.
+
+.. automodule:: mom.os.path
+.. automodule:: mom.os.patterns
 """
 
 from mom.os import path, patterns

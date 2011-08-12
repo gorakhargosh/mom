@@ -15,6 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+:module: mom.net.scheme
+
+.. automodule:: mom.net.scheme.data
+"""
+
 from mom.net.scheme import data
 
 __all__ = [
