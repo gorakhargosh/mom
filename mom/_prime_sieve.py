@@ -33,4 +33,4 @@ except ImportError:
         return [2] + [2*i+1 for i in range(1,n//2) if sieve[i]]
     make_prime_sieve = _rwh_primes1
 
-sieve = make_prime_sieve(9999)
+sieve = tuple(make_prime_sieve(9999))
