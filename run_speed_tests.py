@@ -7,6 +7,7 @@ from tests.speed import report
 setups = [
     "from mom.builtins import integer_byte_length; n=1<<4096",
     "from mom.builtins import _integer_byte_length; n=1<<4096",
+    "from mom.builtins import _integer_byte_length_1; n=1<<4096",
     None,
     "from mom.builtins import integer_bit_length; n=1<<4096",
     "from mom.builtins import _integer_bit_length; n=1<<4096",
@@ -23,6 +24,7 @@ setups = [
 statements = [
     "integer_byte_length(n)",
     "_integer_byte_length(n)",
+    "_integer_byte_length_1(n)",
     None,
     "integer_bit_length(n)",
     "_integer_bit_length(n)",
