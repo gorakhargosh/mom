@@ -199,7 +199,6 @@ def _b85encode_chunks(raw_bytes,
     else:
         padding_size = 0
 
-    #encoded = b('\x00') * num_uint32 * 5
     encoded = array('B', [0] * num_uint32 * 5)
     # ASCII85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
@@ -221,6 +220,9 @@ def _b85encode_chunks(raw_bytes,
     if padding_size and not _padding:
         # Only as much padding added before encoding is removed after encoding.
         encoded = encoded[:-padding_size]
+
+    # In Python 3, this method is deprecated, but as long as we are
+    # supporting Python 2.5, we need to use this. Python 3.x calls if tobytes().
     return encoded.tostring()
 
 
@@ -501,7 +503,8 @@ def ipv6_b85encode(uint128,
         _base85_bytes[(uint128 // 85) % 85],   #85**1 == 85
         _base85_bytes[uint128 % 85],           #85**0 == 1
     )
-    return array('B', encoded).tostring()
+    # pack('B' * 20, *encoded)
+    return pack('BBBBBBBBBBBBBBBBBBBB', *encoded)
 
 
 def ipv6_b85decode(encoded,
@@ -526,7 +529,7 @@ def ipv6_b85decode(encoded,
         )
     if len(encoded) != 20:
         raise ValueError("Not 20 encoded bytes: %r" % encoded)
-    #uint128 = 0L
+    #uint128 = 0
     #for char in encoded:
     #    uint128 = uint128 * 85 + _base85_ords[byte_ord(char)]
     # Above loop unrolled to process 4 5-tuple chunks instead:
