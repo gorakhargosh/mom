@@ -62,7 +62,7 @@ import re
 from mom import string
 from struct import unpack, pack
 from mom.builtins import is_bytes, b, byte
-from mom._compat import range, have_python3, ZERO_BYTE
+from mom._compat import range, have_python3, ZERO_BYTE, get_machine_alignment
 
 
 __all__ = [
@@ -165,9 +165,46 @@ def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
             counter += 1
 
 
-def _b85encode_chunks(raw_bytes, num_uint32,
+def _b85encode_chunks(raw_bytes,
                       _base85_chars,
-                      _pow_85=POW_85):
+                      _padding=False,
+                      _pow_85=POW_85,
+                      _zero_byte=ZERO_BYTE):
+    """
+    Base85 encodes processing 32-bit chunks at a time.
+
+    :param raw_bytes:
+        Raw bytes.
+    :param _base85_chars:
+        (Internal) Character set to use.
+    :param _padding:
+        (Internal) ``True`` if padding should be included; ``False`` (default)
+        otherwise. You should not need to use this--the default value is
+        usually the expected value. If you find a need to use this more
+        often than not, *tell us* so that we can make this argument public.
+    :param _pow_85:
+        (Internal) Powers of 85 lookup table.
+    :param _zero_byte:
+        (Internal) Zero byte.
+    :returns:
+        Base-85 encoded bytes.
+    """
+    # We need chunks of 32-bit (4 bytes chunk size) unsigned integers,
+    # which means the length of the byte sequence must be divisible by 4.
+    # Ensures length by appending additional padding zero bytes if required.
+    # ceil_div(length, 4).
+    num_uint32, remainder = divmod(len(raw_bytes), 4)
+    if remainder:
+        # TODO: Write a test for this.
+        # If we have a remainder, upto 3 padding bytes are added,
+        # which means in the encoded output sans-padding, the final 5-tuple
+        # chunk will have at least 2 characters.
+        padding_size = 4 - remainder
+        raw_bytes += _zero_byte * padding_size
+        num_uint32 += 1
+    else:
+        padding_size = 0
+
     ascii_chars = [0] * num_uint32 * 5
     # ASCII85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
@@ -185,18 +222,20 @@ def _b85encode_chunks(raw_bytes, num_uint32,
         ascii_chars[i+3] = _base85_chars[(x // 85) % 85]     # 85**1 = 85
         ascii_chars[i+4] = _base85_chars[x % 85]             # 85**0 = 1
         i += 5
-    return ascii_chars
+
+    if padding_size and not _padding:
+        # Only as much padding added before encoding is removed after encoding.
+        ascii_chars = ascii_chars[:-padding_size]
+    return b('').join(ascii_chars)
 
 
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
-              _padding=False,
               _base85_chars=ASCII85_CHARSET,
+              _padding=False,
               _compact_zero=True,
-              _compact_char=ZERO_GROUP_CHAR,
-              _zero_byte=ZERO_BYTE,
-              _encode_chunks=_b85encode_chunks):
+              _compact_char=ZERO_GROUP_CHAR):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -222,11 +261,6 @@ def b85encode(raw_bytes,
         The prefix used by the encoded text. None by default.
     :param suffix:
         The suffix used by the encoded text. None by default.
-    :param _padding:
-        (Internal) ``True`` if padding should be included; ``False`` (default)
-        otherwise. You should not need to use this--the default value is
-        usually the expected value. If you find a need to use this more
-        often than not, *tell us* so that we can make this argument public.
     :param _base85_chars:
         (Internal) Character set to use.
     :param _compact_zero:
@@ -252,33 +286,12 @@ def b85encode(raw_bytes,
     if not is_bytes(raw_bytes):
         raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
-
-    # We need chunks of 32-bit (4 bytes chunk size) unsigned integers,
-    # which means the length of the byte sequence must be divisible by 4.
-    # Ensures length by appending additional padding zero bytes if required.
-    # ceil_div(length, 4).
-    num_uint32, remainder = divmod(len(raw_bytes), 4)
-    if remainder:
-        # TODO: Write a test for this.
-        # If we have a remainder, upto 3 padding bytes are added,
-        # which means in the encoded output sans-padding, the final 5-tuple
-        # chunk will have at least 2 characters.
-        padding_size = 4 - remainder
-        raw_bytes += _zero_byte * padding_size
-        num_uint32 += 1
-    else:
-        padding_size = 0
-
-    # Encode the chunks into ASCII85 characters.
-    ascii_chars = _encode_chunks(raw_bytes, num_uint32, _base85_chars)
-    if padding_size and not _padding:
-        # Only as much padding added before encoding is removed after encoding.
-        ascii_chars = ascii_chars[:-padding_size]
-    encoded = b('').join(ascii_chars)
+    
+    # Encode into ASCII85 characters.
+    encoded = _b85encode_chunks(raw_bytes, _base85_chars, _padding)
     encoded = encoded.replace(EXCLAMATION_CHUNK, _compact_char) \
               if _compact_zero else encoded
     return prefix + encoded + suffix
-
 
 
 def b85decode(encoded,
@@ -419,10 +432,13 @@ def rfc1924_b85encode(raw_bytes,
     :returns:
         RFC1924 base85 encoded string.
     """
-    return b85encode(raw_bytes,
-                     _padding=_padding,
-                     _base85_chars=RFC1924_CHARSET,
-                     _compact_zero=False)
+    if not is_bytes(raw_bytes):
+        raise TypeError("data must be raw bytes: got %r" %
+                        type(raw_bytes).__name__)
+
+    return _b85encode_chunks(raw_bytes,
+                             _padding=_padding,
+                             _base85_chars=RFC1924_CHARSET)
 
 
 def rfc1924_b85decode(encoded):
