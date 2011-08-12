@@ -139,7 +139,10 @@ def _integer_to_bytes_array_based(number, chunk_size=0):
     if number < 0:
         raise ValueError('Negative numbers cannot be used: %i' % number)
 
-    bytes_count = integer_byte_length(number)
+    if number == 0:
+        bytes_count = 1
+    else:
+        bytes_count = integer_byte_length(number)
     byte_array = array('B', [0] * bytes_count)
     for count in range(bytes_count - 1, -1, -1):
         byte_array[count] = number & 0xff
