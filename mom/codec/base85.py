@@ -499,7 +499,8 @@ def ipv6_b85encode(uint128,
 #        uint128, remainder = divmod(uint128, 85)
 #        encoded[i] = _base85_chars[remainder]
     # Above loop unrolled:
-    encoded = (
+    # pack('B' * 20, ...)
+    return pack('BBBBBBBBBBBBBBBBBBBB',
         _base85_bytes[(uint128 // _pow_85[19])], # Don't need %85. Already < 85
         _base85_bytes[(uint128 // _pow_85[18]) % 85],
         _base85_bytes[(uint128 // _pow_85[17]) % 85],
@@ -521,8 +522,6 @@ def ipv6_b85encode(uint128,
         _base85_bytes[(uint128 // 85) % 85],   #85**1 == 85
         _base85_bytes[uint128 % 85],           #85**0 == 1
     )
-    # pack('B' * 20, *encoded)
-    return pack('BBBBBBBBBBBBBBBBBBBB', *encoded)
 
 
 def ipv6_b85decode(encoded,
