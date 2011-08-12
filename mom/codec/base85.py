@@ -160,26 +160,26 @@ def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
 
 
 def _b85encode_chunks(raw_bytes,
-                      _base85_bytes,
-                      _padding=False,
-                      _pow_85=POW_85,
-                      _zero_byte=ZERO_BYTE):
+                      base85_bytes,
+                      padding=False,
+                      pow_85=POW_85,
+                      zero_byte=ZERO_BYTE):
     """
     Base85 encodes processing 32-bit chunks at a time.
 
     :param raw_bytes:
         Raw bytes.
-    :param _base85_bytes:
-        (Internal) Character set to use.
-    :param _padding:
-        (Internal) ``True`` if padding should be included; ``False`` (default)
+    :param base85_bytes:
+        Character set to use.
+    :param padding:
+        ``True`` if padding should be included; ``False`` (default)
         otherwise. You should not need to use this--the default value is
         usually the expected value. If you find a need to use this more
         often than not, *tell us* so that we can make this argument public.
-    :param _pow_85:
-        (Internal) Powers of 85 lookup table.
-    :param _zero_byte:
-        (Internal) Zero byte.
+    :param pow_85:
+        Powers of 85 lookup table.
+    :param zero_byte:
+        Zero byte.
     :returns:
         Base-85 encoded bytes.
     """
@@ -194,7 +194,7 @@ def _b85encode_chunks(raw_bytes,
         # which means in the encoded output sans-padding, the final 5-tuple
         # chunk will have at least 2 characters.
         padding_size = 4 - remainder
-        raw_bytes += _zero_byte * padding_size
+        raw_bytes += zero_byte * padding_size
         num_uint32 += 1
     else:
         padding_size = 0
@@ -210,14 +210,14 @@ def _b85encode_chunks(raw_bytes,
 #            chars[i] = _base85_chars[mod]
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
-        encoded[i]   = _base85_bytes[x // _pow_85[4]] # Don't need %85.is<85
-        encoded[i+1] = _base85_bytes[(x // _pow_85[3]) % 85]
-        encoded[i+2] = _base85_bytes[(x // _pow_85[2]) % 85]
-        encoded[i+3] = _base85_bytes[(x // 85) % 85]     # 85**1 = 85
-        encoded[i+4] = _base85_bytes[x % 85]             # 85**0 = 1
+        encoded[i]   = base85_bytes[x // pow_85[4]] # Don't need %85.is<85
+        encoded[i+1] = base85_bytes[(x // pow_85[3]) % 85]
+        encoded[i+2] = base85_bytes[(x // pow_85[2]) % 85]
+        encoded[i+3] = base85_bytes[(x // 85) % 85]     # 85**1 = 85
+        encoded[i+4] = base85_bytes[x % 85]             # 85**0 = 1
         i += 5
 
-    if padding_size and not _padding:
+    if padding_size and not padding:
         # Only as much padding added before encoding is removed after encoding.
         encoded = encoded[:-padding_size]
 
@@ -226,10 +226,66 @@ def _b85encode_chunks(raw_bytes,
     return encoded.tostring()
 
 
+def _b85decode_chunks(encoded, base85_bytes, base85_ords):
+    """
+    Base-85 decodes.
+
+    :param encoded:
+        Encoded ASCII string.
+    :param base85_bytes:
+        Character set to use.
+    :param base85_ords:
+        A function to convert a base85 character to its ordinal
+        value. You should not need to use this.
+    :returns:
+        Base-85-decoded raw bytes.
+    """
+    # We want 5-tuple chunks, so pad with as many base85_ord == 84 characters
+    # as required to satisfy the length.
+    length = len(encoded)
+    num_uint32s, remainder = divmod(length, 5)
+    if remainder:
+        padding_byte = byte(base85_bytes[84]) # 'u' (ASCII85); '~' (RFC1924)
+        padding_size = 5 - remainder
+        encoded += padding_byte * padding_size
+        num_uint32s += 1
+        length += padding_size
+    else:
+        padding_size = 0
+
+    uint32s = [0] * num_uint32s
+    j = 0
+    for i in range(0, length, 5):
+        chunk = encoded[i:i+5]
+
+#        uint32_value = 0
+#        for char in chunk:
+#            uint32_value = uint32_value * 85 + _base85_ords[byte_ord(char)]
+#        Above loop unrolled:
+        uint32_value = ((((base85_ords[byte_ord(chunk[0])] *
+                        85 + base85_ords[byte_ord(chunk[1])]) *
+                        85 + base85_ords[byte_ord(chunk[2])]) *
+                        85 + base85_ords[byte_ord(chunk[3])]) *
+                        85 + base85_ords[byte_ord(chunk[4])])
+        # Groups of characters that decode to a value greater than 2**32 − 1
+        # (encoded as "s8W-!") will cause a decoding error. Bad byte?
+        if uint32_value > UINT32_MAX: # 2**32 - 1
+            raise OverflowError("Cannot decode chunk `%r`" % chunk)
+
+        uint32s[j] = uint32_value
+        j += 1
+
+    raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
+    if padding_size:
+        # Only as much padding added before decoding is removed after decoding.
+        raw_bytes = raw_bytes[:-padding_size]
+    return raw_bytes
+
+
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
-              _base85_chars=ASCII85_BYTES,
+              _base85_bytes=ASCII85_BYTES,
               _padding=False,
               _compact_zero=True,
               _compact_char=ZERO_GROUP_CHAR):
@@ -258,15 +314,13 @@ def b85encode(raw_bytes,
         The prefix used by the encoded text. None by default.
     :param suffix:
         The suffix used by the encoded text. None by default.
-    :param _base85_chars:
+    :param _base85_bytes:
         (Internal) Character set to use.
     :param _compact_zero:
         (Internal) Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of
         '!!!!!' if this is ``True`` (default).
     :param _compact_char:
         (Internal) Character used to represent compact groups ('z' default)
-    :param _pow_85:
-        (Internal) Powers of 85 lookup table.
     :returns:
         ASCII-85 encoded bytes.
     """
@@ -285,7 +339,7 @@ def b85encode(raw_bytes,
                         type(raw_bytes).__name__)
     
     # Encode into ASCII85 characters.
-    encoded = _b85encode_chunks(raw_bytes, _base85_chars, _padding)
+    encoded = _b85encode_chunks(raw_bytes, _base85_bytes, _padding)
     encoded = encoded.replace(EXCLAMATION_CHUNK, _compact_char) \
               if _compact_zero else encoded
     return prefix + encoded + suffix
@@ -294,8 +348,8 @@ def b85encode(raw_bytes,
 def b85decode(encoded,
               prefix=None,
               suffix=None,
-              _base85_ords=ASCII85_ORDS,
               _base85_bytes=ASCII85_BYTES,
+              _base85_ords=ASCII85_ORDS,
               _ignore_pattern=WHITESPACE_PATTERN,
               _uncompact_zero=True,
               _compact_char=ZERO_GROUP_CHAR):
@@ -308,12 +362,14 @@ def b85decode(encoded,
         The prefix used by the encoded text. None by default.
     :param suffix:
         The suffix used by the encoded text. None by default.
-    :param _ignore_pattern:
-        (Internal) By default all whitespace is ignored. This must be an
-        ``re.compile()`` instance. You should not need to use this.
+    :param _base85_bytes:
+        (Internal) Character set to use.
     :param _base85_ords:
         (Internal) A function to convert a base85 character to its ordinal
         value. You should not need to use this.
+    :param _ignore_pattern:
+        (Internal) By default all whitespace is ignored. This must be an
+        ``re.compile()`` instance. You should not need to use this.
     :param _uncompact_zero:
         (Internal) Treats 'z' (a zero-group (\x00\x00\x00\x00)) as a '!!!!!'
         if ``True`` (default).
@@ -356,49 +412,6 @@ def b85decode(encoded,
     return _b85decode_chunks(encoded, _base85_bytes, _base85_ords)
 
 
-def _b85decode_chunks(encoded, _base85_bytes, _base85_ords):
-    # We want 5-tuple chunks, so pad with as many base85_ord == 84 characters
-    # as required to satisfy the length.
-    length = len(encoded)
-    num_uint32s, remainder = divmod(length, 5)
-    if remainder:
-        padding_byte = byte(_base85_bytes[84]) # 'u' (ASCII85); '~' (RFC1924)
-        padding_size = 5 - remainder
-        encoded += padding_byte * padding_size
-        num_uint32s += 1
-        length += padding_size
-    else:
-        padding_size = 0
-
-    uint32s = [0] * num_uint32s
-    j = 0
-    for i in range(0, length, 5):
-        chunk = encoded[i:i+5]
-
-#        uint32_value = 0
-#        for char in chunk:
-#            uint32_value = uint32_value * 85 + _base85_ords[byte_ord(char)]
-#        Above loop unrolled:
-        uint32_value = ((((_base85_ords[byte_ord(chunk[0])] *
-                        85 + _base85_ords[byte_ord(chunk[1])]) *
-                        85 + _base85_ords[byte_ord(chunk[2])]) *
-                        85 + _base85_ords[byte_ord(chunk[3])]) *
-                        85 + _base85_ords[byte_ord(chunk[4])])
-        # Groups of characters that decode to a value greater than 2**32 − 1
-        # (encoded as "s8W-!") will cause a decoding error. Bad byte?
-        if uint32_value > UINT32_MAX: # 2**32 - 1
-            raise OverflowError("Cannot decode chunk `%r`" % chunk)
-
-        uint32s[j] = uint32_value
-        j += 1
-
-    raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
-    if padding_size:
-        # Only as much padding added before decoding is removed after decoding.
-        raw_bytes = raw_bytes[:-padding_size]
-    return raw_bytes
-
-
 def rfc1924_b85encode(raw_bytes,
                       _padding=False):
     """
@@ -428,13 +441,11 @@ def rfc1924_b85encode(raw_bytes,
     if not is_bytes(raw_bytes):
         raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
-
-    return _b85encode_chunks(raw_bytes,
-                             _padding=_padding,
-                             _base85_bytes=RFC1924_BYTES)
+    return _b85encode_chunks(raw_bytes, RFC1924_BYTES, _padding)
 
 
-def rfc1924_b85decode(encoded):
+def rfc1924_b85decode(encoded,
+                      _ignore_pattern=WHITESPACE_PATTERN):
     """
     Base85 decodes using the RFC1924 character set.
 
@@ -445,13 +456,20 @@ def rfc1924_b85decode(encoded):
     :see: http://tools.ietf.org/html/rfc1924
     :param encoded:
         RFC1924 Base85 encoded string.
+    :param _ignore_pattern:
+        (Internal) By default all whitespace is ignored. This must be an
+        ``re.compile()`` instance. You should not need to use this.
     :returns:
         Decoded bytes.
     """
-    return b85decode(encoded,
-                     _base85_ords=RFC1924_ORDS,
-                     _base85_bytes=RFC1924_BYTES,
-                     _uncompact_zero=False)
+    if not is_bytes(encoded):
+        raise TypeError(
+            "Encoded sequence must be bytes: got %r" % type(encoded).__name__
+        )
+    # ASCII-85 ignores whitespace.
+    if _ignore_pattern:
+        encoded = re.sub(_ignore_pattern, b(''), encoded)
+    return _b85decode_chunks(encoded, RFC1924_BYTES, RFC1924_ORDS)
 
 
 def ipv6_b85encode(uint128,
@@ -563,5 +581,5 @@ def ipv6_b85decode(encoded,
                 85 + _base85_ords[byte_ord(encoded[19])])
     if uint128 > UINT128_MAX:
         raise OverflowError("Cannot decode `%r` -- may contain stray " \
-                            "or whitespace characters" % encoded)
+                            "ASCII bytes (whitespace?)" % encoded)
     return uint128
