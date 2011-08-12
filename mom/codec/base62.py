@@ -30,7 +30,7 @@ cookie-safe, and almost **human being-safe**. Base-62 representation can:
 * not contain punctuation characters.
 
 For examples of places where you can use base-62, see the documentation
-for :module:`mom.codec.base58`.
+for :mod:`mom.codec.base58`.
 
 In general, use base-62 in any 7-bit ASCII-safe compact communication where
 human beings and communication devices may be significantly involved.
@@ -44,7 +44,7 @@ When you don't care about the visual ambiguity between these characters:
 * I (ASCII UPPERCASE ALPHABET I)
 * l (ASCII LOWERCASE ALPHABET L)
 
-For a practical example, see the documentation for :module:`mom.codec.base58`.
+For a practical example, see the documentation for :mod:`mom.codec.base58`.
 
 Functions
 ---------

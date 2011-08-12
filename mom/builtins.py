@@ -61,6 +61,7 @@ Encodings
 .. autofunction:: bin
 .. autofunction:: hex
 .. autofunction:: byte
+.. autofunction:: byte_ord
 
 Size counting
 -------------
@@ -105,6 +106,7 @@ from mom._compat import \
 
 __all__ = [
     "byte",
+    "byte_ord",
     "bytes",
     "bin",
     "hex",
