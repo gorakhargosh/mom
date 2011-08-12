@@ -132,7 +132,7 @@ def bytearray_to_long(byte_array):
     :returns:
         Long.
     """
-    total = 0L
+    total = 0
     multiplier = 1
     for count in range(len(byte_array)-1, -1, -1):
         byte_val = byte_array[count]
