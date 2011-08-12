@@ -4,7 +4,7 @@
 import unittest2
 from mom.builtins import b
 from mom.codec import hex_decode, base58_decode, base58_encode
-from mom.codec.base58 import b58encode, b58decode
+from mom.codec.base58 import b58encode, b58decode, ALT58_CHARSET, ASCII58_CHARSET
 from mom.security.random import generate_random_bytes
 
 random_bytes_len_4093 = generate_random_bytes(4093)
@@ -23,6 +23,10 @@ padding_raw = b('''\
 ''')
 
 class Test_base58_codec(unittest2.TestCase):
+    def test_ensure_charset_length(self):
+        self.assertEqual(len(ASCII58_CHARSET), 58)
+        self.assertEqual(len(ALT58_CHARSET), 58)
+
     def test_codec_identity(self):
         self.assertEqual(
             b58decode(b58encode(random_bytes_len_4093)),

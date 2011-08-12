@@ -22,7 +22,7 @@
 
 Where should you use base-58?
 -----------------------------
-Base-85 representation is 7 bit-ASCII safe, MIME-safe, URL-safe, HTTP
+Base-58 representation is 7 bit-ASCII safe, MIME-safe, URL-safe, HTTP
 cookie-safe, and **human being-safe**. Base-58 representation can:
 
 * be readable and editable by a human being;
@@ -155,16 +155,22 @@ ASCII58_CHARSET = ("123456789"
 # Therefore, b'1' represents b'\0'.
 ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_CHARSET))
 
+
+
+# Really, I don't understand why people use the non-ASCII order,
+# but if you really like it that much, go ahead. Be my guest. Here
+# is what you will need:
+#
 # Does not follow ASCII order.
-FLICKR58_CHARSET = ("123456789"
-                  "abcdefghijkmnopqrstuvwxyz"
-                  "ABCDEFGHJKLMNPQRSTUVWXYZ").encode("ascii")
+ALT58_CHARSET = ("123456789"
+                 "abcdefghijkmnopqrstuvwxyz"
+                 "ABCDEFGHJKLMNPQRSTUVWXYZ").encode("ascii")
 # Therefore, b'1' represents b'\0'.
-FLICKR58_ORDS = dict((x, i) for i, x in enumerate(FLICKR58_CHARSET))
+ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_CHARSET))
 
 if have_python3:
     ASCII58_CHARSET = tuple(byte(x) for x in ASCII58_CHARSET)
-    FLICKR58_CHARSET = tuple(byte(x) for x in FLICKR58_CHARSET)
+    ALT58_CHARSET = tuple(byte(x) for x in ALT58_CHARSET)
 
 
 def b58encode(raw_bytes,

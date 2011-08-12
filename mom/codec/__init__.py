@@ -20,7 +20,7 @@
 :synopsis: Many different types of common encode/decode function.
 
 This module contains codecs for converting between hex, base64, base85,
-decimal, and binary representations of bytes.
+base58, base62, decimal, and binary representations of bytes.
 
 Understand that bytes are simply base-256 representation.
 
@@ -48,6 +48,8 @@ Use them. They will help prevent unexpected bugs.
 .. autofunction:: base64_decode
 .. autofunction:: base64_urlsafe_encode
 .. autofunction:: base64_urlsafe_decode
+.. autofunction:: base62_encode
+.. autofunction:: base62_decode
 .. autofunction:: base58_encode
 .. autofunction:: base58_decode
 .. autofunction:: hex_encode
@@ -72,6 +74,7 @@ from mom._compat import have_python3, ZERO_BYTE
 from mom.builtins import is_bytes, b
 from mom.functional import leading, chunks
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
+from mom.codec.base62 import b62encode, b62decode
 from mom.codec.base58 import b58decode, b58encode
 from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode, \
     rfc1924_b85decode
@@ -84,6 +87,8 @@ __all__ = [
     "base64_decode",
     "base64_urlsafe_encode",
     "base64_urlsafe_decode",
+    "base62_encode",
+    "base62_decode",
     "base58_encode",
     "base58_decode",
     "hex_encode",
@@ -221,6 +226,37 @@ def base64_decode(encoded):
     return binascii.a2b_base64(encoded)
 
 
+def base62_encode(raw_bytes):
+    """
+    Encodes raw bytes into base-62 representation. URL-safe and human safe.
+
+    Encode your Unicode strings to a byte encoding before base-62-encoding
+    them.
+
+    Convenience wrapper for consistency.
+
+    :param raw_bytes:
+        Bytes to encode.
+    :returns:
+        Base-62 encoded bytes.
+    """
+    return b62encode(raw_bytes)
+
+
+def base62_decode(encoded):
+    """
+    Decodes base-62-encoded bytes into raw bytes.
+
+    Convenience wrapper for consistency.
+
+    :param encoded:
+        Base-62 encoded bytes.
+    :returns:
+        Raw bytes.
+    """
+    return b62decode(encoded)
+
+
 def base58_encode(raw_bytes):
     """
     Encodes raw bytes into base-58 representation. URL-safe and human safe.
@@ -245,7 +281,7 @@ def base58_decode(encoded):
     Convenience wrapper for consistency.
 
     :param encoded:
-        Base-58 encoded representation.
+        Base-58 encoded bytes.
     :returns:
         Raw bytes.
     """
