@@ -257,16 +257,16 @@ def hex(num, prefix="0x"):
     :returns:
         Hexadecimal string.
     """
-    if num is None:
-        raise TypeError("'%r' object cannot be interpreted as an index" \
-                        % type(num).__name__)
+#    if num is None:
+#        raise TypeError("'%r' object cannot be interpreted as an index" \
+#                        % type(num).__name__)
     prefix = prefix or ""
     if num < 0:
         num = -num
         prefix = "-" + prefix
 
-    # To ensure TypeError is raised when non integer is passed.
-    x = num & 1
+    # Make sure this is an int and not float.
+    num & 1
 
     hex_num = "%x" % num
     return prefix + hex_num.lower()
@@ -488,7 +488,11 @@ def integer_bit_length(num):
         return 0
     if num < 0:
         num = -num
-    hex_num = hex(num, None)
+
+    # Make sure this is an int and not float.
+    num & 1
+    
+    hex_num = "%x" % num #hex(num, None)
     return ((len(hex_num) - 1) * 4) + {
         '0':0, '1':1, '2':2, '3':2,
         '4':3, '5':3, '6':3, '7':3,
