@@ -140,13 +140,12 @@ Functions
 from __future__ import absolute_import, division
 
 import re
-from mom._compat import have_python3
+from mom._compat import have_python3, ZERO_BYTE
 from mom.builtins import byte, is_bytes, b
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
 
 
-ZERO_BYTE = byte(0)
 WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 # Follows ASCII order.

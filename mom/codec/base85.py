@@ -62,7 +62,7 @@ import re
 from mom import string
 from struct import unpack, pack
 from mom.builtins import is_bytes, b, byte
-from mom._compat import range, have_python3
+from mom._compat import range, have_python3, ZERO_BYTE
 
 
 __all__ = [
@@ -79,7 +79,6 @@ __all__ = [
 
 UINT128_MAX = (1 << 128) - 1    # 340282366920938463463374607431768211455L
 UINT32_MAX = 0xffffffff # (1 << 32) - 1      # 4294967295
-ZERO_BYTE = byte(0)
 EXCLAMATION_CHUNK = b('!!!!!')
 ZERO_GROUP_CHAR = b('z')
 WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)

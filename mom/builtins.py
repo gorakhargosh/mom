@@ -100,7 +100,7 @@ from struct import pack
 
 from mom._compat import \
     byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
-    next, integer_types, get_machine_alignment, byte_ord
+    next, integer_types, get_machine_alignment, byte_ord, ZERO_BYTE
 
 
 __all__ = [
@@ -148,8 +148,6 @@ bytes = bytes_type
 # Fake byte literal support.
 b = byte_literal
 
-# This is used in a large number of places. Do not remove.
-ZERO_BYTE = b('\x00')
 
 
 def byte(num):

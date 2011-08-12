@@ -46,8 +46,9 @@ except ImportError:
 import binascii
 from struct import pack, unpack, pack_into
 from array import array
+
+from mom._compat import get_machine_alignment, range, ZERO_BYTE
 from mom.builtins import is_bytes, byte, b, integer_byte_length
-from mom._compat import get_machine_alignment, range
 
 
 __all__ = [
@@ -55,8 +56,6 @@ __all__ = [
     "integer_to_bytes",
 ]
 
-
-ZERO_BYTE = byte(0)
 
 
 def bytes_to_integer(raw_bytes):

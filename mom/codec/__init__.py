@@ -62,8 +62,8 @@ Use them. They will help prevent unexpected bugs.
 from __future__ import absolute_import
 
 import binascii
-from mom._compat import have_python3
-from mom.builtins import is_bytes, b, byte
+from mom._compat import have_python3, ZERO_BYTE
+from mom.builtins import is_bytes, b
 from mom.functional import leading, chunks
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.codec.base58 import b58decode, b58encode
@@ -88,8 +88,6 @@ __all__ = [
     "bin_decode",
 ]
 
-
-ZERO_BYTE = byte(0)
 
 
 # Bytes base-encoding.

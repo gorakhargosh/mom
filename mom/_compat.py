@@ -115,7 +115,8 @@ else:
     def byte_literal(s):
         return s
 
-
+# This is used in a large number of places. Do not remove.
+ZERO_BYTE = byte_literal('\x00')
 
 try:
     # Check whether we have reduce as a built-in.
