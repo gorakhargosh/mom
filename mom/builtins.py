@@ -88,11 +88,19 @@ People screw these up too. Useful in functional programming.
 
 from __future__ import absolute_import
 
+try:
+    # Use Psyco (if available) because it cuts execution time into almost half
+    # on 32-bit architecture.
+    import psyco
+    psyco.full()
+except ImportError:
+    pass
+
 from struct import pack
 
 from mom._compat import \
     byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
-    next, integer_types
+    next, integer_types, get_machine_alignment, byte_ord
 
 
 __all__ = [
@@ -100,7 +108,7 @@ __all__ = [
     "bytes",
     "bin",
     "hex",
-    "integer_byte_count",
+    "integer_byte_length",
     "integer_bit_length",
     "is_sequence",
     "is_unicode",
@@ -139,6 +147,9 @@ bytes = bytes_type
 
 # Fake byte literal support.
 b = byte_literal
+
+# This is used in a large number of places. Do not remove.
+ZERO_BYTE = b('\x00')
 
 
 def byte(num):
@@ -329,7 +340,7 @@ def is_integer(obj):
     return isinstance(obj, integer_types) and not isinstance(obj, bool)
 
 
-def integer_byte_count(num):
+def integer_byte_length(num):
     """
     Number of bytes needed to represent a integer.
 
@@ -345,11 +356,67 @@ def integer_byte_count(num):
     if remainder:
         quanta += 1
     return quanta
+
+
+def _integer_byte_length(num):
+    """
+    Number of bytes needed to represent a integer.
+
+    :param num:
+        Integer value. If num is 0, returns 0.
+    :returns:
+        The number of bytes in the integer.
+    """
+    if num == 0:
+        return 0
+    bits = _integer_bit_length(num)
+    quanta, remainder = divmod(bits, 8)
+    if remainder:
+        quanta += 1
+    return quanta
     # The following does floating point division.
     #return int(math.ceil(bits / 8.0))
 
 
-def integer_bit_length(num):
+def _integer_raw_bytes_without_leading(num,
+                      _zero_byte=ZERO_BYTE,
+                      _get_machine_alignment=get_machine_alignment):
+    if num == 0:
+        return b('')
+    if num < 0:
+        num = -num
+    raw_bytes = b('')
+    word_bits, num_bytes, max_uint, pack_type = _get_machine_alignment(num)
+    pack_format = ">" + pack_type
+    while num > 0:
+        raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
+        num >>= word_bits
+
+    # Count the number of zero prefix bytes.
+    zero_leading = 0
+    for zero_leading, x in enumerate(raw_bytes):
+        if x != _zero_byte[0]:
+            break
+
+    # Bytes remaining without zero padding is the number of bytes required
+    # to represent this integer.
+    return raw_bytes[zero_leading:]
+
+
+def _integer_byte_length_1(num):
+    """
+    Number of bytes needed to represent a integer.
+
+    :param num:
+        Integer value. If num is 0, returns 0. If num is negative,
+        its absolute value will be considered.
+    :returns:
+        The number of bytes in the integer.
+    """
+    return len(_integer_raw_bytes_without_leading(num))
+
+
+def _integer_bit_length(num):
     """
     Number of bits needed to represent a integer excluding any prefix
     0 bits.
@@ -371,7 +438,37 @@ def integer_bit_length(num):
     return bits
 
 
-def _integer_bit_length(num):
+def _integer_bit_length_1(num):
+    """
+    Number of bits needed to represent a integer excluding any prefix
+    0 bits.
+
+    :param num:
+        Integer value. If num is 0, returns 0. Only the absolute value of the
+        number is considered. Therefore, signed integers will be abs(num)
+        before the number's bit length is determined.
+    :returns:
+        Returns the number of bits in the integer.
+    """
+    if num == 0:
+        return 0
+    if num < 0:
+        num = -num
+    if num > 0x80:
+        raw_bytes = _integer_raw_bytes_without_leading(num)
+        first_byte = byte_ord(raw_bytes[0])
+        bits = 0
+        while first_byte >> bits:
+            bits += 1
+        return ((len(raw_bytes)-1) * 8) + bits
+    else:
+        bits = 0
+        while num >> bits:
+            bits += 1
+        return bits
+
+
+def integer_bit_length(num):
     """
     Number of bits needed to represent a integer excluding any prefix
     0 bits.

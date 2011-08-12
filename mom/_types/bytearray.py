@@ -42,7 +42,7 @@ from __future__ import absolute_import
 
 from array import array
 #from mom.builtins import b
-from mom.builtins import integer_byte_count, integer_bit_length
+from mom.builtins import integer_byte_length, integer_bit_length
 
 
 #try:
@@ -150,7 +150,7 @@ def long_to_bytearray(num):
     :returns:
         Long.
     """
-    bytes_count = integer_byte_count(num)
+    bytes_count = integer_byte_length(num)
     byte_array = bytearray_create_zeros(bytes_count)
     for count in range(bytes_count - 1, -1, -1):
         byte_array[count] = int(num % 256)
@@ -196,7 +196,7 @@ def long_to_mpi(num):
     #add an extra byte of zeros
     if not (integer_bit_length(num) & 0x7):
         ext = 1
-    length = integer_byte_count(num) + ext
+    length = integer_byte_length(num) + ext
     byte_array = bytearray_concat(bytearray_create_zeros(4+ext), byte_array)
     byte_array[0] = (length >> 24) & 0xFF
     byte_array[1] = (length >> 16) & 0xFF

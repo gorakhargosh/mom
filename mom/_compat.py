@@ -63,6 +63,7 @@ try:
 except NameError:
     long_type = int
 
+    
 # They fucking removed long too! Should I call them bastards? No? Bastards!
 try:
     int_type = long
@@ -83,8 +84,12 @@ try:
     unicode_type = unicode
     basestring_type = basestring
     have_python3 = False
+    def byte_ord(c):
+        return ord(c)
 except NameError:
     # Python3.
+    def byte_ord(c):
+        return c
     unicode_type = str
     basestring_type = (str, bytes)
     have_python3 = True
@@ -109,6 +114,8 @@ if str is unicode_type:
 else:
     def byte_literal(s):
         return s
+
+
 
 try:
     # Check whether we have reduce as a built-in.
@@ -216,16 +223,23 @@ except AttributeError:
                 raise NotImplementedError("What the fuck?! No PRNG available.")
 
 
-def get_machine_alignment(num, arch=64):
+def get_machine_alignment(num, force_arch=64,
+                          _machine_word_size=MACHINE_WORD_SIZE):
     """
     Returns alignment details for the given number based on the platform
     Python is running on.
 
     :param num:
         Unsigned integral number.
+    :param force_arch:
+        If you don't want to use 64-bit unsigned chunks, set this to
+        anything other than 64. 32-bit chunks will be preferred then.
+        Default 64 will be used when on a 64-bit machine.
+    :param _machine_word_size:
+        (Internal) The machine word size used for alignment.
     :returns:
         4-tuple::
-        
+
             (word_bits, word_bytes,
              max_uint, packing_format_type)
     """
@@ -234,7 +248,7 @@ def get_machine_alignment(num, arch=64):
     max_uint16 = 0xffff
     max_uint8 = 0xff
 
-    if arch == 64 and MACHINE_WORD_SIZE >= 64 and num > max_uint32:
+    if force_arch == 64 and _machine_word_size >= 64 and num > max_uint32:
         # 64-bit unsigned integer.
         return 64, 8, max_uint64, "Q"
     elif num > max_uint16:
@@ -262,3 +276,4 @@ def get_machine_array_alignment(num):
     else:
         # 8-bit unsigned integer.
         return 8, max_uint8, "B"
+

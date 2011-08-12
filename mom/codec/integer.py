@@ -14,60 +14,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# Optimization notes:
-# -------------------
-#
-# I think a machine-aligned array-based implementation can go even faster.
-# But since we're happy with this result right now, we're sticking to it.
-#
-# For the following test:
-# 1. integer_to_bytes (is clearly at least 20x-50x faster than others).
-# 2. _integer_to_bytes
-# 3. _integer_to_bytes_array_based
-#
-# integer_to_bytes speed test
-# python2.5 (32-bit)
-# 1000 loops, best of 3: 322 usec per loop
-# 100 loops, best of 3: 4.68 msec per loop
-# 100 loops, best of 3: 3.74 msec per loop
-# python2.6
-# 10000 loops, best of 3: 90.6 usec per loop
-# 100 loops, best of 3: 3.34 msec per loop
-# 100 loops, best of 3: 2.74 msec per loop
-# python2.7
-# 10000 loops, best of 3: 86.9 usec per loop
-# 100 loops, best of 3: 2.67 msec per loop
-# 100 loops, best of 3: 2.11 msec per loop
-# python3.2
-# 10000 loops, best of 3: 92.5 usec per loop
-# 100 loops, best of 3: 3.05 msec per loop
-# 100 loops, best of 3: 2.48 msec per loop
-# pypy
-# 10000 loops, best of 3: 69.2 usec per loop
-# 100 loops, best of 3: 3.3 msec per loop
-# 100 loops, best of 3: 2.96 msec per loop
-#
-# For the following test:
-# 1. bytes_to_integer (is clearly at least 56x faster than second).
-# 2. _bytes_to_integer
-#
-# bytes_to_integer speed test
-# python2.5 (32-bit)
-# 10000 loops, best of 3: 93.7 usec per loop
-# 100 loops, best of 3: 5.32 msec per loop
-# python2.6
-# 10000 loops, best of 3: 71.7 usec per loop
-# 100 loops, best of 3: 4.33 msec per loop
-# python2.7
-# 10000 loops, best of 3: 78.4 usec per loop
-# 100 loops, best of 3: 2.84 msec per loop
-# python3.2
-# 10000 loops, best of 3: 73.5 usec per loop
-# 100 loops, best of 3: 3.16 msec per loop
-# pypy
-# 100 loops, best of 3: 3.32 msec per loop
-# 100 loops, best of 3: 7.46 msec per loop
 
 """
 :module: mom.codec.integer
@@ -100,7 +46,7 @@ except ImportError:
 import binascii
 from struct import pack, unpack, pack_into
 from array import array
-from mom.builtins import is_bytes, byte, b, integer_byte_count
+from mom.builtins import is_bytes, byte, b, integer_byte_length
 from mom._compat import get_machine_alignment, range
 
 
@@ -194,7 +140,7 @@ def _integer_to_bytes_array_based(number, chunk_size=0):
     if number < 0:
         raise ValueError('Negative numbers cannot be used: %i' % number)
 
-    bytes_count = integer_byte_count(number)
+    bytes_count = integer_byte_length(number)
     byte_array = array('B', [0] * bytes_count)
     for count in range(bytes_count - 1, -1, -1):
         byte_array[count] = number & 0xff
@@ -218,7 +164,7 @@ def _integer_to_bytes_array_based(number, chunk_size=0):
     return raw_bytes
 
 
-def _integer_to_bytes(number, block_size=0):
+def _integer_to_bytes_python_rsa(number, block_size=0):
     """
     Naive slow and accurate implementation. Base for all our tests.
 
@@ -243,7 +189,7 @@ def _integer_to_bytes(number, block_size=0):
         raise ValueError('Negative numbers cannot be used: %d' % number)
 
     # Do some bounds checking
-    needed_bytes = integer_byte_count(number)
+    needed_bytes = integer_byte_length(number)
     if block_size > 0:
         if needed_bytes > block_size:
             raise OverflowError('Needed %i bytes for number, but block size '
