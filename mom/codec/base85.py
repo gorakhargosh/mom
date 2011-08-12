@@ -42,8 +42,8 @@ PostScript formats. It may also be used to store RSA keys or binary data
 with a lot of zero byte sequences. The RFC1924 character set-based encoding,
 however, may be used to compactly represent 128-bit unsigned integers (like
 IPv6 addresses) or binary diffs. Encoding based on RFC1924 does not compact
-zero byte sequences, so this form of encoding is less efficient than the
-ASCII85 version where a lot of redundant zero byte sequences are expected.
+zero byte sequences, so this form of encoding is less space-efficient than
+the ASCII85 version which compacts redundant zero byte sequences.
 
 
 Functions
