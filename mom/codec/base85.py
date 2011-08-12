@@ -222,7 +222,8 @@ def _b85encode_chunks(raw_bytes,
         encoded = encoded[:-padding_size]
 
     # In Python 3, this method is deprecated, but as long as we are
-    # supporting Python 2.5, we need to use this. Python 3.x calls if tobytes().
+    # supporting Python 2.5, we need to use this. Python 3.x names it
+    # ``tobytes()``.
     return encoded.tostring()
 
 
