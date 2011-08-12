@@ -26,9 +26,9 @@ Bits and bytes
 
 Numbers
 -------
-.. autofunction:: generate_random_ulong_atmost
-.. autofunction:: generate_random_ulong_exactly
-.. autofunction:: generate_random_ulong_between
+.. autofunction:: generate_random_uint_atmost
+.. autofunction:: generate_random_uint_exactly
+.. autofunction:: generate_random_uint_between
 
 Sequences and choices
 ---------------------
