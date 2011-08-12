@@ -59,8 +59,9 @@ Use them. They will help prevent unexpected bugs.
 .. autofunction:: bin_encode
 .. autofunction:: bin_decode
 
-.. automodule:: mom.codec.base58
 .. automodule:: mom.codec.base85
+.. automodule:: mom.codec.base62
+.. automodule:: mom.codec.base58
 .. automodule:: mom.codec.integer
 .. automodule:: mom.codec.json
 .. automodule:: mom.codec.text

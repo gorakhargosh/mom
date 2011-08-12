@@ -17,7 +17,7 @@
 
 """
 :module: mom.codec.base62
-:synopsis: Base-62 representation for unambiguous display & compact human-input.
+:synopsis: Base-62 representation for compact human-input & 7-bit ASCII safety.
 
 Where should you use base-62?
 -----------------------------
