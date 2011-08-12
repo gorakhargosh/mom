@@ -45,6 +45,17 @@ IPv6 addresses) or binary diffs. Encoding based on RFC1924 does not compact
 zero byte sequences, so this form of encoding is less space-efficient than
 the ASCII85 version which compacts redundant zero byte sequences.
 
+About base85 and this implementation
+------------------------------------
+Base-85 represents 4 bytes as 5 ASCII characters. This is a 7% improvement
+over base-64, which translates to a size increase of ~25% over plain
+binary data for base-85 versus that of ~37% for base-64.
+
+However, because the base64 encoding routines in Python are implemented
+in C, base-64 may be less expensive to compute. This implementation of
+base-85 uses a lot of tricks to reduce computation time and is hence
+generally faster than many other implementations. If computation speed
+is a concern for you, please contribute a C implementation or wait for one.
 
 Functions
 ---------
