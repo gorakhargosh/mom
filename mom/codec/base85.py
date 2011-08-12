@@ -466,7 +466,7 @@ def rfc1924_b85decode(encoded,
         raise TypeError(
             "Encoded sequence must be bytes: got %r" % type(encoded).__name__
         )
-    # ASCII-85 ignores whitespace.
+    # Ignores whitespace.
     if _ignore_pattern:
         encoded = re.sub(_ignore_pattern, b(''), encoded)
     return _b85decode_chunks(encoded, RFC1924_BYTES, RFC1924_ORDS)
