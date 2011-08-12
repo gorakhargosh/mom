@@ -481,9 +481,9 @@ def integer_bit_length(num):
         Returns the number of bits in the integer.
     """
     # import math
-    if num is None:
-        raise TypeError("'%r' object cannot be interpreted as an index" \
-                        % type(num).__name__)
+    #if num is None:
+    #    raise TypeError("'%r' object cannot be interpreted as an index" \
+    #                    % type(num).__name__)
     if num == 0:
         return 0
     if num < 0:
