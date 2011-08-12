@@ -164,7 +164,30 @@ def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
         else:
             counter += 1
 
-            
+
+def _b85encode_chunks(raw_bytes, num_uint32,
+                      _base85_chars,
+                      _pow_85=POW_85):
+    ascii_chars = [0] * num_uint32 * 5
+    # ASCII85 uses a big-endian convention.
+    # See: http://en.wikipedia.org/wiki/Ascii85
+    i = 0
+    for x in unpack('>' + 'L' * num_uint32, raw_bytes):
+#        chars = list(range(5))
+#        for i in reversed(chars):
+#            x, mod = divmod(x, 85)
+#            chars[i] = _base85_chars[mod]
+#        ascii_chars.extend(chars)
+        # Above loop unrolled:
+        ascii_chars[i]   = _base85_chars[x // _pow_85[4]] # Don't need %85.is<85
+        ascii_chars[i+1] = _base85_chars[(x // _pow_85[3]) % 85]
+        ascii_chars[i+2] = _base85_chars[(x // _pow_85[2]) % 85]
+        ascii_chars[i+3] = _base85_chars[(x // 85) % 85]     # 85**1 = 85
+        ascii_chars[i+4] = _base85_chars[x % 85]             # 85**0 = 1
+        i += 5
+    return ascii_chars
+
+
 def b85encode(raw_bytes,
               prefix=None,
               suffix=None,
@@ -172,8 +195,8 @@ def b85encode(raw_bytes,
               _base85_chars=ASCII85_CHARSET,
               _compact_zero=True,
               _compact_char=ZERO_GROUP_CHAR,
-              _pow_85=POW_85,
-              _zero_byte=ZERO_BYTE):
+              _zero_byte=ZERO_BYTE,
+              _encode_chunks=_b85encode_chunks):
     """
     ASCII-85 encodes a sequence of raw bytes.
 
@@ -246,24 +269,8 @@ def b85encode(raw_bytes,
     else:
         padding_size = 0
 
-    ascii_chars = [0] * num_uint32 * 5
-    # ASCII85 uses a big-endian convention.
-    # See: http://en.wikipedia.org/wiki/Ascii85
-    i = 0
-#    ascii_chars = []
-    for x in unpack('>' + 'L' * num_uint32, raw_bytes):
-#        chars = list(range(5))
-#        for i in reversed(chars):
-#            x, mod = divmod(x, 85)
-#            chars[i] = _base85_chars[mod]
-#        ascii_chars.extend(chars)
-        # Above loop unrolled:
-        ascii_chars[i]   = _base85_chars[x // _pow_85[4]] # Don't need %85.is<85
-        ascii_chars[i+1] = _base85_chars[(x // _pow_85[3]) % 85]
-        ascii_chars[i+2] = _base85_chars[(x // _pow_85[2]) % 85]
-        ascii_chars[i+3] = _base85_chars[(x // 85) % 85]     # 85**1 = 85
-        ascii_chars[i+4] = _base85_chars[x % 85]             # 85**0 = 1
-        i += 5
+    # Encode the chunks into ASCII85 characters.
+    ascii_chars = _encode_chunks(raw_bytes, num_uint32, _base85_chars)
     if padding_size and not _padding:
         # Only as much padding added before encoding is removed after encoding.
         ascii_chars = ascii_chars[:-padding_size]
@@ -271,6 +278,7 @@ def b85encode(raw_bytes,
     encoded = encoded.replace(EXCLAMATION_CHUNK, _compact_char) \
               if _compact_zero else encoded
     return prefix + encoded + suffix
+
 
 
 def b85decode(encoded,
