@@ -7,7 +7,7 @@ import sys
 import unittest2
 import math
 import struct
-from mom._compat import get_machine_alignment, MACHINE_WORD_SIZE, MAX_UINT64, MAX_UINT32, MAX_UINT16, MAX_UINT8
+from mom._compat import get_machine_alignment, MACHINE_WORD_SIZE, UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX
 
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
@@ -398,20 +398,20 @@ class Test_is_negative(unittest2.TestCase):
 class Test_get_machine_alignment(unittest2.TestCase):
     def test_values(self):
         if MACHINE_WORD_SIZE == 32:
-            self.assertEqual(get_machine_alignment(1 << 64), (32, 4, MAX_UINT32, 'L'))
-            self.assertEqual(get_machine_alignment(1 << 32), (32, 4, MAX_UINT32, 'L'))
+            self.assertEqual(get_machine_alignment(1 << 64), (32, 4, UINT32_MAX, 'L'))
+            self.assertEqual(get_machine_alignment(1 << 32), (32, 4, UINT32_MAX, 'L'))
         elif MACHINE_WORD_SIZE == 64:
-            self.assertEqual(get_machine_alignment(1 << 64), (64, 8, MAX_UINT64, 'Q'))
-            self.assertEqual(get_machine_alignment(1 << 32), (64, 8, MAX_UINT64, 'Q'))
+            self.assertEqual(get_machine_alignment(1 << 64), (64, 8, UINT64_MAX, 'Q'))
+            self.assertEqual(get_machine_alignment(1 << 32), (64, 8, UINT64_MAX, 'Q'))
         else:
             raise NotImplementedError("Do we support other than 32/64-bit?")
         # Anything 32-bit or below:
         values = [
-            (1 << 31, (32, 4, MAX_UINT32, 'L')),
-            (1 << 16, (32, 4, MAX_UINT32, 'L')),
-            (1 << 15, (16, 2, MAX_UINT16, 'H')),
-            (1 << 8, (16, 2, MAX_UINT16, 'H')),
-            (1 << 7, (8, 1, MAX_UINT8, 'B'))
+            (1 << 31, (32, 4, UINT32_MAX, 'L')),
+            (1 << 16, (32, 4, UINT32_MAX, 'L')),
+            (1 << 15, (16, 2, UINT16_MAX, 'H')),
+            (1 << 8, (16, 2, UINT16_MAX, 'H')),
+            (1 << 7, (8, 1, UINT8_MAX, 'B'))
         ]
         for num, tup  in values:
             self.assertEqual(get_machine_alignment(num), tup, "%d, %r" % (num, tup))

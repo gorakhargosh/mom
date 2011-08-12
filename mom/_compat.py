@@ -30,33 +30,34 @@ import os
 import sys
 
 try:
-    MAX_INT = sys.maxsize
+    INT_MAX = sys.maxsize
 except AttributeError:
-    MAX_INT = sys.maxint
+    INT_MAX = sys.maxint
 
 
-MAX_INT64 = (1 << 63) - 1
-MAX_INT32 = (1 << 31) - 1
-MAX_INT16 = (1 << 15) - 1
-MAX_UINT64 = 0xffffffffffffffff # ((1 << 64) - 1)
-MAX_UINT32 = 0xffffffff # ((1 << 32) - 1)
-MAX_UINT16 = 0xffff # ((1 << 16) - 1)
-MAX_UINT8 = 0xff
+INT64_MAX = (1 << 63) - 1
+INT32_MAX = (1 << 31) - 1
+INT16_MAX = (1 << 15) - 1
+UINT128_MAX = (1 << 128) - 1    # 340282366920938463463374607431768211455L
+UINT64_MAX = 0xffffffffffffffff # ((1 << 64) - 1)
+UINT32_MAX = 0xffffffff # ((1 << 32) - 1)
+UINT16_MAX = 0xffff # ((1 << 16) - 1)
+UINT8_MAX = 0xff
 
 
 # Determine the word size of the processor.
-if MAX_INT == MAX_INT64:
+if INT_MAX == INT64_MAX:
     # 64-bit processor.
     MACHINE_WORD_SIZE = 64
-    MAX_UINT = MAX_UINT64
-elif MAX_INT == MAX_INT32:
+    UINT_MAX = UINT64_MAX
+elif INT_MAX == INT32_MAX:
     # 32-bit processor.
     MACHINE_WORD_SIZE = 32
-    MAX_UINT = MAX_UINT32
+    UINT_MAX = UINT32_MAX
 else:
     # Else we just assume 64-bit processor keeping up with modern times.
     MACHINE_WORD_SIZE = 64
-    MAX_UINT = MAX_UINT64
+    UINT_MAX = UINT64_MAX
 
 try:
     long_type = long
@@ -244,37 +245,28 @@ def get_machine_alignment(num, force_arch=64,
             (word_bits, word_bytes,
              max_uint, packing_format_type)
     """
-    max_uint64 = 0xffffffffffffffff
-    max_uint32 = 0xffffffff
-    max_uint16 = 0xffff
-    max_uint8 = 0xff
-
-    if force_arch == 64 and _machine_word_size >= 64 and num > max_uint32:
+    if force_arch == 64 and _machine_word_size >= 64 and num > UINT32_MAX:
         # 64-bit unsigned integer.
-        return 64, 8, max_uint64, "Q"
-    elif num > max_uint16:
+        return 64, 8, UINT64_MAX, "Q"
+    elif num > UINT16_MAX:
         # 32-bit unsigned integer
-        return 32, 4, max_uint32, "L"
-    elif num > max_uint8:
+        return 32, 4, UINT32_MAX, "L"
+    elif num > UINT8_MAX:
         # 16-bit unsigned integer.
-        return 16, 2, max_uint16, "H"
+        return 16, 2, UINT16_MAX, "H"
     else:
         # 8-bit unsigned integer.
-        return 8, 1, max_uint8, "B"
+        return 8, 1, UINT8_MAX, "B"
 
     
 def get_machine_array_alignment(num):
-    max_uint32 = 0xffffffff
-    max_uint16 = 0xffff
-    max_uint8 = 0xff
-
-    if num > max_uint16:
+    if num > UINT16_MAX:
         # 32-bit unsigned integer
-        return 32, max_uint32, "L"
-    elif num > max_uint8:
+        return 32, UINT32_MAX, "L"
+    elif num > UINT8_MAX:
         # 16-bit unsigned integer.
-        return 16, max_uint16, "H"
+        return 16, UINT16_MAX, "H"
     else:
         # 8-bit unsigned integer.
-        return 8, max_uint8, "B"
+        return 8, UINT8_MAX, "B"
 

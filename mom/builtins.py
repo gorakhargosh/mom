@@ -148,6 +148,7 @@ bytes = bytes_type
 # Fake byte literal support.
 b = byte_literal
 
+byte_ord = byte_ord
 
 
 def byte(num):
