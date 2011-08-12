@@ -28,6 +28,7 @@ from __future__ import absolute_import
 
 import os
 import sys
+from array import array
 
 try:
     INT_MAX = sys.maxsize
@@ -119,6 +120,9 @@ else:
 # This is used in a large number of places. Do not remove.
 ZERO_BYTE = byte_literal('\x00')
 
+have_little_endian = bool(byte_ord(array("i",[1]).tostring()[0]))
+
+
 try:
     # Check whether we have reduce as a built-in.
     __reduce_test__ = reduce((lambda num1, num2: num1 + num2), [1, 2, 3, 4])
@@ -126,9 +130,6 @@ except NameError:
     # Python 3k
     from functools import reduce
 reduce = reduce
-
-
-
 
 
 if getattr(dict, "iteritems", None):

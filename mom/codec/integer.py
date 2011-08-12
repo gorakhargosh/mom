@@ -44,8 +44,8 @@ except ImportError:
     pass
 
 import binascii
-from struct import pack, unpack, pack_into
 from array import array
+from struct import pack, unpack, pack_into
 
 from mom._compat import get_machine_alignment, range, ZERO_BYTE
 from mom.builtins import is_bytes, byte, b, integer_byte_length
