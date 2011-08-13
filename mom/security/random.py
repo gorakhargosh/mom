@@ -55,7 +55,7 @@ from mom import string
 from mom._compat import range, generate_random_bytes as _generate_random_bytes
 from mom.builtins import integer_bit_length, is_integer, byte
 from mom.codec import hex_encode
-from mom.codec.integer import bytes_to_integer
+from mom.codec.integer import bytes_to_uint
 
 
 __all__ = [
@@ -148,7 +148,7 @@ def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
         q += 1
     random_bytes = rand_func(q)
     mask = (1 << n_bits) - 1
-    return mask & bytes_to_integer(random_bytes)
+    return mask & bytes_to_uint(random_bytes)
 
 
 def generate_random_uint_exactly(n_bits, rand_func=generate_random_bytes):
@@ -165,7 +165,7 @@ def generate_random_uint_exactly(n_bits, rand_func=generate_random_bytes):
         (2**n_bits)-1 both inclusive.
     """
     # Doesn't perform any floating-point operations.
-    value = bytes_to_integer(generate_random_bits(n_bits, rand_func=rand_func))
+    value = bytes_to_uint(generate_random_bits(n_bits, rand_func=rand_func))
     #assert(value >= 0 and value < (2L ** n_bits))
     # Set the high bit to ensure bit length.
     #value |= 2 ** (n_bits - 1)

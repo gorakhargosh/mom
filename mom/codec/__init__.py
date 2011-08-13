@@ -74,7 +74,7 @@ import binascii
 from mom._compat import have_python3, ZERO_BYTE
 from mom.builtins import is_bytes, b
 from mom.functional import leading, chunks
-from mom.codec.integer import bytes_to_integer, integer_to_bytes
+from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.codec.base62 import b62encode, b62decode
 from mom.codec.base58 import b58decode, b58encode
 from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode, \
@@ -337,7 +337,7 @@ def decimal_encode(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     padding = b("0") * leading((lambda w: w == ZERO_BYTE[0]), raw_bytes)
-    int_val = bytes_to_integer(raw_bytes)
+    int_val = bytes_to_uint(raw_bytes)
     return padding + str(int_val).encode("ascii") if int_val else padding
 
 
@@ -356,7 +356,7 @@ def decimal_decode(encoded):
                         type(encoded).__name__)
     padding = ZERO_BYTE * leading((lambda x: x == b("0")[0]), encoded)
     int_val = int(encoded)
-    return padding + integer_to_bytes(int_val) if int_val else padding
+    return padding + uint_to_bytes(int_val) if int_val else padding
 
 
 _HEX_TO_BIN_LOOKUP = {

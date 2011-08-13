@@ -41,7 +41,7 @@ class Test_base62_codec(unittest2.TestCase):
             random_bytes_len_4093
         )
 
-    def test_padding(self):
+    def test_encodes_zero_prefixed_padding(self):
         self.assertEqual(b62decode(b62encode(padding_raw)), padding_raw)
         self.assertEqual(_b62decode(b62encode(padding_raw)), padding_raw)
         self.assertEqual(base62_decode(base62_encode(padding_raw)), padding_raw)

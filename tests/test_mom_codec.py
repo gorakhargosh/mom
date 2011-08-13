@@ -18,12 +18,15 @@ from mom.codec import \
     bin_decode, \
     base85_encode, base85_decode, base58_encode, base58_decode, \
     base64_urlsafe_encode, base64_urlsafe_decode
+from mom.codec._alt_integer import \
+    uint_to_bytes_naive_array_based, \
+    uint_to_bytes_naive, \
+    uint_to_bytes_pycrypto, \
+    uint_to_bytes_array_based, \
+    bytes_to_uint_naive
 from mom.codec.integer import \
-    bytes_to_integer, \
-    integer_to_bytes, \
-    _bytes_to_integer, _integer_to_bytes_python_rsa, \
-    _integer_to_bytes_array_based, _integer_to_bytes_a, \
-    _long_to_bytes
+    bytes_to_uint, \
+    uint_to_bytes
 from mom._prime_sieve import make_prime_sieve
 from tests.test_mom_builtins import unicode_string
 
@@ -236,104 +239,104 @@ class Test_bin_codec(unittest2.TestCase):
         self.assertRaises(TypeError, bin_decode, None)
 
 
-class Test_bytes_integer_codec(unittest2.TestCase):
+class Test_bytes_uint_codec(unittest2.TestCase):
     def test_codec_equivalence(self):
         # Padding bytes are not preserved (it is acceptable here).
         random_bytes = b("\x00\xbcE\x9a\xda]")
         expected_bytes = b("\xbcE\x9a\xda]")
-        self.assertEqual(integer_to_bytes(bytes_to_integer(zero_bytes)),
+        self.assertEqual(uint_to_bytes(bytes_to_uint(zero_bytes)),
                          one_zero_byte)
-        self.assertEqual(integer_to_bytes(bytes_to_integer(random_bytes)),
+        self.assertEqual(uint_to_bytes(bytes_to_uint(random_bytes)),
                          expected_bytes)
 
-        self.assertEqual(integer_to_bytes(_bytes_to_integer(zero_bytes)),
+        self.assertEqual(uint_to_bytes(bytes_to_uint_naive(zero_bytes)),
                          one_zero_byte)
-        self.assertEqual(integer_to_bytes(_bytes_to_integer(random_bytes)),
+        self.assertEqual(uint_to_bytes(bytes_to_uint_naive(random_bytes)),
                          expected_bytes)
 
     def test_TypeError_non_bytes_argument(self):
-        self.assertRaises(TypeError, bytes_to_integer, unicode_string)
-        self.assertRaises(TypeError, bytes_to_integer, None)
+        self.assertRaises(TypeError, bytes_to_uint, unicode_string)
+        self.assertRaises(TypeError, bytes_to_uint, None)
 
-        self.assertRaises(TypeError, _bytes_to_integer, unicode_string)
-        self.assertRaises(TypeError, _bytes_to_integer, None)
+        self.assertRaises(TypeError, bytes_to_uint_naive, unicode_string)
+        self.assertRaises(TypeError, bytes_to_uint_naive, None)
 
 
-class Test_integer_to_bytes(unittest2.TestCase):
+class Test_uint_to_bytes(unittest2.TestCase):
     def test_accuracy(self):
-        self.assertEqual(integer_to_bytes(123456789), b('\x07[\xcd\x15'))
-        self.assertEqual(_long_to_bytes(123456789), b('\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes_a(123456789), b('\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes_python_rsa(123456789), b('\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes_array_based(123456789), b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes(123456789), b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes_pycrypto(123456789), b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes_array_based(123456789), b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes_naive(123456789), b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes_naive_array_based(123456789), b('\x07[\xcd\x15'))
 
-        self.assertEqual(integer_to_bytes(long_value),
+        self.assertEqual(uint_to_bytes(long_value),
                          expected_bytes)
-        self.assertEqual(_long_to_bytes(long_value),
+        self.assertEqual(uint_to_bytes_pycrypto(long_value),
                          expected_bytes)
-        self.assertEqual(_integer_to_bytes_a(long_value),
+        self.assertEqual(uint_to_bytes_array_based(long_value),
                          expected_bytes)
-        self.assertEqual(_integer_to_bytes_python_rsa(long_value),
+        self.assertEqual(uint_to_bytes_naive(long_value),
                          expected_bytes)
-        self.assertEqual(_integer_to_bytes_array_based(long_value),
+        self.assertEqual(uint_to_bytes_naive_array_based(long_value),
                          expected_bytes)
 
     def test_chunk_size(self):
-        self.assertEqual(integer_to_bytes(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes(long_value, long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(_long_to_bytes(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_pycrypto(long_value, long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(_integer_to_bytes_a(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_array_based(long_value, long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(_integer_to_bytes_python_rsa(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_naive(long_value, long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(_integer_to_bytes_array_based(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_naive_array_based(long_value, long_value_blocksize),
                          expected_blocksize_bytes)
 
 
-        self.assertEqual(integer_to_bytes(123456789, 6),
+        self.assertEqual(uint_to_bytes(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
-        self.assertEqual(integer_to_bytes(123456789, 7),
+        self.assertEqual(uint_to_bytes(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
 
-        self.assertEqual(_long_to_bytes(123456789, 6),
+        self.assertEqual(uint_to_bytes_pycrypto(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
-        self.assertEqual(_long_to_bytes(123456789, 7),
+        self.assertEqual(uint_to_bytes_pycrypto(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
         
-        self.assertEqual(_integer_to_bytes_a(123456789, 6),
+        self.assertEqual(uint_to_bytes_array_based(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes_a(123456789, 7),
+        self.assertEqual(uint_to_bytes_array_based(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
 
-        self.assertEqual(_integer_to_bytes_python_rsa(123456789, 6),
+        self.assertEqual(uint_to_bytes_naive(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes_python_rsa(123456789, 7),
+        self.assertEqual(uint_to_bytes_naive(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
 
-        self.assertEqual(_integer_to_bytes_array_based(123456789, 6),
+        self.assertEqual(uint_to_bytes_naive_array_based(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
-        self.assertEqual(_integer_to_bytes_array_based(123456789, 7),
+        self.assertEqual(uint_to_bytes_naive_array_based(123456789, 7),
                          b('\x00\x00\x00\x07[\xcd\x15'))
 
     def test_zero(self):
-        self.assertEqual(integer_to_bytes(0, 4), b('\x00') * 4)
-        self.assertEqual(_integer_to_bytes_a(0, 4), b('\x00') * 4)
-        self.assertEqual(_integer_to_bytes_python_rsa(0, 4), b('\x00') * 4)
-        self.assertEqual(_integer_to_bytes_array_based(0, 4), b('\x00') * 4)
-        self.assertEqual(_long_to_bytes(0, 4), b('\x00') * 4)
+        self.assertEqual(uint_to_bytes(0, 4), b('\x00') * 4)
+        self.assertEqual(uint_to_bytes_array_based(0, 4), b('\x00') * 4)
+        self.assertEqual(uint_to_bytes_naive(0, 4), b('\x00') * 4)
+        self.assertEqual(uint_to_bytes_naive_array_based(0, 4), b('\x00') * 4)
+        self.assertEqual(uint_to_bytes_pycrypto(0, 4), b('\x00') * 4)
 
-        self.assertEqual(integer_to_bytes(0, 7), b('\x00') * 7)
-        self.assertEqual(_integer_to_bytes_python_rsa(0, 7), b('\x00') * 7)
-        self.assertEqual(_integer_to_bytes_a(0, 7), b('\x00') * 7)
-        self.assertEqual(_integer_to_bytes_array_based(0, 7), b('\x00') * 7)
-        self.assertEqual(_long_to_bytes(0, 7), b('\x00') * 7)
+        self.assertEqual(uint_to_bytes(0, 7), b('\x00') * 7)
+        self.assertEqual(uint_to_bytes_naive(0, 7), b('\x00') * 7)
+        self.assertEqual(uint_to_bytes_array_based(0, 7), b('\x00') * 7)
+        self.assertEqual(uint_to_bytes_naive_array_based(0, 7), b('\x00') * 7)
+        self.assertEqual(uint_to_bytes_pycrypto(0, 7), b('\x00') * 7)
 
-        self.assertEqual(integer_to_bytes(0), b('\x00'))
-        self.assertEqual(_integer_to_bytes_python_rsa(0), b('\x00'))
-        self.assertEqual(_integer_to_bytes_a(0), b('\x00'))
-        self.assertEqual(_integer_to_bytes_array_based(0), b('\x00'))
-        self.assertEqual(_long_to_bytes(0), b('\x00'))
+        self.assertEqual(uint_to_bytes(0), b('\x00'))
+        self.assertEqual(uint_to_bytes_naive(0), b('\x00'))
+        self.assertEqual(uint_to_bytes_array_based(0), b('\x00'))
+        self.assertEqual(uint_to_bytes_naive_array_based(0), b('\x00'))
+        self.assertEqual(uint_to_bytes_pycrypto(0), b('\x00'))
 
     def test_correctness_against_base_implementation(self):
         # Slow test.
@@ -343,53 +346,53 @@ class Test_integer_to_bytes(unittest2.TestCase):
             1 << 77,
         ]
         for value in values:
-            self.assertEqual(integer_to_bytes(value), _integer_to_bytes_python_rsa(value),
+            self.assertEqual(uint_to_bytes(value), uint_to_bytes_naive(value),
                              "Boom %d" % value)
-            self.assertEqual(_integer_to_bytes_a(value), _integer_to_bytes_python_rsa(value),
+            self.assertEqual(uint_to_bytes_array_based(value), uint_to_bytes_naive(value),
                              "Boom %d" % value)
-            self.assertEqual(integer_to_bytes(value),
-                             _integer_to_bytes_array_based(value),
+            self.assertEqual(uint_to_bytes(value),
+                             uint_to_bytes_naive_array_based(value),
                              "Boom %d" % value)
-            self.assertEqual(_long_to_bytes(value),
-                             _integer_to_bytes_python_rsa(value),
+            self.assertEqual(uint_to_bytes_pycrypto(value),
+                             uint_to_bytes_naive(value),
                              "Boom %d" % value)
-            self.assertEqual(bytes_to_integer(integer_to_bytes(value)),
+            self.assertEqual(bytes_to_uint(uint_to_bytes(value)),
                              value,
                              "Boom %d" % value)
 
     def test_correctness_for_primes(self):
         for prime in sieve:
-            self.assertEqual(integer_to_bytes(prime), _integer_to_bytes_python_rsa(prime),
+            self.assertEqual(uint_to_bytes(prime), uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
-            self.assertEqual(_integer_to_bytes_a(prime), _integer_to_bytes_python_rsa(prime),
+            self.assertEqual(uint_to_bytes_array_based(prime), uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
-            self.assertEqual(_long_to_bytes(prime), _integer_to_bytes_python_rsa(prime),
+            self.assertEqual(uint_to_bytes_pycrypto(prime), uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
 
     def test_raises_OverflowError_when_chunk_size_is_insufficient(self):
-        self.assertRaises(OverflowError, integer_to_bytes, 123456789, 3)
-        self.assertRaises(OverflowError, integer_to_bytes, 299999999999, 4)
+        self.assertRaises(OverflowError, uint_to_bytes, 123456789, 3)
+        self.assertRaises(OverflowError, uint_to_bytes, 299999999999, 4)
 
-        self.assertRaises(OverflowError, _integer_to_bytes_a, 123456789, 3)
-        self.assertRaises(OverflowError, _integer_to_bytes_a, 299999999999, 4)
+        self.assertRaises(OverflowError, uint_to_bytes_array_based, 123456789, 3)
+        self.assertRaises(OverflowError, uint_to_bytes_array_based, 299999999999, 4)
 
-        self.assertRaises(OverflowError, _integer_to_bytes_python_rsa, 123456789, 3)
-        self.assertRaises(OverflowError, _integer_to_bytes_python_rsa, 299999999999, 4)
+        self.assertRaises(OverflowError, uint_to_bytes_naive, 123456789, 3)
+        self.assertRaises(OverflowError, uint_to_bytes_naive, 299999999999, 4)
 
-        self.assertRaises(OverflowError, _integer_to_bytes_array_based, 123456789, 3)
-        self.assertRaises(OverflowError, _integer_to_bytes_array_based, 299999999999, 4)
+        self.assertRaises(OverflowError, uint_to_bytes_naive_array_based, 123456789, 3)
+        self.assertRaises(OverflowError, uint_to_bytes_naive_array_based, 299999999999, 4)
 
-        self.assertRaises(OverflowError, _long_to_bytes, 123456789, 3)
-        self.assertRaises(OverflowError, _long_to_bytes, 299999999999, 4)
+        self.assertRaises(OverflowError, uint_to_bytes_pycrypto, 123456789, 3)
+        self.assertRaises(OverflowError, uint_to_bytes_pycrypto, 299999999999, 4)
 
     def test_raises_ValueError_when_negative_integer(self):
-        self.assertRaises(ValueError, integer_to_bytes, -1)
-        self.assertRaises(ValueError, _integer_to_bytes_a, -1)
-        self.assertRaises(ValueError, _integer_to_bytes_python_rsa, -1)
-        self.assertRaises(ValueError, _integer_to_bytes_array_based, -1)
+        self.assertRaises(ValueError, uint_to_bytes, -1)
+        self.assertRaises(ValueError, uint_to_bytes_array_based, -1)
+        self.assertRaises(ValueError, uint_to_bytes_naive, -1)
+        self.assertRaises(ValueError, uint_to_bytes_naive_array_based, -1)
 
     def test_raises_TypeError_when_not_integer(self):
-        self.assertRaises(TypeError, integer_to_bytes, None)
-        self.assertRaises(TypeError, _integer_to_bytes_a, None)
-        self.assertRaises(TypeError, _integer_to_bytes_python_rsa, None)
-        self.assertRaises(TypeError, _integer_to_bytes_array_based, None)
+        self.assertRaises(TypeError, uint_to_bytes, None)
+        self.assertRaises(TypeError, uint_to_bytes_array_based, None)
+        self.assertRaises(TypeError, uint_to_bytes_naive, None)
+        self.assertRaises(TypeError, uint_to_bytes_naive_array_based, None)

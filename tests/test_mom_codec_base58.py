@@ -5,6 +5,7 @@ import unittest2
 from mom.builtins import b
 from mom.codec import hex_decode, base58_decode, base58_encode
 from mom.codec.base58 import b58encode, b58decode, ALT58_CHARSET, ASCII58_CHARSET, _b58decode
+from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.security.random import generate_random_bytes
 
 random_bytes_len_4093 = generate_random_bytes(4093)
@@ -41,7 +42,7 @@ class Test_base58_codec(unittest2.TestCase):
             random_bytes_len_4093
         )
 
-    def test_padding(self):
+    def test_encodes_zero_prefixed_padding(self):
         self.assertEqual(b58decode(b58encode(padding_raw)), padding_raw)
         self.assertEqual(_b58decode(b58encode(padding_raw)), padding_raw)
         self.assertEqual(base58_decode(base58_encode(padding_raw)), padding_raw)
@@ -60,6 +61,19 @@ class Test_base58_codec(unittest2.TestCase):
         self.assertEqual(base58_decode(b('1')), one_zero_byte)
 
     def test_encoding_and_decoding(self):
+        hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
+
+        self.assertEqual(b58encode(hello_world), b("JxF12TrwUP45BMd"))
+        self.assertEqual(b58decode(b("JxF12TrwUP45BMd")), hello_world)
+
+#        self.assertEqual(bytes_to_integer(b58decode(b("16Ho7Hs"))), 3471844090)
+#        self.assertEqual(b58encode(integer_to_bytes(3471844090)), b("16Ho7Hs"))
+
+#        self.assertEqual(_b58encode(b("Hello World")), b("JxF12TrwUP45BMd"))
+#        self.assertEqual(_b58decode(b("JxF12TrwUP45BMd")), b("Hello World"))
+#        self.assertEqual(bytes_to_integer(_b58decode(b("16Ho7Hs"))), 3471844090)
+#        self.assertEqual(_b58encode(integer_to_bytes(3471844090)), b("16Ho7Hs"))
+
         self.assertEqual(b58encode(raw_data), encoded)
         self.assertEqual(b58decode(encoded), raw_data)
         self.assertEqual(b58decode(encoded_with_whitespace), raw_data)

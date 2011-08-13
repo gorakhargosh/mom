@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import unittest2
 from mom.builtins import is_bytes, is_bytes_or_unicode
-from mom.codec.integer import bytes_to_integer
+from mom.codec.integer import bytes_to_uint
 from mom.security.random import \
     generate_random_hex_string, generate_random_uint_between, \
     generate_random_bits, generate_random_uint_atmost, \
@@ -19,7 +19,7 @@ class Test_generate_random_bits(unittest2.TestCase):
     def test_range(self):
         for i in range(999):
             n_bits = 4
-            value = bytes_to_integer(generate_random_bits(n_bits))
+            value = bytes_to_uint(generate_random_bits(n_bits))
             self.assertTrue(value >= 0 and value < (1 << n_bits))
 
     def test_uniqueness(self):

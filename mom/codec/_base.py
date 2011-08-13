@@ -31,7 +31,7 @@ except ImportError:
     pass
 
 from mom._compat import ZERO_BYTE
-from mom.codec.integer import integer_to_bytes
+from mom.codec.integer import uint_to_bytes
 
 
 def base_decode_to_number(encoded,
@@ -72,7 +72,7 @@ def base_number_to_bytes(number, encoded,
                          zero_base_char,
                          zero_byte=ZERO_BYTE):
     if number:
-        raw_bytes = integer_to_bytes(number)
+        raw_bytes = uint_to_bytes(number)
     else:
         # number == 0
         raw_bytes = zero_byte

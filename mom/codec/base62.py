@@ -159,7 +159,7 @@ from __future__ import absolute_import, division
 from mom._compat import have_python3, ZERO_BYTE
 from mom.builtins import byte, is_bytes, b
 from mom.codec._base import base_number_to_bytes, base_decode_to_number
-from mom.codec.integer import bytes_to_integer, integer_to_bytes
+from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.functional import leading
 
 
@@ -215,7 +215,7 @@ def b62encode(raw_bytes,
     if not is_bytes(raw_bytes):
         raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
-    number = bytes_to_integer(raw_bytes)
+    number = bytes_to_uint(raw_bytes)
     encoded = b('')
     while number > 0:
         number, remainder = divmod(number, 62)
@@ -297,7 +297,7 @@ def _b62decode(encoded,
 
     # Obtain raw bytes.
     if number:
-        raw_bytes = integer_to_bytes(number)
+        raw_bytes = uint_to_bytes(number)
     else:
         # We don't want to convert to b'\x00' when we get number == 0.
         # That would add an off-by-one extra zero byte in the result.
