@@ -4,7 +4,8 @@
 import unittest2
 from mom.builtins import b
 from mom.codec import hex_decode, base62_decode, base62_encode
-from mom.codec.base62 import b62encode, b62decode, ASCII62_CHARSET, ALT62_CHARSET, _b62decode
+from mom.codec._alt_base import b62decode_naive
+from mom.codec.base62 import b62encode, b62decode, ASCII62_CHARSET, ALT62_CHARSET
 from mom.security.random import generate_random_bytes
 
 random_bytes_len_4093 = generate_random_bytes(4093)
@@ -33,7 +34,7 @@ class Test_base62_codec(unittest2.TestCase):
             random_bytes_len_4093
         )
         self.assertEqual(
-            _b62decode(b62encode(random_bytes_len_4093)),
+            b62decode_naive(b62encode(random_bytes_len_4093)),
             random_bytes_len_4093
         )
         self.assertEqual(
@@ -43,16 +44,16 @@ class Test_base62_codec(unittest2.TestCase):
 
     def test_encodes_zero_prefixed_padding(self):
         self.assertEqual(b62decode(b62encode(padding_raw)), padding_raw)
-        self.assertEqual(_b62decode(b62encode(padding_raw)), padding_raw)
+        self.assertEqual(b62decode_naive(b62encode(padding_raw)), padding_raw)
         self.assertEqual(base62_decode(base62_encode(padding_raw)), padding_raw)
 
     def test_zero_bytes(self):
         self.assertEqual(b62encode(zero_bytes), b('0000'))
         self.assertEqual(b62decode(b('0000')), zero_bytes)
-        self.assertEqual(_b62decode(b('0000')), zero_bytes)
+        self.assertEqual(b62decode_naive(b('0000')), zero_bytes)
         self.assertEqual(b62encode(one_zero_byte), b('0'))
         self.assertEqual(b62decode(b('0')), one_zero_byte)
-        self.assertEqual(_b62decode(b('0')), one_zero_byte)
+        self.assertEqual(b62decode_naive(b('0')), one_zero_byte)
 
         self.assertEqual(base62_encode(zero_bytes), b('0000'))
         self.assertEqual(base62_decode(b('0000')), zero_bytes)
@@ -63,8 +64,8 @@ class Test_base62_codec(unittest2.TestCase):
         self.assertEqual(b62encode(raw_data), encoded)
         self.assertEqual(b62decode(encoded), raw_data)
         self.assertEqual(b62decode(encoded_with_whitespace), raw_data)
-        self.assertEqual(_b62decode(encoded), raw_data)
-        self.assertEqual(_b62decode(encoded_with_whitespace), raw_data)
+        self.assertEqual(b62decode_naive(encoded), raw_data)
+        self.assertEqual(b62decode_naive(encoded_with_whitespace), raw_data)
 
         self.assertEqual(base62_encode(raw_data), encoded)
         self.assertEqual(base62_decode(encoded), raw_data)

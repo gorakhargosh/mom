@@ -34,10 +34,10 @@ from mom._compat import ZERO_BYTE
 from mom.codec.integer import uint_to_bytes
 
 
-def base_decode_to_number(encoded,
-                          base,
-                          ord_lookup_table,
-                          powers):
+def base_to_uint(encoded,
+                 base,
+                 ord_lookup_table,
+                 powers):
     """
     Decodes bytes from the given base into a big integer.
 
@@ -68,9 +68,9 @@ def base_decode_to_number(encoded,
     return number
 
 
-def base_number_to_bytes(number, encoded,
-                         zero_base_char,
-                         zero_byte=ZERO_BYTE):
+def uint_to_base256(number, encoded,
+                    zero_base_char,
+                    zero_byte=ZERO_BYTE):
     if number:
         raw_bytes = uint_to_bytes(number)
     else:

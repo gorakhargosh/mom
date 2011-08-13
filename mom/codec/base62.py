@@ -158,8 +158,8 @@ from __future__ import absolute_import, division
 
 from mom._compat import have_python3, ZERO_BYTE
 from mom.builtins import byte, is_bytes, b
-from mom.codec._base import base_number_to_bytes, base_decode_to_number
-from mom.codec.integer import bytes_to_uint, uint_to_bytes
+from mom.codec._base import uint_to_base256, base_to_uint
+from mom.codec.integer import bytes_to_uint
 from mom.functional import leading
 
 
@@ -254,63 +254,13 @@ def b62decode(encoded,
     encoded = b('').join(encoded.split())
 
     # Convert to big integer.
-    number = base_decode_to_number(encoded, 62, _lookup, _powers)
+    number = base_to_uint(encoded, 62, _lookup, _powers)
 
     # 0 byte is represented using the first character in the character set.
     zero_base_char = _charset[0]
 
     # Adds zero prefix padding if required.
-    return base_number_to_bytes(number, encoded, zero_base_char)
+    return uint_to_base256(number, encoded, zero_base_char)
 
 
-def _b62decode(encoded,
-              _charset=ASCII62_CHARSET,
-              _lookup=ASCII62_ORDS,
-              _zero_byte=ZERO_BYTE):
-    """
-    Base-62 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
 
-    :param encoded:
-        Base-62 encoded bytes.
-    :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII62_CHARSET``
-        that uses natural ASCII order.
-    :param _lookup:
-        (Internal) Ordinal-to-character lookup table for the specified
-        character set.
-    :returns:
-        Raw bytes.
-    """
-    if not is_bytes(encoded):
-        raise TypeError("encoded data must be bytes: got %r" %
-                        type(encoded).__name__)
-
-    # Ignore whitespace.
-    import re
-    WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
-    encoded = re.sub(WHITESPACE_PATTERN, b(''), encoded)
-
-    # Convert to big integer.
-    number = 0
-    for i, x in enumerate(reversed(encoded)):
-        number += _lookup[x] * (62**i)
-
-    # Obtain raw bytes.
-    if number:
-        raw_bytes = uint_to_bytes(number)
-    else:
-        # We don't want to convert to b'\x00' when we get number == 0.
-        # That would add an off-by-one extra zero byte in the result.
-        raw_bytes = b('')
-
-    # Add prefixed padding if required.
-    # 0 byte is represented using the first character in the character set.
-    zero_char = _charset[0]
-    # The extra [0] index in zero_byte_char[0] is for Python2.x-Python3.x
-    # compatibility. Indexing into Python 3 bytes yields an integer, whereas
-    # in Python 2.x it yields a single-byte string.
-    zero_leading = leading(lambda w: w == zero_char[0], encoded)
-    if zero_leading:
-        padding = _zero_byte * zero_leading
-        raw_bytes = padding + raw_bytes
-    return raw_bytes
