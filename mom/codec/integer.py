@@ -358,7 +358,7 @@ def _long_to_bytes(n, blocksize=0):
     blocksize.
     """
     # after much testing, this algorithm was deemed to be the fastest
-    s = ''
+    s = b('')
     n = int(n)
     while n > 0:
         s = pack('>I', n & 0xffffffff) + s
