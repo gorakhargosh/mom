@@ -69,7 +69,6 @@ Functions
 
 from __future__ import absolute_import, division
 
-import re
 from array import array
 from struct import unpack, pack
 from mom import string
@@ -91,7 +90,6 @@ __all__ = [
 
 EXCLAMATION_CHUNK = b('!!!!!')
 ZERO_GROUP_CHAR = b('z')
-WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 # Use this if you want the base85 codec to encode/decode including
 # ASCII85 prefixes/suffixes.
