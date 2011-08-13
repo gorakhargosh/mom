@@ -97,8 +97,8 @@ as new files would be generated every time the source files change.
 Instead, we have chosen to make use of Web server URL-rewriting rules
 to strip the hashed identifier and serve the file fresh as it is on the
 server file system. These are therefore **non-versioned assets**--only
-the URLs that point at them are. That is if you took a diff between these
-the files that these URLs point at::
+the URLs that point at them are versioned. That is if you took a diff
+between the files that these URLs point at::
 
     http://s.example.com/js/pO7arZWO/file.js
     http://s.example.com/js/2qiFqxEm/file.js
