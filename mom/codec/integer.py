@@ -290,7 +290,7 @@ def integer_to_bytes(number, chunk_size=0,
     return raw_bytes
 
 
-def integer_to_bytes_a(number, chunk_size=0,
+def _integer_to_bytes_a(number, chunk_size=0,
                        _zero_byte=ZERO_BYTE,
                        _get_machine_alignment=get_machine_alignment):
     """
@@ -361,7 +361,7 @@ def integer_to_bytes_a(number, chunk_size=0,
 
 
 # From pycrypto (for verification only).
-def long_to_bytes(n, blocksize=0):
+def _long_to_bytes(n, blocksize=0):
     """long_to_bytes(n:long, blocksize:int) : string
     Convert a long integer to a byte string.
 
