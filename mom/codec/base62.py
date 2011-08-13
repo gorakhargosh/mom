@@ -128,7 +128,7 @@ instead. For example::
 
 .. NOTE::
     Do note that the base-58 encoded version of the SHA-1 hash (40 characters
-    in hexadecimal representation) may have length a of either 27 or 28.
+    in hexadecimal representation) may have a length of either 27 or 28.
     Similarly, for the SHA-1 hash (40 characters in hex), the base62-encoded
     version may have a length of either 26 or 27.
     
