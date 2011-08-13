@@ -103,7 +103,7 @@ the files that these URLs point at::
     http://s.example.com/js/pO7arZWO/file.js
     http://s.example.com/js/2qiFqxEm/file.js
 
-you would *not* see a difference. Only the URLs differ to "fool" the browser
+you would *not* see a difference. Only the URLs differ to trick the browser
 into caching as well as it can.
 
 The hashed-identifier is not part of the query string for this asset URL
