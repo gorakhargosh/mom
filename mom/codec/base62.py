@@ -54,15 +54,12 @@ Functions
 
 from __future__ import absolute_import, division
 
-import re
 from mom._compat import have_python3, ZERO_BYTE
 from mom.builtins import byte, is_bytes, b
 from mom.codec._base import base_number_to_bytes, base_decode_to_number
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
 
-
-WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 # Follows ASCII order.
 ASCII62_CHARSET = ("0123456789"
@@ -167,7 +164,6 @@ def b62decode(encoded,
 def _b62decode(encoded,
               _charset=ASCII62_CHARSET,
               _lookup=ASCII62_ORDS,
-              _ignore_pattern=WHITESPACE_PATTERN,
               _zero_byte=ZERO_BYTE):
     """
     Base-62 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
@@ -180,9 +176,6 @@ def _b62decode(encoded,
     :param _lookup:
         (Internal) Ordinal-to-character lookup table for the specified
         character set.
-    :param _ignore_pattern:
-        (Internal) Regular expression pattern to ignore bytes within encoded
-        byte data.
     :returns:
         Raw bytes.
     """
@@ -191,8 +184,9 @@ def _b62decode(encoded,
                         type(encoded).__name__)
 
     # Ignore whitespace.
-    if _ignore_pattern:
-        encoded = re.sub(_ignore_pattern, b(''), encoded)
+    import re
+    WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
+    encoded = re.sub(WHITESPACE_PATTERN, b(''), encoded)
 
     # Convert to big integer.
     number = 0

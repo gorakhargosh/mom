@@ -139,15 +139,12 @@ Functions
 
 from __future__ import absolute_import, division
 
-import re
 from mom._compat import have_python3, ZERO_BYTE, range
 from mom.builtins import byte, is_bytes, b
 from mom.codec._base import base_decode_to_number, base_number_to_bytes
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
 
-
-WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 # Follows ASCII order.
 ASCII58_CHARSET = ("123456789"
@@ -251,7 +248,6 @@ def b58decode(encoded,
 def _b58decode(encoded,
               _charset=ASCII58_CHARSET,
               _lookup=ASCII58_ORDS,
-              _ignore_pattern=WHITESPACE_PATTERN,
               _zero_byte=ZERO_BYTE):
     """
     Simple implementation for benchmarking.
@@ -266,9 +262,6 @@ def _b58decode(encoded,
     :param _lookup:
         (Internal) Ordinal-to-character lookup table for the specified
         character set.
-    :param _ignore_pattern:
-        (Internal) Regular expression pattern to ignore bytes within encoded
-        byte data.
     :returns:
         Raw bytes.
     """
@@ -276,9 +269,11 @@ def _b58decode(encoded,
         raise TypeError("encoded data must be bytes: got %r" %
                         type(encoded).__name__)
 
+    import re
+    WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
+
     # Ignore whitespace.
-    if _ignore_pattern:
-        encoded = re.sub(_ignore_pattern, b(''), encoded)
+    encoded = re.sub(WHITESPACE_PATTERN, b(''), encoded)
 
     # Convert to big integer.
     number = 0
