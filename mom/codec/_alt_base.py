@@ -22,9 +22,82 @@ from mom.builtins import is_bytes, b
 from mom.codec import uint_to_bytes
 from mom.codec.base58 import ASCII58_CHARSET, ASCII58_ORDS
 from mom.codec.base62 import ASCII62_CHARSET, ASCII62_ORDS
+from mom.codec.integer import bytes_to_uint
 from mom.functional import leading
 
 WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
+
+
+def b58encode_naive(raw_bytes,
+                    _charset=ASCII58_CHARSET,
+                    _padding=True,
+                    _zero_byte=ZERO_BYTE):
+    """
+    Base58 encodes a sequence of raw bytes. Zero-byte sequences are
+    preserved by default.
+
+    :param raw_bytes:
+        Raw bytes to encode.
+    :param _charset:
+        (Internal) The character set to use. Defaults to ``ASCII58_CHARSET``
+        that uses natural ASCII order.
+    :param _padding:
+        (Internal) ``True`` (default) to include prefixed zero-byte sequence
+        padding converted to appropriate representation.
+    :returns:
+        Base-58 encoded bytes.
+    """
+    if not is_bytes(raw_bytes):
+        raise TypeError("data must be raw bytes: got %r" %
+                        type(raw_bytes).__name__)
+    number = bytes_to_uint(raw_bytes)
+    encoded = b('')
+    while number > 0:
+        encoded = _charset[number % 58] + encoded
+        number //= 58
+        # The following makes more divmod calls but is 2x faster.
+#        number, remainder = divmod(number, 58)
+#        encoded = _charset[remainder] + encoded
+    if _padding:
+        zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
+        encoded = (_charset[0] * zero_leading) + encoded
+    return encoded
+
+
+def b62encode_naive(raw_bytes,
+                    _charset=ASCII62_CHARSET,
+                    _padding=True,
+                    _zero_byte=ZERO_BYTE):
+    """
+    Base62 encodes a sequence of raw bytes. Zero-byte sequences are
+    preserved by default.
+
+    :param raw_bytes:
+        Raw bytes to encode.
+    :param _charset:
+        (Internal) The character set to use. Defaults to ``ASCII62_CHARSET``
+        that uses natural ASCII order.
+    :param _padding:
+        (Internal) ``True`` (default) to include prefixed zero-byte sequence
+        padding converted to appropriate representation.
+    :returns:
+        Base-62 encoded bytes.
+    """
+    if not is_bytes(raw_bytes):
+        raise TypeError("data must be raw bytes: got %r" %
+                        type(raw_bytes).__name__)
+    number = bytes_to_uint(raw_bytes)
+    encoded = b('')
+    while number > 0:
+        encoded = _charset[number % 62] + encoded
+        number //= 62
+        # The following makes more divmod calls but is 2x faster.
+#        number, remainder = divmod(number, 62)
+#        encoded = _charset[remainder] + encoded
+    if _padding:
+        zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
+        encoded = (_charset[0] * zero_leading) + encoded
+    return encoded
 
 
 def b62decode_naive(encoded,
