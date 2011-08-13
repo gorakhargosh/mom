@@ -40,6 +40,16 @@ random_long_value = generate_random_uint_between(0, 99999999999999999)
 zero_long = 0
 negative_long_value = -1
 
+long_value = 71671831749689734735896910666236152091910950933161125188784836897624039426313152092699961904060141667369
+expected_blocksize_bytes = b('''\
+\x00\x01\xff\xff\xff\xff\xff\xff\xff\xff\x000 0\x0c\x06\x08*\x86H\x86\
+\xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)''')
+long_value_blocksize = 45
+expected_bytes = b('''\
+\x01\xff\xff\xff\xff\xff\xff\xff\xff\x000 0\x0c\x06\x08*\x86H\x86\
+\xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)''')
+
+
 base85_raw = b("""Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
 mind, that by a perseverance of delight in the continued and
@@ -255,7 +265,26 @@ class Test_integer_to_bytes(unittest2.TestCase):
         self.assertEqual(_integer_to_bytes_python_rsa(123456789), b('\x07[\xcd\x15'))
         self.assertEqual(_integer_to_bytes_array_based(123456789), b('\x07[\xcd\x15'))
 
+        self.assertEqual(integer_to_bytes(long_value),
+                         expected_bytes)
+        self.assertEqual(integer_to_bytes_a(long_value),
+                         expected_bytes)
+        self.assertEqual(_integer_to_bytes_python_rsa(long_value),
+                         expected_bytes)
+        self.assertEqual(_integer_to_bytes_array_based(long_value),
+                         expected_bytes)
+
     def test_chunk_size(self):
+        self.assertEqual(integer_to_bytes(long_value, long_value_blocksize),
+                         expected_blocksize_bytes)
+        self.assertEqual(integer_to_bytes_a(long_value, long_value_blocksize),
+                         expected_blocksize_bytes)
+        self.assertEqual(_integer_to_bytes_python_rsa(long_value, long_value_blocksize),
+                         expected_blocksize_bytes)
+        self.assertEqual(_integer_to_bytes_array_based(long_value, long_value_blocksize),
+                         expected_blocksize_bytes)
+
+
         self.assertEqual(integer_to_bytes(123456789, 6),
                          b('\x00\x00\x07[\xcd\x15'))
         self.assertEqual(integer_to_bytes(123456789, 7),

@@ -255,11 +255,8 @@ def integer_to_bytes(number, chunk_size=0,
     if number < 0:
         raise ValueError('Number must be unsigned integer: %d' % number)
 
-#    count = 0
     raw_bytes = b('')
     if not number:
-        # Count the zero byte as well.
-#        count = 1
         raw_bytes = _zero_byte
 
     # Align packing to machine word size.
@@ -268,7 +265,6 @@ def integer_to_bytes(number, chunk_size=0,
     pack_format = ">" + pack_type
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
-#        count += 1
         num >>= word_bits
 
     # Count the number of zero prefix bytes.
@@ -276,25 +272,21 @@ def integer_to_bytes(number, chunk_size=0,
     for zero_leading, x in enumerate(raw_bytes):
         if x != _zero_byte[0]:
             break
-
+    raw_bytes = raw_bytes[zero_leading:]
+    
     if chunk_size > 0:
         # Bounds checking. We're not doing this up-front because the
         # most common use case is not specifying a chunk size. In the worst
         # case, the number will already have been converted to bytes above.
-        #length = count * word_bytes
         length = len(raw_bytes)
-        #assert l == length
-        bytes_needed = length - zero_leading
-        if bytes_needed > chunk_size:
+        if length > chunk_size:
             raise OverflowError(
                 "Need %d bytes for number, but chunk size is %d" %
-                (bytes_needed, chunk_size)
+                (length, chunk_size)
             )
         remainder = length % chunk_size
         if remainder:
             raw_bytes = (chunk_size - remainder) * _zero_byte + raw_bytes
-    else:
-        raw_bytes = raw_bytes[zero_leading:]
     return raw_bytes
 
 
@@ -323,15 +315,11 @@ def integer_to_bytes_a(number, chunk_size=0,
         bytes than fit into the block.
     """
     # Machine word aligned byte array based implementation.
-
     if number < 0:
         raise ValueError('Number must be unsigned integer: %d' % number)
 
-#    count = 0
     raw_bytes = b('')
     if not number:
-#        # Count the zero byte as well.
-#        count = 1
         raw_bytes = ZERO_BYTE
 
     # Align packing to machine word size.
@@ -354,23 +342,51 @@ def integer_to_bytes_a(number, chunk_size=0,
     for zero_leading in range(length):
         if a[zero_leading]:
             break
-
-    raw_bytes = a.tostring()
+    raw_bytes = a[zero_leading:].tostring()
+    
     if chunk_size > 0:
         # Bounds checking. We're not doing this up-front because the
         # most common use case is not specifying a chunk size. In the worst
         # case, the number will already have been converted to bytes above.
-        #length = count * word_bytes
-        #assert l == length
-        bytes_needed = length - zero_leading
-        if bytes_needed > chunk_size:
+        length = len(raw_bytes)
+        if length > chunk_size:
             raise OverflowError(
                 "Need %d bytes for number, but chunk size is %d" %
-                (bytes_needed, chunk_size)
+                (length, chunk_size)
             )
         remainder = length % chunk_size
         if remainder:
             raw_bytes = (chunk_size - remainder) * _zero_byte + raw_bytes
-    else:
-        raw_bytes = raw_bytes[zero_leading:]
     return raw_bytes
+
+
+# From pycrypto (for verification only).
+def long_to_bytes(n, blocksize=0):
+    """long_to_bytes(n:long, blocksize:int) : string
+    Convert a long integer to a byte string.
+
+    If optional blocksize is given and greater than zero, pad the front of the
+    byte string with binary zeros so that the length is a multiple of
+    blocksize.
+    """
+    # after much testing, this algorithm was deemed to be the fastest
+    s = ''
+    n = int(n)
+    while n > 0:
+        s = pack('>I', n & 0xffffffff) + s
+        n >>= 32
+    # strip off leading zeros
+    for i in range(len(s)):
+        if s[i] != b('\000')[0]:
+            break
+    else:
+        # only happens when n == 0
+        s = b('\000')
+        i = 0
+    s = s[i:]
+    # add back some pad bytes. this could be done more efficiently w.r.t. the
+    # de-padding being done above, but sigh...
+    if blocksize > 0 and len(s) % blocksize:
+        s = (blocksize - len(s) % blocksize) * b('\000') + s
+    return s
+
