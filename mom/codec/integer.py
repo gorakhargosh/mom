@@ -131,10 +131,6 @@ def _integer_to_bytes_array_based(number, chunk_size=0):
     :returns:
         Long.
     """
-# Even without this check a type error will be raised. Reduces overhead.
-#    if not is_integer(number):
-#        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
-#            type(number).__name__)
 
     if number < 0:
         raise ValueError('Negative numbers cannot be used: %i' % number)
@@ -181,11 +177,6 @@ def _integer_to_bytes_python_rsa(number, block_size=0):
         ``OverflowError`` when block_size is given and the number takes up more
         bytes than fit into the block.
     """
-
-# Even without this check a type error will be raised. Reduces overhead.
-#    if not is_integer(number):
-#        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
-#            type(number).__name__)
 
     if number < 0:
         raise ValueError('Negative numbers cannot be used: %d' % number)
@@ -243,15 +234,7 @@ def integer_to_bytes(number, chunk_size=0,
         bytes than fit into the block.
     """
     # Machine word-aligned implementation.
-    # ~19x faster than naive implementation on 32-bit processors.
-    # ~33x faster than naive implementation on 64-bit processors.
-    # ~50x faster on 64-bit pypy 1.5
     
-# Even without this check a type error will be raised. Reduces overhead.
-#    if not is_integer(number):
-#        raise TypeError("Expected unsigned integer as argument 1, got: %r" %
-#            type(number).__name__)
-
     if number < 0:
         raise ValueError('Number must be unsigned integer: %d' % number)
 
