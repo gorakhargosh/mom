@@ -110,7 +110,7 @@ POW_58 = tuple(58**power for power in range(256))
 
 
 def b58encode(raw_bytes,
-              _charset=ASCII58_CHARSET, _padding=False, _zero_byte=ZERO_BYTE):
+              _charset=ASCII58_CHARSET, _padding=True, _zero_byte=ZERO_BYTE):
     """
     Base58 encodes a sequence of raw bytes. Zero-byte sequences are
     preserved by default.
