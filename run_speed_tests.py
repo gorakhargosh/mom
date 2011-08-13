@@ -5,6 +5,9 @@ import sys
 from tests.speed import report
 
 setups = [
+    "from mom.codec.base58 import b58decode, b58encode; import os; b = b58encode(os.urandom(60))",
+    "from mom.codec.base58 import _b58decode, b58encode; import os; b = b58encode(os.urandom(60))",
+    None,
     "from mom.builtins import integer_byte_length; n=1<<4096",
     "from mom.builtins import _integer_byte_length; n=1<<4096",
     "from mom.builtins import _integer_byte_length_1; n=1<<4096",
@@ -23,6 +26,9 @@ setups = [
     "import os; from mom.codec.integer import _bytes_to_integer; b = os.urandom(4003)",
 ]
 statements = [
+    "b58decode(b)",
+    "_b58decode(b)",
+    None,
     "integer_byte_length(n)",
     "_integer_byte_length(n)",
     "_integer_byte_length_1(n)",

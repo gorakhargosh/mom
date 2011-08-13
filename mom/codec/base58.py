@@ -140,7 +140,7 @@ Functions
 from __future__ import absolute_import, division
 
 import re
-from mom._compat import have_python3, ZERO_BYTE
+from mom._compat import have_python3, ZERO_BYTE, range
 from mom.builtins import byte, is_bytes, b
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
@@ -171,6 +171,11 @@ ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_CHARSET))
 if have_python3:
     ASCII58_CHARSET = tuple(byte(x) for x in ASCII58_CHARSET)
     ALT58_CHARSET = tuple(byte(x) for x in ALT58_CHARSET)
+
+# If you're going to make people type stuff longer than 40
+# characters, I don't know what to tell you. Beyond 40 powers
+# are computed, so be careful if you care about computation speed.
+POW_58 = tuple(58**power for power in range(40))
 
 
 def b58encode(raw_bytes,
@@ -208,10 +213,78 @@ def b58decode(encoded,
               _charset=ASCII58_CHARSET,
               _lookup=ASCII58_ORDS,
               _ignore_pattern=WHITESPACE_PATTERN,
-              _zero_byte=ZERO_BYTE):
+              _zero_byte=ZERO_BYTE,
+              _pow_58=POW_58,
+              _pow_len=len(POW_58)):
     """
     Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
     
+    :param encoded:
+        Base-58 encoded bytes.
+    :param _charset:
+        (Internal) The character set to use. Defaults to ``ASCII58_CHARSET``
+        that uses natural ASCII order.
+    :param _lookup:
+        (Internal) Ordinal-to-character lookup table for the specified
+        character set.
+    :param _ignore_pattern:
+        (Internal) Regular expression pattern to ignore bytes within encoded
+        byte data.
+    :returns:
+        Raw bytes.
+    """
+    if not is_bytes(encoded):
+        raise TypeError("encoded data must be bytes: got %r" %
+                        type(encoded).__name__)
+
+    # Ignore whitespace.
+    if _ignore_pattern:
+        encoded = re.sub(_ignore_pattern, b(''), encoded)
+
+#    # Convert to big integer.
+#    number = 0
+#    for i, x in enumerate(reversed(encoded)):
+#        number += _lookup[x] * (58**i)
+    # Above loop divided into precomputed powers section and computed.
+    number = 0
+    length = len(encoded)
+    for i, x in enumerate(encoded[length:-_pow_len-1:-1]):
+        number += _lookup[x] * _pow_58[i]
+    for i in range(_pow_len, length):
+        x = encoded[length - i - 1]
+        number += _lookup[x] * (58**i)
+
+    # Obtain raw bytes.
+    if number:
+        raw_bytes = integer_to_bytes(number)
+    else:
+        # We don't want to convert to b'\x00' when we get number == 0.
+        # That would add an off-by-one extra zero byte in the result.
+        raw_bytes = b('')
+
+    # Add prefixed padding if required.
+    # 0 byte is represented using the first character in the character set.
+    zero_char = _charset[0]
+    # The extra [0] index in zero_byte_char[0] is for Python2.x-Python3.x
+    # compatibility. Indexing into Python 3 bytes yields an integer, whereas
+    # in Python 2.x it yields a single-byte string.
+    zero_leading = leading(lambda w: w == zero_char[0], encoded)
+    if zero_leading:
+        padding = _zero_byte * zero_leading
+        raw_bytes = padding + raw_bytes
+    return raw_bytes
+
+
+def _b58decode(encoded,
+              _charset=ASCII58_CHARSET,
+              _lookup=ASCII58_ORDS,
+              _ignore_pattern=WHITESPACE_PATTERN,
+              _zero_byte=ZERO_BYTE):
+    """
+    Simple implementation for benchmarking.
+
+    Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
+
     :param encoded:
         Base-58 encoded bytes.
     :param _charset:
