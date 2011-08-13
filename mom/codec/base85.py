@@ -362,7 +362,6 @@ def b85decode(encoded,
               suffix=None,
               _base85_bytes=ASCII85_BYTES,
               _base85_ords=ASCII85_ORDS,
-              _ignore_pattern=WHITESPACE_PATTERN,
               _uncompact_zero=True,
               _compact_char=ZERO_GROUP_CHAR):
     """
@@ -379,9 +378,6 @@ def b85decode(encoded,
     :param _base85_ords:
         (Internal) A function to convert a base85 character to its ordinal
         value. You should not need to use this.
-    :param _ignore_pattern:
-        (Internal) By default all whitespace is ignored. This must be an
-        ``re.compile()`` instance. You should not need to use this.
     :param _uncompact_zero:
         (Internal) Treats 'z' (a zero-group (\x00\x00\x00\x00)) as a '!!!!!'
         if ``True`` (default).
@@ -407,8 +403,7 @@ def b85decode(encoded,
         )
 
     # ASCII-85 ignores whitespace.
-    if _ignore_pattern:
-        encoded = re.sub(_ignore_pattern, b(''), encoded)
+    encoded = b('').join(encoded.split())
 
     # Strip the prefix and suffix.
     if prefix and encoded.startswith(prefix):
@@ -456,8 +451,7 @@ def rfc1924_b85encode(raw_bytes,
     return _b85encode_chunks(raw_bytes, RFC1924_BYTES, _padding)
 
 
-def rfc1924_b85decode(encoded,
-                      _ignore_pattern=WHITESPACE_PATTERN):
+def rfc1924_b85decode(encoded):
     """
     Base85 decodes using the RFC1924 character set.
 
@@ -468,9 +462,6 @@ def rfc1924_b85decode(encoded,
     :see: http://tools.ietf.org/html/rfc1924
     :param encoded:
         RFC1924 Base85 encoded string.
-    :param _ignore_pattern:
-        (Internal) By default all whitespace is ignored. This must be an
-        ``re.compile()`` instance. You should not need to use this.
     :returns:
         Decoded bytes.
     """
@@ -478,9 +469,8 @@ def rfc1924_b85decode(encoded,
         raise TypeError(
             "Encoded sequence must be bytes: got %r" % type(encoded).__name__
         )
-    # Ignores whitespace.
-    if _ignore_pattern:
-        encoded = re.sub(_ignore_pattern, b(''), encoded)
+    # Ignore whitespace.
+    encoded = b('').join(encoded.split())
     return _b85decode_chunks(encoded, RFC1924_BYTES, RFC1924_ORDS)
 
 
@@ -542,8 +532,8 @@ def ipv6_b85decode(encoded,
     Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
     representation. Used to base85-decode IPv6 addresses or 128-bit chunks.
 
-    The encoded string must not contain whitespace; otherwise, an
-    ``OverflowError`` will be raised.
+    Whitespace is ignored. Raises an ``OverflowError`` if stray characters
+    are found.
 
     :param encoded:
         RFC1924 Base85-encoded string.
@@ -556,8 +546,13 @@ def ipv6_b85decode(encoded,
         raise TypeError(
             "Encoded sequence must be bytes: got %r" % type(encoded).__name__
         )
+
+    # Ignore whitespace.
+    encoded = b('').join(encoded.split())
+
     if len(encoded) != 20:
         raise ValueError("Not 20 encoded bytes: %r" % encoded)
+
     #uint128 = 0
     #for char in encoded:
     #    uint128 = uint128 * 85 + _base85_ords[byte_ord(char)]

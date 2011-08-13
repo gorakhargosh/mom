@@ -130,7 +130,6 @@ def b62encode(raw_bytes,
 def b62decode(encoded,
               _charset=ASCII62_CHARSET,
               _lookup=ASCII62_ORDS,
-              _ignore_pattern=WHITESPACE_PATTERN,
               _powers=POW_62):
     """
     Base-62 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
@@ -143,9 +142,6 @@ def b62decode(encoded,
     :param _lookup:
         (Internal) Ordinal-to-character lookup table for the specified
         character set.
-    :param _ignore_pattern:
-        (Internal) Regular expression pattern to ignore bytes within encoded
-        byte data.
     :param _powers:
         (Internal) Tuple of Pre-computed powers of 62.
     :returns:
@@ -156,8 +152,7 @@ def b62decode(encoded,
                         type(encoded).__name__)
 
     # Ignore whitespace.
-    if _ignore_pattern:
-        encoded = re.sub(_ignore_pattern, b(''), encoded)
+    encoded = b('').join(encoded.split())
 
     # Convert to big integer.
     number = base_decode_to_number(encoded, 62, _lookup, _powers)

@@ -262,9 +262,16 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
     def test_ValueError_when_encoded_length_not_20(self):
         self.assertRaises(ValueError, ipv6_b85decode,
                           b('=r54lj&NUUO~Hi%c2ym0='))
+        self.assertRaises(ValueError, ipv6_b85decode,
+                          b('=r54lj&NUUO='))
 
     def test_TypeError_when_not_number(self):
         self.assertRaises(TypeError, ipv6_b85encode, None)
 
-    def test_OverflowError_when_whitespace_found(self):
-        self.assertRaises(OverflowError, ipv6_b85decode, b('=r54lj&\nUUO Hi%c2ym0'))
+    def test_ignores_whitespace(self):
+        self.assertEqual(ipv6_b85decode(b('=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0')),
+                         ipv6_number_2)
+
+    def test_OverflowError_when_stray_characters_found(self):
+        self.assertRaises(OverflowError, ipv6_b85decode,
+                          b('=r54lj&NUUO~Hi,./:[]'))

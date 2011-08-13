@@ -214,7 +214,6 @@ def b58encode(raw_bytes,
 def b58decode(encoded,
               _charset=ASCII58_CHARSET,
               _lookup=ASCII58_ORDS,
-              _ignore_pattern=WHITESPACE_PATTERN,
               _powers=POW_58):
     """
     Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
@@ -227,9 +226,6 @@ def b58decode(encoded,
     :param _lookup:
         (Internal) Ordinal-to-character lookup table for the specified
         character set.
-    :param _ignore_pattern:
-        (Internal) Regular expression pattern to ignore bytes within encoded
-        byte data.
     :param _powers:
         (Internal) Tuple of Pre-computed powers of 58.
     :returns:
@@ -240,8 +236,7 @@ def b58decode(encoded,
                         type(encoded).__name__)
 
     # Ignore whitespace.
-    if _ignore_pattern:
-        encoded = re.sub(_ignore_pattern, b(''), encoded)
+    encoded = b('').join(encoded.split())
 
     # Convert to big integer.
     number = base_decode_to_number(encoded, 58, _lookup, _powers)
