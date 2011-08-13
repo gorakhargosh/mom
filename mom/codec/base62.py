@@ -96,7 +96,17 @@ because that would cause an unnecessary explosion of files on the server
 as new files would be generated every time the source files change.
 Instead, we have chosen to make use of Web server URL-rewriting rules
 to strip the hashed identifier and serve the file fresh as it is on the
-server file system. These are therefore **non-versioned assets**.
+server file system. These are therefore **non-versioned assets**--only
+the URLs that point at them are. That is if you took a diff between::
+
+    http://s.example.com/js/pO7arZWO/file.js
+
+and::
+
+    http://s.example.com/js/2qiFqxEm/file.js
+
+You would *not* see a difference. Only the URLs differ to "fool" the browser
+into caching as well as it can.
 
 The hashed-identifier is not part of the query string for this asset URL
 because certain proxies do not cache files served from URLs that include
