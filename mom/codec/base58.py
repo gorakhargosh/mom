@@ -142,6 +142,7 @@ from __future__ import absolute_import, division
 import re
 from mom._compat import have_python3, ZERO_BYTE, range
 from mom.builtins import byte, is_bytes, b
+from mom.codec._base import base_decode_to_number, base_number_to_bytes
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
 
@@ -154,7 +155,6 @@ ASCII58_CHARSET = ("123456789"
                   "abcdefghijkmnopqrstuvwxyz").encode("ascii")
 # Therefore, b'1' represents b'\0'.
 ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_CHARSET))
-
 
 
 # Really, I don't understand why people use the non-ASCII order,
@@ -172,10 +172,12 @@ if have_python3:
     ASCII58_CHARSET = tuple(byte(x) for x in ASCII58_CHARSET)
     ALT58_CHARSET = tuple(byte(x) for x in ALT58_CHARSET)
 
-# If you're going to make people type stuff longer than 40
-# characters, I don't know what to tell you. Beyond 40 powers
+# If you're going to make people type stuff longer than this length
+# I don't know what to tell you. Beyond this length powers
 # are computed, so be careful if you care about computation speed.
-POW_58 = tuple(58**power for power in range(40))
+# I think this is a VERY generous range. Most of the stuff you decode
+# that is smaller than 256 bytes will be very fast.
+POW_58 = tuple(58**power for power in range(256))
 
 
 def b58encode(raw_bytes,
@@ -213,9 +215,7 @@ def b58decode(encoded,
               _charset=ASCII58_CHARSET,
               _lookup=ASCII58_ORDS,
               _ignore_pattern=WHITESPACE_PATTERN,
-              _zero_byte=ZERO_BYTE,
-              _pow_58=POW_58,
-              _pow_len=len(POW_58)):
+              _powers=POW_58):
     """
     Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
     
@@ -230,6 +230,8 @@ def b58decode(encoded,
     :param _ignore_pattern:
         (Internal) Regular expression pattern to ignore bytes within encoded
         byte data.
+    :param _powers:
+        (Internal) Tuple of Pre-computed powers of 58.
     :returns:
         Raw bytes.
     """
@@ -241,38 +243,14 @@ def b58decode(encoded,
     if _ignore_pattern:
         encoded = re.sub(_ignore_pattern, b(''), encoded)
 
-#    # Convert to big integer.
-#    number = 0
-#    for i, x in enumerate(reversed(encoded)):
-#        number += _lookup[x] * (58**i)
-    # Above loop divided into precomputed powers section and computed.
-    number = 0
-    length = len(encoded)
-    for i, x in enumerate(encoded[length:-_pow_len-1:-1]):
-        number += _lookup[x] * _pow_58[i]
-    for i in range(_pow_len, length):
-        x = encoded[length - i - 1]
-        number += _lookup[x] * (58**i)
-
-    # Obtain raw bytes.
-    if number:
-        raw_bytes = integer_to_bytes(number)
-    else:
-        # We don't want to convert to b'\x00' when we get number == 0.
-        # That would add an off-by-one extra zero byte in the result.
-        raw_bytes = b('')
-
-    # Add prefixed padding if required.
+    # Convert to big integer.
+    number = base_decode_to_number(encoded, 58, _lookup, _powers)
+    
     # 0 byte is represented using the first character in the character set.
-    zero_char = _charset[0]
-    # The extra [0] index in zero_byte_char[0] is for Python2.x-Python3.x
-    # compatibility. Indexing into Python 3 bytes yields an integer, whereas
-    # in Python 2.x it yields a single-byte string.
-    zero_leading = leading(lambda w: w == zero_char[0], encoded)
-    if zero_leading:
-        padding = _zero_byte * zero_leading
-        raw_bytes = padding + raw_bytes
-    return raw_bytes
+    zero_base_char = _charset[0]
+
+    # Adds zero prefix padding if required.
+    return base_number_to_bytes(number, encoded, zero_base_char)
 
 
 def _b58decode(encoded,

@@ -57,6 +57,7 @@ from __future__ import absolute_import, division
 import re
 from mom._compat import have_python3, ZERO_BYTE
 from mom.builtins import byte, is_bytes, b
+from mom.codec._base import base_number_to_bytes, base_decode_to_number
 from mom.codec.integer import bytes_to_integer, integer_to_bytes
 from mom.functional import leading
 
@@ -86,6 +87,13 @@ ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_CHARSET))
 if have_python3:
     ASCII62_CHARSET = tuple(byte(x) for x in ASCII62_CHARSET)
     ALT62_CHARSET = tuple(byte(x) for x in ALT62_CHARSET)
+
+# If you're going to make people type stuff longer than this length
+# I don't know what to tell you. Beyond this length powers
+# are computed, so be careful if you care about computation speed.
+# I think this is a VERY generous range. Most of the stuff you decode
+# that is smaller than 256 bytes will be very fast.
+POW_62 = tuple(62**power for power in range(256))
 
 
 def b62encode(raw_bytes,
@@ -120,6 +128,48 @@ def b62encode(raw_bytes,
 
 
 def b62decode(encoded,
+              _charset=ASCII62_CHARSET,
+              _lookup=ASCII62_ORDS,
+              _ignore_pattern=WHITESPACE_PATTERN,
+              _powers=POW_62):
+    """
+    Base-62 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
+
+    :param encoded:
+        Base-62 encoded bytes.
+    :param _charset:
+        (Internal) The character set to use. Defaults to ``ASCII62_CHARSET``
+        that uses natural ASCII order.
+    :param _lookup:
+        (Internal) Ordinal-to-character lookup table for the specified
+        character set.
+    :param _ignore_pattern:
+        (Internal) Regular expression pattern to ignore bytes within encoded
+        byte data.
+    :param _powers:
+        (Internal) Tuple of Pre-computed powers of 62.
+    :returns:
+        Raw bytes.
+    """
+    if not is_bytes(encoded):
+        raise TypeError("encoded data must be bytes: got %r" %
+                        type(encoded).__name__)
+
+    # Ignore whitespace.
+    if _ignore_pattern:
+        encoded = re.sub(_ignore_pattern, b(''), encoded)
+
+    # Convert to big integer.
+    number = base_decode_to_number(encoded, 62, _lookup, _powers)
+
+    # 0 byte is represented using the first character in the character set.
+    zero_base_char = _charset[0]
+
+    # Adds zero prefix padding if required.
+    return base_number_to_bytes(number, encoded, zero_base_char)
+
+
+def _b62decode(encoded,
               _charset=ASCII62_CHARSET,
               _lookup=ASCII62_ORDS,
               _ignore_pattern=WHITESPACE_PATTERN,
