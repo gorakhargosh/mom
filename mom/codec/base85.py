@@ -69,6 +69,13 @@ Functions
 
 from __future__ import absolute_import, division
 
+try:
+    # Use psyco if available.
+    import psyco
+    psyco.full()
+except ImportError:
+    pass
+
 from array import array
 from struct import unpack, pack
 from mom import string
