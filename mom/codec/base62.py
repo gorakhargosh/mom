@@ -156,9 +156,9 @@ Functions
 
 from __future__ import absolute_import, division
 
-from mom._compat import have_python3, ZERO_BYTE
+from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE
 from mom.builtins import byte, is_bytes, b, bytes_leading
-from mom.codec._base import uint_to_base256, base_to_uint
+from mom.codec._base import uint_to_base256, base_to_uint, base_encode, base_decode
 from mom.codec.integer import bytes_to_uint
 
 
@@ -195,14 +195,15 @@ POW_62 = tuple(62**power for power in range(512))
 
 
 def b62encode(raw_bytes,
-              _charset=ASCII62_BYTES, _padding=True, _zero_byte=ZERO_BYTE):
+              base_bytes=ASCII62_BYTES,
+              _padding=True):
     """
     Base62 encodes a sequence of raw bytes. Zero-byte sequences are
     preserved by default.
 
     :param raw_bytes:
         Raw bytes to encode.
-    :param _charset:
+    :param base_bytes:
         (Internal) The character set to use. Defaults to ``ASCII62_BYTES``
         that uses natural ASCII order.
     :param _padding:
@@ -211,33 +212,21 @@ def b62encode(raw_bytes,
     :returns:
         Base-62 encoded bytes.
     """
-    if not is_bytes(raw_bytes):
-        raise TypeError("data must be raw bytes: got %r" %
-                        type(raw_bytes).__name__)
-    number = bytes_to_uint(raw_bytes)
-    encoded = b('')
-    while number > 0:
-        number, remainder = divmod(number, 62)
-        encoded = _charset[remainder] + encoded
-    if _padding:
-        zero_leading = bytes_leading(raw_bytes)
-        encoded = (_charset[0] * zero_leading) + encoded
-    return encoded
+    return base_encode(raw_bytes, 62, base_bytes, base_bytes[0], _padding)
 
 
 def b62decode(encoded,
-              _charset=ASCII62_BYTES,
-              _lookup=ASCII62_ORDS,
-              _powers=POW_62):
+              base_bytes=ASCII62_BYTES,
+              base_ords=ASCII62_ORDS):
     """
     Base-62 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
 
     :param encoded:
         Base-62 encoded bytes.
-    :param _charset:
+    :param base_bytes:
         (Internal) The character set to use. Defaults to ``ASCII62_BYTES``
         that uses natural ASCII order.
-    :param _lookup:
+    :param base_ords:
         (Internal) Ordinal-to-character lookup table for the specified
         character set.
     :param _powers:
@@ -245,21 +234,6 @@ def b62decode(encoded,
     :returns:
         Raw bytes.
     """
-    if not is_bytes(encoded):
-        raise TypeError("encoded data must be bytes: got %r" %
-                        type(encoded).__name__)
-
-    # Ignore whitespace.
-    encoded = b('').join(encoded.split())
-
-    # Convert to big integer.
-    number = base_to_uint(encoded, 62, _lookup, _powers)
-
-    # 0 byte is represented using the first character in the character set.
-    zero_base_char = _charset[0]
-
-    # Adds zero prefix padding if required.
-    return uint_to_base256(number, encoded, zero_base_char)
-
-
-
+    # Zero byte is represented using the first character in the character set.
+    # Adds zero byte prefix padding if required.
+    return base_decode(encoded, 62, base_ords, base_bytes[0], POW_62)

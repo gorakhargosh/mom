@@ -70,9 +70,9 @@ Functions
 from __future__ import absolute_import, division
 
 from collections import deque
-from mom._compat import have_python3, ZERO_BYTE, range
+from mom._compat import have_python3, ZERO_BYTE, range, EMPTY_BYTE
 from mom.builtins import byte, is_bytes, b, bytes_leading
-from mom.codec._base import base_to_uint, uint_to_base256
+from mom.codec._base import base_to_uint, uint_to_base256, base_encode, base_decode
 from mom.codec.integer import bytes_to_uint
 
 
@@ -124,33 +124,21 @@ def b58encode(raw_bytes,
     :returns:
         Base-58 encoded bytes.
     """
-    if not is_bytes(raw_bytes):
-        raise TypeError("data must be raw bytes: got %r" %
-                        type(raw_bytes).__name__)
-    number = bytes_to_uint(raw_bytes)
-    encoded = b('')
-    while number > 0:
-        number, remainder = divmod(number, 58)
-        encoded = base_bytes[remainder] + encoded
-    if _padding:
-        zero_leading = bytes_leading(raw_bytes)
-        encoded = (base_bytes[0] * zero_leading) + encoded
-    return encoded
+    return base_encode(raw_bytes, 58, base_bytes, base_bytes[0], _padding)
 
 
 def b58decode(encoded,
-              _charset=ASCII58_BYTES,
-              _lookup=ASCII58_ORDS,
-              _powers=POW_58):
+              base_bytes=ASCII58_BYTES,
+              base_ords=ASCII58_ORDS):
     """
     Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
     
     :param encoded:
         Base-58 encoded bytes.
-    :param _charset:
+    :param base_bytes:
         (Internal) The character set to use. Defaults to ``ASCII58_BYTES``
         that uses natural ASCII order.
-    :param _lookup:
+    :param base_ords:
         (Internal) Ordinal-to-character lookup table for the specified
         character set.
     :param _powers:
@@ -158,18 +146,7 @@ def b58decode(encoded,
     :returns:
         Raw bytes.
     """
-    if not is_bytes(encoded):
-        raise TypeError("encoded data must be bytes: got %r" %
-                        type(encoded).__name__)
+    # Zero byte is represented using the first character in the character set.
+    # Adds zero byte prefix padding if required.
+    return base_decode(encoded, 58, base_ords, base_bytes[0], POW_58)
 
-    # Ignore whitespace.
-    encoded = b('').join(encoded.split())
-
-    # Convert to big integer.
-    number = base_to_uint(encoded, 58, _lookup, _powers)
-    
-    # 0 byte is represented using the first character in the character set.
-    zero_base_char = _charset[0]
-
-    # Adds zero prefix padding if required.
-    return uint_to_base256(number, encoded, zero_base_char)

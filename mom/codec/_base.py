@@ -31,8 +31,34 @@ except ImportError:
     pass
 
 from mom._compat import ZERO_BYTE, EMPTY_BYTE
-from mom.codec.integer import uint_to_bytes
-from mom.builtins import bytes_leading
+from mom.codec.integer import uint_to_bytes, bytes_to_uint
+from mom.builtins import bytes_leading, is_bytes
+
+
+def base_encode(raw_bytes, base, base_bytes, base_zero, padding=True):
+    if not is_bytes(raw_bytes):
+        raise TypeError("data must be raw bytes: got %r" %
+                        type(raw_bytes).__name__)
+    number = bytes_to_uint(raw_bytes)
+    encoded = EMPTY_BYTE
+    while number > 0:
+        number, remainder = divmod(number, base)
+        encoded = base_bytes[remainder] + encoded
+    if padding:
+        zero_leading = bytes_leading(raw_bytes)
+        encoded = encoded.rjust(len(encoded) + zero_leading, base_zero)
+    return encoded
+
+
+def base_decode(encoded, base, base_ords, base_zero, powers):
+    if not is_bytes(encoded):
+        raise TypeError("encoded data must be bytes: got %r" %
+                        type(encoded).__name__)
+    # Ignore whitespace.
+    encoded = EMPTY_BYTE.join(encoded.split())
+    # Convert to big integer.
+    number = base_to_uint(encoded, base, base_ords, powers)
+    return uint_to_base256(number, encoded, base_zero)
 
 
 def base_to_uint(encoded,
