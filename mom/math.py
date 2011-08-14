@@ -34,9 +34,8 @@ Primes
 """
 
 from __future__ import absolute_import, division
-from mom.builtins import is_integer
 from mom.security.random import generate_random_uint_between
-from mom._prime_sieve import sieve
+from mom.prime_sieve import sieve
 from mom._compat import range
 
 
@@ -49,6 +48,7 @@ __all__ = [
     "generate_random_prime",
     "generate_random_safe_prime",
 ]
+
 
 def gcd(num_a, num_b):
     """

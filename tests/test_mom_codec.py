@@ -27,7 +27,7 @@ from mom.codec._alt_integer import \
 from mom.codec.integer import \
     bytes_to_uint, \
     uint_to_bytes
-from mom._prime_sieve import make_prime_sieve
+from mom.prime_sieve import sieve
 from tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
@@ -78,8 +78,6 @@ url_safety_test_standard_encoded = \
     b('R4FZmkud8umBBsa+NqUOwGuRSQXe2NzWp/KfCYyhpvMZxwv9PXoCWr5SwMZ+YN1mekE=')
 url_safety_test_safe_encoded = \
     b('R4FZmkud8umBBsa-NqUOwGuRSQXe2NzWp_KfCYyhpvMZxwv9PXoCWr5SwMZ-YN1mekE')
-
-sieve = make_prime_sieve(10000)
 
 class Test_base85_codec(unittest2.TestCase):
     def test_codec_identity(self):
