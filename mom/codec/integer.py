@@ -84,12 +84,15 @@ def bytes_to_uint(raw_bytes):
     return int(binascii.b2a_hex(raw_bytes), 16)
 
 
-def unsigned_integer_to_bytes(number):
+def unsigned_integer_to_bytes(number, fill_size=0, chunk_size=0):
     if number < 0:
         raise ValueError("Number must be an unsigned integer: %d" % number)
 
-    # Ensure the number is an integer.
-    number & 1
+    if fill_size and chunk_size:
+        raise ValueError("You can either fill or pad chunks, but not both")
+
+    # Ensure these are integers.
+    number & 1 and chunk_size & 1 and fill_size & 1
 
     raw_bytes = b('')
 
@@ -100,15 +103,26 @@ def unsigned_integer_to_bytes(number):
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
         num >>= word_bits
-
     # Obtain the index of the first non-zero byte.
     zero_leading = bytes_leading(raw_bytes)
-
     if number == 0:
         raw_bytes = ZERO_BYTE
-
     # De-padding.
     raw_bytes = raw_bytes[zero_leading:]
+
+    length = len(raw_bytes)
+    if fill_size > 0:
+        if length > fill_size:
+            raise OverflowError(
+                "Need %d bytes for number, but fill size is %d" %
+                (length, fill_size)
+            )
+        raw_bytes = raw_bytes.rjust(fill_size, ZERO_BYTE)
+    elif chunk_size > 0:
+        remainder = length % chunk_size
+        if remainder:
+            padding_size = chunk_size - remainder
+            raw_bytes = raw_bytes.rjust(length + padding_size, ZERO_BYTE)
     return raw_bytes
 
 
