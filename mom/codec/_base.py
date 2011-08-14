@@ -19,8 +19,10 @@
 :module: mom.codec._base
 :synopsis: Routines used by base converters.
 
-.. autofunction:: base_decode_to_number
-.. autofunction:: base_number_to_bytes
+.. autofunction:: base_encode
+.. autofunction:: base_decode
+.. autofunction:: base_to_uint
+.. autofunction:: uint_to_base256
 """
 
 try:
