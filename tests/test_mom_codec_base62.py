@@ -5,7 +5,7 @@ import unittest2
 from mom.builtins import b
 from mom.codec import hex_decode, base62_decode, base62_encode
 from mom.codec._alt_base import b62decode_naive
-from mom.codec.base62 import b62encode, b62decode, ASCII62_CHARSET, ALT62_CHARSET
+from mom.codec.base62 import b62encode, b62decode, ASCII62_BYTES, ALT62_BYTES
 from mom.security.random import generate_random_bytes
 
 random_bytes_len_512 = generate_random_bytes(512)
@@ -25,8 +25,8 @@ padding_raw = b('''\
 
 class Test_base62_codec(unittest2.TestCase):
     def test_ensure_charset_length(self):
-        self.assertEqual(len(ASCII62_CHARSET), 62)
-        self.assertEqual(len(ALT62_CHARSET), 62)
+        self.assertEqual(len(ASCII62_BYTES), 62)
+        self.assertEqual(len(ALT62_BYTES), 62)
 
     def test_codec_identity(self):
         self.assertEqual(

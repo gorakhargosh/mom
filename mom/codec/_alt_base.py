@@ -17,13 +17,12 @@
 from array import array
 
 import re
-from struct import pack
 from mom._compat import ZERO_BYTE, UINT128_MAX
 from mom.builtins import is_bytes, b
 from mom.codec import uint_to_bytes
-from mom.codec.base58 import ASCII58_CHARSET, ASCII58_ORDS
-from mom.codec.base62 import ASCII62_CHARSET, ASCII62_ORDS
-from mom.codec.base85 import RFC1924_ORDS, POW_85, RFC1924_BYTES
+from mom.codec.base58 import ASCII58_BYTES, ASCII58_ORDS
+from mom.codec.base62 import ASCII62_BYTES, ASCII62_ORDS
+from mom.codec.base85 import RFC1924_ORDS, RFC1924_BYTES
 from mom.codec.integer import bytes_to_uint
 from mom.functional import leading
 
@@ -31,7 +30,7 @@ WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 
 def b58encode_naive(raw_bytes,
-                    _charset=ASCII58_CHARSET,
+                    base_bytes=ASCII58_BYTES,
                     _padding=True,
                     _zero_byte=ZERO_BYTE):
     """
@@ -40,8 +39,8 @@ def b58encode_naive(raw_bytes,
 
     :param raw_bytes:
         Raw bytes to encode.
-    :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII58_CHARSET``
+    :param base_bytes:
+        The character set to use. Defaults to ``ASCII58_BYTES``
         that uses natural ASCII order.
     :param _padding:
         (Internal) ``True`` (default) to include prefixed zero-byte sequence
@@ -55,19 +54,19 @@ def b58encode_naive(raw_bytes,
     number = bytes_to_uint(raw_bytes)
     encoded = b('')
     while number > 0:
-        encoded = _charset[number % 58] + encoded
+        encoded = base_bytes[number % 58] + encoded
         number //= 58
         # The following makes more divmod calls but is 2x faster.
 #        number, remainder = divmod(number, 58)
 #        encoded = _charset[remainder] + encoded
     if _padding:
         zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
-        encoded = (_charset[0] * zero_leading) + encoded
+        encoded = (base_bytes[0] * zero_leading) + encoded
     return encoded
 
 
 def b62encode_naive(raw_bytes,
-                    _charset=ASCII62_CHARSET,
+                    base_bytes=ASCII62_BYTES,
                     _padding=True,
                     _zero_byte=ZERO_BYTE):
     """
@@ -76,8 +75,8 @@ def b62encode_naive(raw_bytes,
 
     :param raw_bytes:
         Raw bytes to encode.
-    :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII62_CHARSET``
+    :param base_bytes:
+        The character set to use. Defaults to ``ASCII62_CHARSET``
         that uses natural ASCII order.
     :param _padding:
         (Internal) ``True`` (default) to include prefixed zero-byte sequence
@@ -91,19 +90,19 @@ def b62encode_naive(raw_bytes,
     number = bytes_to_uint(raw_bytes)
     encoded = b('')
     while number > 0:
-        encoded = _charset[number % 62] + encoded
+        encoded = base_bytes[number % 62] + encoded
         number //= 62
         # The following makes more divmod calls but is 2x faster.
 #        number, remainder = divmod(number, 62)
 #        encoded = _charset[remainder] + encoded
     if _padding:
         zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
-        encoded = (_charset[0] * zero_leading) + encoded
+        encoded = (base_bytes[0] * zero_leading) + encoded
     return encoded
 
 
 def b62decode_naive(encoded,
-                    _charset=ASCII62_CHARSET,
+                    _charset=ASCII62_BYTES,
                     _lookup=ASCII62_ORDS):
     """
     Base-62 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
@@ -153,7 +152,7 @@ def b62decode_naive(encoded,
 
 
 def b58decode_naive(encoded,
-                    _charset=ASCII58_CHARSET,
+                    _charset=ASCII58_BYTES,
                     _lookup=ASCII58_ORDS):
     """
     Simple implementation for benchmarking.
@@ -163,7 +162,7 @@ def b58decode_naive(encoded,
     :param encoded:
         Base-58 encoded bytes.
     :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII58_CHARSET``
+        (Internal) The character set to use. Defaults to ``ASCII58_BYTES``
         that uses natural ASCII order.
     :param _lookup:
         (Internal) Ordinal-to-character lookup table for the specified

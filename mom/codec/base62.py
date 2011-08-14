@@ -163,11 +163,11 @@ from mom.codec.integer import bytes_to_uint
 
 
 # Follows ASCII order.
-ASCII62_CHARSET = ("0123456789"
+ASCII62_BYTES = ("0123456789"
                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                   "abcdefghijlkmnopqrstuvwxyz").encode("ascii")
 # Therefore, b'0' represents b'\0'.
-ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_CHARSET))
+ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_BYTES))
 
 
 # Really, I don't understand why people use the non-ASCII order,
@@ -175,16 +175,16 @@ ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_CHARSET))
 # is what you will need:
 #
 # Does not follow ASCII order.
-ALT62_CHARSET = ("0123456789"
+ALT62_BYTES = ("0123456789"
                  "abcdefghijlkmnopqrstuvwxyz"
                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ").encode("ascii")
 # Therefore, b'0' represents b'\0'.
-ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_CHARSET))
+ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_BYTES))
 
 
 if have_python3:
-    ASCII62_CHARSET = tuple(byte(x) for x in ASCII62_CHARSET)
-    ALT62_CHARSET = tuple(byte(x) for x in ALT62_CHARSET)
+    ASCII62_BYTES = tuple(byte(x) for x in ASCII62_BYTES)
+    ALT62_BYTES = tuple(byte(x) for x in ALT62_BYTES)
 
 # If you're going to make people type stuff longer than this length
 # I don't know what to tell you. Beyond this length powers
@@ -195,7 +195,7 @@ POW_62 = tuple(62**power for power in range(256))
 
 
 def b62encode(raw_bytes,
-              _charset=ASCII62_CHARSET, _padding=True, _zero_byte=ZERO_BYTE):
+              _charset=ASCII62_BYTES, _padding=True, _zero_byte=ZERO_BYTE):
     """
     Base62 encodes a sequence of raw bytes. Zero-byte sequences are
     preserved by default.
@@ -203,7 +203,7 @@ def b62encode(raw_bytes,
     :param raw_bytes:
         Raw bytes to encode.
     :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII62_CHARSET``
+        (Internal) The character set to use. Defaults to ``ASCII62_BYTES``
         that uses natural ASCII order.
     :param _padding:
         (Internal) ``True`` (default) to include prefixed zero-byte sequence
@@ -226,7 +226,7 @@ def b62encode(raw_bytes,
 
 
 def b62decode(encoded,
-              _charset=ASCII62_CHARSET,
+              _charset=ASCII62_BYTES,
               _lookup=ASCII62_ORDS,
               _powers=POW_62):
     """
@@ -235,7 +235,7 @@ def b62decode(encoded,
     :param encoded:
         Base-62 encoded bytes.
     :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII62_CHARSET``
+        (Internal) The character set to use. Defaults to ``ASCII62_BYTES``
         that uses natural ASCII order.
     :param _lookup:
         (Internal) Ordinal-to-character lookup table for the specified

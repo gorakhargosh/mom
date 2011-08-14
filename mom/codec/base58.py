@@ -69,6 +69,7 @@ Functions
 
 from __future__ import absolute_import, division
 
+from collections import deque
 from mom._compat import have_python3, ZERO_BYTE, range
 from mom.builtins import byte, is_bytes, b, bytes_leading
 from mom.codec._base import base_to_uint, uint_to_base256
@@ -76,11 +77,11 @@ from mom.codec.integer import bytes_to_uint
 
 
 # Follows ASCII order.
-ASCII58_CHARSET = ("123456789"
+ASCII58_BYTES = ("123456789"
                   "ABCDEFGHJKLMNPQRSTUVWXYZ"
                   "abcdefghijkmnopqrstuvwxyz").encode("ascii")
 # Therefore, b'1' represents b'\0'.
-ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_CHARSET))
+ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_BYTES))
 
 
 # Really, I don't understand why people use the non-ASCII order,
@@ -88,15 +89,15 @@ ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_CHARSET))
 # is what you will need:
 #
 # Does not follow ASCII order.
-ALT58_CHARSET = ("123456789"
+ALT58_BYTES = ("123456789"
                  "abcdefghijkmnopqrstuvwxyz"
                  "ABCDEFGHJKLMNPQRSTUVWXYZ").encode("ascii")
 # Therefore, b'1' represents b'\0'.
-ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_CHARSET))
+ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_BYTES))
 
 if have_python3:
-    ASCII58_CHARSET = tuple(byte(x) for x in ASCII58_CHARSET)
-    ALT58_CHARSET = tuple(byte(x) for x in ALT58_CHARSET)
+    ASCII58_BYTES = tuple(byte(x) for x in ASCII58_BYTES)
+    ALT58_BYTES = tuple(byte(x) for x in ALT58_BYTES)
 
 # If you're going to make people type stuff longer than this length
 # I don't know what to tell you. Beyond this length powers
@@ -107,15 +108,15 @@ POW_58 = tuple(58**power for power in range(256))
 
 
 def b58encode(raw_bytes,
-              _charset=ASCII58_CHARSET, _padding=True, _zero_byte=ZERO_BYTE):
+              base_bytes=ASCII58_BYTES, _padding=True):
     """
     Base58 encodes a sequence of raw bytes. Zero-byte sequences are
     preserved by default.
 
     :param raw_bytes:
         Raw bytes to encode.
-    :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII58_CHARSET``
+    :param base_bytes:
+        The character set to use. Defaults to ``ASCII58_BYTES``
         that uses natural ASCII order.
     :param _padding:
         (Internal) ``True`` (default) to include prefixed zero-byte sequence
@@ -130,15 +131,15 @@ def b58encode(raw_bytes,
     encoded = b('')
     while number > 0:
         number, remainder = divmod(number, 58)
-        encoded = _charset[remainder] + encoded
+        encoded = base_bytes[remainder] + encoded
     if _padding:
         zero_leading = bytes_leading(raw_bytes)
-        encoded = (_charset[0] * zero_leading) + encoded
+        encoded = (base_bytes[0] * zero_leading) + encoded
     return encoded
 
 
 def b58decode(encoded,
-              _charset=ASCII58_CHARSET,
+              _charset=ASCII58_BYTES,
               _lookup=ASCII58_ORDS,
               _powers=POW_58):
     """
@@ -147,7 +148,7 @@ def b58decode(encoded,
     :param encoded:
         Base-58 encoded bytes.
     :param _charset:
-        (Internal) The character set to use. Defaults to ``ASCII58_CHARSET``
+        (Internal) The character set to use. Defaults to ``ASCII58_BYTES``
         that uses natural ASCII order.
     :param _lookup:
         (Internal) Ordinal-to-character lookup table for the specified
