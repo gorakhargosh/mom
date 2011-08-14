@@ -119,6 +119,7 @@ else:
 
 # This is used in a large number of places. Do not remove.
 ZERO_BYTE = byte_literal('\x00')
+EMPTY_BYTE = byte_literal('')
 
 have_little_endian = bool(byte_ord(array("i",[1]).tostring()[0]))
 

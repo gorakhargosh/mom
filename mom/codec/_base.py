@@ -30,9 +30,9 @@ try:
 except ImportError:
     pass
 
-from mom._compat import ZERO_BYTE
+from mom._compat import ZERO_BYTE, EMPTY_BYTE
 from mom.codec.integer import uint_to_bytes
-from mom.builtins import bytes_leading
+from mom.builtins import bytes_leading, b
 
 
 def base_to_uint(encoded,
@@ -70,25 +70,12 @@ def base_to_uint(encoded,
 
 
 def uint_to_base256(number, encoded,
-                    base_zero,
-                    zero_byte=ZERO_BYTE):
-    if number:
-        raw_bytes = uint_to_bytes(number)
+                    base_zero):
+    if number == 0:
+        raw_bytes = EMPTY_BYTE
     else:
-        # number == 0
-        raw_bytes = zero_byte
-
-    # The extra [0] index in ``zero_base_char[0]`` is for Python2.x-Python3.x
-    # compatibility. Indexing into Python 3 bytes yields an integer, whereas
-    # in Python 2.x it yields a single-byte string. ``encoded`` is bytes.
-    base_zero_byte = base_zero[0]
-
-    # Count the number of leading zero base ASCII characters.
-    zero_leading = 0
-    for zero_leading, x in enumerate(encoded):
-        if x != base_zero_byte:
-            break
+        raw_bytes = uint_to_bytes(number)
+    zero_leading = bytes_leading(encoded, base_zero)
     if zero_leading:
-        padding = zero_byte * zero_leading
-        raw_bytes = padding + raw_bytes
+        raw_bytes = raw_bytes.rjust(len(raw_bytes) + zero_leading, ZERO_BYTE)
     return raw_bytes
