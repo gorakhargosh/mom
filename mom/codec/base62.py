@@ -156,10 +156,9 @@ Functions
 
 from __future__ import absolute_import, division
 
-from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE
-from mom.builtins import byte, is_bytes, b, bytes_leading
-from mom.codec._base import uint_to_base256, base_to_uint, base_encode, base_decode
-from mom.codec.integer import bytes_to_uint
+from mom._compat import have_python3
+from mom.builtins import byte
+from mom.codec._base import base_encode, base_decode
 
 
 # Follows ASCII order.
