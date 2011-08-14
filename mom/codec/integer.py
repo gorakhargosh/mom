@@ -92,7 +92,8 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     fill size.
 
     .. NOTE:
-        You must specify either fill_size or chunk_size, but not both.
+        You must not specify both fill_size and chunk_size. Only one
+        of them is allowed.
 
     :param number:
         Integer value
