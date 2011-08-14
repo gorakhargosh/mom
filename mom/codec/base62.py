@@ -157,10 +157,9 @@ Functions
 from __future__ import absolute_import, division
 
 from mom._compat import have_python3, ZERO_BYTE
-from mom.builtins import byte, is_bytes, b
+from mom.builtins import byte, is_bytes, b, bytes_leading
 from mom.codec._base import uint_to_base256, base_to_uint
 from mom.codec.integer import bytes_to_uint
-from mom.functional import leading
 
 
 # Follows ASCII order.
@@ -221,7 +220,7 @@ def b62encode(raw_bytes,
         number, remainder = divmod(number, 62)
         encoded = _charset[remainder] + encoded
     if _padding:
-        zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
+        zero_leading = bytes_leading(raw_bytes)
         encoded = (_charset[0] * zero_leading) + encoded
     return encoded
 

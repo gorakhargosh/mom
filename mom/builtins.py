@@ -100,7 +100,7 @@ except ImportError:
 from struct import pack
 from mom._compat import \
     byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
-    next, integer_types, byte_ord
+    next, integer_types, byte_ord, ZERO_BYTE
 
 
 __all__ = [
@@ -168,6 +168,58 @@ def byte(num):
         A single byte.
     """
     return pack("B", num)
+
+
+def bytes_leading(raw_bytes, needle=ZERO_BYTE):
+    """
+    Finds the number of prefixed byte occurrences in the haystack.
+
+    Useful when you want to deal with padding.
+
+    :param raw_bytes:
+        Raw bytes.
+    :param needle:
+        The byte to count. Default \000.
+    :returns:
+        The number of leading needle bytes.
+    """
+    leading = 0
+    # Indexing keeps compatibility between Python 2.x and Python 3.x
+    _byte = needle[0]
+    for x in raw_bytes:
+        if x == _byte:
+            leading += 1
+        else:
+            break
+    return leading
+
+
+def bytes_trailing(raw_bytes, needle=ZERO_BYTE):
+    """
+    Finds the number of suffixed byte occurrences in the haystack.
+
+    Useful when you want to deal with padding.
+
+    :param raw_bytes:
+        Raw bytes.
+    :param needle:
+        The byte to count. Default \000.
+    :returns:
+        The number of trailing needle bytes.
+    """
+    trailing = 0
+    # Indexing keeps compatibility between Python 2.x and Python 3.x
+    _byte = needle[0]
+    for x in reversed(raw_bytes):
+        if x == _byte:
+            trailing += 1
+        else:
+            break
+    return trailing
+
+
+def bytes_fill(raw_bytes, filler, size):
+    return None
 
 
 def bin(num, prefix="0b"):

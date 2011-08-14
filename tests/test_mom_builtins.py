@@ -2,20 +2,18 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-import sys
 
 import unittest2
 import math
 import struct
 from mom._alt_builtins import integer_byte_length_shift_counting, integer_byte_length_word_aligned, integer_bit_length_shift_counting, integer_bit_length_word_aligned
-from mom._compat import get_machine_alignment, MACHINE_WORD_SIZE, UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX
-
+from mom._compat import get_machine_alignment, MACHINE_WORD_SIZE, UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX, ZERO_BYTE
+from mom.functional import leading, trailing
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
     is_unicode, \
     is_bytes, \
     is_bytes_or_unicode, \
-    b, \
     bin, \
     hex, \
     integer_byte_length, \
@@ -25,7 +23,7 @@ from mom.builtins import \
     is_odd, \
     is_even, \
     is_negative, \
-    is_positive, byte
+    is_positive, byte, bytes_leading, bytes_trailing, b
 
 try:
     unicode
@@ -54,6 +52,27 @@ class Test_byte(unittest2.TestCase):
         self.assertRaises(struct.error, byte, 256)
         self.assertRaises(struct.error, byte, -1)
 
+
+class Test_bytes_leading_and_trailing(unittest2.TestCase):
+    def test_leading(self):
+        self.assertEqual(bytes_leading(b('\x00\x00\x00\x00')), 4)
+        self.assertEqual(bytes_leading(b('\x00\x00\x00')), 3)
+        self.assertEqual(bytes_leading(b('\x00\x00\xff')), 2)
+        self.assertEqual(bytes_leading(b('\xff')), 0)
+        self.assertEqual(bytes_leading(b('\x00\xff')), 1)
+        self.assertEqual(bytes_leading(b('\x00')), 1)
+        self.assertEqual(bytes_leading(b('\x00\x00\x00\xff')), 3)
+
+    def test_trailing(self):
+        self.assertEqual(bytes_trailing(b('\x00\x00\x00\x00')), 4)
+        self.assertEqual(bytes_trailing(b('\x00\x00\x00')), 3)
+        self.assertEqual(bytes_trailing(b('\xff\x00\x00')), 2)
+        self.assertEqual(bytes_trailing(b('\xff')), 0)
+        self.assertEqual(bytes_trailing(b('\x00')), 1)
+        self.assertEqual(bytes_trailing(b('\xff\x00\x00\x00')), 3)
+        self.assertEqual(bytes_trailing(b('')), 0)
+
+            
 class Test_bin(unittest2.TestCase):
     def test_binary_0_1_and_minus_1(self):
         self.assertEqual(bin(0), '0b0')
