@@ -256,3 +256,62 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
         chunk = raw_bytes[i:i+4]
         int_value = (int_value << 32) + unpack('>I', chunk)[0]
     return int_value
+
+
+#def uint_to_bytes(number, chunk_size=0):
+#    """
+#    Convert an unsigned integer to bytes (base-256 representation)::
+#    Does not preserve leading zeros if you don't specify a chunk size.
+#
+#    :param number:
+#        Integer value
+#    :param chunk_size:
+#        If optional chunk size is given and greater than zero, pad the front of
+#        the byte string with binary zeros so that the length is a multiple of
+#        ``chunk_size``.
+#    :returns:
+#        Raw bytes (base-256 representation).
+#    :raises:
+#        ``OverflowError`` when block_size is given and the number takes up more
+#        bytes than fit into the block.
+#    """
+#    # Machine word-aligned implementation and unsurprisingly the fastest of
+#    # all these implementations.
+#    if number < 0:
+#        raise ValueError('Number must be unsigned integer: %d' % number)
+#
+#    raw_bytes = b('')
+#    # Align packing to machine word size.
+#    num = number
+#    word_bits, word_bytes, max_uint, pack_type = get_word_alignment(num)
+#    pack_format = ">" + pack_type
+#    while num > 0:
+#        raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
+#        num >>= word_bits
+#    # Get the index of the first non-zero byte.
+#    first_non_zero = bytes_leading(raw_bytes)
+#
+#    if number == 0:
+#        raw_bytes = ZERO_BYTE
+#
+#    if chunk_size > 0:
+#        # Bounds checking. We're not doing this up-front because the
+#        # most common use case is not specifying a chunk size. In the worst
+#        # case, the number will already have been converted to bytes above.
+#        length = len(raw_bytes) - first_non_zero
+#        if length > chunk_size:
+#            raise OverflowError(
+#                "Need %d bytes for number, but chunk size is %d" %
+#                (length, chunk_size)
+#            )
+#        remainder = length % chunk_size
+#        if remainder:
+#            padding_size = (chunk_size - remainder)
+#            if first_non_zero > 0:
+#                raw_bytes = raw_bytes[first_non_zero-padding_size:]
+#            else:
+#                raw_bytes = (padding_size * ZERO_BYTE) + raw_bytes
+#    else:
+#        raw_bytes = raw_bytes[first_non_zero:]
+#    return raw_bytes
+#
