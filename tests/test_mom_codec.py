@@ -263,10 +263,13 @@ class Test_bytes_uint_codec(unittest2.TestCase):
 class Test_uint_to_bytes(unittest2.TestCase):
     def test_accuracy(self):
         self.assertEqual(uint_to_bytes(123456789), b('\x07[\xcd\x15'))
-        self.assertEqual(uint_to_bytes_pycrypto(123456789), b('\x07[\xcd\x15'))
-        self.assertEqual(uint_to_bytes_array_based(123456789), b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes_pycrypto(123456789),
+                         b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes_array_based(123456789),
+                         b('\x07[\xcd\x15'))
         self.assertEqual(uint_to_bytes_naive(123456789), b('\x07[\xcd\x15'))
-        self.assertEqual(uint_to_bytes_naive_array_based(123456789), b('\x07[\xcd\x15'))
+        self.assertEqual(uint_to_bytes_naive_array_based(123456789),
+                         b('\x07[\xcd\x15'))
 
         self.assertEqual(uint_to_bytes(long_value),
                          expected_bytes)
@@ -280,15 +283,20 @@ class Test_uint_to_bytes(unittest2.TestCase):
                          expected_bytes)
 
     def test_chunk_size(self):
-        self.assertEqual(uint_to_bytes(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes(long_value,
+                                       long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(uint_to_bytes_pycrypto(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_pycrypto(long_value,
+                                                long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(uint_to_bytes_array_based(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_array_based(long_value,
+                                                   long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(uint_to_bytes_naive(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_naive(long_value,
+                                             long_value_blocksize),
                          expected_blocksize_bytes)
-        self.assertEqual(uint_to_bytes_naive_array_based(long_value, long_value_blocksize),
+        self.assertEqual(uint_to_bytes_naive_array_based(long_value,
+                                                         long_value_blocksize),
                          expected_blocksize_bytes)
 
 
@@ -346,7 +354,8 @@ class Test_uint_to_bytes(unittest2.TestCase):
         for value in values:
             self.assertEqual(uint_to_bytes(value), uint_to_bytes_naive(value),
                              "Boom %d" % value)
-            self.assertEqual(uint_to_bytes_array_based(value), uint_to_bytes_naive(value),
+            self.assertEqual(uint_to_bytes_array_based(value),
+                             uint_to_bytes_naive(value),
                              "Boom %d" % value)
             self.assertEqual(uint_to_bytes(value),
                              uint_to_bytes_naive_array_based(value),
@@ -362,26 +371,29 @@ class Test_uint_to_bytes(unittest2.TestCase):
         for prime in sieve:
             self.assertEqual(uint_to_bytes(prime), uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
-            self.assertEqual(uint_to_bytes_array_based(prime), uint_to_bytes_naive(prime),
+            self.assertEqual(uint_to_bytes_array_based(prime),
+                             uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
-            self.assertEqual(uint_to_bytes_pycrypto(prime), uint_to_bytes_naive(prime),
+            self.assertEqual(uint_to_bytes_pycrypto(prime),
+                             uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
 
     def test_raises_OverflowError_when_chunk_size_is_insufficient(self):
         self.assertRaises(OverflowError, uint_to_bytes, 123456789, 3)
         self.assertRaises(OverflowError, uint_to_bytes, 299999999999, 4)
 
-        self.assertRaises(OverflowError, uint_to_bytes_array_based, 123456789, 3)
-        self.assertRaises(OverflowError, uint_to_bytes_array_based, 299999999999, 4)
+        self.assertRaises(OverflowError,
+                          uint_to_bytes_array_based, 123456789, 3)
+        self.assertRaises(OverflowError,
+                          uint_to_bytes_array_based, 299999999999, 4)
 
         self.assertRaises(OverflowError, uint_to_bytes_naive, 123456789, 3)
         self.assertRaises(OverflowError, uint_to_bytes_naive, 299999999999, 4)
 
-        self.assertRaises(OverflowError, uint_to_bytes_naive_array_based, 123456789, 3)
-        self.assertRaises(OverflowError, uint_to_bytes_naive_array_based, 299999999999, 4)
-
-        self.assertRaises(OverflowError, uint_to_bytes_pycrypto, 123456789, 3)
-        self.assertRaises(OverflowError, uint_to_bytes_pycrypto, 299999999999, 4)
+        self.assertRaises(OverflowError,
+                          uint_to_bytes_naive_array_based, 123456789, 3)
+        self.assertRaises(OverflowError,
+                          uint_to_bytes_naive_array_based, 299999999999, 4)
 
     def test_raises_ValueError_when_negative_integer(self):
         self.assertRaises(ValueError, uint_to_bytes, -1)
