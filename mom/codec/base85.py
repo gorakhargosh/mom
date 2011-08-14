@@ -513,8 +513,7 @@ def rfc1924_b85decode(encoded):
 
 
 def ipv6_b85encode(uint128,
-                   _base85_bytes=RFC1924_BYTES,
-                   _pow_85=POW_85):
+                   _base85_bytes=RFC1924_BYTES):
     """
     Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
     Used to encode IPv6 addresses or 128-bit chunks.
@@ -523,8 +522,6 @@ def ipv6_b85encode(uint128,
         A 128-bit unsigned integer to be encoded.
     :param _base85_bytes:
         (Internal) Base85 encoding charset lookup table.
-    :param _pow_85:
-        (Internal) Powers of 85 lookup table.
     :returns:
         RFC1924 Base85-encoded string.
     """
@@ -534,34 +531,12 @@ def ipv6_b85encode(uint128,
     if uint128 > UINT128_MAX:
         raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                             uint128)
-#    encoded = list(range(20))
-#    for i in reversed(encoded):
-#        uint128, remainder = divmod(uint128, 85)
-#        encoded[i] = _base85_chars[remainder]
-    # Above loop unrolled:
-    # pack('B' * 20, ...)
-    return pack('BBBBBBBBBBBBBBBBBBBB',
-        _base85_bytes[(uint128 // _pow_85[19])], # Don't need %85. Already < 85
-        _base85_bytes[(uint128 // _pow_85[18]) % 85],
-        _base85_bytes[(uint128 // _pow_85[17]) % 85],
-        _base85_bytes[(uint128 // _pow_85[16]) % 85],
-        _base85_bytes[(uint128 // _pow_85[15]) % 85],
-        _base85_bytes[(uint128 // _pow_85[14]) % 85],
-        _base85_bytes[(uint128 // _pow_85[13]) % 85],
-        _base85_bytes[(uint128 // _pow_85[12]) % 85],
-        _base85_bytes[(uint128 // _pow_85[11]) % 85],
-        _base85_bytes[(uint128 // _pow_85[10]) % 85],
-        _base85_bytes[(uint128 // _pow_85[9]) % 85],
-        _base85_bytes[(uint128 // _pow_85[8]) % 85],
-        _base85_bytes[(uint128 // _pow_85[7]) % 85],
-        _base85_bytes[(uint128 // _pow_85[6]) % 85],
-        _base85_bytes[(uint128 // _pow_85[5]) % 85],
-        _base85_bytes[(uint128 // _pow_85[4]) % 85],
-        _base85_bytes[(uint128 // _pow_85[3]) % 85],
-        _base85_bytes[(uint128 // _pow_85[2]) % 85],
-        _base85_bytes[(uint128 // 85) % 85],   #85**1 == 85
-        _base85_bytes[uint128 % 85],           #85**0 == 1
-    )
+    #encoded = list(range(20))
+    encoded = array('B', list(range(20)))
+    for i in reversed(encoded):
+        uint128, remainder = divmod(uint128, 85)
+        encoded[i] = _base85_bytes[remainder]
+    return encoded.tostring()
 
 
 def ipv6_b85decode(encoded,

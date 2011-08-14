@@ -15,13 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import re
-from mom._compat import ZERO_BYTE
+from struct import pack
+from mom._compat import ZERO_BYTE, UINT128_MAX
 from mom.builtins import is_bytes, b
 from mom.codec import uint_to_bytes
 from mom.codec.base58 import ASCII58_CHARSET, ASCII58_ORDS
 from mom.codec.base62 import ASCII62_CHARSET, ASCII62_ORDS
+from mom.codec.base85 import RFC1924_ORDS, POW_85, RFC1924_BYTES
 from mom.codec.integer import bytes_to_uint
 from mom.functional import leading
 
@@ -200,3 +201,92 @@ def b58decode_naive(encoded,
         padding = ZERO_BYTE * zero_leading
         raw_bytes = padding + raw_bytes
     return raw_bytes
+
+
+def ipv6_b85decode_naive(encoded,
+                         _base85_ords=RFC1924_ORDS):
+    """
+    Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
+    representation. Used to base85-decode IPv6 addresses or 128-bit chunks.
+
+    Whitespace is ignored. Raises an ``OverflowError`` if stray characters
+    are found.
+
+    :param encoded:
+        RFC1924 Base85-encoded string.
+    :param _base85_ords:
+        (Internal) Look up table.
+    :returns:
+        A 128-bit unsigned integer.
+    """
+    if not is_bytes(encoded):
+        raise TypeError(
+            "Encoded sequence must be bytes: got %r" % type(encoded).__name__
+        )
+    # Ignore whitespace.
+    encoded = b('').join(encoded.split())
+    if len(encoded) != 20:
+        raise ValueError("Not 20 encoded bytes: %r" % encoded)
+    uint128 = 0
+    try:
+        for char in encoded:
+            uint128 = uint128 * 85 + _base85_ords[char]
+    except KeyError:
+        raise OverflowError("Cannot decode `%r -- may contain stray " \
+                            "ASCII bytes" % encoded)
+    if uint128 > UINT128_MAX:
+        raise OverflowError("Cannot decode `%r` -- may contain stray " \
+                            "ASCII bytes" % encoded)
+    return uint128
+
+
+
+def ipv6_b85encode_naive(uint128,
+                         _base85_bytes=RFC1924_BYTES):
+    """
+    Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
+    Used to encode IPv6 addresses or 128-bit chunks.
+
+    :param uint128:
+        A 128-bit unsigned integer to be encoded.
+    :param _base85_bytes:
+        (Internal) Base85 encoding charset lookup table.
+    :param _pow_85:
+        (Internal) Powers of 85 lookup table.
+    :returns:
+        RFC1924 Base85-encoded string.
+    """
+    if uint128 < 0:
+        raise ValueError("Number is not a 128-bit unsigned integer: got %d" %
+                         uint128)
+    if uint128 > UINT128_MAX:
+        raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
+                            uint128)
+#    encoded = list(range(20))
+#    for i in reversed(encoded):
+#        uint128, remainder = divmod(uint128, 85)
+#        encoded[i] = _base85_chars[remainder]
+    # Above loop unrolled:
+    # pack('B' * 20, ...)
+    return pack('BBBBBBBBBBBBBBBBBBBB',
+        _base85_bytes[(uint128 // POW_85[19])], # Don't need %85. Already < 85
+        _base85_bytes[(uint128 // POW_85[18]) % 85],
+        _base85_bytes[(uint128 // POW_85[17]) % 85],
+        _base85_bytes[(uint128 // POW_85[16]) % 85],
+        _base85_bytes[(uint128 // POW_85[15]) % 85],
+        _base85_bytes[(uint128 // POW_85[14]) % 85],
+        _base85_bytes[(uint128 // POW_85[13]) % 85],
+        _base85_bytes[(uint128 // POW_85[12]) % 85],
+        _base85_bytes[(uint128 // POW_85[11]) % 85],
+        _base85_bytes[(uint128 // POW_85[10]) % 85],
+        _base85_bytes[(uint128 // POW_85[9]) % 85],
+        _base85_bytes[(uint128 // POW_85[8]) % 85],
+        _base85_bytes[(uint128 // POW_85[7]) % 85],
+        _base85_bytes[(uint128 // POW_85[6]) % 85],
+        _base85_bytes[(uint128 // POW_85[5]) % 85],
+        _base85_bytes[(uint128 // POW_85[4]) % 85],
+        _base85_bytes[(uint128 // POW_85[3]) % 85],
+        _base85_bytes[(uint128 // POW_85[2]) % 85],
+        _base85_bytes[(uint128 // 85) % 85],   #85**1 == 85
+        _base85_bytes[uint128 % 85],           #85**0 == 1
+    )
