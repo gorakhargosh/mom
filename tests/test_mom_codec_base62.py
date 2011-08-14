@@ -8,7 +8,7 @@ from mom.codec._alt_base import b62decode_naive
 from mom.codec.base62 import b62encode, b62decode, ASCII62_CHARSET, ALT62_CHARSET
 from mom.security.random import generate_random_bytes
 
-random_bytes_len_4093 = generate_random_bytes(4093)
+random_bytes_len_512 = generate_random_bytes(512)
 
 zero_bytes = b('\x00\x00\x00\x00')
 one_zero_byte = b('\x00')
@@ -30,16 +30,16 @@ class Test_base62_codec(unittest2.TestCase):
 
     def test_codec_identity(self):
         self.assertEqual(
-            b62decode(b62encode(random_bytes_len_4093)),
-            random_bytes_len_4093
+            b62decode(b62encode(random_bytes_len_512)),
+            random_bytes_len_512
         )
         self.assertEqual(
-            b62decode_naive(b62encode(random_bytes_len_4093)),
-            random_bytes_len_4093
+            b62decode_naive(b62encode(random_bytes_len_512)),
+            random_bytes_len_512
         )
         self.assertEqual(
-            base62_decode(base62_encode(random_bytes_len_4093)),
-            random_bytes_len_4093
+            base62_decode(base62_encode(random_bytes_len_512)),
+            random_bytes_len_512
         )
 
     def test_encodes_zero_prefixed_padding(self):

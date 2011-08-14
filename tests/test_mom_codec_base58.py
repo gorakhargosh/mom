@@ -6,10 +6,9 @@ from mom.builtins import b
 from mom.codec import hex_decode, base58_decode, base58_encode
 from mom.codec._alt_base import b58decode_naive
 from mom.codec.base58 import b58encode, b58decode, ALT58_CHARSET, ASCII58_CHARSET
-from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.security.random import generate_random_bytes
 
-random_bytes_len_4093 = generate_random_bytes(4093)
+random_bytes = generate_random_bytes(384)
 
 zero_bytes = b('\x00\x00\x00\x00')
 one_zero_byte = b('\x00')
@@ -30,18 +29,10 @@ class Test_base58_codec(unittest2.TestCase):
         self.assertEqual(len(ALT58_CHARSET), 58)
 
     def test_codec_identity(self):
-        self.assertEqual(
-            b58decode(b58encode(random_bytes_len_4093)),
-            random_bytes_len_4093
-        )
-        self.assertEqual(
-            b58decode_naive(b58encode(random_bytes_len_4093)),
-            random_bytes_len_4093
-        )
-        self.assertEqual(
-            base58_decode(base58_encode(random_bytes_len_4093)),
-            random_bytes_len_4093
-        )
+        self.assertEqual(b58decode(b58encode(random_bytes)), random_bytes)
+        self.assertEqual(b58decode_naive(b58encode(random_bytes)), random_bytes)
+        self.assertEqual(base58_decode(base58_encode(random_bytes)),
+                         random_bytes)
 
     def test_encodes_zero_prefixed_padding(self):
         self.assertEqual(b58decode(b58encode(padding_raw)), padding_raw)
