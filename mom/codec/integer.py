@@ -51,7 +51,7 @@ import binascii
 from struct import pack
 
 from mom._compat import get_word_alignment, ZERO_BYTE, EMPTY_BYTE
-from mom.builtins import is_bytes, b, bytes_leading
+from mom.builtins import is_bytes, bytes_leading
 
 
 __all__ = [

@@ -79,8 +79,9 @@ except ImportError:
 from array import array
 from struct import unpack, pack
 from mom import string
-from mom.builtins import is_bytes, b, byte_ord, byte
-from mom._compat import range, ZERO_BYTE, UINT128_MAX, UINT32_MAX, have_little_endian, have_python3, EMPTY_BYTE
+from mom.builtins import is_bytes, b, byte
+from mom._compat import range, ZERO_BYTE, UINT128_MAX, UINT32_MAX, \
+    have_python3, EMPTY_BYTE
 
 
 __all__ = [
