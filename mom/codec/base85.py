@@ -591,72 +591,13 @@ def ipv6_b85decode(encoded,
     if len(encoded) != 20:
         raise ValueError("Not 20 encoded bytes: %r" % encoded)
 
-
     #uint128 = 0
     #for char in encoded:
     #    uint128 = uint128 * 85 + _base85_ords[byte_ord(char)]
     # Above loop unrolled to process 4 5-tuple chunks instead:
-    #v, w, x, y, z = encoded[0:5]
-    # v = encoded[0]..z = encoded[4]
-
-    # I've left this approach in here to warn you to NOT use it.
-    # This results in a massive amount of calls to byte_ord inside
-    # tight loops.
-#    uint128 = ((((_base85_ords[byte_ord(encoded[0])] *
-#                85 + _base85_ords[byte_ord(encoded[1])]) *
-#                85 + _base85_ords[byte_ord(encoded[2])]) *
-#                85 + _base85_ords[byte_ord(encoded[3])]) *
-#                85 + _base85_ords[byte_ord(encoded[4])])
-#    #v, w, x, y, z = encoded[5:10]
-#    # v = encoded[5]..z = encoded[9]
-#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[5])]) *
-#                85 + _base85_ords[byte_ord(encoded[6])]) *
-#                85 + _base85_ords[byte_ord(encoded[7])]) *
-#                85 + _base85_ords[byte_ord(encoded[8])]) *
-#                85 + _base85_ords[byte_ord(encoded[9])])
-#    #v, w, x, y, z = encoded[10:15]
-#    # v = encoded[10]..z = encoded[14]
-#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[10])]) *
-#                85 + _base85_ords[byte_ord(encoded[11])]) *
-#                85 + _base85_ords[byte_ord(encoded[12])]) *
-#                85 + _base85_ords[byte_ord(encoded[13])]) *
-#                85 + _base85_ords[byte_ord(encoded[14])])
-#    #v, w, x, y, z = encoded[15:20]
-#    # v = encoded[15]..z = encoded[19]
-#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[15])]) *
-#                85 + _base85_ords[byte_ord(encoded[16])]) *
-#                85 + _base85_ords[byte_ord(encoded[17])]) *
-#                85 + _base85_ords[byte_ord(encoded[18])]) *
-#                85 + _base85_ords[byte_ord(encoded[19])])
-#    uint128 = ((((_base85_ords[byte_ord(encoded[0])] *
-#                85 + _base85_ords[byte_ord(encoded[1])]) *
-#                85 + _base85_ords[byte_ord(encoded[2])]) *
-#                85 + _base85_ords[byte_ord(encoded[3])]) *
-#                85 + _base85_ords[byte_ord(encoded[4])])
-#    #v, w, x, y, z = encoded[5:10]
-#    # v = encoded[5]..z = encoded[9]
-#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[5])]) *
-#                85 + _base85_ords[byte_ord(encoded[6])]) *
-#                85 + _base85_ords[byte_ord(encoded[7])]) *
-#                85 + _base85_ords[byte_ord(encoded[8])]) *
-#                85 + _base85_ords[byte_ord(encoded[9])])
-#    #v, w, x, y, z = encoded[10:15]
-#    # v = encoded[10]..z = encoded[14]
-#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[10])]) *
-#                85 + _base85_ords[byte_ord(encoded[11])]) *
-#                85 + _base85_ords[byte_ord(encoded[12])]) *
-#                85 + _base85_ords[byte_ord(encoded[13])]) *
-#                85 + _base85_ords[byte_ord(encoded[14])])
-#    #v, w, x, y, z = encoded[15:20]
-#    # v = encoded[15]..z = encoded[19]
-#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[15])]) *
-#                85 + _base85_ords[byte_ord(encoded[16])]) *
-#                85 + _base85_ords[byte_ord(encoded[17])]) *
-#                85 + _base85_ords[byte_ord(encoded[18])]) *
-#                85 + _base85_ords[byte_ord(encoded[19])])
-
     try:
-
+        #v, w, x, y, z = encoded[0:5]
+        # v = encoded[0]..z = encoded[4]
         uint128 = ((((_base85_ords[encoded[0]] *
                     85 + _base85_ords[encoded[1]]) *
                     85 + _base85_ords[encoded[2]]) *
@@ -691,3 +632,61 @@ def ipv6_b85decode(encoded,
         raise OverflowError("Cannot decode `%r` -- may contain stray " \
                             "ASCII bytes" % encoded)
     return uint128
+
+    # I've left this approach in here to warn you to NOT use it.
+    # This results in a massive amount of calls to byte_ord inside
+    # tight loops.
+#    v, w, x, y, z = encoded[0:5]
+#    v = encoded[0]..z = encoded[4]
+#    uint128 = ((((_base85_ords[byte_ord(encoded[0])] *
+#                85 + _base85_ords[byte_ord(encoded[1])]) *
+#                85 + _base85_ords[byte_ord(encoded[2])]) *
+#                85 + _base85_ords[byte_ord(encoded[3])]) *
+#                85 + _base85_ords[byte_ord(encoded[4])])
+#    #v, w, x, y, z = encoded[5:10]
+#    # v = encoded[5]..z = encoded[9]
+#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[5])]) *
+#                85 + _base85_ords[byte_ord(encoded[6])]) *
+#                85 + _base85_ords[byte_ord(encoded[7])]) *
+#                85 + _base85_ords[byte_ord(encoded[8])]) *
+#                85 + _base85_ords[byte_ord(encoded[9])])
+#    #v, w, x, y, z = encoded[10:15]
+#    # v = encoded[10]..z = encoded[14]
+#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[10])]) *
+#                85 + _base85_ords[byte_ord(encoded[11])]) *
+#                85 + _base85_ords[byte_ord(encoded[12])]) *
+#                85 + _base85_ords[byte_ord(encoded[13])]) *
+#                85 + _base85_ords[byte_ord(encoded[14])])
+#    #v, w, x, y, z = encoded[15:20]
+#    # v = encoded[15]..z = encoded[19]
+#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[15])]) *
+#                85 + _base85_ords[byte_ord(encoded[16])]) *
+#                85 + _base85_ords[byte_ord(encoded[17])]) *
+#                85 + _base85_ords[byte_ord(encoded[18])]) *
+#                85 + _base85_ords[byte_ord(encoded[19])])
+#    uint128 = ((((_base85_ords[byte_ord(encoded[0])] *
+#                85 + _base85_ords[byte_ord(encoded[1])]) *
+#                85 + _base85_ords[byte_ord(encoded[2])]) *
+#                85 + _base85_ords[byte_ord(encoded[3])]) *
+#                85 + _base85_ords[byte_ord(encoded[4])])
+#    #v, w, x, y, z = encoded[5:10]
+#    # v = encoded[5]..z = encoded[9]
+#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[5])]) *
+#                85 + _base85_ords[byte_ord(encoded[6])]) *
+#                85 + _base85_ords[byte_ord(encoded[7])]) *
+#                85 + _base85_ords[byte_ord(encoded[8])]) *
+#                85 + _base85_ords[byte_ord(encoded[9])])
+#    #v, w, x, y, z = encoded[10:15]
+#    # v = encoded[10]..z = encoded[14]
+#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[10])]) *
+#                85 + _base85_ords[byte_ord(encoded[11])]) *
+#                85 + _base85_ords[byte_ord(encoded[12])]) *
+#                85 + _base85_ords[byte_ord(encoded[13])]) *
+#                85 + _base85_ords[byte_ord(encoded[14])])
+#    #v, w, x, y, z = encoded[15:20]
+#    # v = encoded[15]..z = encoded[19]
+#    uint128 = (((((uint128 * 85 + _base85_ords[byte_ord(encoded[15])]) *
+#                85 + _base85_ords[byte_ord(encoded[16])]) *
+#                85 + _base85_ords[byte_ord(encoded[17])]) *
+#                85 + _base85_ords[byte_ord(encoded[18])]) *
+#                85 + _base85_ords[byte_ord(encoded[19])])
