@@ -32,7 +32,7 @@ except ImportError:
 
 from mom._compat import ZERO_BYTE, EMPTY_BYTE
 from mom.codec.integer import uint_to_bytes
-from mom.builtins import bytes_leading, b
+from mom.builtins import bytes_leading
 
 
 def base_to_uint(encoded,

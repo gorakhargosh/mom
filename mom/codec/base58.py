@@ -103,8 +103,8 @@ if have_python3:
 # I don't know what to tell you. Beyond this length powers
 # are computed, so be careful if you care about computation speed.
 # I think this is a VERY generous range. Most of the stuff you decode
-# that is smaller than 256 bytes will be very fast.
-POW_58 = tuple(58**power for power in range(256))
+# that is smaller than 512 bytes will be very fast.
+POW_58 = tuple(58**power for power in range(512))
 
 
 def b58encode(raw_bytes,
