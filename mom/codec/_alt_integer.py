@@ -31,7 +31,7 @@ except ImportError:
 
 from array import array
 from struct import pack, pack_into, unpack
-from mom._compat import range, ZERO_BYTE, get_machine_alignment
+from mom._compat import range, ZERO_BYTE, get_word_alignment
 from mom.builtins import integer_byte_length, b, byte, is_bytes
 
 
@@ -154,7 +154,7 @@ def uint_to_bytes_pycrypto(n, blocksize=0):
 
 def uint_to_bytes_array_based(number, chunk_size=0,
                                _zero_byte=ZERO_BYTE,
-                               _get_machine_alignment=get_machine_alignment):
+                               _get_machine_alignment=get_word_alignment):
     """
     Convert a integer to bytes (base-256 representation)::
 

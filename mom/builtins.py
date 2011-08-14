@@ -218,10 +218,6 @@ def bytes_trailing(raw_bytes, needle=ZERO_BYTE):
     return trailing
 
 
-def bytes_fill(raw_bytes, filler, size):
-    return None
-
-
 def bin(num, prefix="0b"):
     """
     Converts a long value to its binary representation.

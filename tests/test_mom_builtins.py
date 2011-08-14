@@ -7,7 +7,7 @@ import unittest2
 import math
 import struct
 from mom._alt_builtins import integer_byte_length_shift_counting, integer_byte_length_word_aligned, integer_bit_length_shift_counting, integer_bit_length_word_aligned
-from mom._compat import get_machine_alignment, MACHINE_WORD_SIZE, UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX, ZERO_BYTE
+from mom._compat import get_word_alignment, MACHINE_WORD_SIZE, UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX, ZERO_BYTE
 from mom.functional import leading, trailing
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
@@ -419,11 +419,11 @@ class Test_is_negative(unittest2.TestCase):
 class Test_get_machine_alignment(unittest2.TestCase):
     def test_values(self):
         if MACHINE_WORD_SIZE == 32:
-            self.assertEqual(get_machine_alignment(1 << 64), (32, 4, UINT32_MAX, 'L'))
-            self.assertEqual(get_machine_alignment(1 << 32), (32, 4, UINT32_MAX, 'L'))
+            self.assertEqual(get_word_alignment(1 << 64), (32, 4, UINT32_MAX, 'L'))
+            self.assertEqual(get_word_alignment(1 << 32), (32, 4, UINT32_MAX, 'L'))
         elif MACHINE_WORD_SIZE == 64:
-            self.assertEqual(get_machine_alignment(1 << 64), (64, 8, UINT64_MAX, 'Q'))
-            self.assertEqual(get_machine_alignment(1 << 32), (64, 8, UINT64_MAX, 'Q'))
+            self.assertEqual(get_word_alignment(1 << 64), (64, 8, UINT64_MAX, 'Q'))
+            self.assertEqual(get_word_alignment(1 << 32), (64, 8, UINT64_MAX, 'Q'))
         else:
             raise NotImplementedError("Do we support other than 32/64-bit?")
         # Anything 32-bit or below:
@@ -435,7 +435,7 @@ class Test_get_machine_alignment(unittest2.TestCase):
             (1 << 7, (8, 1, UINT8_MAX, 'B'))
         ]
         for num, tup  in values:
-            self.assertEqual(get_machine_alignment(num), tup, "%d, %r" % (num, tup))
+            self.assertEqual(get_word_alignment(num), tup, "%d, %r" % (num, tup))
 
 if __name__ == "__main__":
     unittest2.main()

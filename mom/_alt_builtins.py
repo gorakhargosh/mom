@@ -18,7 +18,7 @@
 from __future__ import absolute_import
 
 from struct import pack
-from mom._compat import ZERO_BYTE, get_machine_alignment
+from mom._compat import ZERO_BYTE, get_word_alignment
 from mom.builtins import b, byte_ord
 
 
@@ -70,7 +70,7 @@ def integer_bit_length_shift_counting(num):
 
 def _integer_raw_bytes_without_leading(num,
                       _zero_byte=ZERO_BYTE,
-                      _get_machine_alignment=get_machine_alignment):
+                      _get_machine_alignment=get_word_alignment):
     # Do not change this to `not num` otherwise a TypeError will not
     # be raised when `None` is passed in as a value.
     if num == 0:

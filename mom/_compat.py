@@ -226,8 +226,8 @@ except AttributeError:
                 raise NotImplementedError("What the fuck?! No PRNG available.")
 
 
-def get_machine_alignment(num, force_arch=64,
-                          _machine_word_size=MACHINE_WORD_SIZE):
+def get_word_alignment(num, force_arch=64,
+                       _machine_word_size=MACHINE_WORD_SIZE):
     """
     Returns alignment details for the given number based on the platform
     Python is running on.
