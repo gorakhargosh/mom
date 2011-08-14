@@ -50,7 +50,7 @@ except ImportError:
 import binascii
 from struct import pack
 
-from mom._compat import get_machine_alignment, ZERO_BYTE
+from mom._compat import get_word_alignment, ZERO_BYTE
 from mom.builtins import is_bytes, b, bytes_leading
 
 
@@ -84,6 +84,34 @@ def bytes_to_uint(raw_bytes):
     return int(binascii.b2a_hex(raw_bytes), 16)
 
 
+def unsigned_integer_to_bytes(number):
+    if number < 0:
+        raise ValueError("Number must be an unsigned integer: %d" % number)
+
+    # Ensure the number is an integer.
+    number & 1
+
+    raw_bytes = b('')
+
+    # Pack the integer one machine word at a time into bytes.
+    num = number
+    word_bits, _, max_uint, pack_type = get_word_alignment(num)
+    pack_format = ">%s" % pack_type
+    while num > 0:
+        raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
+        num >>= word_bits
+
+    # Obtain the index of the first non-zero byte.
+    zero_leading = bytes_leading(raw_bytes)
+
+    if number == 0:
+        raw_bytes = ZERO_BYTE
+
+    # De-padding.
+    raw_bytes = raw_bytes[zero_leading:]
+    return raw_bytes
+
+
 def uint_to_bytes(number, chunk_size=0):
     """
     Convert an unsigned integer to bytes (base-256 representation)::
@@ -109,7 +137,7 @@ def uint_to_bytes(number, chunk_size=0):
     raw_bytes = b('')
     # Align packing to machine word size.
     num = number
-    word_bits, word_bytes, max_uint, pack_type = get_machine_alignment(num)
+    word_bits, word_bytes, max_uint, pack_type = get_word_alignment(num)
     pack_format = ">" + pack_type
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
