@@ -132,23 +132,12 @@ range = range
 reduce = reduce
 next = next
 
-
 # Types and their meanings:
 #
 # * ``bytes`` = bytes (binary data or a sequence of bytes).
 # * ``unicode`` = Unicode string or text (for backward compatibility,
 #    2to3 converts these).
 bytes = bytes_type
-
-# We don't really need to define this type.
-# 2to3 will automatically convert it to Python 3-``str`` anyway.
-# unicode = unicode_type
-
-# Don't do this. This will break the 2to3 tool.
-# Avoid using str. Use ``bytes`` or ``unicode``. ``bytes`` will
-# prevail the transition and ``unicode`` can be translated automatically
-# by the 2to3 tool. ``str`` is a mind-mess.
-# str = unicode_type
 
 # Fake byte literal support.
 b = byte_literal
