@@ -34,6 +34,7 @@ Primes
 """
 
 from __future__ import absolute_import, division
+from mom.builtins import is_integer
 from mom.security.random import generate_random_uint_between
 from mom._prime_sieve import sieve
 from mom._compat import range
@@ -104,6 +105,38 @@ def inverse_mod(num_a, num_b):
     if num_d == 1:
         return ud % num_b
     return 0
+
+
+def exact_log2(number):
+    """
+    Find and return an unsigned integer i >= 0 such that ``number == 2**i``.
+    If no such integer exists, this function raises ValueError.
+
+    .. NOTE:
+        It essentially answers this question:
+
+        "How many times would you have to multiply 2 into itself to
+        get the given number?"
+
+    Taken from PyCrypto.
+
+    :param number:
+        Unsigned integer.
+    :returns:
+        An integer i >= 0 such that number == 2**i.
+    """
+    num = number
+    if num <= 0:
+        raise ValueError("Cannot compute logarithm of non-positive integer")
+    i = 0
+    while num:
+        if (num & 1) and num != 1:
+            raise ValueError("No solution could be found")
+        i += 1
+        num >>= 1
+    i -= 1
+    #assert number == (1 << i)
+    return i
 
 
 def _pure_pow_mod(base, power, modulus):

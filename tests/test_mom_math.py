@@ -6,7 +6,7 @@ from __future__ import absolute_import
 import unittest2
 
 from mom.math import gcd, lcm, is_prime, _pure_is_prime, \
-    generate_random_prime, generate_random_safe_prime
+    generate_random_prime, generate_random_safe_prime, exact_log2
 from mom._prime_sieve import make_prime_sieve
 
 class Test__pure_is_prime(unittest2.TestCase):
@@ -46,3 +46,20 @@ class Test_lcm(unittest2.TestCase):
         self.assertEqual(lcm(6, 4), 12)
         self.assertEqual(lcm(21, 6), 42)
         
+
+class Test_exact_log2(unittest2.TestCase):
+    def test_ValueError_when_not_found(self):
+        self.assertRaises(ValueError, exact_log2, 7)
+        self.assertRaises(ValueError, exact_log2, 58)
+        self.assertRaises(ValueError, exact_log2, 62)
+        self.assertRaises(ValueError, exact_log2, 85)
+
+    def test_ValueError_when_not_negative_or_0(self):
+        self.assertRaises(ValueError, exact_log2, 0)
+        self.assertRaises(ValueError, exact_log2, -1)
+        self.assertRaises(ValueError, exact_log2, -1024)
+
+    def test_correctness(self):
+        powers = range(20)
+        for power in powers:
+            self.assertEqual(exact_log2(1 << power), power)
