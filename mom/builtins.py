@@ -52,7 +52,6 @@ even when Python versions change.
 
 Rules to follow:
 * Use ``bytes`` where you want byte strings (binary data).
-* Use ``unicode`` where you want Unicode strings (unencoded text).
 
 The meanings of these types have been changed to suit Python 3.
 
@@ -63,8 +62,11 @@ Encodings
 .. autofunction:: byte
 .. autofunction:: byte_ord
 
+
 Size counting
 -------------
+.. autofunction:: bytes_leading
+.. autofunction:: bytes_trailing
 .. autofunction:: integer_bit_length
 .. autofunction:: integer_byte_length
 
@@ -107,6 +109,8 @@ __all__ = [
     "byte",
     "byte_ord",
     "bytes",
+    "bytes_leading",
+    "bytes_trailing",
     "bin",
     "hex",
     "integer_byte_length",
