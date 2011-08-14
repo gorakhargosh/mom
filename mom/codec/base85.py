@@ -80,7 +80,7 @@ from array import array
 from struct import unpack, pack
 from mom import string
 from mom.builtins import is_bytes, b, byte_ord, byte
-from mom._compat import range, ZERO_BYTE, UINT128_MAX, UINT32_MAX, have_little_endian, have_python3
+from mom._compat import range, ZERO_BYTE, UINT128_MAX, UINT32_MAX, have_little_endian, have_python3, EMPTY_BYTE
 
 
 __all__ = [
@@ -294,7 +294,7 @@ def _b85decode_chunks(encoded, base85_bytes, base85_ords):
     #uint32s = [0] * num_uint32s
     uint32s = array('I', [0] * num_uint32s)
     j = 0
-    chunk = b('')
+    chunk = EMPTY_BYTE
     try:
         for i in range(0, length, 5):
             chunk = encoded[i:i+5]
@@ -374,8 +374,8 @@ def b85encode(raw_bytes,
     :returns:
         ASCII-85 encoded bytes.
     """
-    prefix = prefix or b("")
-    suffix = suffix or b("")
+    prefix = prefix or EMPTY_BYTE
+    suffix = suffix or EMPTY_BYTE
     if not (is_bytes(prefix) and is_bytes(suffix)):
         raise TypeError(
             "Prefix/suffix must be bytes: got prefix %r, %r" %
@@ -424,8 +424,8 @@ def b85decode(encoded,
     :returns:
         ASCII85-decoded raw bytes.
     """
-    prefix = prefix or b("")
-    suffix = suffix or b("")
+    prefix = prefix or EMPTY_BYTE
+    suffix = suffix or EMPTY_BYTE
 
     if not (is_bytes(prefix) and is_bytes(suffix)):
         raise TypeError(
@@ -441,7 +441,7 @@ def b85decode(encoded,
         )
 
     # ASCII-85 ignores whitespace.
-    encoded = b('').join(encoded.split())
+    encoded = EMPTY_BYTE.join(encoded.split())
 
     # Strip the prefix and suffix.
     if prefix and encoded.startswith(prefix):
@@ -508,7 +508,7 @@ def rfc1924_b85decode(encoded):
             "Encoded sequence must be bytes: got %r" % type(encoded).__name__
         )
     # Ignore whitespace.
-    encoded = b('').join(encoded.split())
+    encoded = EMPTY_BYTE.join(encoded.split())
     return _b85decode_chunks(encoded, RFC1924_BYTES, RFC1924_ORDS)
 
 
@@ -585,7 +585,7 @@ def ipv6_b85decode(encoded,
         )
 
     # Ignore whitespace.
-    encoded = b('').join(encoded.split())
+    encoded = EMPTY_BYTE.join(encoded.split())
 
     if len(encoded) != 20:
         raise ValueError("Not 20 encoded bytes: %r" % encoded)

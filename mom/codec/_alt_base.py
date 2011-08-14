@@ -17,7 +17,7 @@
 from array import array
 
 import re
-from mom._compat import ZERO_BYTE, UINT128_MAX
+from mom._compat import ZERO_BYTE, UINT128_MAX, EMPTY_BYTE
 from mom.builtins import is_bytes, b
 from mom.codec import uint_to_bytes
 from mom.codec.base58 import ASCII58_BYTES, ASCII58_ORDS
@@ -52,7 +52,7 @@ def b58encode_naive(raw_bytes,
         raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     number = bytes_to_uint(raw_bytes)
-    encoded = b('')
+    encoded = EMPTY_BYTE
     while number > 0:
         encoded = base_bytes[number % 58] + encoded
         number //= 58
@@ -88,7 +88,7 @@ def b62encode_naive(raw_bytes,
         raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     number = bytes_to_uint(raw_bytes)
-    encoded = b('')
+    encoded = EMPTY_BYTE
     while number > 0:
         encoded = base_bytes[number % 62] + encoded
         number //= 62
@@ -123,7 +123,7 @@ def b62decode_naive(encoded,
                         type(encoded).__name__)
 
     # Ignore whitespace.
-    encoded = re.sub(WHITESPACE_PATTERN, b(''), encoded)
+    encoded = re.sub(WHITESPACE_PATTERN, EMPTY_BYTE, encoded)
 
     # Convert to big integer.
     number = 0
@@ -136,7 +136,7 @@ def b62decode_naive(encoded,
     else:
         # We don't want to convert to b'\x00' when we get number == 0.
         # That would add an off-by-one extra zero byte in the result.
-        raw_bytes = b('')
+        raw_bytes = EMPTY_BYTE
 
     # Add prefixed padding if required.
     # 0 byte is represented using the first character in the character set.
@@ -175,7 +175,7 @@ def b58decode_naive(encoded,
                         type(encoded).__name__)
 
     # Ignore whitespace.
-    encoded = re.sub(WHITESPACE_PATTERN, b(''), encoded)
+    encoded = re.sub(WHITESPACE_PATTERN, EMPTY_BYTE, encoded)
 
     # Convert to big integer.
     number = 0
@@ -188,7 +188,7 @@ def b58decode_naive(encoded,
     else:
         # We don't want to convert to b'\x00' when we get number == 0.
         # That would add an off-by-one extra zero byte in the result.
-        raw_bytes = b('')
+        raw_bytes = EMPTY_BYTE
 
     # Add prefixed padding if required.
     # 0 byte is represented using the first character in the character set.
@@ -224,7 +224,7 @@ def ipv6_b85decode_naive(encoded,
             "Encoded sequence must be bytes: got %r" % type(encoded).__name__
         )
     # Ignore whitespace.
-    encoded = b('').join(encoded.split())
+    encoded = EMPTY_BYTE.join(encoded.split())
     if len(encoded) != 20:
         raise ValueError("Not 20 encoded bytes: %r" % encoded)
     uint128 = 0

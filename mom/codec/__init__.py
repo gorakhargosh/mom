@@ -71,7 +71,7 @@ Use them. They will help prevent unexpected bugs.
 from __future__ import absolute_import
 
 import binascii
-from mom._compat import have_python3, ZERO_BYTE
+from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE
 from mom.builtins import is_bytes, b
 from mom.functional import leading, chunks
 from mom.codec.integer import bytes_to_uint, uint_to_bytes
@@ -413,7 +413,7 @@ def bin_encode(raw_bytes):
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
-    return b('').join(_HEX_TO_BIN_LOOKUP[hex_char]
+    return EMPTY_BYTE.join(_HEX_TO_BIN_LOOKUP[hex_char]
                    for hex_char in hex_encode(raw_bytes))
 
     # Prefixed zero-bytes destructive. '\x00\x00' treated as '\x00'
@@ -432,7 +432,7 @@ def bin_decode(encoded):
     if not is_bytes(encoded):
         raise TypeError("argument must be bytes: got %r" %
                         type(encoded).__name__)
-    return hex_decode(b('').join(_BIN_TO_HEX_LOOKUP[nibble]
+    return hex_decode(EMPTY_BYTE.join(_BIN_TO_HEX_LOOKUP[nibble]
                               for nibble in chunks(encoded, 4)))
 
     # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'

@@ -31,7 +31,7 @@ except ImportError:
 
 from array import array
 from struct import pack, pack_into, unpack
-from mom._compat import range, ZERO_BYTE, get_word_alignment
+from mom._compat import range, ZERO_BYTE, get_word_alignment, EMPTY_BYTE
 from mom.builtins import integer_byte_length, b, byte, is_bytes
 
 
@@ -117,8 +117,8 @@ def uint_to_bytes_naive(number, block_size=0):
             padding_size -= 1
         padding =  ZERO_BYTE * padding_size
     else:
-        padding = b('')
-    return padding + b('').join(raw_bytes)
+        padding = EMPTY_BYTE
+    return padding + EMPTY_BYTE.join(raw_bytes)
 
 
 # From pycrypto (for verification only).
@@ -131,7 +131,7 @@ def uint_to_bytes_pycrypto(n, blocksize=0):
     blocksize.
     """
     # after much testing, this algorithm was deemed to be the fastest
-    s = b('')
+    s = EMPTY_BYTE
     n = int(n)
     while n > 0:
         s = pack('>I', n & 0xffffffff) + s
@@ -180,7 +180,7 @@ def uint_to_bytes_array_based(number, chunk_size=0,
     if number < 0:
         raise ValueError('Number must be unsigned integer: %d' % number)
 
-    raw_bytes = b('')
+    raw_bytes = EMPTY_BYTE
     if not number:
         raw_bytes = ZERO_BYTE
 
@@ -280,7 +280,7 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
 #    if number < 0:
 #        raise ValueError('Number must be unsigned integer: %d' % number)
 #
-#    raw_bytes = b('')
+#    raw_bytes = EMPTY_BYTE
 #    # Align packing to machine word size.
 #    num = number
 #    word_bits, word_bytes, max_uint, pack_type = get_word_alignment(num)

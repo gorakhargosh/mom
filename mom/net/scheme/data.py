@@ -27,6 +27,7 @@
 
 
 from __future__ import absolute_import
+from mom._compat import EMPTY_BYTE
 
 try:
     # Python 3.
@@ -80,11 +81,11 @@ def data_urlencode(raw_bytes,
         # We want ASCII bytes.
         encode = lambda data: quote(data).encode('ascii')
         codec = b(",")
-    mime_type = mime_type or b("")
+    mime_type = mime_type or EMPTY_BYTE
 
-    charset = b(";charset=") + charset if charset else b("")
+    charset = b(";charset=") + charset if charset else EMPTY_BYTE
     encoded = encode(raw_bytes)
-    return b('').join((b("data:"), mime_type, charset, codec, encoded))
+    return EMPTY_BYTE.join((b("data:"), mime_type, charset, codec, encoded))
 
 
 def data_urlparse(data_url):

@@ -50,7 +50,7 @@ except ImportError:
 import binascii
 from struct import pack
 
-from mom._compat import get_word_alignment, ZERO_BYTE
+from mom._compat import get_word_alignment, ZERO_BYTE, EMPTY_BYTE
 from mom.builtins import is_bytes, b, bytes_leading
 
 
@@ -127,7 +127,7 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     # Ensure these are integers.
     number & 1 and chunk_size & 1 and fill_size & 1
 
-    raw_bytes = b('')
+    raw_bytes = EMPTY_BYTE
 
     # Pack the integer one machine word at a time into bytes.
     num = number

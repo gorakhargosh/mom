@@ -18,7 +18,7 @@
 from __future__ import absolute_import
 
 from struct import pack
-from mom._compat import ZERO_BYTE, get_word_alignment
+from mom._compat import ZERO_BYTE, get_word_alignment, EMPTY_BYTE
 from mom.builtins import b, byte_ord
 
 
@@ -74,10 +74,10 @@ def _integer_raw_bytes_without_leading(num,
     # Do not change this to `not num` otherwise a TypeError will not
     # be raised when `None` is passed in as a value.
     if num == 0:
-        return b('')
+        return EMPTY_BYTE
     if num < 0:
         num = -num
-    raw_bytes = b('')
+    raw_bytes = EMPTY_BYTE
     word_bits, num_bytes, max_uint, pack_type = _get_machine_alignment(num)
     pack_format = ">" + pack_type
     while num > 0:

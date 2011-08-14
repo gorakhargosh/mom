@@ -41,6 +41,7 @@ Contents:
  - best_match():        Choose the mime-type with the highest quality ('q')
                           from a list of candidates.
 """
+from mom._compat import EMPTY_BYTE
 
 from mom.builtins import b
 
@@ -185,7 +186,7 @@ def best_match(supported, header):
         pos += 1
     weighted_matches.sort()
 
-    return weighted_matches[-1][0][1] and weighted_matches[-1][2] or b('')
+    return weighted_matches[-1][0][1] and weighted_matches[-1][2] or EMPTY_BYTE
 
 
 def _filter_blank(i):
