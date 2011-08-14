@@ -45,7 +45,7 @@ class Test_lcm(unittest2.TestCase):
         self.assertEqual(lcm(4, 6), 12)
         self.assertEqual(lcm(6, 4), 12)
         self.assertEqual(lcm(21, 6), 42)
-        
+
 
 class Test_exact_log2(unittest2.TestCase):
     def test_ValueError_when_not_found(self):

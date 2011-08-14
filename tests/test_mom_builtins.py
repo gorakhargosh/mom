@@ -62,6 +62,7 @@ class Test_bytes_leading_and_trailing(unittest2.TestCase):
         self.assertEqual(bytes_leading(b('\x00\xff')), 1)
         self.assertEqual(bytes_leading(b('\x00')), 1)
         self.assertEqual(bytes_leading(b('\x00\x00\x00\xff')), 3)
+        self.assertEqual(bytes_leading(b('')), 0)
 
     def test_trailing(self):
         self.assertEqual(bytes_trailing(b('\x00\x00\x00\x00')), 4)
