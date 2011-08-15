@@ -285,9 +285,12 @@ Use them. They will help prevent unexpected bugs.
 from __future__ import absolute_import
 
 import binascii
-from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE, UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE, EQUAL_BYTE, DIGIT_ZERO_BYTE
+
+from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE, \
+    UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE, \
+    EQUAL_BYTE, DIGIT_ZERO_BYTE
 from mom.builtins import is_bytes, b, bytes_leading
-from mom.functional import leading, chunks
+from mom.functional import chunks
 from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.codec.base62 import b62encode, b62decode
 from mom.codec.base58 import b58decode, b58encode
