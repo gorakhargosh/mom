@@ -100,8 +100,8 @@ if have_python3:
 # If you're going to make people type stuff longer than this length
 # I don't know what to tell you. Beyond this length powers
 # are computed, so be careful if you care about computation speed.
-# I think this is a VERY generous range. Most of the stuff you decode
-# that is smaller than 512 bytes will be very fast.
+# I think this is a VERY generous range. Decoding bytes fewer than 512
+# will use this pre-computed lookup table, and hence, be faster.
 POW_58 = tuple(58**power for power in range(512))
 
 
