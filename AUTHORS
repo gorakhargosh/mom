@@ -33,6 +33,7 @@ The library borrows some code from Facebook's Tornado Web framework
 Bret Taylor             <btaylor+contributor@gmail.com>
 Ben Darnell             <ben@bendarnell.com>
 
-Base implementation for SetQueue
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Lukáš Lalinský          <lalinsky@gmail.com>
+Collections
+~~~~~~~~~~~
+Lukáš Lalinský           <lalinsky@gmail.com>
+Alice Zoë Bevan–McGregor <alice.mcgregor@me.com>
