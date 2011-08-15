@@ -191,7 +191,7 @@ Chunked encoding
 ~~~~~~~~~~~~~~~~
 Base encoding a chunk of 4 bytes at a time (32 bits at a time) means
 we would need a way to represent each of the 256**4 (4294967296) values with
-our encoding.
+our encoding::
 
     >>> 256**4
     4294967296
@@ -200,7 +200,7 @@ our encoding.
 
 Given an encoding alphabet of 85 ASCII characters, for example, we need
 to find an exponent (logarithm) that allows us to represent each one of these
-4294967296 values.
+4294967296 values::
 
     >>> 85**4
     52200625
@@ -209,7 +209,7 @@ to find an exponent (logarithm) that allows us to represent each one of these
     >>> 85**5 >= 2**32
     True
 
-Done using logarithms:
+Done using logarithms::
 
     >>> import math
     >>> math(2**32, 85)
@@ -220,7 +220,7 @@ Therefore, we would need 5 characters from this encoding alphabet to represent
 of space and the codec will need to deal with padding and de-padding bytes
 to ensure the resulting size to be a multiple of the chunk size, but the
 byte sequence will be more compact than its base-16 (hexadecimal)
-representation, for example.
+representation, for example::
 
     >>> import math
     >>> math(2**32, 16)
