@@ -10,7 +10,25 @@ except ImportError:
     from Queue import Empty as QueueEmpty
 
 from threading import Thread
-from mom.collections import SetQueue
+from mom.collections import SetQueue, AttributeDict, attrdict
+
+class Test_AttributeDict(unittest2.TestCase):
+    def test_behavior(self):
+        d = AttributeDict(something="foobar", another_thing="haha")
+        self.assertEqual(d.something, "foobar")
+        self.assertEqual(d.another_thing, "haha")
+
+        d = attrdict(something="foobar", another_thing="haha")
+        self.assertEqual(d.something, "foobar")
+        self.assertEqual(d.another_thing, "haha")
+
+    def test_KeyError_when_key_not_found(self):
+        d = AttributeDict(something="foobar", another_thing="haha")
+        a = attrdict(something="foobar", another_thing="haha")
+        def foo_wrapper(d):
+            return d.not_present
+        self.assertRaises(KeyError, foo_wrapper, d)
+        self.assertRaises(KeyError, foo_wrapper, a)
 
 
 class TestSetQueue(unittest2.TestCase):
