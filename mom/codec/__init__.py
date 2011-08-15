@@ -22,7 +22,220 @@
 This module contains codecs for converting between hex, base64, base85,
 base58, base62, decimal, and binary representations of bytes.
 
-Understand that bytes are simply base-256 representation.
+Understand that bytes are simply base-256 representation. A PNG file::
+
+    \\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00
+    \\x05\\x00\\x00\\x00\\x05\\x08\\x06\\x00\\x00\\x00\\x8do&
+    \\xe5\\x00\\x00\\x00\\x1cIDAT\\x08\\xd7c\\xf8\\xff\\xff?
+    \\xc3\\x7f\\x06 \\x05\\xc3 \\x12\\x84\\xd01\\xf1\\x82X\\xcd
+    \\x04\\x00\\x0e\\xf55\\xcb\\xd1\\x8e\\x0e\\x1f\\x00\\x00\\x00
+    \\x00IEND\\xaeB`\\x82
+
+That is what an example PNG file looks like as a stream of bytes (base-256)
+in Python (with line-breaks added for visual-clarity).
+
+If we wanted to send this PNG within an email message, which is restricted to
+ASCII characters, we cannot simply add these bytes in and hope they go
+through unchanged. The receiver at the other end expects to get a copy
+of exactly the same bytes that you send. Because we are limited to using
+ASCII characters, we need to "encode" this binary data into a subset of
+ASCII characters before transmitting, and the receiver needs to "decode"
+those ASCII characters back into binary data before attempting to display it.
+
+.. pull-quote::
+
+    **Base-encoding raw bytes into ASCII characters is used to safely
+    transmit binary data through any medium that does not inherently support
+    non-ASCII data.**
+
+Therefore, we need to convert the above PNG binary data into something
+that looks like (again, line-breaks have been added for visual clarity only)::
+
+    iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI
+    12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJg
+    gg==
+
+The base-encoding method that we can use is limited by these criteria:
+
+1. The number of ASCII characters, a subset of ASCII, that we can use
+   to represent binary data.
+2. Whether human beings are involved in the transmission of data. Ergo,
+   visual clarity, legibility, readability, human-inputability, and even
+   *double-click-to-select-ability*! *(Hint: try double-clicking the encoded
+   data above to see whether it selects all of it--it won't).*
+3. Whether we want the process to be more time-efficient or space-efficient.
+   That is, whether we can process binary data in chunks or whether we need
+   to convert it into an arbitrarily large integer before encoding,
+   respectively.
+
+
+Terminology
+-----------
+
+Answer this question:
+
+.. pull-quote::
+
+    How many **times** should I multiply 2 by itself to obtain 8?
+
+You say:
+
+.. pull-quote::
+
+    That's a dumb question. 3 times!
+
+Well, congratulations! You have just re-discovered **logarithms**.
+In a system of equations, we may have unknowns. Given an
+equation with 3 parts, 2 of which are known, we often need to find the 3rd.
+Logarithms are used when you know the base (radix) and the number, but not the
+exponent.
+
+    **Logarithms help you find exponents.**
+
+Take for example::
+
+    2**0 = 1
+    2**1 = 2
+    2**2 = 4
+    2**3 = 8
+    2**4 = 16
+    2**5 = 32
+    2**6 = 64
+
+Alternatively, logarithms can be thought of as answering the question:
+
+.. pull-quote::
+
+    **Raising 2 to which exponent gets me 64?**
+
+This is the same as doing::
+
+    >>> import math
+    >>> math.log(64, 2)    # number 64, base 2.
+    6.0
+
+read as "logarithm to the base 2 of 64" which gives 6. That is, if
+we raise 2 to the power 6, we get 64.
+
+The concept of **roots** or radicals is also related. Roots help you find the
+base (radix) given the exponent and the number. So::
+
+    >>> root(8, 3)   # cube root. exponent 3, number 8.
+    2.0              # base
+
+.. pull-quote::
+
+        **Roots help you find the base.**
+
+Hopefully, that brings you up to speed and enables you to clearly **see the
+relationship between powers, logarithms, and roots**.
+
+We will often refer to the term **byte** and mean it to be
+an octet (8) of bits. **The number of bits in a byte is dependent on the
+processor architecture.** Therefore, we *can* have a 9-bit byte or even
+a 36-bit byte.
+
+.. pull-quote::
+
+    **For our purposes, however, a byte means a chunk of 8 bits--that is,
+    an octet.**
+
+By the term "**encoding**," throughout this discussion, we mean **a way of
+representing a sequence of bytes in terms of a subset of US-ASCII characters,
+each of which uses 7 bits**. This ensures that in communication and messaging
+that involves the transmission of binary data, at a small increase in encoded
+size, we can *safely* transmit this data encoded as ASCII_ text. We could be
+pedantic and use the phrase "ASCII-subset-based encoding" everywhere, but we'll
+simply refer to it as "encoding" instead.
+
+.. _ASCII: http://en.wikipedia.org/wiki/ASCII
+
+
+How it applies to encodings
+---------------------------
+Byte, or base-256, representation allows each byte to be represented
+using one of 256 values (0-255 inclusive). Modern processors can process
+data in chunks of 32 bits (4 bytes), 64 bits (8 bytes), and so on. Notice
+that these are powers of 2 given that our processors are binary machines.
+
+We could feed a 64-bit processor with 8 bits of data at a time, but
+that would guarantee that the codec will be only 1/8th as time-efficient as it
+can be. That is, if you feed the same 64-bit processor with 64 bits of data
+at a time instead, the encoding process will be 8 times as fast. Whoa!
+
+Therefore, in order to ensure that our codecs are fast, we need to feed
+our processors data in chunks to be more time-efficient. The two types of
+encoding we discuss here are:
+
+1. big-integer-based polynomial-time base-conversions
+2. chunked linear-time base-conversions.
+
+.. pull-quote::
+
+    **These two types of encoding are not always compatible with each other.**
+
+Big-integer based encoding
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+This method of encoding is generally costlier because the raw bytes
+(base-256 representation) are first converted into a big integer, which
+is then subsequently repeatedly divided to obtain an encoded sequence
+of bytes. Bases 58, 60, and 62 are not powers of 2, and therefore cannot
+be reliably or efficiently encoded in chunks of powers of 2 (used by
+microprocessors) so as to produce the same encoded representations as
+their big integer encoded representations. Therefore,
+using these encodings for a large amount of binary data is not advised.
+The base-58 and base-62 modules in this library are meant to be used with
+small amounts of binary data.
+
+Chunked encoding
+~~~~~~~~~~~~~~~~
+Base encoding a chunk of 4 bytes at a time (32 bits at a time) means
+we would need a way to represent each of the 256**4 (4294967296) values with
+our encoding.
+
+    >>> 256**4
+    4294967296
+    >>> 2**32
+    4294967296
+
+Given an encoding alphabet of 85 ASCII characters, for example, we need
+to find an exponent (logarithm) that allows us to represent each one of these
+4294967296 values.
+
+    >>> 85**4
+    52200625
+    >>> 85**5
+    4437053125
+    >>> 85**5 >= 2**32
+    True
+
+Done using logarithms:
+
+    >>> import math
+    >>> math(2**32, 85)
+    4.9926740807112
+
+Therefore, we would need 5 characters from this encoding alphabet to represent
+4 bytes. Since 85 is not a power of 2, there is going to be a little wastage
+of space and the codec will need to deal with padding and de-padding bytes
+to ensure the resulting size to be a multiple of the chunk size, but the
+byte sequence will be more compact than its base-16 (hexadecimal)
+representation, for example.
+
+    >>> import math
+    >>> math(2**32, 16)
+    8.0
+
+As you can see, if we used hexadecimal representation instead, each 4-byte
+chunk would be represented using 8 characters from the encoding alphabet.
+This is clearly less space-efficient than using 5 characters per 4 bytes of
+binary data.
+
+Base-64 as another example
+--------------------------
+Base-64 allows us to represent 256**4 (4294967296) values using 64
+ASCII characters.
+
 
 Bytes base-encoding
 -------------------
@@ -65,6 +278,7 @@ Use them. They will help prevent unexpected bugs.
 .. automodule:: mom.codec.integer
 .. automodule:: mom.codec.json
 .. automodule:: mom.codec.text
+.. automodule:: mom.codec._base
 
 """
 

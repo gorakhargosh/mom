@@ -23,7 +23,7 @@ Queues
 ------
 .. autoclass:: SetQueue
 .. autoclass:: AttributeDict
-.. autoclass:: adict
+.. autoclass:: attrdict
 
 """
 

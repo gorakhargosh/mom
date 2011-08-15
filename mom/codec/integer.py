@@ -86,7 +86,7 @@ def bytes_to_uint(raw_bytes):
 
 def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     """
-    Convert an unsigned integer to bytes (base-256 representation)::
+    Convert an unsigned integer to bytes (base-256 representation).
 
     Does not preserve leading zeros if you don't specify a chunk size or
     fill size.

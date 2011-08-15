@@ -17,12 +17,13 @@
 
 """
 :module: mom.codec._base
-:synopsis: Routines used by base converters.
+:synopsis: Routines used by ASCII-based base converters.
 
 .. autofunction:: base_encode
 .. autofunction:: base_decode
 .. autofunction:: base_to_uint
 .. autofunction:: uint_to_base256
+
 """
 
 try:
@@ -38,6 +39,18 @@ from mom.builtins import bytes_leading, is_bytes
 
 
 def base_encode(raw_bytes, base, base_bytes, base_zero, padding=True):
+    """
+    Encodes raw bytes given a base.
+
+    :param raw_bytes:
+        Raw bytes to encode.
+    :param base:
+        Unsigned integer base.
+    :param base_bytes:
+        The ASCII bytes used in the encoded string. "Character set" or "alphabet".
+    :param base_zero:
+
+    """
     if not is_bytes(raw_bytes):
         raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
