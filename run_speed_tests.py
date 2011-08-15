@@ -43,6 +43,7 @@ setups = [
     "from mom._alt_builtins import integer_bit_length_shift_counting; n=1<<4096",
     None,
     "from mom.codec.integer import uint_to_bytes; n=1<<4096",
+    "from mom.codec._alt_integer import uint_to_bytes_simple; n=1<<4096",
     "from mom.codec._alt_integer import uint_to_bytes_array_based; n=1<<4096",
     "from mom.codec._alt_integer import uint_to_bytes_pycrypto; n=1<<4096",
     "from mom.codec._alt_integer import uint_to_bytes_naive; n=1<<4096",
@@ -50,6 +51,7 @@ setups = [
     None,
     "import os; from mom.codec.integer import bytes_to_uint; b = os.urandom(4003)",
     "import os; from mom.codec._alt_integer import bytes_to_uint_naive; b = os.urandom(4003)",
+    "import os; from mom.codec._alt_integer import bytes_to_uint_simple; b = os.urandom(4003)",
 ]
 statements = [
     "b58encode(b)",
@@ -90,6 +92,7 @@ statements = [
     "integer_bit_length_shift_counting(n)",
     None,
     "uint_to_bytes(n)",
+    "uint_to_bytes_simple(n)",
     "uint_to_bytes_array_based(n)",
     "uint_to_bytes_pycrypto(n)",
     "uint_to_bytes_naive(n)",
@@ -97,6 +100,7 @@ statements = [
     None,
     "bytes_to_uint(b)",
     "bytes_to_uint_naive(b)",
+    "bytes_to_uint_simple(b)",
 ]
 
 

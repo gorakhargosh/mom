@@ -132,6 +132,13 @@ except NameError:
     from functools import reduce
 reduce = reduce
 
+try:
+    # Python 2.x
+    from itertools import imap as map
+except ImportError:
+    # Python 3.x
+    pass
+
 
 if getattr(dict, "iteritems", None):
     def dict_each(func, iterable):

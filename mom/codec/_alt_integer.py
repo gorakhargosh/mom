@@ -31,8 +31,10 @@ except ImportError:
 
 from array import array
 from struct import pack, pack_into, unpack
-from mom._compat import range, ZERO_BYTE, get_word_alignment, EMPTY_BYTE
-from mom.builtins import integer_byte_length, b, byte, is_bytes
+from mom._compat import range, ZERO_BYTE, \
+    get_word_alignment, EMPTY_BYTE, \
+    map, reduce
+from mom.builtins import integer_byte_length, b, byte, is_bytes, byte_ord
 
 
 def uint_to_bytes_naive_array_based(uint, chunk_size=0):
@@ -315,3 +317,17 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
 #        raw_bytes = raw_bytes[first_non_zero:]
 #    return raw_bytes
 #
+
+
+def uint_to_bytes_simple(num):
+    assert num >= 0
+    rv = []
+    while num:
+        rv.append(byte(num & 0xff))
+        num >>= 8
+    return EMPTY_BYTE.join(reversed(rv))
+
+
+def bytes_to_uint_simple(bytes):
+    return reduce(lambda a, b: a << 8 | b, map(byte_ord, bytes), 0)
+
