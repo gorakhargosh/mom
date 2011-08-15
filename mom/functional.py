@@ -199,6 +199,8 @@ Predicates, transforms, and walkers
 
 from __future__ import absolute_import
 
+
+from collections import defaultdict, deque
 from functools import partial
 try:
     # Python 2.x
@@ -218,7 +220,7 @@ from itertools import islice, takewhile,\
     cycle, repeat, groupby
 
 from mom.itertools import chain, starmap
-from mom.builtins import is_bytes_or_unicode, is_bytes
+from mom.builtins import is_bytes_or_unicode
 from mom._compat import range, dict_each, reduce as _reduce, next
 
 
@@ -425,7 +427,7 @@ def _some1(predicate, iterable):
 def _some2(predicate, iterable):
     """Alternative implementation of :func:`some`."""
     result = False
-    for x in dropwhile(complement(predicate), iterable):
+    for _ in dropwhile(complement(predicate), iterable):
         result = True
     return result
 
@@ -958,8 +960,6 @@ def occurrences(iterable):
     :returns:
         A dictionary of counts of each element in the iterable.
     """
-    from collections import defaultdict
-
     d = defaultdict(int)
     for k in iterable:
         d[k] += 1
@@ -1398,7 +1398,6 @@ def eat(iterator, n):
     # Use functions that consume iterators at C speed.
     if n is None:
         # Feed the entire iterator into a zero-length deque.
-        from collections import deque
         deque(iterator)
     else:
         # Advance to the empty slice starting at position n.

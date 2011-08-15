@@ -41,21 +41,7 @@ OpenSSL MPI Bignum conversion
 from __future__ import absolute_import
 
 from array import array
-#from mom.builtins import b
 from mom.builtins import integer_byte_length, integer_bit_length
-
-
-#try:
-#    _bytearray(0)
-#except NameError:
-#    class bytearray(object):
-#        def __init__(self, source=None, encoding=None, errors=None):
-#            source = source or b('')
-#            self._array = array('B', source)
-#
-#        def __repr__(self):
-#            return repr(self._array)
-#bytearray = bytearray
 
 
 def bytearray_create(sequence):

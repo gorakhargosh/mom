@@ -19,7 +19,7 @@ from __future__ import absolute_import
 
 from struct import pack
 from mom._compat import ZERO_BYTE, get_word_alignment, EMPTY_BYTE
-from mom.builtins import b, byte_ord
+from mom.builtins import byte_ord
 
 
 def integer_byte_length_shift_counting(num):
@@ -78,7 +78,7 @@ def _integer_raw_bytes_without_leading(num,
     if num < 0:
         num = -num
     raw_bytes = EMPTY_BYTE
-    word_bits, num_bytes, max_uint, pack_type = _get_machine_alignment(num)
+    word_bits, _, max_uint, pack_type = _get_machine_alignment(num)
     pack_format = ">" + pack_type
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes

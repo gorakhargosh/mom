@@ -134,7 +134,7 @@ def list_directories(dir_pathname,
     :param followlinks:
         Please see the documentation for :func:`os.walk`
     """
-    for root, dir_names, file_names in walk(
+    for root, dir_names, _ in walk(
         dir_pathname, recursive, topdown, followlinks):
         for dir_name in dir_names:
             yield absolute_path(path_join(root, dir_name))
@@ -158,7 +158,7 @@ def list_files(dir_pathname,
     :param followlinks:
         Please see the documentation for :func:`os.walk`
     """
-    for root, dir_names, file_names in walk(
+    for root, _, file_names in walk(
         dir_pathname, recursive, topdown, followlinks):
         for file_name in file_names:
             yield absolute_path(path_join(root, file_name))

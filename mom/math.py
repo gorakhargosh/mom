@@ -230,7 +230,7 @@ def _pure_is_prime(num, iterations=5, _sieve=sieve):
         s, t = s // 2, t+1
     #Repeat Rabin-Miller x times
     a = 2 #Use 2 as a base for first iteration speedup, per HAC
-    for count in range(iterations):
+    for _ in range(iterations):
         v = _pure_pow_mod(a, s, num)
         if v == 1:
             continue
