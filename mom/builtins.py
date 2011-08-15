@@ -176,6 +176,9 @@ def bytes_leading(raw_bytes, needle=ZERO_BYTE):
     :returns:
         The number of leading needle bytes.
     """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" %
+                        type(raw_bytes).__name__)
     leading = 0
     # Indexing keeps compatibility between Python 2.x and Python 3.x
     _byte = needle[0]
@@ -200,6 +203,9 @@ def bytes_trailing(raw_bytes, needle=ZERO_BYTE):
     :returns:
         The number of trailing needle bytes.
     """
+    if not is_bytes(raw_bytes):
+        raise TypeError("argument must be raw bytes: got %r" %
+                        type(raw_bytes).__name__)
     trailing = 0
     # Indexing keeps compatibility between Python 2.x and Python 3.x
     _byte = needle[0]

@@ -285,8 +285,8 @@ Use them. They will help prevent unexpected bugs.
 from __future__ import absolute_import
 
 import binascii
-from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE
-from mom.builtins import is_bytes, b
+from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE, UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE, EQUAL_BYTE, DIGIT_ZERO_BYTE
+from mom.builtins import is_bytes, b, bytes_leading
 from mom.functional import leading, chunks
 from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.codec.base62 import b62encode, b62decode
@@ -382,7 +382,9 @@ def base64_urlsafe_encode(raw_bytes):
     # this module itself is a wrapper. binascii is implemented in C, so
     # we avoid module overhead however small.
     encoded = binascii.b2a_base64(raw_bytes)[:-1]
-    return encoded.rstrip(b('=')).replace(b('+'), b('-')).replace(b('/'),b('_'))
+    return encoded.rstrip(EQUAL_BYTE).\
+        replace(PLUS_BYTE, HYPHEN_BYTE).\
+        replace(FORWARD_SLASH_BYTE, UNDERSCORE_BYTE)
 
 
 def base64_urlsafe_decode(encoded):
@@ -399,12 +401,13 @@ def base64_urlsafe_decode(encoded):
                         type(encoded).__name__)
     remainder = len(encoded) % 4
     if remainder:
-        encoded += b('=') * (4 - remainder)
+        encoded += EQUAL_BYTE * (4 - remainder)
     # This is 3-4x faster than urlsafe_b64decode() -Guido.
     # We're not using the base64.py wrapper around binascii because
     # this module itself is a wrapper. binascii is implemented in C, so
     # we avoid module overhead however small.
-    encoded = encoded.replace(b('-'), b('+')).replace(b('_'),b('/'))
+    encoded = encoded.replace(HYPHEN_BYTE, PLUS_BYTE).\
+        replace(UNDERSCORE_BYTE, FORWARD_SLASH_BYTE)
     return binascii.a2b_base64(encoded)
 
 
@@ -547,12 +550,13 @@ def decimal_encode(raw_bytes):
     :returns:
         Decimal-encoded representation.
     """
-    if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" %
-                        type(raw_bytes).__name__)
-    padding = b("0") * leading((lambda w: w == ZERO_BYTE[0]), raw_bytes)
+    padding = DIGIT_ZERO_BYTE * bytes_leading(raw_bytes)
     int_val = bytes_to_uint(raw_bytes)
-    return padding + str(int_val).encode("ascii") if int_val else padding
+    if int_val:
+        encoded = padding + str(int_val).encode("ascii")
+    else:
+        encoded = padding
+    return encoded
 
 
 def decimal_decode(encoded):
@@ -565,12 +569,13 @@ def decimal_decode(encoded):
     :returns:
         Raw bytes.
     """
-    if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" %
-                        type(encoded).__name__)
-    padding = ZERO_BYTE * leading((lambda x: x == b("0")[0]), encoded)
+    padding = ZERO_BYTE * bytes_leading(encoded, DIGIT_ZERO_BYTE)
     int_val = int(encoded)
-    return padding + uint_to_bytes(int_val) if int_val else padding
+    if int_val:
+        decoded = padding + uint_to_bytes(int_val)
+    else:
+        decoded = padding
+    return decoded
 
 
 _HEX_TO_BIN_LOOKUP = {
@@ -628,10 +633,7 @@ def bin_encode(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
     return EMPTY_BYTE.join(_HEX_TO_BIN_LOOKUP[hex_char]
-                   for hex_char in hex_encode(raw_bytes))
-
-    # Prefixed zero-bytes destructive. '\x00\x00' treated as '\x00'
-    #return bin(bytes_to_integer(byte_string))[2:]
+                   for hex_char in binascii.b2a_hex(raw_bytes))
 
 
 def bin_decode(encoded):
@@ -646,9 +648,5 @@ def bin_decode(encoded):
     if not is_bytes(encoded):
         raise TypeError("argument must be bytes: got %r" %
                         type(encoded).__name__)
-    return hex_decode(EMPTY_BYTE.join(_BIN_TO_HEX_LOOKUP[nibble]
-                              for nibble in chunks(encoded, 4)))
-
-    # Prefixed zero-bytes destructive. '\x00\x00\x00' treated as '\x00'
-    #return integer_to_bytes(int(encoded, 2))
-
+    return binascii.a2b_hex(EMPTY_BYTE.join(_BIN_TO_HEX_LOOKUP[nibble]
+                                            for nibble in chunks(encoded, 4)))

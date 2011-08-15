@@ -34,7 +34,7 @@ from struct import pack, pack_into, unpack
 from mom._compat import range, ZERO_BYTE, \
     get_word_alignment, EMPTY_BYTE, \
     map, reduce
-from mom.builtins import integer_byte_length, b, byte, is_bytes, byte_ord
+from mom.builtins import integer_byte_length, byte, is_bytes, byte_ord
 
 
 def uint_to_bytes_naive_array_based(uint, chunk_size=0):
@@ -73,7 +73,7 @@ def uint_to_bytes_naive_array_based(uint, chunk_size=0):
             )
         remainder = length % chunk_size
         if remainder:
-            raw_bytes = (chunk_size - remainder) * b('\x00') + raw_bytes
+            raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
     return raw_bytes
 
 
@@ -140,23 +140,21 @@ def uint_to_bytes_pycrypto(n, blocksize=0):
         n >>= 32
     # strip off leading zeros
     for i in range(len(s)):
-        if s[i] != b('\000')[0]:
+        if s[i] != ZERO_BYTE[0]:
             break
     else:
         # only happens when n == 0
-        s = b('\000')
+        s = ZERO_BYTE
         i = 0
     s = s[i:]
     # add back some pad bytes. this could be done more efficiently w.r.t. the
     # de-padding being done above, but sigh...
     if blocksize > 0 and len(s) % blocksize:
-        s = (blocksize - len(s) % blocksize) * b('\000') + s
+        s = (blocksize - len(s) % blocksize) * ZERO_BYTE + s
     return s
 
 
-def uint_to_bytes_array_based(number, chunk_size=0,
-                               _zero_byte=ZERO_BYTE,
-                               _get_machine_alignment=get_word_alignment):
+def uint_to_bytes_array_based(number, chunk_size=0):
     """
     Convert a integer to bytes (base-256 representation)::
 
@@ -188,7 +186,7 @@ def uint_to_bytes_array_based(number, chunk_size=0,
 
     # Align packing to machine word size.
     num = number
-    word_bits, word_bytes, max_uint, pack_type = _get_machine_alignment(num)
+    word_bits, word_bytes, max_uint, pack_type = get_word_alignment(num)
     pack_format = ">" + pack_type
 
     temp_buffer = array("B", [0] * word_bytes)
@@ -218,7 +216,7 @@ def uint_to_bytes_array_based(number, chunk_size=0,
             )
         remainder = length % chunk_size
         if remainder:
-            raw_bytes = (chunk_size - remainder) * _zero_byte + raw_bytes
+            raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
     return raw_bytes
 
 

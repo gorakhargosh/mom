@@ -112,17 +112,36 @@ except NameError:
 # and just use byte literals.
 if str is unicode_type:
     def byte_literal(s):
+        """
+        This innocent-looking byte literal faker can be detrimental to
+        performance so define these as constants in your code instead.
+        Don't call it repeatedly inside tight loops.
+        """
         return s.encode('latin1')
 else:
     def byte_literal(s):
+        """
+        This innocent-looking byte literal faker can be detrimental to
+        performance so define these as constants in your code instead.
+        Don't call it repeatedly inside tight loops.
+        """
         return s
 
-# This is used in a large number of places. Do not remove.
+# These are used in a large number of places. Do not remove.
+# This may not make sense, but remember that our code may be used within
+# tight loops, and we do not want user code to slow down because of
+# thousands of calls to byte_literal or b. Do it once here.
 ZERO_BYTE = byte_literal('\x00')
 EMPTY_BYTE = byte_literal('')
+EQUAL_BYTE = byte_literal('=')
+PLUS_BYTE = byte_literal('+')
+HYPHEN_BYTE = byte_literal('-')
+FORWARD_SLASH_BYTE = byte_literal('/')
+UNDERSCORE_BYTE = byte_literal('_')
+DIGIT_ZERO_BYTE = byte_literal('0')
+
 
 have_little_endian = bool(byte_ord(array("i",[1]).tostring()[0]))
-
 
 try:
     # Check whether we have reduce as a built-in.
