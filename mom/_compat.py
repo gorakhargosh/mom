@@ -137,7 +137,7 @@ try:
     from itertools import imap as map
 except ImportError:
     # Python 3.x
-    pass
+    map = map
 
 
 if getattr(dict, "iteritems", None):
