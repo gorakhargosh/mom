@@ -18,6 +18,10 @@
 """
 :module: mom.codec.base36
 :synopsis: Base-36 codec.
+
+.. autofunction:: b36encode
+.. autofunction:: b36decode
+
 """
 
 from __future__ import absolute_import
