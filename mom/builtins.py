@@ -338,20 +338,30 @@ def is_integer(obj):
 
 def integer_byte_length(num):
     """
-    Number of bytes needed to represent a integer.
+    Number of bytes needed to represent a integer excluding any prefix 0 bytes.
 
     :param num:
         Integer value. If num is 0, returns 0.
     :returns:
         The number of bytes in the integer.
     """
-    # Do not change this to `not num` otherwise a TypeError will not
-    # be raised when `None` is passed in as a value.
-    if num == 0:
-        return 0
-    bits = integer_bit_length(num)
-    quanta, remainder = divmod(bits, 8)
+    quanta, remainder = divmod(integer_bit_length(num), 8)
     if remainder:
+        quanta += 1
+    return quanta
+
+
+def integer_byte_size(number):
+    """
+    Size in bytes of an integer.
+
+    :param num:
+        Integer value. If num is 0, returns 1.
+    :returns:
+        Size in bytes of an integer.
+    """
+    quanta, remainder = divmod(integer_bit_length(number), 8)
+    if remainder or number == 0:
         quanta += 1
     return quanta
 

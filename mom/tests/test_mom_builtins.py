@@ -21,7 +21,7 @@ from mom.builtins import \
     is_odd, \
     is_even, \
     is_negative, \
-    is_positive, byte, bytes_leading, bytes_trailing, b
+    is_positive, byte, bytes_leading, bytes_trailing, b, integer_byte_size
 
 try:
     unicode
@@ -153,13 +153,13 @@ class Test_hex(unittest2.TestCase):
         self.assertRaises(TypeError, hex, object)
 
 
-class Test_integer_byte_count(unittest2.TestCase):
-    def test_byte_count_zero_if_zero(self):
+class Test_integer_byte_length(unittest2.TestCase):
+    def test_byte_length_zero_if_zero(self):
         self.assertEqual(integer_byte_length(0), 0)
         self.assertEqual(integer_byte_length_shift_counting(0), 0)
         self.assertEqual(integer_byte_length_word_aligned(0), 0)
 
-    def test_byte_count_correct(self):
+    def test_byte_length_correctness(self):
         numbers = [-12, 12, 1200, 120091, 123456789]
         for num in numbers:
             if num < 0:
@@ -191,13 +191,46 @@ class Test_integer_byte_count(unittest2.TestCase):
 
         self.assertRaises(TypeError, integer_byte_length_shift_counting, None)
         self.assertRaises(TypeError, integer_byte_length_shift_counting, object)
-
-        #self.assertRaises(TypeError, _integer_byte_length_1, None)
         self.assertRaises(TypeError, integer_byte_length_word_aligned, object)
 
 
-class Test_long_bit_length(unittest2.TestCase):
-    def test_bit_length_1_if_zero(self):
+class Test_integer_byte_size(unittest2.TestCase):
+    def test_1_if_zero(self):
+        self.assertEqual(integer_byte_size(0), 1)
+
+    def test_values(self):
+        self.assertEqual(integer_byte_size(255), 1)
+        self.assertEqual(integer_byte_size(256), 2)
+        self.assertEqual(integer_byte_size(0xffff), 2)
+        self.assertEqual(integer_byte_size(0xffffff), 3)
+        self.assertEqual(integer_byte_size(0xffffffff), 4)
+        self.assertEqual(integer_byte_size(0xffffffffff), 5)
+        self.assertEqual(integer_byte_size(0xffffffffffff), 6)
+        self.assertEqual(integer_byte_size(0xffffffffffffff), 7)
+        self.assertEqual(integer_byte_size(0xffffffffffffffff), 8)
+
+    def test_raises_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, integer_byte_size, None)
+        self.assertRaises(TypeError, integer_byte_size, object)
+
+    def test_byte_size_correctness(self):
+        numbers = [-12, 12, 1200, 120091, 123456789]
+        for num in numbers:
+            if num < 0:
+                bit_length = len(bin(num, None)) - 1
+            else:
+                bit_length = len(bin(num, None))
+            count = int(math.ceil(bit_length / 8.0))
+            self.assertEqual(integer_byte_size(num), count,
+                             "Boom. for number %d, expected %d" % (num, count))
+
+        self.assertEqual(integer_byte_size(1 << 1023), 128)
+        self.assertEqual(integer_byte_size((1 << 1024) - 1), 128)
+        self.assertEqual(integer_byte_size(1 << 1024), 129)
+
+        
+class Test_integer_bit_length(unittest2.TestCase):
+    def test_bit_length_0_if_zero(self):
         self.assertEqual(integer_bit_length(0), 0)
         self.assertEqual(integer_bit_length_shift_counting(0), 0)
         self.assertEqual(integer_bit_length_word_aligned(0), 0)
