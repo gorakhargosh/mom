@@ -147,7 +147,7 @@ b = byte_literal
 byte_ord = byte_ord
 
 
-def byte(num):
+def byte(number):
     """
     Converts a number between 0 and 255 (both inclusive) to a base-256 (byte)
     representation.
@@ -157,12 +157,12 @@ def byte(num):
 
     Raises :class:``struct.error`` on overflow.
 
-    :param num:
+    :param number:
         An unsigned integer between 0 and 255 (both inclusive).
     :returns:
         A single byte.
     """
-    return pack("B", num)
+    return pack("B", number)
 
 
 def bytes_leading(raw_bytes, needle=ZERO_BYTE):
@@ -219,11 +219,11 @@ def bytes_trailing(raw_bytes, needle=ZERO_BYTE):
     return trailing
 
 
-def bin(num, prefix="0b"):
+def bin(number, prefix="0b"):
     """
     Converts a long value to its binary representation.
 
-    :param num:
+    :param number:
         Long value.
     :param prefix:
         The prefix to use for the bitstring. Default "0b" to mimic Python
@@ -231,26 +231,26 @@ def bin(num, prefix="0b"):
     :returns:
         Bit string.
     """
-    if num is None:
+    if number is None:
         raise TypeError("'%r' object cannot be interpreted as an index" \
-                        % type(num).__name__)
+                        % type(number).__name__)
     prefix = prefix or ""
-    if num < 0:
-        num = -num
+    if number < 0:
+        number = -number
         prefix = "-" + prefix
     bit_string = ''
-    while num > 1:
-        bit_string = str(num & 1) + bit_string
-        num >>= 1
-    bit_string = str(num) + bit_string
+    while number > 1:
+        bit_string = str(number & 1) + bit_string
+        number >>= 1
+    bit_string = str(number) + bit_string
     return prefix + bit_string
 
 
-def hex(num, prefix="0x"):
+def hex(number, prefix="0x"):
     """
     Converts a integer value to its hexadecimal representation.
 
-    :param num:
+    :param number:
         Integer value.
     :param prefix:
         The prefix to use for the hexadecimal string. Default "0x" to mimic
@@ -259,14 +259,14 @@ def hex(num, prefix="0x"):
         Hexadecimal string.
     """
     prefix = prefix or ""
-    if num < 0:
-        num = -num
+    if number < 0:
+        number = -number
         prefix = "-" + prefix
 
     # Make sure this is an int and not float.
-    num & 1
+    number & 1
 
-    hex_num = "%x" % num
+    hex_num = "%x" % number
     return prefix + hex_num.lower()
 
 
@@ -338,16 +338,16 @@ def is_integer(obj):
     return isinstance(obj, integer_types) and not isinstance(obj, bool)
 
 
-def integer_byte_length(num):
+def integer_byte_length(number):
     """
     Number of bytes needed to represent a integer excluding any prefix 0 bytes.
 
-    :param num:
+    :param number:
         Integer value. If num is 0, returns 0.
     :returns:
         The number of bytes in the integer.
     """
-    quanta, remainder = divmod(integer_bit_length(num), 8)
+    quanta, remainder = divmod(integer_bit_length(number), 8)
     if remainder:
         quanta += 1
     return quanta
@@ -357,7 +357,7 @@ def integer_byte_size(number):
     """
     Size in bytes of an integer.
 
-    :param num:
+    :param number:
         Integer value. If num is 0, returns 1.
     :returns:
         Size in bytes of an integer.
@@ -368,12 +368,12 @@ def integer_byte_size(number):
     return quanta
 
 
-def integer_bit_length(num):
+def integer_bit_length(number):
     """
     Number of bits needed to represent a integer excluding any prefix
     0 bits.
 
-    :param num:
+    :param number:
         Integer value. If num is 0, returns 0. Only the absolute value of the
         number is considered. Therefore, signed integers will be abs(num)
         before the number's bit length is determined.
@@ -382,13 +382,13 @@ def integer_bit_length(num):
     """
     # Do not change this to `not num` otherwise a TypeError will not
     # be raised when `None` is passed in as a value.
-    if num == 0:
+    if number == 0:
         return 0
-    if num < 0:
-        num = -num
+    if number < 0:
+        number = -number
     # Make sure this is an int and not float.
-    num & 1
-    hex_num = "%x" % num
+    number & 1
+    hex_num = "%x" % number
     return ((len(hex_num) - 1) * 4) + {
         '0':0, '1':1, '2':2, '3':2,
         '4':3, '5':3, '6':3, '7':3,
