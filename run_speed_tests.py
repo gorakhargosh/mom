@@ -5,6 +5,11 @@ import sys
 from mom.tests.speed import report
 
 setups = [
+    "from mom.codec.base36 import b36encode; import os; b = os.urandom(256)",
+    "from mom.codec.base36 import b36decode, b36encode; import os; b = b36encode(os.urandom(256))",
+    "from mom.codec.base36 import b36encode; import os; b = os.urandom(3079)",
+    "from mom.codec.base36 import b36decode, b36encode; import os; b = b36encode(os.urandom(3079))",
+    None,
     "from mom.codec.base58 import b58encode; import os; b = os.urandom(3079)",
     "from mom.codec._alt_base import b58encode_naive; import os; b = os.urandom(3079)",
     "from mom.tests.bitcointools_base58 import b58encode_bitcoin; import os; b = os.urandom(3079)",
@@ -57,6 +62,11 @@ setups = [
     "import os; from mom.codec._alt_integer import bytes_to_uint_simple; b = os.urandom(4003)",
 ]
 statements = [
+    "b36encode(b)",
+    "b36decode(b)",
+    "b36encode(b)",
+    "b36decode(b)",
+    None,
     "b58encode(b)",
     "b58encode_naive(b)",
     "b58encode_bitcoin(b)",
