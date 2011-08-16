@@ -44,7 +44,7 @@ When you don't care about the visual ambiguity between these characters:
 * I (ASCII UPPERCASE ALPHABET I)
 * l (ASCII LOWERCASE ALPHABET L)
 
-A practical example (shortened static asset URLs):
+A practical example (versioned static asset URLs):
 --------------------------------------------------
 In order to reduce the number of HTTP requests for static assets sent to a
 Web server, developers often include a hash of the asset being served into
