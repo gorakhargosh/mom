@@ -26,55 +26,58 @@ Encode/decode base58 in the same way that Bitcoin does
 """
 
 import math
+from mom._compat import ZERO_BYTE, EMPTY_BYTE
+from mom.builtins import byte_ord, byte, b
 
-__b58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
-__b58base = len(__b58chars)
+ALPHABET = b('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
+BASE = len(ALPHABET)
+
 
 def bitcoin_b58encode(v):
     """ encode v, which is a string of bytes, to base58.
     """
 
-    long_value = 0L
-    for (i, c) in enumerate(v[::-1]):
-        long_value += (256 ** i) * ord(c)
+    long_value = 0
+    for i, c in enumerate(v[::-1]):
+        long_value += (256 ** i) * byte_ord(c)
 
-    result = ''
-    while long_value >= __b58base:
-        div, mod = divmod(long_value, __b58base)
-        result = __b58chars[mod] + result
+    result = EMPTY_BYTE
+    while long_value >= BASE:
+        div, mod = divmod(long_value, BASE)
+        result = ALPHABET[mod] + result
         long_value = div
-    result = __b58chars[long_value] + result
+    result = ALPHABET[long_value] + result
 
     # Bitcoin does a little leading-zero-compression:
     # leading 0-bytes in the input become leading-1s
     nPad = 0
     for c in v:
-        if c == '\0': nPad += 1
+        if c == ZERO_BYTE: nPad += 1
         else: break
 
-    return (__b58chars[0] * nPad) + result
+    return (ALPHABET[0] * nPad) + result
 
 
 def bitcoin_b58decode(v, length):
     """ decode v into a string of len bytes
     """
-    long_value = 0L
+    long_value = 0
     for (i, c) in enumerate(v[::-1]):
-        long_value += __b58chars.find(c) * (__b58base ** i)
+        long_value += ALPHABET.find(c) * (BASE ** i)
 
-    result = ''
+    result = EMPTY_BYTE
     while long_value >= 256:
         div, mod = divmod(long_value, 256)
-        result = chr(mod) + result
+        result = byte(mod) + result
         long_value = div
-    result = chr(long_value) + result
+    result = byte(long_value) + result
 
     nPad = 0
     for c in v:
-        if c == __b58chars[0]: nPad += 1
+        if c == ALPHABET[0]: nPad += 1
         else: break
 
-    result = chr(0) * nPad + result
+    result = byte(0) * nPad + result
     if length is not None and len(result) != length:
         return None
 
