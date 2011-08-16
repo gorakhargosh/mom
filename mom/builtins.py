@@ -69,6 +69,7 @@ Size counting
 .. autofunction:: bytes_trailing
 .. autofunction:: integer_bit_length
 .. autofunction:: integer_byte_length
+.. autofunction:: integer_byte_size
 
 Type detection predicates
 -------------------------
@@ -114,6 +115,7 @@ __all__ = [
     "bin",
     "hex",
     "integer_byte_length",
+    "integer_byte_size",
     "integer_bit_length",
     "is_sequence",
     "is_unicode",
