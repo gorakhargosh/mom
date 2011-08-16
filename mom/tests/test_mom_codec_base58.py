@@ -4,9 +4,8 @@
 import unittest2
 from mom._compat import ZERO_BYTE
 from mom.builtins import b
-from mom.codec import hex_decode, base58_decode, base58_encode
+from mom.codec import base58_decode, base58_encode
 from mom.codec._alt_base import b58decode_naive, b58encode_naive
-from mom.codec._alt_bitcoin_base58 import b58decode_bitcoin, b58encode_bitcoin
 from mom.codec.base58 import b58encode, b58decode, ALT58_BYTES, ASCII58_BYTES
 from mom.codec.integer import uint_to_bytes, bytes_to_uint
 from mom.security.random import generate_random_bytes
