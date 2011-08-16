@@ -110,8 +110,7 @@ def base_to_uint(encoded,
     return number
 
 
-def uint_to_base256(number, encoded,
-                    base_zero):
+def uint_to_base256(number, encoded, base_zero):
     if number == 0:
         raw_bytes = EMPTY_BYTE
     else:
