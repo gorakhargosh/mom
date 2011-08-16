@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import unittest2
 from mom.builtins import b
@@ -13,10 +27,10 @@ random_bytes_len_512 = generate_random_bytes(512)
 zero_bytes = b('\x00\x00\x00\x00')
 one_zero_byte = b('\x00')
 raw_data = hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
-encoded = b('01041W9weGIezvwKmSO0kaL8BGx4qp64Q8')
+encoded = b('01041W9weGIezvwKmSO0laL8BGx4qp64Q8')
 encoded_with_whitespace = b('''
 01041W9weGIezvwKmS
-O0kaL8BGx4qp64Q8
+O0laL8BGx4qp64Q8
 ''')
 
 padding_raw = b('''\
