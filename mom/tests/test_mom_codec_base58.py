@@ -4,8 +4,9 @@
 import unittest2
 from mom.builtins import b
 from mom.codec import hex_decode, base58_decode, base58_encode
-from mom.codec._alt_base import b58decode_naive
+from mom.codec._alt_base import b58decode_naive, b58encode_naive
 from mom.codec.base58 import b58encode, b58decode, ALT58_BYTES, ASCII58_BYTES
+from mom.codec.integer import uint_to_bytes, bytes_to_uint
 from mom.security.random import generate_random_bytes
 
 random_bytes = generate_random_bytes(384)
@@ -55,16 +56,11 @@ class Test_base58_codec(unittest2.TestCase):
     def test_encoding_and_decoding(self):
         hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
 
-        self.assertEqual(b58encode(hello_world), b("JxF12TrwUP45BMd"))
-        self.assertEqual(b58decode(b("JxF12TrwUP45BMd")), hello_world)
+        self.assertEqual(b58encode(hello_world), b58encode_naive(hello_world))
+        self.assertEqual(b58decode(b58encode(hello_world)), hello_world)
 
-#        self.assertEqual(bytes_to_integer(b58decode(b("16Ho7Hs"))), 3471844090)
-#        self.assertEqual(b58encode(integer_to_bytes(3471844090)), b("16Ho7Hs"))
-
-#        self.assertEqual(_b58encode(b("Hello World")), b("JxF12TrwUP45BMd"))
-#        self.assertEqual(_b58decode(b("JxF12TrwUP45BMd")), b("Hello World"))
-#        self.assertEqual(bytes_to_integer(_b58decode(b("16Ho7Hs"))), 3471844090)
-#        self.assertEqual(_b58encode(integer_to_bytes(3471844090)), b("16Ho7Hs"))
+        self.assertEqual(bytes_to_uint(b58decode(b("16Ho7Hs"))), 3471844090)
+        self.assertEqual(b58encode(uint_to_bytes(3471844090, 5)), b("16Ho7Hs"))
 
         self.assertEqual(b58encode(raw_data), encoded)
         self.assertEqual(b58decode(encoded), raw_data)
