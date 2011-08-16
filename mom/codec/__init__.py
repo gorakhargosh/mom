@@ -110,8 +110,8 @@ Alternatively, logarithms can be thought of as answering the question:
 
 This is the same as doing::
 
-    >>> import math
-    >>> math.log(64, 2)    # number 64, base 2.
+    import math
+    math.log(64, 2)    # 6.0; number 64, base 2.
     6.0
 
 read as "logarithm to the base 2 of 64" which gives 6. That is, if
@@ -120,8 +120,7 @@ we raise 2 to the power 6, we get 64.
 The concept of **roots** or radicals is also related. Roots help you find the
 base (radix) given the exponent and the number. So::
 
-    >>> root(8, 3)   # cube root. exponent 3, number 8.
-    2.0              # base
+    root(8, 3)   # 2.0; cube root. exponent 3, number 8.
 
 .. pull-quote::
 
@@ -193,27 +192,23 @@ Base encoding a chunk of 4 bytes at a time (32 bits at a time) means
 we would need a way to represent each of the 256**4 (4294967296) values with
 our encoding::
 
-    >>> 256**4
-    4294967296
-    >>> 2**32
-    4294967296
+    256**4 # 4294967296
+    2**32  # 4294967296
 
 Given an encoding alphabet of 85 ASCII characters, for example, we need
 to find an exponent (logarithm) that allows us to represent each one of these
 4294967296 values::
 
-    >>> 85**4
-    52200625
-    >>> 85**5
-    4437053125
+    85**4 # 52200625
+    85**5 # 4437053125
+
     >>> 85**5 >= 2**32
     True
 
 Done using logarithms::
 
-    >>> import math
-    >>> math(2**32, 85)
-    4.9926740807112
+    import math
+    math.log(2**32, 85)   # 4.9926740807111996
 
 Therefore, we would need 5 characters from this encoding alphabet to represent
 4 bytes. Since 85 is not a power of 2, there is going to be a little wastage
@@ -222,9 +217,8 @@ to ensure the resulting size to be a multiple of the chunk size, but the
 byte sequence will be more compact than its base-16 (hexadecimal)
 representation, for example::
 
-    >>> import math
-    >>> math(2**32, 16)
-    8.0
+    import math
+    math.log(2**32, 16)   # 8.0
 
 As you can see, if we used hexadecimal representation instead, each 4-byte
 chunk would be represented using 8 characters from the encoding alphabet.

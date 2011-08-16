@@ -4,8 +4,8 @@
 import os
 import unittest2
 from mom.builtins import b
-from tests.constants import unicode_string
-from tests.test_mom_builtins import unicode_string2
+from mom.tests.constants import unicode_string
+from mom.tests.test_mom_builtins import unicode_string2
 
 from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode, \
     ipv6_b85decode, ASCII85_PREFIX, ASCII85_SUFFIX, rfc1924_b85encode, \

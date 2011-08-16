@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from tests.speed import report
+from mom.tests.speed import report
 
 setups = [
     "from mom.codec.base58 import b58encode; import os; b = os.urandom(3079)",

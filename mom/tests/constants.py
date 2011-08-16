@@ -6,12 +6,12 @@ from __future__ import absolute_import
 from mom._compat import have_python3
 
 if have_python3:
-    from tests.py3kconstants import \
+    from mom.tests.py3kconstants import \
         unicode_string, unicode_string2, foo, ufoo, \
         json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte, \
         utf8_bytes, utf8_bytes2, latin1_bytes
 else:
-    from tests.py2kconstants import \
+    from mom.tests.py2kconstants import \
         unicode_string, unicode_string2, foo, ufoo, \
         json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte, \
         utf8_bytes, utf8_bytes2, latin1_bytes

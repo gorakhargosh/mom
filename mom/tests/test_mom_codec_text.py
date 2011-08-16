@@ -8,10 +8,7 @@ from mom.codec.text import utf8_encode_if_unicode, \
     to_unicode_if_bytes, bytes_to_unicode, utf8_encode, \
     utf8_encode_recursive, bytes_to_unicode_recursive, \
     utf8_decode, utf8_decode_if_bytes
-
-from tests.test_mom_builtins import \
-    unicode_string, utf8_bytes, unicode_string2, utf8_bytes2, latin1_bytes
-
+from mom.tests.constants import *
 
 class Test_to_utf8_if_unicode(unittest2.TestCase):
     def test_encodes_unicode_strings(self):

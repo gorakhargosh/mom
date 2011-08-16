@@ -28,7 +28,7 @@ from mom.codec.integer import \
     bytes_to_uint, \
     uint_to_bytes
 from mom.prime_sieve import sieve
-from tests.test_mom_builtins import unicode_string
+from mom.tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
 random_bytes_1024 = generate_random_bytes(1024 >> 3)

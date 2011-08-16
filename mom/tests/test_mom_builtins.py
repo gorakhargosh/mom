@@ -8,7 +8,6 @@ import math
 import struct
 from mom._alt_builtins import integer_byte_length_shift_counting, integer_byte_length_word_aligned, integer_bit_length_shift_counting, integer_bit_length_word_aligned
 from mom._compat import get_word_alignment, MACHINE_WORD_SIZE, UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX, ZERO_BYTE
-from mom.functional import leading, trailing
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
     is_unicode, \
@@ -19,7 +18,6 @@ from mom.builtins import \
     integer_byte_length, \
     integer_bit_length, \
     is_sequence,\
-\
     is_odd, \
     is_even, \
     is_negative, \
@@ -27,10 +25,10 @@ from mom.builtins import \
 
 try:
     unicode
-    from tests.constants import unicode_string, unicode_string2, \
+    from mom.tests.constants import unicode_string, unicode_string2, \
         utf8_bytes, utf8_bytes2, latin1_bytes
 except NameError:
-    from tests.py3kconstants import unicode_string, unicode_string2, \
+    from mom.tests.py3kconstants import unicode_string, unicode_string2, \
         utf8_bytes, utf8_bytes2, latin1_bytes
 
 unicode_string = unicode_string

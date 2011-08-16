@@ -7,7 +7,7 @@ import unittest2
 from mom.builtins import b
 from mom.codec import base64_decode
 from mom.net.scheme.data import data_urlencode, data_urlparse
-from tests.test_mom_builtins import unicode_string
+from mom.tests.constants import unicode_string
 
 png = b('''\
 \x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x05\x00\x00\x00\x05\

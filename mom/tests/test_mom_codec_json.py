@@ -6,14 +6,7 @@ from __future__ import absolute_import
 import unittest2
 from mom.codec.json import json_encode, json_decode
 from mom.codec.text import utf8_encode
-try:
-    unicode
-    from tests.constants import ufoo, json_ufoo, json_foo, \
-        json_unicode_value, unicode_value, x_byte
-except NameError:
-    from tests.py3kconstants import ufoo, json_ufoo, json_foo, \
-        json_unicode_value, unicode_value, x_byte
-
+from mom.tests.constants import *
 
 class Test_decode(unittest2.TestCase):
     def test_decode(self):

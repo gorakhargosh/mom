@@ -8,8 +8,7 @@ from mom.codec import base64_encode, hex_encode
 from mom.security.hash import sha1_hex_digest, md5_digest, \
     sha1_digest, sha1_base64_digest, md5_hex_digest, md5_base64_digest, \
     hmac_sha1_digest, hmac_sha1_base64_digest
-
-from tests.test_mom_builtins import unicode_string, unicode_string2
+from mom.tests.constants import unicode_string, unicode_string2
 
 input_md5_digest = b('\xe8\x0bP\x17\t\x89P\xfcX\xaa\xd8<\x8c\x14\x97\x8e')
 input_sha1_digest = b('\x1f\x8a\xc1\x0f#\xc5\xb5\xbc\x11g\xbd\xa8K\x83>\\\x05zw\xd2')

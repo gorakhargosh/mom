@@ -6,7 +6,7 @@ import sys
 import unittest2 as unittest
 
 current_path = os.path.abspath(os.path.dirname(__file__))
-tests_path = os.path.join(current_path, 'tests')
+tests_path = os.path.join(current_path, 'mom', 'tests')
 sys.path[0:0] = [
     current_path,
     tests_path,
