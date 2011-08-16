@@ -60,6 +60,10 @@ class Test_base36_codec(unittest2.TestCase):
         encoded_hello_world = b36encode(hello_world)
         self.assertEqual(b36decode(encoded_hello_world), hello_world)
 
+    def test_decoder_ignores_whitespace(self):
+        hello_world_encoded = b(' \nFUV      RSIVVNF\nRBJW\tAJO\x0b')
+        self.assertEqual(b36decode(hello_world_encoded), b('hello world'))
+
     def test_wikipedia_encoding(self):
         encoding_table = [
             (1, b("1")),
