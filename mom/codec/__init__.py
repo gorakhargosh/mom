@@ -20,7 +20,7 @@
 :synopsis: Many different types of common encode/decode function.
 
 This module contains codecs for converting between hex, base64, base85,
-base58, base62, decimal, and binary representations of bytes.
+base58, base62, base36, decimal, and binary representations of bytes.
 
 Understand that bytes are simply base-256 representation. A PNG file::
 
@@ -259,6 +259,8 @@ Use them. They will help prevent unexpected bugs.
 .. autofunction:: base62_decode
 .. autofunction:: base58_encode
 .. autofunction:: base58_decode
+.. autofunction:: base36_encode
+.. autofunction:: base36_decode
 .. autofunction:: hex_encode
 .. autofunction:: hex_decode
 .. autofunction:: decimal_encode
@@ -284,6 +286,7 @@ from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE, \
     UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE, \
     EQUAL_BYTE, DIGIT_ZERO_BYTE
 from mom.builtins import is_bytes, b, bytes_leading
+from mom.codec.base36 import b36encode, b36decode
 from mom.functional import chunks
 from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.codec.base62 import b62encode, b62decode
@@ -303,6 +306,8 @@ __all__ = [
     "base62_decode",
     "base58_encode",
     "base58_decode",
+    "base36_encode",
+    "base36_decode",
     "hex_encode",
     "hex_decode",
     "decimal_encode",
@@ -501,6 +506,37 @@ def base58_decode(encoded):
         Raw bytes.
     """
     return b58decode(encoded)
+
+
+def base36_encode(raw_bytes):
+    """
+    Encodes raw bytes into base-36 representation.
+    
+    Encode your Unicode strings to a byte encoding before base-58-encoding
+    them.
+
+    Convenience wrapper for consistency.
+
+    :param raw_bytes:
+        Bytes to encode.
+    :returns:
+        Base-36 encoded bytes.
+    """
+    return b36encode(raw_bytes)
+
+
+def base36_decode(encoded):
+    """
+    Decodes base-36-encoded bytes into raw bytes.
+
+    Convenience wrapper for consistency.
+
+    :param encoded:
+        Base-36 encoded bytes.
+    :returns:
+        Raw bytes.
+    """
+    return b36decode(encoded)
 
 
 def hex_encode(raw_bytes):
