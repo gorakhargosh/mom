@@ -12,21 +12,13 @@
 
 from __future__ import absolute_import
 
-try:
-    from string import lowercase, uppercase, letters
-    ascii_lowercase = lowercase
-    ascii_uppercase = uppercase
-    ascii_letters = letters
-except ImportError:
-    from string import ascii_lowercase, ascii_uppercase, ascii_letters
-    ascii_lowercase = ascii_lowercase
-    ascii_uppercase = ascii_uppercase
-    ascii_letters = ascii_letters
-    
-from string import digits, punctuation, printable, whitespace
+from string import punctuation, printable, whitespace
 
-digits = digits
+ascii_uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ascii_lowercase = "abcdefghijklmnopqrstuvwxyz"
+ascii_letters = ascii_lowercase + ascii_uppercase
+digits = "0123456789"
+
 punctuation = punctuation
 printable = printable
 whitespace = whitespace
-
