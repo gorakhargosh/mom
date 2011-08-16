@@ -157,14 +157,15 @@ Functions
 from __future__ import absolute_import, division
 
 from mom._compat import have_python3
+from mom import string
 from mom.builtins import byte
 from mom.codec._base import base_encode, base_decode
 
 
 # Follows ASCII order.
-ASCII62_BYTES = ("0123456789"
-                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                  "abcdefghijlkmnopqrstuvwxyz").encode("ascii")
+ASCII62_BYTES = (string.digits +
+                 string.ascii_uppercase +
+                 string.ascii_lowercase).encode("ascii")
 # Therefore, b'0' represents b'\0'.
 ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_BYTES))
 
@@ -174,9 +175,9 @@ ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_BYTES))
 # is what you will need:
 #
 # Does not follow ASCII order.
-ALT62_BYTES = ("0123456789"
-                 "abcdefghijlkmnopqrstuvwxyz"
-                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ").encode("ascii")
+ALT62_BYTES = (string.digits +
+               string.ascii_lowercase +
+               string.ascii_uppercase).encode("ascii")
 # Therefore, b'0' represents b'\0'.
 ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_BYTES))
 

@@ -76,8 +76,8 @@ from mom.codec._base import base_encode, base_decode
 
 # Follows ASCII order.
 ASCII58_BYTES = ("123456789"
-                  "ABCDEFGHJKLMNPQRSTUVWXYZ"
-                  "abcdefghijkmnopqrstuvwxyz").encode("ascii")
+                 "ABCDEFGHJKLMNPQRSTUVWXYZ"
+                 "abcdefghijkmnopqrstuvwxyz").encode("ascii")
 # Therefore, b'1' represents b'\0'.
 ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_BYTES))
 
@@ -88,8 +88,8 @@ ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_BYTES))
 #
 # Does not follow ASCII order.
 ALT58_BYTES = ("123456789"
-                 "abcdefghijkmnopqrstuvwxyz"
-                 "ABCDEFGHJKLMNPQRSTUVWXYZ").encode("ascii")
+               "abcdefghijkmnopqrstuvwxyz"
+               "ABCDEFGHJKLMNPQRSTUVWXYZ").encode("ascii")
 # Therefore, b'1' represents b'\0'.
 ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_BYTES))
 
