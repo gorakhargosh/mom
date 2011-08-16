@@ -23,17 +23,27 @@
 
 """
 Encode/decode base58 in the same way that Bitcoin does
+
+The original code has been ported to run on Python 2.x and Python 3.x.
+However, the implementation is still a broken one. DO NOT USE.
 """
 
 import math
-from mom._compat import ZERO_BYTE, EMPTY_BYTE
+from mom._compat import ZERO_BYTE, EMPTY_BYTE, have_python3
 from mom.builtins import byte_ord, byte, b
 
 ALPHABET = b('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
 BASE = len(ALPHABET)
 
+if have_python3:
+    def _chr(c):
+        return byte(c)
+else:
+    def _chr(c):
+        return c
 
-def bitcoin_b58encode(v):
+
+def b58encode_bitcoin(v):
     """ encode v, which is a string of bytes, to base58.
     """
 
@@ -44,9 +54,9 @@ def bitcoin_b58encode(v):
     result = EMPTY_BYTE
     while long_value >= BASE:
         div, mod = divmod(long_value, BASE)
-        result = ALPHABET[mod] + result
+        result = _chr(ALPHABET[mod]) + result
         long_value = div
-    result = ALPHABET[long_value] + result
+    result = _chr(ALPHABET[long_value]) + result
 
     # Bitcoin does a little leading-zero-compression:
     # leading 0-bytes in the input become leading-1s
@@ -55,15 +65,15 @@ def bitcoin_b58encode(v):
         if c == ZERO_BYTE: nPad += 1
         else: break
 
-    return (ALPHABET[0] * nPad) + result
+    return (_chr(ALPHABET[0]) * nPad) + result
 
 
-def bitcoin_b58decode(v, length):
+def b58decode_bitcoin(encoded, length=None):
     """ decode v into a string of len bytes
     """
     long_value = 0
-    for (i, c) in enumerate(v[::-1]):
-        long_value += ALPHABET.find(c) * (BASE ** i)
+    for i, c in enumerate(encoded[::-1]):
+        long_value += ALPHABET.find(_chr(c)) * (BASE ** i)
 
     result = EMPTY_BYTE
     while long_value >= 256:
@@ -73,7 +83,7 @@ def bitcoin_b58decode(v, length):
     result = byte(long_value) + result
 
     nPad = 0
-    for c in v:
+    for c in encoded:
         if c == ALPHABET[0]: nPad += 1
         else: break
 

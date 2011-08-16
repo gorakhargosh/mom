@@ -2,18 +2,20 @@
 # -*- coding: utf-8 -*-
 
 import unittest2
+from mom._compat import ZERO_BYTE
 from mom.builtins import b
 from mom.codec import hex_decode, base58_decode, base58_encode
 from mom.codec._alt_base import b58decode_naive, b58encode_naive
+from mom.codec._alt_bitcoin_base58 import b58decode_bitcoin, b58encode_bitcoin
 from mom.codec.base58 import b58encode, b58decode, ALT58_BYTES, ASCII58_BYTES
 from mom.codec.integer import uint_to_bytes, bytes_to_uint
 from mom.security.random import generate_random_bytes
 
 random_bytes = generate_random_bytes(384)
 
-zero_bytes = b('\x00\x00\x00\x00')
-one_zero_byte = b('\x00')
-raw_data = hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
+zero_bytes_4 = ZERO_BYTE * 4
+#raw_data = hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
+raw_data = b('\x00\\\xc8\x7fJ?\xdf\xe3\xa24kiS&|\xa8g(&0\xd3\xf9\xb7\x8ed')
 encoded = b('19TbMSWwHvnxAKy12iNm3KdbGfzfaMFViT')
 encoded_with_whitespace = b('''
 19TbMSWwHvnxAKy12iN
@@ -41,23 +43,45 @@ class Test_base58_codec(unittest2.TestCase):
         self.assertEqual(base58_decode(base58_encode(padding_raw)), padding_raw)
 
     def test_zero_bytes(self):
-        self.assertEqual(b58encode(zero_bytes), b('1111'))
-        self.assertEqual(b58decode(b('1111')), zero_bytes)
-        self.assertEqual(b58decode_naive(b('1111')), zero_bytes)
-        self.assertEqual(b58encode(one_zero_byte), b('1'))
-        self.assertEqual(b58decode(b('1')), one_zero_byte)
-        self.assertEqual(b58decode_naive(b('1')), one_zero_byte)
+        self.assertEqual(b58encode(zero_bytes_4), b('1111'))
+        self.assertEqual(b58decode(b('1111')), zero_bytes_4)
+        self.assertEqual(b58encode(ZERO_BYTE), b('1'))
+        self.assertEqual(b58decode(b('1')), ZERO_BYTE)
 
-        self.assertEqual(base58_encode(zero_bytes), b('1111'))
-        self.assertEqual(base58_decode(b('1111')), zero_bytes)
-        self.assertEqual(base58_encode(one_zero_byte), b('1'))
-        self.assertEqual(base58_decode(b('1')), one_zero_byte)
+        self.assertEqual(b58encode_naive(zero_bytes_4), b('1111'))
+        self.assertEqual(b58decode_naive(b('1111')), zero_bytes_4)
+        self.assertEqual(b58encode_naive(ZERO_BYTE), b('1'))
+        self.assertEqual(b58decode_naive(b('1')), ZERO_BYTE)
+
+        self.assertEqual(base58_encode(zero_bytes_4), b('1111'))
+        self.assertEqual(base58_decode(b('1111')), zero_bytes_4)
+        self.assertEqual(base58_encode(ZERO_BYTE), b('1'))
+        self.assertEqual(base58_decode(b('1')), ZERO_BYTE)
+
+# The bitcoin implementation is a broken one. Do not use.
+#    def test_bitcoin_implementation(self):
+#        hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
+#        encoded_hello_world = b58encode(hello_world)
+#
+#        self.assertEqual(b58encode_bitcoin(raw_data), encoded)
+#        self.assertEqual(b58decode_bitcoin(encoded), raw_data)
+#        self.assertEqual(encoded_hello_world, b58encode_bitcoin(hello_world))
+#        self.assertEqual(b58decode_bitcoin(encoded_hello_world), hello_world)
+#
+#    def test_bitcoin_zero_encode(self):
+#        self.assertEqual(b58encode_bitcoin(zero_bytes_4), b('1111'))
+#        self.assertEqual(b58encode_bitcoin(ZERO_BYTE), b('1'))
+#
+#    def test_bitcoin_zero_decode(self):
+#        self.assertEqual(b58decode_bitcoin(b('1111')), zero_bytes_4)
+#        self.assertEqual(b58decode_bitcoin(b('1')), ZERO_BYTE)
 
     def test_encoding_and_decoding(self):
         hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
+        encoded_hello_world = b58encode(hello_world)
 
-        self.assertEqual(b58encode(hello_world), b58encode_naive(hello_world))
-        self.assertEqual(b58decode(b58encode(hello_world)), hello_world)
+        self.assertEqual(encoded_hello_world, b58encode_naive(hello_world))
+        self.assertEqual(b58decode(encoded_hello_world), hello_world)
 
         self.assertEqual(bytes_to_uint(b58decode(b("16Ho7Hs"))), 3471844090)
         self.assertEqual(b58encode(uint_to_bytes(3471844090, 5)), b("16Ho7Hs"))
