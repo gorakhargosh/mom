@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 # Timeit based speed reporter.
 # Taken directly from the Python source code for timeit.
 

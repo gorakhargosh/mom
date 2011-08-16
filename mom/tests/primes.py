@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 #import psyco; psyco.full()
+
+
 from math import sqrt, ceil
 import numpy as np
 
