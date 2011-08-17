@@ -62,20 +62,12 @@ __all__ = [
 
 def bytes_to_uint(raw_bytes):
     """
-    Converts bytes to integer::
-
-        bytes_to_integer(bytes) : integer
-
-    This is (essentially) the inverse of integer_to_bytes().
-
-    Encode your Unicode strings to a byte encoding before converting them.
-
-    .. WARNING: Does not preserve leading zero bytes.
+    Converts a series of bytes into an unsigned integer.
 
     :param raw_bytes:
         Raw bytes (base-256 representation).
     :returns:
-        Integer.
+        Unsigned integer.
     """
     if not is_bytes(raw_bytes):
         raise TypeError("argument must be raw bytes: got %r" %
@@ -92,15 +84,10 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     chunk size or a fill size is specified. A single zero byte is 
     returned if the number is 0 and no padding is specified.
 
-    Specifying a chunk size prefixes enough padding to keep the resulting
-    byte size to be a multiple of the chunk size. Filling pads only as 
-    much as is required to satisfy the total byte size. The fill size is 
-    therefore the maximum size in bytes of the integer. If the number
-    of bytes used to represent the integer overflows the fill size, an 
-    ``OverflowError`` will be raised. Specifying the ``overflow`` 
-    argument to this function by setting it to ``True`` ignores overflow
-    errors. In such circumstances, the number of bytes representing the
-    integer may be greater than the fill size.
+    When a chunk size or a fill size is specified, the resulting bytes 
+    are prefix-padded with zero bytes to satisfy the size. The total
+    size of the number in bytes is either the fill size or an integral
+    multiple of the chunk size.
 
     .. NOTE:
         You cannot specify both the fill size and the chunk size.
@@ -108,13 +95,16 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     :param number:
         Integer value
     :param fill_size:
-        If the optional fill size is given the length of the resulting
-        byte string is expected to be the fill size and will be padded
-        with prefix zero bytes to satisfy that length.
+        The maxmimum number of bytes with which to represent the integer.
+        Prefix zero padding is added as necessary to satisfy the size.
+        If the number of bytes needed to represent the integer is greater
+        than the fill size, an ``OverflowError`` is raised. To suppress
+        this error and allow overflow, you may set the ``overfloww``
+        argument to this function to ``True``.
     :param chunk_size:
-        If optional chunk size is given and greater than zero, pad the front of
-        the byte string with binary zeros so that the length is a multiple of
-        ``chunk_size``.
+        If optional chunk size is given and greater than zero, the 
+        resulting sequence of bytes is prefix-padded with zero bytes so 
+        that the total number of bytes is a multiple of ``chunk_size``.
     :param overflow:
         ``False`` (default). If this is ``True``, no ``OverflowError``
         will be raised when the fill_size is shorter than the length
@@ -123,8 +113,8 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     :returns:
         Raw bytes (base-256 representation).
     :raises:
-        ``OverflowError`` when fill_size is given and the number takes up more
-        bytes than fit into the block. This requires the ``overflow``
+        ``OverflowError`` when a fill size is given and the number takes up 
+        more bytes than fit into the block. This requires the ``overflow``
         argument to this function to be set to ``False`` otherwise, no
         error will be raised.
     """
