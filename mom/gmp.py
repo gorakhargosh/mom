@@ -30,6 +30,7 @@
 """
 :module: mom.gmp
 :synopsis: ctypes-based GMP wrapper.
+:see: http://noahdesu.com/2009/12/14/python-gmp/
 
 .. autoclass:: Integer
 .. autoclass:: Float
