@@ -398,6 +398,22 @@ def integer_bit_length(number):
     #return int(math.floor(math.log(n, 2))+1)
 
 
+def integer_bit_count(number):
+    """
+    Returns the number of set (1) bits in an integer.
+    
+    :param number:
+        An integer.
+    :returns:
+        The number of set bits in the integer. 
+    """
+    count = 0
+    while number:
+        number &= number - 1
+        count += 1
+    return count
+
+
 def is_even(num):
     """
     Determines whether a number is even.
