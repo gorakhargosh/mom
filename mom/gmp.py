@@ -37,10 +37,9 @@
 .. autoclass:: Random
 """
 
-
 from __future__ import absolute_import
 
-from ctypes import CDLL, Structure, POINTER, byref, \
+from ctypes import CDLL, Structure, POINTER, byref,\
     c_int, c_ulonglong, c_voidp, c_long, c_byte, cast, c_char_p, c_ulong
 from ctypes.util import find_library
 
@@ -60,27 +59,30 @@ _libgmp = CDLL(_libgmp_path)
 #
 class c_mpz_struct(Structure):
     _fields_ = [
-        ('_mp_alloc',   c_int),
-        ('_mp_size',    c_int),
-        ('_mp_d',       POINTER(c_ulonglong))]
+        ('_mp_alloc', c_int),
+        ('_mp_size', c_int),
+        ('_mp_d', POINTER(c_ulonglong))]
+
 
 class c_gmp_randstate_struct(Structure):
     _fields_ = [
-        ('_mp_seed',    c_mpz_struct),
-        ('_mp_alg',     c_int),
+        ('_mp_seed', c_mpz_struct),
+        ('_mp_alg', c_int),
         ('_mp_algdata', c_voidp)]
+
 
 class c_mpq_struct(Structure):
     _fields_ = [
-        ('_mp_num',     c_mpz_struct),
-        ('_mp_den',     c_mpz_struct)]
+        ('_mp_num', c_mpz_struct),
+        ('_mp_den', c_mpz_struct)]
+
 
 class c_mpf_struct(Structure):
     _fields_ = [
-        ('_mp_prec',    c_int),
-        ('_mp_size',    c_int),
-        ('_mp_exp',     c_long),
-        ('_mp_d',       POINTER(c_long))]
+        ('_mp_prec', c_int),
+        ('_mp_size', c_int),
+        ('_mp_exp', c_long),
+        ('_mp_d', POINTER(c_long))]
 
 #------------------------------------------------------------------------------
 # Function references into MP library
@@ -117,7 +119,7 @@ _MPF_div = _libgmp.__gmpf_div
 _MPF_abs = _libgmp.__gmpf_abs
 _MPF_neg = _libgmp.__gmpf_neg
 _MPF_cmp = _libgmp.__gmpf_cmp
-_MPF_eq  = _libgmp.__gmpf_eq
+_MPF_eq = _libgmp.__gmpf_eq
 _MPF_set_str = _libgmp.__gmpf_set_str
 _MPF_get_str = _libgmp.__gmpf_get_str
 
@@ -196,9 +198,9 @@ class Integer(object):
             _MPZ_set_str(self, value.__str__(), 10)
         else:
             try:
-              _MPZ_set_str(self, str(int(value)), 10)
+                _MPZ_set_str(self, str(int(value)), 10)
             except Exception:
-              raise TypeError("non-int")
+                raise TypeError("non-int")
 
     def __str__(self):
         return _MPZ_get_str(None, 10, self)
@@ -293,6 +295,7 @@ class Integer(object):
     def __neg__(self):
         return self.__apply_ret_2_0(_MPZ_neg, Integer(), self)
 
+
 class Rational(object):
     def __init__(self):
         self._mpq = c_mpq_struct()
@@ -337,10 +340,10 @@ class Rational(object):
         if isinstance(value, Rational):
             _MPQ_set_str(self, value.__str__(), 10)
         else:
-          try:
-            _MPQ_set_str(self, str(float(value)), 10)
-          except Exception:
-            raise TypeError("non-rational")
+            try:
+                _MPQ_set_str(self, str(float(value)), 10)
+            except Exception:
+                raise TypeError("non-rational")
 
     def __str__(self):
         return _MPQ_get_str(None, 10, self)
@@ -391,6 +394,7 @@ class Rational(object):
     def __neg__(self):
         return self.__apply_ret_2_0(_MPQ_neg, Rational(), self)
 
+
 class Float(object):
     def __init__(self, init_value=0.0, precision=None):
         self._mpf = c_mpf_struct()
@@ -405,10 +409,10 @@ class Float(object):
         if isinstance(value, Float):
             _MPF_set_str(self, value.__str__(), 10)
         else:
-          try:
-            _MPF_set_str(self, str(float(value)), 10)
-          except Exception:
-            raise TypeError("non-float")
+            try:
+                _MPF_set_str(self, str(float(value)), 10)
+            except Exception:
+                raise TypeError("non-float")
 
     def __apply_ret(self, func, ret, op1, op2):
         assert isinstance(ret, Float)
@@ -435,7 +439,7 @@ class Float(object):
     #Extra apply_ret for 3 args with return - for _eq
     def __apply_ret_3_1(self, func, op1, op2, op3):
         if(not isinstance(op2, Float)):
-          op2 = Float(op2)
+            op2 = Float(op2)
         return func(op1, op2, op3)
 
     @property
@@ -448,7 +452,7 @@ class Float(object):
         return arg
 
     def __str__(self):
-        exp = (c_byte*4)()
+        exp = (c_byte * 4)()
         exp = cast(exp, POINTER((c_int)))
         return _MPF_get_str(None, exp, 10, 10, self)
 
@@ -607,7 +611,7 @@ _MPF_mul.argtypes = (Float, Float, Float)
 _MPF_abs.argtypes = (Float, Float)
 _MPF_neg.argtypes = (Float, Float)
 _MPF_cmp.argtypes = (Float, Float)
-_MPF_eq.argtypes =  (Float, Float, c_int)
+_MPF_eq.argtypes = (Float, Float, c_int)
 _MPF_set_str.argtypes = (Float, c_char_p, c_int)
 _MPF_get_str.argtypes = (c_char_p, POINTER(c_int), c_int, c_int, Float)
 # non-default (int) return types
