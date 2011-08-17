@@ -28,9 +28,10 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
+from __future__ import absolute_import
+
 import unittest2
 from mom import gmp
-
 
 #TODO inplace long += gmp
 class TestIntegerInit(unittest2.TestCase):
