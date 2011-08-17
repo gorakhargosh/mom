@@ -53,17 +53,21 @@ def b36encode(raw_bytes, base_bytes=ASCII36_BYTES, _padding=True):
         (Internal) ``True`` (default) to include prefixed zero-byte sequence
         padding converted to appropriate representation.
     :returns:
-        Base-36 encoded bytes.
+        Uppercase (default) base-36 encoded bytes.
     """
     return base_encode(raw_bytes, 36, base_bytes, base_bytes[0], _padding)
 
 
 def b36decode(encoded, base_bytes=ASCII36_BYTES):
     """
-    Base-36 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
+    Base-36 decodes a sequence of bytes into raw bytes.
+
+    Leading, trailing, and internal whitespace is ignored. The case
+    of the encoded byte string is also ignored. For example, you may pass
+    in ``AbCd`` instead of ``ABCD``.
 
     :param encoded:
-        Base-36 encoded bytes.
+        Case-insensitive base-36 encoded bytes.
     :param base_bytes:
         (Internal) The character set to use. Defaults to ``ASCII36_BYTES``
         that uses natural ASCII order.
