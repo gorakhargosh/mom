@@ -58,15 +58,18 @@ that looks like (again, line-breaks have been added for visual clarity only)::
 The base-encoding method that we can use is limited by these criteria:
 
 1. The number of ASCII characters, a subset of ASCII, that we can use
-   to represent binary data.
+   to represent binary data (case-sensitivity, ambiguity, base, deviation
+   from standard characters, etc.)
 2. Whether human beings are involved in the transmission of data. Ergo,
    visual clarity, legibility, readability, human-inputability, and even
    *double-click-to-select-ability*! *(Hint: try double-clicking the encoded
-   data above to see whether it selects all of it--it won't).*
+   data above to see whether it selects all of it--it won't).* This is a
+   corollary for point 1.
 3. Whether we want the process to be more time-efficient or space-efficient.
    That is, whether we can process binary data in chunks or whether we need
    to convert it into an arbitrarily large integer before encoding,
    respectively.
+
 
 
 Terminology
