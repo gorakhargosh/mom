@@ -197,8 +197,8 @@ class Integer(object):
         else:
             try:
               _MPZ_set_str(self, str(int(value)), 10)
-            except:
-              raise TypeError, "non-int"
+            except Exception:
+              raise TypeError("non-int")
 
     def __str__(self):
         return _MPZ_get_str(None, 10, self)
@@ -339,8 +339,8 @@ class Rational(object):
         else:
           try:
             _MPQ_set_str(self, str(float(value)), 10)
-          except Exception as e:
-            raise TypeError, "non-rational"
+          except Exception:
+            raise TypeError("non-rational")
 
     def __str__(self):
         return _MPQ_get_str(None, 10, self)
@@ -407,8 +407,8 @@ class Float(object):
         else:
           try:
             _MPF_set_str(self, str(float(value)), 10)
-          except Exception as e:
-            raise TypeError, "non-float"
+          except Exception:
+            raise TypeError("non-float")
 
     def __apply_ret(self, func, ret, op1, op2):
         assert isinstance(ret, Float)
@@ -524,7 +524,7 @@ class Random(object):
         if algo in [RAND_ALGO_DEFAULT, RAND_ALGO_MT]:
             algo(self)
         else:
-            raise Exception, "Algorithm not available"
+            raise NotImplementedError("Algorithm not available")
 
     def __del__(self):
         _GMP_randclear(self)
