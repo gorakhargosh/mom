@@ -45,9 +45,10 @@ from ctypes import CDLL, Structure, POINTER, byref, \
 from ctypes.util import find_library
 
 # Find the GMP library
-_libgmp_path = find_library('gmp')
+_libgmp_path = find_library("gmp")
 if not _libgmp_path:
-    raise EnvironmentError('Unable to find libgmp')
+    raise ImportError("Unable to find libgmp")
+    # raise EnvironmentError('Unable to find libgmp')
 _libgmp = CDLL(_libgmp_path)
 
 
