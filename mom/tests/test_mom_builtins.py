@@ -35,7 +35,8 @@ from mom.builtins import \
     is_odd, \
     is_even, \
     is_negative, \
-    is_positive, byte, bytes_leading, bytes_trailing, b, integer_byte_size
+    is_positive, byte, bytes_leading, bytes_trailing, b, \
+    integer_byte_size, integer_bit_count
 
 try:
     unicode
@@ -242,7 +243,20 @@ class Test_integer_byte_size(unittest2.TestCase):
         self.assertEqual(integer_byte_size((1 << 1024) - 1), 128)
         self.assertEqual(integer_byte_size(1 << 1024), 129)
 
-        
+class Test_integer_bit_count(unittest2.TestCase):
+    def test_bit_count(self):
+        self.assertEqual(integer_bit_count(0), 0)
+        self.assertEqual(integer_bit_count(1), 1)
+        self.assertEqual(integer_bit_count(255), 8)
+        self.assertEqual(integer_bit_count(2), 1)
+        self.assertEqual(integer_bit_count(3), 2)
+        self.assertEqual(integer_bit_count(5), 2)
+        self.assertEqual(integer_bit_count(1 << 128), 1)
+        self.assertEqual(integer_bit_count((1 << 129) - 1), 129)
+        self.assertEqual(integer_bit_count(1 << 1024), 1)
+        self.assertEqual(integer_bit_count((1 << 1024) - 1), 1024)
+
+
 class Test_integer_bit_length(unittest2.TestCase):
     def test_bit_length_0_if_zero(self):
         self.assertEqual(integer_bit_length(0), 0)
