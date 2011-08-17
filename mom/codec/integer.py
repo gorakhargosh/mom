@@ -88,12 +88,22 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     """
     Convert an unsigned integer to bytes (base-256 representation).
 
-    Does not preserve leading zeros if you don't specify a chunk size or
-    fill size.
+    Leading zeros are not preserved for positive integers unless a 
+    chunk size or a fill size is specified. A single zero byte is 
+    returned if the number is 0 and no padding is specified.
+
+    Specifying a chunk size prefixes enough padding to keep the resulting
+    byte size to be a multiple of the chunk size. Filling pads only as 
+    much as is required to satisfy the total byte size. The fill size is 
+    therefore the maximum size in bytes of the integer. If the number
+    of bytes used to represent the integer overflows the fill size, an 
+    ``OverflowError`` will be raised. Specifying the ``overflow`` 
+    argument to this function by setting it to ``True`` ignores overflow
+    errors. In such circumstances, the number of bytes representing the
+    integer may be greater than the fill size.
 
     .. NOTE:
-        You must not specify both fill_size and chunk_size. Only one
-        of them is allowed.
+        You cannot specify both the fill size and the chunk size.
 
     :param number:
         Integer value
