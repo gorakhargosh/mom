@@ -380,6 +380,9 @@ def integer_bit_length(number):
     :returns:
         Returns the number of bits in the integer.
     """
+    # Public domain. Taken from tlslite. This is the fastest implementation
+    # I have found.
+
     # Do not change this to `not num` otherwise a TypeError will not
     # be raised when `None` is passed in as a value.
     if number == 0:
@@ -400,13 +403,17 @@ def integer_bit_length(number):
 
 def integer_bit_count(number):
     """
-    Returns the number of set (1) bits in an integer.
-    
+    Returns the number of set (1) bits in an unsigned integer.
+
     :param number:
-        An integer.
+        An integer. If this is a negative integer, its absolute 
+        value will be considered.
     :returns:
-        The number of set bits in the integer. 
+        The number of set bits in an unsigned integer. 
     """
+    # Licensed under the PSF License.
+    # Taken from http://wiki.python.org/moin/BitManipulation
+    number = abs(number)
     count = 0
     while number:
         number &= number - 1

@@ -256,6 +256,16 @@ class Test_integer_bit_count(unittest2.TestCase):
         self.assertEqual(integer_bit_count(1 << 1024), 1)
         self.assertEqual(integer_bit_count((1 << 1024) - 1), 1024)
 
+    def test_negative_checks_against_abs(self):
+        self.assertEqual(integer_bit_count(-1), 1)
+        self.assertEqual(integer_bit_count(-255), 8)
+
+    def test_TypeError_when_bad_type(self):
+        self.assertRaises(TypeError, integer_bit_count, "")
+        self.assertRaises(TypeError, integer_bit_count, {})
+        self.assertRaises(TypeError, integer_bit_count, object)
+        self.assertRaises(TypeError, integer_bit_count, [])
+
 
 class Test_integer_bit_length(unittest2.TestCase):
     def test_bit_length_0_if_zero(self):
