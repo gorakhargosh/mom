@@ -20,8 +20,11 @@ from __future__ import absolute_import
 import unittest2
 import math
 import struct
-from mom._alt_builtins import integer_byte_length_shift_counting, integer_byte_length_word_aligned, integer_bit_length_shift_counting, integer_bit_length_word_aligned
-from mom._compat import get_word_alignment, MACHINE_WORD_SIZE, UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX, ZERO_BYTE
+from mom._alt_builtins import integer_byte_length_shift_counting, \
+    integer_byte_length_word_aligned, integer_bit_length_shift_counting, \
+    integer_bit_length_word_aligned
+from mom._compat import get_word_alignment, MACHINE_WORD_SIZE, \
+    UINT64_MAX, UINT32_MAX, UINT16_MAX, UINT8_MAX, ZERO_BYTE
 from mom.security.random import generate_random_bytes
 from mom.builtins import \
     is_unicode, \
