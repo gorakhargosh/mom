@@ -23,12 +23,13 @@ from mom.functional import \
     find, none,\
     select, reject, ireject, iselect, \
     ichunks, map_dict, select_dict, reject_dict, invert_dict, \
-    pluck, first, last, irest, truthy, compose, contains, \
+    pluck, head, last, itail, truthy, compose, contains, \
     difference, without, _contains_fallback, complement, each, \
     reduce, identity, flatten, flatten1, unique, _some1, _some2, \
     union, nth, intersection, take, round_robin, tally, _leading, \
     partition, falsy, ipeel, omits, idifference, itruthy, ifalsy, \
-    loob, rest, ipluck, peel, chunks, _compose, ncycles, eat, always, never, partition_dict, occurrences, group_consecutive, flock
+    loob, tail, ipluck, peel, chunks, _compose, ncycles, eat, always, \
+    never, partition_dict, occurrences, group_consecutive, flock
 
 
 
@@ -407,17 +408,17 @@ class Test_each(unittest2.TestCase):
 
 
 class Test_seq(unittest2.TestCase):
-    def test_first(self):
-        self.assertEqual(first(range(10)), 0)
+    def test_head(self):
+        self.assertEqual(head(range(10)), 0)
 
     def test_last(self):
         self.assertEqual(last(range(10)), 9)
 
-    def test_irest(self):
-        self.assertEqual(list(irest(range(10))), list(range(1, 10)))
+    def test_itail(self):
+        self.assertEqual(list(itail(range(10))), list(range(1, 10)))
 
-    def test_rest(self):
-        self.assertEqual(rest(list(range(10))), list(range(1, 10)))
+    def test_tail(self):
+        self.assertEqual(tail(list(range(10))), list(range(1, 10)))
 
 
 # Truthy and falsy tests.

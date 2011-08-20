@@ -144,14 +144,14 @@ iterable sequences.
 Indexing and slicing
 ~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: chunks
-.. autofunction:: first
+.. autofunction:: head
 .. autofunction:: ichunks
 .. autofunction:: ipeel
-.. autofunction:: irest
+.. autofunction:: itail
 .. autofunction:: last
 .. autofunction:: nth
 .. autofunction:: peel
-.. autofunction:: rest
+.. autofunction:: tail
 .. autofunction:: round_robin
 .. autofunction:: take
 .. autofunction:: ncycles
@@ -235,7 +235,7 @@ __all__ = [
     "every",
     "falsy",
     "find",
-    "first",
+    "head",
     "flatten",
     "flatten1",
     "group_consecutive",
@@ -250,7 +250,7 @@ __all__ = [
     "ipeel",
     "ipluck",
     "ireject",
-    "irest",
+    "itail",
     "iselect",
     "itruthy",
     "last",
@@ -270,7 +270,7 @@ __all__ = [
     "reduce",
     "reject",
     "reject_dict",
-    "rest",
+    "tail",
     "round_robin",
     "select",
     "select_dict",
@@ -885,7 +885,7 @@ def without(iterable, *values):
     return difference(iterable, values)
 
 
-def first(iterable):
+def head(iterable):
     """
     Returns the first element out of an iterable.
 
@@ -897,7 +897,7 @@ def first(iterable):
     return nth(iterable, 0)
 
 
-def rest(iterable):
+def tail(iterable):
     """
     Returns all elements excluding the first out of an iterable.
 
@@ -909,7 +909,7 @@ def rest(iterable):
     return iterable[1:]
 
 
-def irest(iterable):
+def itail(iterable):
     """
     Returns an iterator for all elements excluding the first out of an iterable.
 
@@ -1291,7 +1291,7 @@ def unique(iterable, is_sorted=False):
                 memo.append(item)
             return memo
 
-        return _reduce(_unique, irest(iterable), [first(iterable)])
+        return _reduce(_unique, itail(iterable), [head(iterable)])
     else:
         return iterable
 
