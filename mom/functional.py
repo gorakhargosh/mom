@@ -1348,6 +1348,28 @@ def take(iterable, n):
     return tuple(islice(iterable, n))
 
 
+def eat(iterator, n):
+    """
+    Advance an iterator n-steps ahead. If n is None, eat entirely.
+
+    Taken from the Python documentation. Under the PSF license.
+
+    :param iterator:
+        An iterator.
+    :param n:
+        The number of steps to advance.
+    :yields:
+        An iterator.
+    """
+    # Use functions that consume iterators at C speed.
+    if n is None:
+        # Feed the entire iterator into a zero-length deque.
+        deque(iterator)
+    else:
+        # Advance to the empty slice starting at position n.
+        next(islice(iterator, n, n), None)
+
+
 def _get_iter_next(it):
     attr = getattr(it, "next", None)
     if not attr:
@@ -1380,28 +1402,6 @@ def round_robin(*iterables):
         except StopIteration:
             pending -= 1
             nexts = cycle(islice(nexts, pending))
-
-
-def eat(iterator, n):
-    """
-    Advance an iterator n-steps ahead. If n is None, eat entirely.
-
-    Taken from the Python documentation. Under the PSF license.
-
-    :param iterator:
-        An iterator.
-    :param n:
-        The number of steps to advance.
-    :yields:
-        An iterator.
-    """
-    # Use functions that consume iterators at C speed.
-    if n is None:
-        # Feed the entire iterator into a zero-length deque.
-        deque(iterator)
-    else:
-        # Advance to the empty slice starting at position n.
-        next(islice(iterator, n, n), None)
 
 
 def ncycles(iterable, n):

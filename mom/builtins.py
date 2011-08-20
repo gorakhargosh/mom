@@ -63,8 +63,8 @@ Encodings
 .. autofunction:: byte_ord
 
 
-Size counting
--------------
+Bits and bytes size counting
+----------------------------
 .. autofunction:: bytes_leading
 .. autofunction:: bytes_trailing
 .. autofunction:: integer_bit_length
