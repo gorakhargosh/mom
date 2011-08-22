@@ -7,30 +7,40 @@
 #
 # Place into the public domain.
 
-"""Echo calls made to functions and methods in a module.
+"""
+:module: mom.tracer
+:synopsis: Echoes calls made to functions and methods in a module.
 
 "Tracing" a function call means printing out the name of the function
 and the values of its arguments before making the call (which is more
 commonly referred to as "tracing", but Python already has a trace module).
 
-Example: to trace calls made to functions in "my_module" do:
+For example, to trace calls made to functions in "my_module" do::
+    
+    from mom import tracer
+    import my_module
+    tracer.trace_module(my_module)
 
-  from mom import tracer
-  import my_module
-  tracer.trace_module(my_module)
+Or, for example, to trace calls made to functions in "my_module.my_class"
+do::
 
-Example: to trace calls made to functions in "my_module.my_class" do:
-
-  tracer.trace_class(my_module.my_class)
+    tracer.trace_class(my_module.my_class)
 
 Alternatively, tracer.trace can be used to decorate functions. Calls to the
-decorated function will be traceed.
+decorated function will be traced. Example::
 
-Example:
+    @tracer.trace
+    def my_function(args):
+        pass
 
-  @tracer.trace
-  def my_function(args):
-      pass
+.. autofunction:: is_classmethod
+.. autofunction:: is_class_private_name
+.. autofunction:: method_name
+.. autofunction:: trace
+.. autofunction:: trace_instancemethod
+.. autofunction:: trace_class
+.. autofunction:: trace_module
+
 """
 
 from __future__ import absolute_import
