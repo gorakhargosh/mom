@@ -43,7 +43,38 @@ from __future__ import absolute_import
 from ctypes import CDLL, Structure, POINTER, byref,\
     c_int, c_ulonglong, c_voidp, c_long, c_byte, cast, c_char_p, c_ulong
 from ctypes.util import find_library
+from mom._compat import have_python3
 
+
+if have_python3:
+    def number_to_pybytes(num):
+        """
+        Converts number to bytes.
+        """
+        return str(num).encode("latin1")
+
+    def to_str(raw_bytes_num):
+        """
+        Converts bytes to the appropriate string representation for the Python
+        version.
+        """
+        #return raw_bytes_num.decode("latin1")
+        return str(raw_bytes_num, "latin1")
+else:
+    def number_to_pybytes(num):
+        """
+        Converts number to bytes.
+        """
+        return str(num)
+    
+    def to_str(raw_bytes_num):
+        """
+        Converts bytes to the appropriate string representation for the Python
+        version.
+        """
+        return raw_bytes_num
+
+    
 # Find the GMP library
 _libgmp_path = find_library("gmp")
 if not _libgmp_path:
@@ -149,6 +180,7 @@ _MPQ_get_str = _libgmp.__gmpq_get_str
 RAND_ALGO_DEFAULT = _GMP_randinit_default
 RAND_ALGO_MT = _GMP_randinit_mt
 
+
 #------------------------------------------------------------------------------
 # Wrappers around Gnu MP Integer, Rational, Random, Float
 #------------------------------------------------------------------------------
@@ -196,15 +228,18 @@ class Integer(object):
 
     def set(self, value):
         if isinstance(value, Integer):
-            _MPZ_set_str(self, value.__str__(), 10)
+            _MPZ_set_str(self, value._tobytes(), 10)
         else:
             try:
-                _MPZ_set_str(self, str(int(value)), 10)
+                _MPZ_set_str(self, number_to_pybytes(int(value)), 10)
             except Exception:
-                raise TypeError("non-int")
+                raise TypeError("non an integer")
+
+    def _tobytes(self):
+        return _MPZ_get_str(None, 10, self)
 
     def __str__(self):
-        return _MPZ_get_str(None, 10, self)
+        return to_str(self._tobytes())
 
     def __repr__(self):
         return self.__str__()
