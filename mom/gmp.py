@@ -130,6 +130,7 @@ _MPZ_sub = _libgmp.__gmpz_sub
 _MPZ_mul = _libgmp.__gmpz_mul
 _MPZ_div = _libgmp.__gmpz_tdiv_q
 _MPZ_fdiv = _libgmp.__gmpz_fdiv_q
+_MPZ_fmod = _libgmp.__gmpz_fdiv_r
 _MPZ_mod = _libgmp.__gmpz_mod
 _MPZ_and = _libgmp.__gmpz_and
 _MPZ_ior = _libgmp.__gmpz_ior
@@ -284,7 +285,7 @@ class Integer(object):
         return self.__apply_ret(_MPZ_and, Integer(), self, other)
 
     def __mod__(self, other):
-        return self.__apply_ret(_MPZ_mod, Integer(), self, other)
+        return self.__apply_ret(_MPZ_fmod, Integer(), self, other)
 
     def __xor__(self, other):
         return self.__apply_ret(_MPZ_xor, Integer(), self, other)

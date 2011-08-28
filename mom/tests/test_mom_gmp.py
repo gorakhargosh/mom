@@ -291,12 +291,12 @@ class Test_IntegerMod(unittest2.TestCase):
 
     def test_NegativeMod(self):
         self.assertEqual(self.large_gmp % self.small_neg_gmp,
-                         gmp.Integer(5000000000 % 19))
+                         gmp.Integer(5000000000 % -19))
         self.assertEqual(self.large_neg_gmp % self.small_neg_gmp,
                          gmp.Integer(-5000000000 % -19))
         self.assertEqual(self.large_neg_gmp % self.small_gmp,
                          gmp.Integer(-5000000000 % 19))
-        self.assertEqual(self.large_gmp % self.small_neg_py,
+        self.assertEqual(self.large_gmp % -19,
                          gmp.Integer(5000000000 % -19))
 
     def test_InPlaceMod(self):
