@@ -209,7 +209,7 @@ class Integer(object):
         assert isinstance(arg, Integer)
         return arg
 
-    def __apply_ret(self, func, ret, op1, op2):
+    def _apply_ret(self, func, ret, op1, op2):
         assert isinstance(ret, Integer)
         if not isinstance(op1, Integer):
             op1 = Integer(op1)
@@ -218,7 +218,7 @@ class Integer(object):
         func(ret, op1, op2)
         return ret
 
-    def __apply_2_rets(self, func, ret1, ret2, op1, op2):
+    def _apply_2_rets(self, func, ret1, ret2, op1, op2):
         assert isinstance(ret1, Integer)
         assert isinstance(ret2, Integer)
         if not isinstance(op1, Integer):
@@ -228,13 +228,13 @@ class Integer(object):
         func(ret1, ret2, op1, op2)
         return ret1, ret2
 
-    def __apply_ret_2_0(self, func, ret, op1):
+    def _apply_ret_2_0(self, func, ret, op1):
         assert isinstance(ret, Integer)
         assert isinstance(op1, Integer)
         func(ret, op1)
         return ret
 
-    def __apply_ret_2_1(self, func, op1, op2):
+    def _apply_ret_2_1(self, func, op1, op2):
         if not isinstance(op1, Integer):
             op1 = Integer(op1)
         if not isinstance(op2, Integer):
@@ -260,42 +260,42 @@ class Integer(object):
         return self.__str__()
 
     def __lt__(self, other):
-        return self.__apply_ret_2_1(_MPZ_cmp, self, other) < 0
+        return self._apply_ret_2_1(_MPZ_cmp, self, other) < 0
 
     def __le__(self, other):
         return self.__lt__(other) or self.__eq__(other)
 
     def __eq__(self, other):
-        return self.__apply_ret_2_1(_MPZ_cmp, self, other) == 0
+        return self._apply_ret_2_1(_MPZ_cmp, self, other) == 0
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __gt__(self, other):
-        return self.__apply_ret_2_1(_MPZ_cmp, self, other) > 0
+        return self._apply_ret_2_1(_MPZ_cmp, self, other) > 0
 
     def __ge__(self, other):
         return self.__gt__(other) or self.__eq__(other)
 
     def __add__(self, other):
-        return self.__apply_ret(_MPZ_add, Integer(), self, other)
+        return self._apply_ret(_MPZ_add, Integer(), self, other)
 
     def __sub__(self, other):
-        return self.__apply_ret(_MPZ_sub, Integer(), self, other)
+        return self._apply_ret(_MPZ_sub, Integer(), self, other)
 
     def __mul__(self, other):
-        return self.__apply_ret(_MPZ_mul, Integer(), self, other)
+        return self._apply_ret(_MPZ_mul, Integer(), self, other)
 
     def __divmod__(self, divisor):
         if divisor == 0 or divisor == Integer(0):
             raise ZeroDivisionError("integer division or modulo by zero")
-        return self.__apply_2_rets(_MPZ_fdivmod,
+        return self._apply_2_rets(_MPZ_fdivmod,
                                    Integer(), Integer(), self, divisor)
 
     def __rdivmod__(self, dividend):
         if self == 0 or self == Integer(0):
             raise ZeroDivisionError("integer division or modulo by zero")
-        return self.__apply_2_rets(_MPZ_fdivmod,
+        return self._apply_2_rets(_MPZ_fdivmod,
                                    Integer(), Integer(), dividend, self)
 
     def __div__(self, other):
@@ -307,51 +307,51 @@ class Integer(object):
     def __floordiv__(self, other):
         if other == 0 or other == Integer(0):
             raise ZeroDivisionError("integer division or modulo by zero")
-        return self.__apply_ret(_MPZ_fdiv, Integer(), self, other)
+        return self._apply_ret(_MPZ_fdiv, Integer(), self, other)
 
     def __and__(self, other):
-        return self.__apply_ret(_MPZ_and, Integer(), self, other)
+        return self._apply_ret(_MPZ_and, Integer(), self, other)
 
     def __mod__(self, other):
         if other == 0 or other == Integer(0):
             raise ZeroDivisionError("integer division or modulo by zero")
-        return self.__apply_ret(_MPZ_fmod, Integer(), self, other)
+        return self._apply_ret(_MPZ_fmod, Integer(), self, other)
 
     def __xor__(self, other):
-        return self.__apply_ret(_MPZ_xor, Integer(), self, other)
+        return self._apply_ret(_MPZ_xor, Integer(), self, other)
 
     def __or__(self, other):
-        return self.__apply_ret(_MPZ_ior, Integer(), self, other)
+        return self._apply_ret(_MPZ_ior, Integer(), self, other)
 
     def __iadd__(self, other):
-        return self.__apply_ret(_MPZ_add, self, self, other)
+        return self._apply_ret(_MPZ_add, self, self, other)
 
     def __isub__(self, other):
-        return self.__apply_ret(_MPZ_sub, self, self, other)
+        return self._apply_ret(_MPZ_sub, self, self, other)
 
     def __imul__(self, other):
-        return self.__apply_ret(_MPZ_mul, self, self, other)
+        return self._apply_ret(_MPZ_mul, self, self, other)
 
     def __imod__(self, other):
-        return self.__apply_ret(_MPZ_fmod, self, self, other)
+        return self._apply_ret(_MPZ_fmod, self, self, other)
 
     def __iand__(self, other):
-        return self.__apply_ret(_MPZ_and, self, self, other)
+        return self._apply_ret(_MPZ_and, self, self, other)
 
     def __ixor__(self, other):
-        return self.__apply_ret(_MPZ_xor, self, self, other)
+        return self._apply_ret(_MPZ_xor, self, self, other)
 
     def __ior__(self, other):
-        return self.__apply_ret(_MPZ_ior, self, self, other)
+        return self._apply_ret(_MPZ_ior, self, self, other)
 
     def __radd__(self, other):
-        return self.__apply_ret(_MPZ_add, Integer(), other, self)
+        return self._apply_ret(_MPZ_add, Integer(), other, self)
 
     def __rsub__(self, other):
-        return self.__apply_ret(_MPZ_sub, Integer(), other, self)
+        return self._apply_ret(_MPZ_sub, Integer(), other, self)
 
     def __rmul__(self, other):
-        return self.__apply_ret(_MPZ_mul, Integer(), other, self)
+        return self._apply_ret(_MPZ_mul, Integer(), other, self)
 
     def __rdiv__(self, other):
         return self.__rfloordiv__(other)
@@ -362,18 +362,18 @@ class Integer(object):
     def __rfloordiv__(self, other):
         if self == 0 or self == Integer(0):
             raise ZeroDivisionError("integer division or modulo by zero")
-        return self.__apply_ret(_MPZ_fdiv, Integer(), other, self)
+        return self._apply_ret(_MPZ_fdiv, Integer(), other, self)
 
     def __rmod__(self, other):
         if self == 0 or self == Integer(0):
             raise ZeroDivisionError("integer division or modulo by zero")
-        return self.__apply_ret(_MPZ_fmod, Integer(), other, self)
+        return self._apply_ret(_MPZ_fmod, Integer(), other, self)
 
     def __abs__(self):
-        return self.__apply_ret_2_0(_MPZ_abs, Integer(), self)
+        return self._apply_ret_2_0(_MPZ_abs, Integer(), self)
 
     def __neg__(self):
-        return self.__apply_ret_2_0(_MPZ_neg, Integer(), self)
+        return self._apply_ret_2_0(_MPZ_neg, Integer(), self)
 
 
 class Rational(object):
