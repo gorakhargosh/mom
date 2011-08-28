@@ -490,14 +490,14 @@ class Test_IntegerAdditionals(unittest2.TestCase):
         self.large_neg_gmp = gmp.Integer(-5000000000)
 
     def test_Negation(self):
-        self.assertEqual(-self.large_gmp, self.large_neg_gmp);
-        self.assertEqual(-self.large_neg_gmp, self.large_gmp);
-        self.assertEqual(-gmp.Integer(0), gmp.Integer(0));
+        self.assertEqual(-self.large_gmp, self.large_neg_gmp)
+        self.assertEqual(-self.large_neg_gmp, self.large_gmp)
+        self.assertEqual(-gmp.Integer(0), gmp.Integer(0))
 
     def test_Absolute(self):
-        self.assertEqual(abs(self.large_gmp), self.large_gmp);
-        self.assertEqual(abs(self.large_neg_gmp), self.large_gmp);
-        self.assertEqual(abs(gmp.Integer(0)), gmp.Integer(0));
+        self.assertEqual(abs(self.large_gmp), self.large_gmp)
+        self.assertEqual(abs(self.large_neg_gmp), self.large_gmp)
+        self.assertEqual(abs(gmp.Integer(0)), gmp.Integer(0))
 
 
 class Test_IntegerErrorCases(unittest2.TestCase):
@@ -916,18 +916,18 @@ class Test_IntegerPyTypeCompatibility(unittest2.TestCase):
 #         self.prec_neg_gmp = gmp.Float("-10.4294967300101010")
 
 #     def test_Negation(self):
-#         self.assertEqual(-self.large_gmp, self.large_neg_gmp);
-#         self.assertEqual(-self.large_neg_gmp, self.large_gmp);
-#         self.assertEqual(-self.prec_gmp, self.prec_neg_gmp);
-#         self.assertEqual(-self.prec_neg_gmp, self.prec_gmp);
-#         self.assertEqual(-gmp.Float(0.0), gmp.Float(0.0));
+#         self.assertEqual(-self.large_gmp, self.large_neg_gmp)
+#         self.assertEqual(-self.large_neg_gmp, self.large_gmp)
+#         self.assertEqual(-self.prec_gmp, self.prec_neg_gmp)
+#         self.assertEqual(-self.prec_neg_gmp, self.prec_gmp)
+#         self.assertEqual(-gmp.Float(0.0), gmp.Float(0.0))
 
 #     def test_Absolute(self):
-#         self.assertEqual(abs(self.large_gmp), self.large_gmp);
-#         self.assertEqual(abs(self.large_neg_gmp), self.large_gmp);
-#         self.assertEqual(abs(self.prec_gmp), self.prec_gmp);
-#         self.assertEqual(abs(self.prec_neg_gmp), self.prec_gmp);
-#         self.assertEqual(abs(gmp.Float(0.0)), gmp.Float(0.0));
+#         self.assertEqual(abs(self.large_gmp), self.large_gmp)
+#         self.assertEqual(abs(self.large_neg_gmp), self.large_gmp)
+#         self.assertEqual(abs(self.prec_gmp), self.prec_gmp)
+#         self.assertEqual(abs(self.prec_neg_gmp), self.prec_gmp)
+#         self.assertEqual(abs(gmp.Float(0.0)), gmp.Float(0.0))
 
 
 # class Test_FloatErrorCases(unittest2.TestCase):
