@@ -29,8 +29,8 @@
 
 # Some tests depend on new div.
 from __future__ import absolute_import, division
-import operator
 
+import operator
 import unittest2
 from mom import gmp
 
