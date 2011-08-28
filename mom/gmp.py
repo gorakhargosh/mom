@@ -275,8 +275,11 @@ class Integer(object):
     def __mul__(self, other):
         return self.__apply_ret(_MPZ_mul, Integer(), self, other)
 
-#    def __div__(self, other):
-#        return self.__apply_ret(_MPZ_fdiv, Integer(), self, other)
+    def __div__(self, other):
+        return self.__floordiv__(other)
+
+    def __truediv__(self, other):
+        raise NotImplementedError("True division is not supported.")
 
     def __floordiv__(self, other):
         if other == 0 or other == Integer(0):
@@ -307,7 +310,7 @@ class Integer(object):
         return self.__apply_ret(_MPZ_mul, self, self, other)
 
     def __imod__(self, other):
-        return self.__apply_ret(_MPZ_mod, self, self, other)
+        return self.__apply_ret(_MPZ_fmod, self, self, other)
 
     def __iand__(self, other):
         return self.__apply_ret(_MPZ_and, self, self, other)
@@ -328,10 +331,20 @@ class Integer(object):
         return self.__apply_ret(_MPZ_mul, Integer(), other, self)
 
     def __rdiv__(self, other):
-        return self.__apply_ret(_MPZ_div, Integer(), other, self)
+        return self.__rfloordiv__(other)
+
+    def __rtruediv__(self, other):
+        raise NotImplementedError("True division is not supported.")
+
+    def __rfloordiv__(self, other):
+        if self == 0 or self == Integer(0):
+            raise ZeroDivisionError("integer division or modulo by zero")
+        return self.__apply_ret(_MPZ_fdiv, Integer(), other, self)
 
     def __rmod__(self, other):
-        return self.__apply_ret(_MPZ_mod, Integer(), other, self)
+        if self == 0 or self == Integer(0):
+            raise ZeroDivisionError("integer division or modulo by zero")
+        return self.__apply_ret(_MPZ_fmod, Integer(), other, self)
 
     def __abs__(self):
         return self.__apply_ret_2_0(_MPZ_abs, Integer(), self)
