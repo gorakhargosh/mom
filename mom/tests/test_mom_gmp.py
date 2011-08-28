@@ -511,6 +511,11 @@ class Test_IntegerErrorCases(unittest2.TestCase):
         self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), 0)
         self.assertRaises(ZeroDivisionError, operator.mod, 1, gmp.Integer(0))
 
+    def test_RealDivisionRaisesError(self):
+        self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), 1)
+        self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), gmp.Integer(1))
+        self.assertRaises(NotImplementedError, operator.truediv, 1, gmp.Integer(1))
+
 
 class Test_IntegerPyTypeCompatibility(unittest2.TestCase):
     def test_IntCompatibility(self):
