@@ -233,8 +233,7 @@ class Test_IntegerDivision(unittest2.TestCase):
         self.assertEqual(self.large_gmp // 50, gmp.Integer(5000000000 // 50))
 
     def test_PyLongReverseDivision(self):
-        # 5000000 // gmp.Integer instance won't work.
-        self.assertEqual(gmp.Integer(5000000000) // self.small_gmp3,
+        self.assertEqual(5000000000 // self.small_gmp3,
                          gmp.Integer(5000000000 // 50))
         self.assertEqual(gmp.Integer(5000500500) // self.large_gmp,
                          gmp.Integer(5000500500 // 5000000000))
