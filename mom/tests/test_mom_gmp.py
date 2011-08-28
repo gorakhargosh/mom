@@ -212,48 +212,49 @@ class Test_IntegerDivision(unittest2.TestCase):
         self.large_neg_gmp = gmp.Integer(-5000000000)
 
     def test_SimpleDivision(self):
-        self.assertEqual(self.small_gmp2 / self.small_gmp,
-                         gmp.Integer(250 / 19))
-        self.assertEqual(self.small_gmp2 / self.small_gmp3,
-                         gmp.Integer(250 / 50))
-        self.assertEqual(self.small_gmp / self.small_gmp2,
-                         gmp.Integer(19 / 250))
+        self.assertEqual(self.small_gmp2 // self.small_gmp,
+                         gmp.Integer(250 // 19))
+        self.assertEqual(self.small_gmp2 // self.small_gmp3,
+                         gmp.Integer(250 // 50))
+        self.assertEqual(self.small_gmp // self.small_gmp2,
+                         gmp.Integer(19 // 250))
 
     def test_LargeDivision(self):
-        self.assertEqual(self.large_gmp2 / self.large_gmp,
-                         gmp.Integer(5000500500 / 5000000000))
-        self.assertEqual(self.large_gmp / self.small_gmp,
-                         gmp.Integer(5000000000 / 19))
-        self.assertEqual(self.large_gmp / self.small_gmp / self.small_gmp,
-                         gmp.Integer(5000000000 / 19 / 19))
+        self.assertEqual(self.large_gmp2 // self.large_gmp,
+                         gmp.Integer(5000500500 // 5000000000))
+        self.assertEqual(self.large_gmp // self.small_gmp,
+                         gmp.Integer(5000000000 // 19))
+        self.assertEqual(self.large_gmp // self.small_gmp // self.small_gmp,
+                         gmp.Integer(5000000000 // 19 // 19))
 
     def test_PyLongDivision(self):
-        self.assertEqual(self.small_gmp2 / 50, gmp.Integer(250 / 50))
-        self.assertEqual(self.large_gmp / 50, gmp.Integer(5000000000 / 50))
+        self.assertEqual(self.small_gmp2 // 50, gmp.Integer(250 // 50))
+        self.assertEqual(self.large_gmp // 50, gmp.Integer(5000000000 // 50))
 
     def test_PyLongReverseDivision(self):
-        self.assertEqual(5000000000 / self.small_gmp3,
-                         gmp.Integer(5000000000 / 50))
-        self.assertEqual(5000500500 / self.large_gmp,
-                         gmp.Integer(5000500500 / 5000000000))
+        # 5000000 // gmp.Integer instance won't work.
+        self.assertEqual(gmp.Integer(5000000000) // self.small_gmp3,
+                         gmp.Integer(5000000000 // 50))
+        self.assertEqual(gmp.Integer(5000500500) // self.large_gmp,
+                         gmp.Integer(5000500500 // 5000000000))
 
     def test_NegativeDivision(self):
-        self.assertEqual(self.large_gmp / self.small_neg_gmp,
-                         gmp.Integer(5000000000 / -19))
-        self.assertEqual(self.large_neg_gmp / self.small_neg_gmp,
-                         gmp.Integer(-5000000000 / -19))
-        self.assertEqual(self.large_neg_gmp / self.small_gmp,
-                         gmp.Integer(-5000000000 / 19))
-        self.assertEqual(self.large_neg_gmp / 50,
-                         gmp.Integer(-5000000000 / 50))
-        self.assertEqual(self.large_gmp / -50, gmp.Integer(5000000000 / -50))
+        self.assertEqual(self.large_gmp // self.small_neg_gmp,
+                         gmp.Integer(5000000000 // -19))
+        self.assertEqual(self.large_neg_gmp // self.small_neg_gmp,
+                         gmp.Integer(-5000000000 // -19))
+        self.assertEqual(self.large_neg_gmp // self.small_gmp,
+                         gmp.Integer(-5000000000 // 19))
+        self.assertEqual(self.large_neg_gmp // 50,
+                         gmp.Integer(-5000000000 // 50))
+        self.assertEqual(self.large_gmp // -50, gmp.Integer(5000000000 // -50))
 
     def test_InPlaceDivision(self):
         i = self.large_gmp
-        i /= self.small_gmp
-        self.assertEqual(i, gmp.Integer(5000000000 / 19))
-        i /= 19
-        self.assertEqual(i, gmp.Integer(5000000000 / 19 / 19))
+        i //= self.small_gmp
+        self.assertEqual(i, gmp.Integer(5000000000 // 19))
+        i //= 19
+        self.assertEqual(i, gmp.Integer(5000000000 // 19 // 19))
 
 
 class Test_IntegerMod(unittest2.TestCase):
