@@ -32,6 +32,8 @@
 :synopsis: ctypes-based GMP wrapper.
 :see: http://noahdesu.com/2009/12/14/python-gmp/
 
+Make sure you use the ``//`` operator for division, and not `/`.
+
 .. autoclass:: Integer
 .. autoclass:: Float
 .. autoclass:: Rational
@@ -272,8 +274,8 @@ class Integer(object):
     def __mul__(self, other):
         return self.__apply_ret(_MPZ_mul, Integer(), self, other)
 
-    def __div__(self, other):
-        return self.__apply_ret(_MPZ_div, Integer(), self, other)
+#    def __div__(self, other):
+#        return self.__apply_ret(_MPZ_fdiv, Integer(), self, other)
 
     def __floordiv__(self, other):
         return self.__apply_ret(_MPZ_fdiv, Integer(), self, other)
