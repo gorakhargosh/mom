@@ -27,8 +27,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-
-from __future__ import absolute_import
+# Some tests depend on new div.
+from __future__ import absolute_import, division
 import operator
 
 import unittest2
@@ -504,10 +504,12 @@ class Test_IntegerErrorCases(unittest2.TestCase):
     def test_DivisionBy0(self):
         self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), gmp.Integer(0))
         self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), 0)
+        self.assertRaises(ZeroDivisionError, operator.floordiv, 1, gmp.Integer(0))
 
     def test_ModBy0(self):
         self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), gmp.Integer(0))
         self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), 0)
+        self.assertRaises(ZeroDivisionError, operator.mod, 1, gmp.Integer(0))
 
 
 class Test_IntegerPyTypeCompatibility(unittest2.TestCase):
