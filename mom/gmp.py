@@ -131,6 +131,7 @@ _MPZ_mul = _libgmp.__gmpz_mul
 _MPZ_div = _libgmp.__gmpz_tdiv_q
 _MPZ_fdiv = _libgmp.__gmpz_fdiv_q
 _MPZ_fmod = _libgmp.__gmpz_fdiv_r
+_MPZ_fdivmod = _libgmp.__gmpz_fdiv_qr
 _MPZ_mod = _libgmp.__gmpz_mod
 _MPZ_and = _libgmp.__gmpz_and
 _MPZ_ior = _libgmp.__gmpz_ior
@@ -217,6 +218,16 @@ class Integer(object):
         func(ret, op1, op2)
         return ret
 
+    def __apply_2_rets(self, func, ret1, ret2, op1, op2):
+        assert isinstance(ret1, Integer)
+        assert isinstance(ret2, Integer)
+        if not isinstance(op1, Integer):
+            op1 = Integer(op1)
+        if not isinstance(op2, Integer):
+            op2 = Integer(op2)
+        func(ret1, ret2, op1, op2)
+        return ret1, ret2
+
     def __apply_ret_2_0(self, func, ret, op1):
         assert isinstance(ret, Integer)
         assert isinstance(op1, Integer)
@@ -274,6 +285,18 @@ class Integer(object):
 
     def __mul__(self, other):
         return self.__apply_ret(_MPZ_mul, Integer(), self, other)
+
+    def __divmod__(self, divisor):
+        if divisor == 0 or divisor == Integer(0):
+            raise ZeroDivisionError("integer division or modulo by zero")
+        return self.__apply_2_rets(_MPZ_fdivmod,
+                                   Integer(), Integer(), self, divisor)
+
+    def __rdivmod__(self, dividend):
+        if self == 0 or self == Integer(0):
+            raise ZeroDivisionError("integer division or modulo by zero")
+        return self.__apply_2_rets(_MPZ_fdivmod,
+                                   Integer(), Integer(), dividend, self)
 
     def __div__(self, other):
         return self.__floordiv__(other)

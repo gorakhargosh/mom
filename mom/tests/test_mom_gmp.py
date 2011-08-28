@@ -256,6 +256,13 @@ class Test_IntegerDivision(unittest2.TestCase):
         i //= 19
         self.assertEqual(i, gmp.Integer(5000000000 // 19 // 19))
 
+    def test_DivMod(self):
+        self.assertEqual(divmod(5000000000, 19),
+                         divmod(gmp.Integer(5000000000), gmp.Integer(19)))
+        self.assertEqual(divmod(5000000000, 19),
+                         divmod(gmp.Integer(5000000000), 19))
+        self.assertEqual(divmod(5000000000, 19), 
+                         divmod(5000000000, gmp.Integer(19)))
 
 class Test_IntegerMod(unittest2.TestCase):
     def setUp(self):
@@ -516,6 +523,10 @@ class Test_IntegerErrorCases(unittest2.TestCase):
         self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), gmp.Integer(1))
         self.assertRaises(NotImplementedError, operator.truediv, 1, gmp.Integer(1))
 
+    def test_DivModBy0(self):
+        self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), 0)
+        self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, divmod, 10, gmp.Integer(0))
 
 class Test_IntegerPyTypeCompatibility(unittest2.TestCase):
     def test_IntCompatibility(self):
