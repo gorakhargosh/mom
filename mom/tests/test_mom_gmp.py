@@ -29,6 +29,7 @@
 
 
 from __future__ import absolute_import
+import operator
 
 import unittest2
 from mom import gmp
@@ -502,18 +503,12 @@ class Test_IntegerAdditionals(unittest2.TestCase):
 
 class Test_IntegerErrorCases(unittest2.TestCase):
     def test_DivisionBy0(self):
-        #TODO Removed for now - crashes in c
-        i = gmp.Integer(1)
-        self.assertTrue(0)
-        #self.assertRaises(ValueError, gmp.Integer(1) / gmp.Integer(0))
-        #self.assertRaises(ValueError, i /= gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), 0)
 
     def test_ModBy0(self):
-        #TODO Removed for now - crashes in c
-        i = gmp.Integer(1)
-        self.assertTrue(0)
-        #self.assertRaises(ValueError, gmp.Integer(1) % gmp.Integer(0))
-        #self.assertRaises(ValueError, i %= gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), 0)
 
 
 class Test_IntegerPyTypeCompatibility(unittest2.TestCase):

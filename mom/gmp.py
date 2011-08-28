@@ -279,12 +279,16 @@ class Integer(object):
 #        return self.__apply_ret(_MPZ_fdiv, Integer(), self, other)
 
     def __floordiv__(self, other):
+        if other == 0 or other == Integer(0):
+            raise ZeroDivisionError("integer division or modulo by zero")
         return self.__apply_ret(_MPZ_fdiv, Integer(), self, other)
 
     def __and__(self, other):
         return self.__apply_ret(_MPZ_and, Integer(), self, other)
 
     def __mod__(self, other):
+        if other == 0 or other == Integer(0):
+            raise ZeroDivisionError("integer division or modulo by zero")
         return self.__apply_ret(_MPZ_fmod, Integer(), self, other)
 
     def __xor__(self, other):
