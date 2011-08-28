@@ -512,6 +512,13 @@ class Test_IntegerErrorCases(unittest2.TestCase):
         self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), gmp.Integer(0))
         self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), 0)
         self.assertRaises(ZeroDivisionError, operator.floordiv, 1, gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.ifloordiv, gmp.Integer(1), gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.ifloordiv, gmp.Integer(1), 0)
+        self.assertRaises(ZeroDivisionError, operator.ifloordiv, 1, gmp.Integer(0))
+#       python 3 removed this.
+#        self.assertRaises(ZeroDivisionError, operator.idiv, gmp.Integer(1), gmp.Integer(0))
+#        self.assertRaises(ZeroDivisionError, operator.idiv, gmp.Integer(1), 0)
+#        self.assertRaises(ZeroDivisionError, operator.idiv, 1, gmp.Integer(0))
 
     def test_ModBy0(self):
         self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), gmp.Integer(0))
@@ -522,12 +529,16 @@ class Test_IntegerErrorCases(unittest2.TestCase):
         self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), 1)
         self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), gmp.Integer(1))
         self.assertRaises(NotImplementedError, operator.truediv, 1, gmp.Integer(1))
+        self.assertRaises(NotImplementedError, operator.itruediv, gmp.Integer(1), 1)
+        self.assertRaises(NotImplementedError, operator.itruediv, gmp.Integer(1), gmp.Integer(1))
+        self.assertRaises(NotImplementedError, operator.itruediv, 1, gmp.Integer(1))
 
     def test_DivModBy0(self):
         self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), 0)
         self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), gmp.Integer(0))
         self.assertRaises(ZeroDivisionError, divmod, 10, gmp.Integer(0))
 
+        
 class Test_IntegerPyTypeCompatibility(unittest2.TestCase):
     def test_IntCompatibility(self):
         print("TODO: Test_s for interation with python ints")

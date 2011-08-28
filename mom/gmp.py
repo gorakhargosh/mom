@@ -335,6 +335,17 @@ class Integer(object):
     def __imod__(self, other):
         return self._apply_ret(_MPZ_fmod, self, self, other)
 
+    def __idiv__(self, other):
+        return self.__floordiv__(other)
+
+    def __itruediv__(self, other):
+        raise NotImplementedError("True division is not supported.")
+
+    def __ifloordiv__(self, other):
+        if other == 0 or other == Integer(0):
+            raise ZeroDivisionError("integer division or modulo by zero")
+        return self._apply_ret(_MPZ_fdiv, self, self, other)
+
     def __iand__(self, other):
         return self._apply_ret(_MPZ_and, self, self, other)
 
