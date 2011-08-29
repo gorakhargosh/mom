@@ -32,8 +32,6 @@
 :synopsis: ctypes-based GMP wrapper.
 :see: http://noahdesu.com/2009/12/14/python-gmp/
 
-Make sure you use the ``//`` operator for division, and not `/`.
-
 .. autoclass:: Integer
 .. autoclass:: Float
 .. autoclass:: Rational
