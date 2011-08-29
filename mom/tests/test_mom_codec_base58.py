@@ -23,6 +23,7 @@ from mom.codec._alt_base import b58decode_naive, b58encode_naive
 from mom.codec.base58 import b58encode, b58decode, ALT58_BYTES, ASCII58_BYTES
 from mom.codec.integer import uint_to_bytes, bytes_to_uint
 from mom.security.random import generate_random_bytes
+from mom.tests.constants import unicode_string
 
 random_bytes = generate_random_bytes(384)
 
@@ -108,3 +109,10 @@ class Test_base58_codec(unittest2.TestCase):
         self.assertEqual(base58_encode(raw_data), encoded)
         self.assertEqual(base58_decode(encoded), raw_data)
         self.assertEqual(base58_decode(encoded_with_whitespace), raw_data)
+
+    def test_TypeError_when_bad_type(self):
+        self.assertRaises(TypeError, b58encode, unicode_string)
+        self.assertRaises(TypeError, b58encode_naive, unicode_string)
+        self.assertRaises(TypeError, b58decode, unicode_string)
+        self.assertRaises(TypeError, b58decode_naive, unicode_string)
+
