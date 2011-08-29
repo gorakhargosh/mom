@@ -18,6 +18,7 @@
 import os
 import unittest2
 from mom.builtins import b
+from mom.codec._alt_base import ipv6_b85encode_naive, ipv6_b85decode_naive
 from mom.tests.constants import unicode_string
 from mom.tests.test_mom_builtins import unicode_string2
 
@@ -266,13 +267,22 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
         self.assertEqual(ipv6_b85encode(ipv6_number_2), ipv6_encoded_2)
         self.assertEqual(ipv6_b85encode(ipv6_number_3), ipv6_encoded_3)
 
+        self.assertEqual(ipv6_b85encode_naive(ipv6_number), ipv6_encoded)
+        self.assertEqual(ipv6_b85encode_naive(ipv6_number_2), ipv6_encoded_2)
+        self.assertEqual(ipv6_b85encode_naive(ipv6_number_3), ipv6_encoded_3)
+
     def test_decoding(self):
         self.assertEqual(ipv6_b85decode(ipv6_encoded), ipv6_number)
         self.assertEqual(ipv6_b85decode(ipv6_encoded_2), ipv6_number_2)
         self.assertEqual(ipv6_b85decode(ipv6_encoded_3), ipv6_number_3)
 
+        self.assertEqual(ipv6_b85decode_naive(ipv6_encoded), ipv6_number)
+        self.assertEqual(ipv6_b85decode_naive(ipv6_encoded_2), ipv6_number_2)
+        self.assertEqual(ipv6_b85decode_naive(ipv6_encoded_3), ipv6_number_3)
+
     def test_TypeError_when_unicode(self):
         self.assertRaises(TypeError, ipv6_b85decode, unicode_string2)
+        self.assertRaises(TypeError, ipv6_b85decode_naive, unicode_string2)
 
     def test_codec_identity(self):
         self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number)),
@@ -282,11 +292,21 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
         self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number_3)),
                          ipv6_number_3)
 
+
+        self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(ipv6_number)),
+                         ipv6_number)
+        self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(ipv6_number_2)),
+                         ipv6_number_2)
+        self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(ipv6_number_3)),
+                         ipv6_number_3)
+
     def test_ValueError_when_negative(self):
         self.assertRaises(ValueError, ipv6_b85encode, -1)
+        self.assertRaises(ValueError, ipv6_b85encode_naive, -1)
 
     def test_OverflowError_when_greater_than_128_bit(self):
         self.assertRaises(OverflowError, ipv6_b85encode, 1 << 128)
+        self.assertRaises(OverflowError, ipv6_b85encode_naive, 1 << 128)
 
     def test_ValueError_when_encoded_length_not_20(self):
         self.assertRaises(ValueError, ipv6_b85decode,
@@ -294,13 +314,24 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
         self.assertRaises(ValueError, ipv6_b85decode,
                           b('=r54lj&NUUO='))
 
+        self.assertRaises(ValueError, ipv6_b85decode_naive,
+                          b('=r54lj&NUUO~Hi%c2ym0='))
+        self.assertRaises(ValueError, ipv6_b85decode_naive,
+                          b('=r54lj&NUUO='))
+
     def test_TypeError_when_not_number(self):
         self.assertRaises(TypeError, ipv6_b85encode, None)
+        self.assertRaises(TypeError, ipv6_b85encode_naive, None)
 
     def test_ignores_whitespace(self):
         self.assertEqual(ipv6_b85decode(b('=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0')),
                          ipv6_number_2)
+        self.assertEqual(
+            ipv6_b85decode_naive(b('=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0')),
+            ipv6_number_2)
 
     def test_OverflowError_when_stray_characters_found(self):
         self.assertRaises(OverflowError, ipv6_b85decode,
+                          b('=r54lj&NUUO~Hi,./:[]'))
+        self.assertRaises(OverflowError, ipv6_b85decode_naive,
                           b('=r54lj&NUUO~Hi,./:[]'))
