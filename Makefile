@@ -46,10 +46,7 @@ test: doc-rebuild
 	@echo "You will need Coverage 3.5 and unittest2 or higher for this to work."
 	@rm -rf htmlcov
 	@bin/coverage erase
-	@bin/coverage run run_tests.py
-	@bin/coverage report -m
-	@echo "HTML report generated in the 'htmlcov' directory."
-	@bin/coverage html -d htmlcov
+	@py.test -n4 --cov mom --cov-report html
 
 lint:
 	@pylint $(PKG_NAME)
