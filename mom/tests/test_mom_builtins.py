@@ -39,7 +39,7 @@ from mom.builtins import \
     is_even, \
     is_negative, \
     is_positive, byte, bytes_leading, bytes_trailing, b, \
-    integer_byte_size, integer_bit_count
+    integer_byte_size, integer_bit_count, integer_bit_size
 
 try:
     unicode
@@ -336,6 +336,40 @@ class Test_integer_bit_length(unittest2.TestCase):
 
         self.assertRaises(TypeError, integer_bit_length_word_aligned, None)
         self.assertRaises(TypeError, integer_bit_length_word_aligned, object)
+
+
+
+class Test_integer_bit_size(unittest2.TestCase):
+    def test_bit_size_0_if_zero(self):
+        self.assertEqual(integer_bit_size(0), 1)
+
+    def test_bit_size_correct(self):
+        numbers = [
+            -12,
+            12,
+            1200,
+            120091,
+            123456789,
+        ]
+        for num in numbers:
+            if num < 0:
+                size = len(bin(num, None)) - 1
+            else:
+                size = len(bin(num, None))
+            self.assertEqual(integer_bit_size(num), size)
+
+        self.assertEqual(integer_bit_size(1023), 10)
+        self.assertEqual(integer_bit_size(1024), 11)
+        self.assertEqual(integer_bit_size(1025), 11)
+        self.assertEqual(integer_bit_size(1 << 1024), 1025)
+        self.assertEqual(integer_bit_size((1 << 1024) + 1), 1025)
+        self.assertEqual(integer_bit_size((1 << 1024) - 1), 1024)
+        self.assertEqual(integer_bit_size((1<<32)-1), 32)
+        self.assertEqual(integer_bit_size((1<<64)-1), 64)
+
+    def test_raises_TypeError_when_invalid_argument(self):
+        self.assertRaises(TypeError, integer_bit_size, None)
+        self.assertRaises(TypeError, integer_bit_size, object)
 
 
 class Test_is_bytes(unittest2.TestCase):

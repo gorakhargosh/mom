@@ -53,7 +53,7 @@ from __future__ import absolute_import, division
 
 from mom import string
 from mom._compat import range, generate_random_bytes as _generate_random_bytes
-from mom.builtins import integer_bit_length, is_integer, byte
+from mom.builtins import integer_bit_length, is_integer, byte, integer_bit_size
 from mom.codec import hex_encode
 from mom.codec.integer import bytes_to_uint
 
@@ -189,12 +189,12 @@ def generate_random_uint_between(low, high, rand_func=generate_random_bytes):
         Random unsigned long integer value.
     """
     if not (is_integer(low) and is_integer(high)):
-        raise TypeError("unsupported operand types(s): %r and %r" \
+        raise TypeError("unsupported argument types(s): %r and %r" \
                         % (type(low).__name__, type(high).__name__))
     if low >= high:
         raise ValueError("high value must be greater than low value.")
     r = high - low - 1
-    bits = integer_bit_length(r)
+    bits = integer_bit_size(r)
     value = generate_random_uint_atmost(bits, rand_func=rand_func)
     while value > r:
         value = generate_random_uint_atmost(bits, rand_func=rand_func)
@@ -246,7 +246,7 @@ def random_shuffle(sequence, rand_func=generate_random_bytes):
     # Choose a random item (without replacement) until all the items have been
     # chosen.
     for i in range(len(sequence)):
-        p = random_choice(copy, rand_func)
+        p = generate_random_uint_between(0, len(copy), rand_func)
         sequence[i] = copy[p]
         del copy[p]
     return sequence

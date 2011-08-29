@@ -68,6 +68,7 @@ Bits and bytes size counting
 .. autofunction:: bytes_leading
 .. autofunction:: bytes_trailing
 .. autofunction:: integer_bit_length
+.. autofunction:: integer_bit_size
 .. autofunction:: integer_byte_length
 .. autofunction:: integer_byte_size
 
@@ -399,6 +400,23 @@ def integer_bit_length(number):
         'c':4, 'd':4, 'e':4, 'f':4,
      }[hex_num[0]]
     #return int(math.floor(math.log(n, 2))+1)
+
+
+def integer_bit_size(number):
+    """
+    Number of bits needed to represent a integer excluding any prefix
+    0 bits.
+
+    :param number:
+        Integer value. If num is 0, returns 1. Only the absolute value of the
+        number is considered. Therefore, signed integers will be abs(num)
+        before the number's bit length is determined.
+    :returns:
+        Returns the number of bits in the integer.
+    """
+    if number == 0:
+        return 1
+    return integer_bit_length(number)
 
 
 def integer_bit_count(number):

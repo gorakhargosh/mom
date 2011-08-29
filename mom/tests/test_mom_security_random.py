@@ -26,7 +26,7 @@ from mom.security.random import \
     generate_random_uint_exactly, ALPHANUMERIC, \
     ASCII_PRINTABLE, ALPHA, LOWERCASE_ALPHANUMERIC, \
     LOWERCASE_ALPHA, DIGITS, generate_random_password, \
-    generate_random_sequence, calculate_entropy, generate_random_string
+    generate_random_sequence, calculate_entropy, generate_random_string, random_shuffle
 
 
 class Test_generate_random_bits(unittest2.TestCase):
@@ -128,7 +128,10 @@ class Test_generate_random_hex_string(unittest2.TestCase):
         self.assertRaises(ValueError, generate_random_hex_string, True)
         self.assertRaises(ValueError, generate_random_hex_string, False)
 
-class Test_generate_random_ulong_between(unittest2.TestCase):
+class Test_generate_random_uint_between(unittest2.TestCase):
+    def test_0_1(self):
+        self.assertEqual(generate_random_uint_between(0, 1), 0)
+
     def test_range(self):
         low, high = 1, 10
         for x in range(1000):
@@ -261,3 +264,17 @@ class Test_calculate_entropy(unittest2.TestCase):
         for length, symbols in zip(lengths_128, symbol_sets):
             for i in range(10):
                 self.assertTrue(calculate_entropy(length, symbols) >= 128)
+
+
+class Test_random_shuffle(unittest2.TestCase):
+    def test_shuffled_length(self):
+        self.assertEqual(len(random_shuffle(list("abcd"))), 4)
+
+    def test_shuffled_set_equivalence(self):
+        self.assertEqual(set(random_shuffle(list("abcd"))), set("abcd"))
+
+    def test_shuffled(self):
+        # The possibility of a collision is smaller as the size of the list
+        # increases.
+        self.assertNotEqual(random_shuffle(list(ALPHANUMERIC)), list(ALPHANUMERIC))
+        self.assertEqual(random_shuffle(["a"]), ["a"])
