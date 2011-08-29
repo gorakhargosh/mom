@@ -26,7 +26,8 @@ from mom.security.random import \
     generate_random_uint_exactly, ALPHANUMERIC, \
     ASCII_PRINTABLE, ALPHA, LOWERCASE_ALPHANUMERIC, \
     LOWERCASE_ALPHA, DIGITS, generate_random_password, \
-    generate_random_sequence, calculate_entropy, generate_random_string, random_shuffle
+    generate_random_sequence, calculate_entropy, generate_random_string, \
+    random_shuffle
 
 
 class Test_generate_random_bits(unittest2.TestCase):
@@ -145,7 +146,8 @@ class Test_generate_random_uint_between(unittest2.TestCase):
     def test_TypeError_when_invalid_argument(self):
         self.assertRaises(TypeError, generate_random_uint_between, None, None)
         self.assertRaises(TypeError, generate_random_uint_between, {}, {})
-        self.assertRaises(TypeError, generate_random_uint_between, object, object)
+        self.assertRaises(TypeError,
+                          generate_random_uint_between, object, object)
         self.assertRaises(TypeError, generate_random_uint_between, True, True)
         self.assertRaises(TypeError, generate_random_uint_between, "", "")
 
@@ -274,5 +276,6 @@ class Test_random_shuffle(unittest2.TestCase):
     def test_shuffled(self):
         # The possibility of a collision is smaller as the size of the list
         # increases.
-        self.assertNotEqual(random_shuffle(list(ALPHANUMERIC)), list(ALPHANUMERIC))
+        self.assertNotEqual(random_shuffle(list(ALPHANUMERIC)),
+                            list(ALPHANUMERIC))
         self.assertEqual(random_shuffle(["a"]), ["a"])
