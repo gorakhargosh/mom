@@ -89,7 +89,14 @@ class Test_bytes_leading_and_trailing(unittest2.TestCase):
         self.assertEqual(bytes_trailing(b('\xff\x00\x00\x00')), 3)
         self.assertEqual(bytes_trailing(b('')), 0)
 
-            
+    def test_TypeError_when_bad_type(self):
+        self.assertRaises(TypeError, bytes_trailing, unicode_string)
+        self.assertRaises(TypeError, bytes_trailing, 1)
+        self.assertRaises(TypeError, bytes_trailing, None)
+        self.assertRaises(TypeError, bytes_leading, unicode_string)
+        self.assertRaises(TypeError, bytes_leading, 1)
+        self.assertRaises(TypeError, bytes_leading, None)
+
 class Test_bin(unittest2.TestCase):
     def test_binary_0_1_and_minus_1(self):
         self.assertEqual(bin(0), '0b0')
