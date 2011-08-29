@@ -210,7 +210,7 @@ class Integer(object):
         return arg
 
     def _apply_ret(self, func, ret, op1, op2):
-        assert isinstance(ret, Integer)
+        #assert isinstance(ret, Integer)
         if not isinstance(op1, Integer):
             op1 = Integer(op1)
         if not isinstance(op2, Integer):
@@ -219,8 +219,8 @@ class Integer(object):
         return ret
 
     def _apply_2_rets(self, func, ret1, ret2, op1, op2):
-        assert isinstance(ret1, Integer)
-        assert isinstance(ret2, Integer)
+        #assert isinstance(ret1, Integer)
+        #assert isinstance(ret2, Integer)
         if not isinstance(op1, Integer):
             op1 = Integer(op1)
         if not isinstance(op2, Integer):
@@ -229,8 +229,8 @@ class Integer(object):
         return ret1, ret2
 
     def _apply_ret_2_0(self, func, ret, op1):
-        assert isinstance(ret, Integer)
-        assert isinstance(op1, Integer)
+        #assert isinstance(ret, Integer)
+        #assert isinstance(op1, Integer)
         func(ret, op1)
         return ret
 
