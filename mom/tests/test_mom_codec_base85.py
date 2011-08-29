@@ -234,6 +234,21 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
         self.assertRaises(OverflowError, rfc1924_b85decode,
                           b('|NsC')) # 0x03030303
 
+    def test_TypeError_when_not_bytes(self):
+        self.assertRaises(TypeError, rfc1924_b85decode, unicode_string)
+        self.assertRaises(TypeError, rfc1924_b85decode, None)
+        self.assertRaises(TypeError, rfc1924_b85decode, object)
+        self.assertRaises(TypeError, rfc1924_b85decode, [])
+        self.assertRaises(TypeError, rfc1924_b85decode, 1)
+        self.assertRaises(TypeError, rfc1924_b85decode, False)
+        
+        self.assertRaises(TypeError, rfc1924_b85encode, unicode_string)
+        self.assertRaises(TypeError, rfc1924_b85encode, None)
+        self.assertRaises(TypeError, rfc1924_b85encode, object)
+        self.assertRaises(TypeError, rfc1924_b85encode, [])
+        self.assertRaises(TypeError, rfc1924_b85encode, 1)
+        self.assertRaises(TypeError, rfc1924_b85encode, False)
+
     def test_codec_identity(self):
         self.assertEqual(
             rfc1924_b85decode(rfc1924_b85encode(mercurial_bytes)),
