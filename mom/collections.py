@@ -51,6 +51,9 @@ class SetQueue(queue.Queue):
     and must implement the :meth:`__hash__`, :meth:`__eq__`, and :meth:`__ne__`
     methods to be hashable.
 
+    :author: Yesudeep Manglapilly <yesudeep@gmail.com>
+    :author: Lukáš Lalinský <lalinsky@gmail.com>
+
     An example item class implementation follows::
 
         class QueuedItem(object):
@@ -78,14 +81,12 @@ class SetQueue(queue.Queue):
             def __hash__(self):
                 return hash(self._key())
 
-    .. NOTE:: This ordered set queue leverages locking already present in the
-              :class:`queue.Queue` class redefining only internal primitives.
-              The order of items is maintained because the internal queue is
-              not replaced. An internal set is used merely to check for the
-              existence of an item in the queue.
-
-    :author: Yesudeep Manglapilly <yesudeep@gmail.com>
-    :author: Lukáš Lalinský <lalinsky@gmail.com>
+    .. NOTE:
+        This ordered set queue leverages locking already present in the
+        :class:`queue.Queue` class redefining only internal primitives.
+        The order of items is maintained because the internal queue is
+        not replaced. An internal set is used merely to check for the
+        existence of an item in the queue.
     """
     def _init(self, maxsize):
         queue.Queue._init(self, maxsize)
