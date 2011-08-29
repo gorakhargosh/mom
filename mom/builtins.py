@@ -95,8 +95,8 @@ from __future__ import absolute_import
 try:
     # Use Psyco (if available) because it cuts execution time into almost half
     # on 32-bit architecture.
-    import psyco
-    psyco.full()
+    import psyco #pragma: no cover
+    psyco.full() #pragma: no cover
 except ImportError:
     pass
 

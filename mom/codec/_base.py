@@ -28,8 +28,8 @@
 
 try:
     # Use psyco if available.
-    import psyco
-    psyco.full()
+    import psyco #pragma: no cover
+    psyco.full() #pragma: no cover
 except ImportError:
     pass
 

@@ -283,6 +283,13 @@ Use them. They will help prevent unexpected bugs.
 
 from __future__ import absolute_import
 
+try:
+    # Use psyco if available.
+    import psyco #pragma: no cover
+    psyco.full() #pragma: no cover
+except ImportError:
+    pass
+
 import binascii
 
 from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE, \
