@@ -254,7 +254,6 @@ class Test_calculate_entropy(unittest2.TestCase):
             20,
         ]
 
-
         for length, symbols in zip(lengths_64, symbol_sets):
             for i in range(10):
                 self.assertTrue(calculate_entropy(length, symbols) >= 64)
@@ -264,7 +263,6 @@ class Test_calculate_entropy(unittest2.TestCase):
         for length, symbols in zip(lengths_128, symbol_sets):
             for i in range(10):
                 self.assertTrue(calculate_entropy(length, symbols) >= 128)
-
 
 class Test_random_shuffle(unittest2.TestCase):
     def test_shuffled_length(self):
