@@ -42,8 +42,8 @@ try:
     # Utilize psyco if it is available.
     # This should help speed up 32-bit versions of Python if you have
     # psyco installed.
-    import psyco
-    psyco.full()
+    import psyco # pragma: no cover
+    psyco.full()  # pragma: no cover
 except ImportError:
     pass
 
