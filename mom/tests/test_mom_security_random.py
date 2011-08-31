@@ -75,7 +75,7 @@ class Test_generate_random_ulong_exactly(unittest2.TestCase):
         self.assertRaises(TypeError, generate_random_uint_exactly, True)
         self.assertRaises(TypeError, generate_random_uint_exactly, "")
 
-        
+
 class Test_generate_random_ulong_atmost(unittest2.TestCase):
     def test_range(self):
         for i in range(128):
