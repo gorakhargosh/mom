@@ -33,7 +33,7 @@ from __future__ import absolute_import
 try:
     # Python 2.x
     from itertools import imap
-except ImportError:
+except ImportError:   # pragma: no cover
     # Python 3.x
     imap = map
 from functools import partial

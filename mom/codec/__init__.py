@@ -639,7 +639,7 @@ _HEX_TO_BIN_LOOKUP = {
     b('e'): b('1110'), b('E'): b('1110'),
     b('f'): b('1111'), b('F'): b('1111'),
 }
-if have_python3:
+if have_python3: # pragma: no cover
     # Indexing into Python 3 bytes yields ords, not single-byte strings.
     _HEX_TO_BIN_LOOKUP = \
         dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())

@@ -206,7 +206,7 @@ try:
     # Python 2.x
     from itertools import \
         ifilter as _ifilter, ifilterfalse as _ifilterfalse, imap as _imap
-except ImportError:
+except ImportError: # pragma: no cover
     # Python 3 nuisance.
     _ifilter = filter
     def _ifilterfalse(predicate, iterable):

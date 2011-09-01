@@ -20,13 +20,13 @@
 
 from __future__ import absolute_import
 
-try:
+try: # pragma: no cover
     # Utilize psyco if it is available.
     # This should help speed up 32-bit versions of Python if you have
     # psyco installed.
     import psyco
     psyco.full()
-except ImportError:
+except ImportError: # pragma: no cover
     pass
 
 from array import array
@@ -319,6 +319,8 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
 
 def uint_to_bytes_simple(num):
     assert num >= 0
+    if num == 0:
+        return ZERO_BYTE
     rv = []
     while num:
         rv.append(byte(num & 0xff))

@@ -130,7 +130,7 @@ RFC1924_BYTES = array('B', (string.digits +
 #for ordinal, _byte in enumerate(RFC1924_BYTES):
 #    RFC1924_ORDS[_byte] = ordinal
 
-if have_python3:
+if have_python3: # pragma: no cover
     # Python 3 bytes when indexed yield integers, not single-character
     # byte strings.
     ASCII85_ORDS = dict((x, x - 33) for x in ASCII85_BYTES)
