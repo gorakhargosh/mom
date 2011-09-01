@@ -36,14 +36,65 @@ class Test_AttributeDict(unittest2.TestCase):
         self.assertEqual(d.something, "foobar")
         self.assertEqual(d.another_thing, "haha")
 
-    def test_KeyError_when_key_not_found(self):
+    def test_AttributeError_when_key_not_found(self):
         d = AttributeDict(something="foobar", another_thing="haha")
         a = attrdict(something="foobar", another_thing="haha")
         def foo_wrapper(d):
             return d.not_present
-        self.assertRaises(KeyError, foo_wrapper, d)
-        self.assertRaises(KeyError, foo_wrapper, a)
+        self.assertRaises(AttributeError, foo_wrapper, d)
+        self.assertRaises(AttributeError, foo_wrapper, a)
 
+    def test_delattr(self):
+        d = AttributeDict(something="foobar", another_thing="haha")
+        del d.another_thing
+        self.assertDictEqual(d.__dict__, dict(something="foobar"))
+        del d["something"]
+        self.assertDictEqual(d.__dict__, dict())
+
+
+    def test_getattr(self):
+        d = AttributeDict(something="foobar", another_thing="haha")
+        d["oob"] = "blah"
+        self.assertEqual(d.something, "foobar")
+        self.assertEqual(d.oob, "blah")
+
+    def test_setattr(self):
+        d = AttributeDict()
+        d.something = "foobar"
+        self.assertEqual(d.something, "foobar")
+
+    def test_contains(self):
+        d = AttributeDict(something="foobar")
+        self.assertTrue("something" in d)
+
+    def test_subclass_attribute_shadows_dict_key(self):
+        class Foobar(AttributeDict):
+            def __init__(self, *args, **kwargs):
+                self.foo = 0
+                super(Foobar, self).__init__(*args, **kwargs)
+
+        d = Foobar(foo="something")
+        self.assertEqual(d["foo"], "something")
+        d.foo = 1
+        self.assertNotEqual(d["foo"], "something")
+        self.assertEqual(d.foo, 1)
+
+    def test_items(self):
+        d = AttributeDict(a="a", b="b", c="c")
+        another = AttributeDict()
+        for k, v in d.items():
+            another[k] = v
+        self.assertDictEqual(d.__dict__, another.__dict__)
+
+    def test_fromkeys(self):
+        d = AttributeDict(a="a", b="b", c="c")
+        another = AttributeDict.fromkeys(d, "Hmm")
+        self.assertDictEqual(another.__dict__, dict(a="Hmm", b="Hmm", c="Hmm"))
+
+    def test_update(self):
+        d = AttributeDict(a="b")
+        d.update(AttributeDict(b="c"))
+        self.assertDictEqual(d.__dict__, dict(a="b", b="c"))
 
 class TestSetQueue(unittest2.TestCase):
     def test_behavior(self):
