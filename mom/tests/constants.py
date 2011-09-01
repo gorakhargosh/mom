@@ -17,9 +17,9 @@
 
 from __future__ import absolute_import
 
-from mom._compat import have_python3
+from mom._compat import HAVE_PYTHON3
 
-if have_python3:
+if HAVE_PYTHON3:
     from mom.tests.py3kconstants import \
         unicode_string, unicode_string2, foo, ufoo, \
         json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte, \

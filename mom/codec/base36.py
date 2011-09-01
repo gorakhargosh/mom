@@ -27,7 +27,7 @@
 from __future__ import absolute_import
 
 from mom import string
-from mom._compat import have_python3, EMPTY_BYTE
+from mom._compat import HAVE_PYTHON3, EMPTY_BYTE
 from mom.builtins import byte
 from mom.codec._base import base_encode, uint_to_base256
 
@@ -35,7 +35,7 @@ from mom.codec._base import base_encode, uint_to_base256
 ASCII36_BYTES = (string.digits +
                 string.ascii_uppercase).encode("ascii")
 # Therefore, b'1' represents b'\0'.
-if have_python3:
+if HAVE_PYTHON3:
     ASCII36_BYTES = tuple(byte(x) for x in ASCII36_BYTES)
 
 

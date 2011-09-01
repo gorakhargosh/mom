@@ -292,7 +292,7 @@ except ImportError:
 
 import binascii
 
-from mom._compat import have_python3, ZERO_BYTE, EMPTY_BYTE, \
+from mom._compat import HAVE_PYTHON3, ZERO_BYTE, EMPTY_BYTE, \
     UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE, \
     EQUAL_BYTE, DIGIT_ZERO_BYTE
 from mom.builtins import is_bytes, b, bytes_leading
@@ -639,7 +639,7 @@ _HEX_TO_BIN_LOOKUP = {
     b('e'): b('1110'), b('E'): b('1110'),
     b('f'): b('1111'), b('F'): b('1111'),
 }
-if have_python3: # pragma: no cover
+if HAVE_PYTHON3: # pragma: no cover
     # Indexing into Python 3 bytes yields ords, not single-byte strings.
     _HEX_TO_BIN_LOOKUP = \
         dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())

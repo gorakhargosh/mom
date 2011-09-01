@@ -25,13 +25,13 @@
 """
 
 from __future__ import absolute_import
-from mom._compat import have_python3
+from mom._compat import HAVE_PYTHON3
 from mom.builtins import is_bytes
 from mom.codec.text import utf8_decode_recursive
 from mom.codec._json_compat import json_dumps as _json_dumps, json_loads
 
 
-if have_python3:
+if HAVE_PYTHON3:
     json_dumps = _json_dumps
 else:
     json_dumps = lambda o: _json_dumps(o).decode('utf-8')

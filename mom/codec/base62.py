@@ -156,7 +156,7 @@ Functions
 
 from __future__ import absolute_import, division
 
-from mom._compat import have_python3
+from mom._compat import HAVE_PYTHON3
 from mom import string
 from mom.builtins import byte
 from mom.codec._base import base_encode, base_decode
@@ -182,7 +182,7 @@ ALT62_BYTES = (string.digits +
 ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_BYTES))
 
 
-if have_python3:
+if HAVE_PYTHON3:
     ASCII62_BYTES = tuple(byte(x) for x in ASCII62_BYTES)
     ALT62_BYTES = tuple(byte(x) for x in ALT62_BYTES)
 

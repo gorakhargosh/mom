@@ -43,10 +43,10 @@ from __future__ import absolute_import
 from ctypes import CDLL, Structure, POINTER, byref,\
     c_int, c_ulonglong, c_voidp, c_long, c_byte, cast, c_char_p, c_ulong
 from ctypes.util import find_library
-from mom._compat import have_python3
+from mom._compat import HAVE_PYTHON3
 
 
-if have_python3:
+if HAVE_PYTHON3:
     def number_to_pybytes(num):
         """
         Converts number to bytes.

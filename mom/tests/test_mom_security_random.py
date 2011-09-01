@@ -32,7 +32,7 @@ from mom.security.random import \
 
 class Test_generate_random_bits(unittest2.TestCase):
     def test_range(self):
-        for i in range(999):
+        for _ in range(999):
             n_bits = 4
             value = bytes_to_uint(generate_random_bits(n_bits))
             self.assertTrue(value >= 0 and value < (1 << n_bits))
@@ -58,7 +58,7 @@ class Test_generate_random_ulong_exactly(unittest2.TestCase):
     def test_range(self):
         for i in range(128):
             n_bits = i + 1
-            for j in range(128):
+            for _ in range(128):
                 x = generate_random_uint_exactly(n_bits)
                 # Ensure high bit is set
                 #self.assertTrue(x & (2 ** (n_bits - 1)))
@@ -80,7 +80,7 @@ class Test_generate_random_ulong_atmost(unittest2.TestCase):
     def test_range(self):
         for i in range(128):
             n_bits = i + 1
-            for j in range(128):
+            for _ in range(128):
                 x = generate_random_uint_atmost(n_bits)
                 self.assertTrue(x >= 0 and x < (1 << n_bits),
                                 "huh? x=%d" % x)
@@ -135,7 +135,7 @@ class Test_generate_random_uint_between(unittest2.TestCase):
 
     def test_range(self):
         low, high = 1, 10
-        for x in range(1000):
+        for _ in range(1000):
             value = generate_random_uint_between(low, high)
             self.assertTrue(value >= low and value < high)
 
@@ -154,7 +154,7 @@ class Test_generate_random_uint_between(unittest2.TestCase):
 
 class Test_generate_random_string(unittest2.TestCase):
     def test_random_string_length(self):
-        for i in range(10):
+        for _ in range(10):
             self.assertEqual(len(generate_random_string(64)),
                              len(generate_random_string(64)))
             self.assertEqual(len(generate_random_string(64)), 64)
@@ -164,7 +164,7 @@ class Test_generate_random_string(unittest2.TestCase):
 
     def test_uniqueness(self):
         # For a decent enough entropy.
-        for i in range(10):
+        for _ in range(10):
             self.assertNotEqual(generate_random_string(64),
                                 generate_random_string(64))
 
@@ -195,17 +195,17 @@ class Test_generate_random_password(unittest2.TestCase):
             157,
         ]
         for length, symbols in zip(lengths_64, symbol_sets):
-            for i in range(10):
+            for _ in range(10):
                 self.assertEqual(len(generate_random_password(64, symbols)),
                                  length)
         for length, symbols in zip(lengths_1024, symbol_sets):
-            for i in range(10):
+            for _ in range(10):
                 self.assertEqual(len(generate_random_password(1024, symbols)),
                                  length)
 
     def test_uniqueness(self):
         # For a decent enough entropy.
-        for i in range(10):
+        for _ in range(10):
             self.assertNotEqual(generate_random_password(64),
                                 generate_random_password(64))
 
@@ -257,13 +257,13 @@ class Test_calculate_entropy(unittest2.TestCase):
         ]
 
         for length, symbols in zip(lengths_64, symbol_sets):
-            for i in range(10):
+            for _ in range(10):
                 self.assertTrue(calculate_entropy(length, symbols) >= 64)
         for length, symbols in zip(lengths_1024, symbol_sets):
-            for i in range(10):
+            for _ in range(10):
                 self.assertTrue(calculate_entropy(length, symbols) >= 1024)
         for length, symbols in zip(lengths_128, symbol_sets):
-            for i in range(10):
+            for _ in range(10):
                 self.assertTrue(calculate_entropy(length, symbols) >= 128)
 
 class Test_random_shuffle(unittest2.TestCase):

@@ -38,12 +38,12 @@ class Test__pure_is_prime(unittest2.TestCase):
         
 class Test_generate_random_prime(unittest2.TestCase):
     def test_generate_random_prime(self):
-        for x in range(100):
+        for _ in range(100):
             self.assertTrue(is_prime(generate_random_prime(64)))
         
 class Test_generate_random_safe_prime(unittest2.TestCase):
     def test_generate_random_safe_prime(self):
-        for x in range(20):
+        for _ in range(20):
             self.assertTrue(is_prime(generate_random_safe_prime(32)))
         
 

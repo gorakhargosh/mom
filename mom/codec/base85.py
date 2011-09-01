@@ -81,7 +81,7 @@ from struct import unpack, pack
 from mom import string
 from mom.builtins import is_bytes, b, byte
 from mom._compat import range, ZERO_BYTE, UINT128_MAX, UINT32_MAX, \
-    have_python3, EMPTY_BYTE
+    HAVE_PYTHON3, EMPTY_BYTE
 
 
 __all__ = [
@@ -130,7 +130,7 @@ RFC1924_BYTES = array('B', (string.digits +
 #for ordinal, _byte in enumerate(RFC1924_BYTES):
 #    RFC1924_ORDS[_byte] = ordinal
 
-if have_python3: # pragma: no cover
+if HAVE_PYTHON3: # pragma: no cover
     # Python 3 bytes when indexed yield integers, not single-character
     # byte strings.
     ASCII85_ORDS = dict((x, x - 33) for x in ASCII85_BYTES)

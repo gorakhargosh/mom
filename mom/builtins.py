@@ -103,8 +103,8 @@ except ImportError:
 
 from struct import pack
 from mom._compat import \
-    byte_literal, bytes_type, unicode_type, basestring_type, range, reduce, \
-    next, integer_types, byte_ord, ZERO_BYTE
+    byte_literal, BYTES_TYPE, UNICODE_TYPE, BASESTRING_TYPE, range, reduce, \
+    next, INTEGER_TYPES, byte_ord, ZERO_BYTE
 
 
 __all__ = [
@@ -140,7 +140,7 @@ next = next
 # * ``bytes`` = bytes (binary data or a sequence of bytes).
 # * ``unicode`` = Unicode string or text (for backward compatibility,
 #    2to3 converts these).
-bytes = bytes_type
+bytes = BYTES_TYPE
 
 # Fake byte literal support.
 b = byte_literal
@@ -299,7 +299,7 @@ def is_unicode(obj):
     :returns:
         ``True`` if value is a Unicode string; ``False`` otherwise.
     """
-    return isinstance(obj, unicode_type)
+    return isinstance(obj, UNICODE_TYPE)
 
 
 def is_bytes(obj):
@@ -311,7 +311,7 @@ def is_bytes(obj):
     :returns:
         ``True`` if value is a bytes instance; ``False`` otherwise.
     """
-    return isinstance(obj, bytes_type)
+    return isinstance(obj, BYTES_TYPE)
 
 
 def is_bytes_or_unicode(obj):
@@ -324,7 +324,7 @@ def is_bytes_or_unicode(obj):
     :returns:
         ``True`` if value is any type of string; ``False`` otherwise.
     """
-    return isinstance(obj, basestring_type)
+    return isinstance(obj, BASESTRING_TYPE)
 
 
 def is_integer(obj):
@@ -336,7 +336,7 @@ def is_integer(obj):
     :returns:
         ``True`` if yes; ``False`` otherwise.
     """
-    return isinstance(obj, integer_types) and not isinstance(obj, bool)
+    return isinstance(obj, INTEGER_TYPES) and not isinstance(obj, bool)
 
 
 def integer_byte_length(number):
@@ -472,7 +472,7 @@ def is_positive(num):
     :returns:
         ``True`` if positive; ``False`` otherwise.
     """
-    if not isinstance(num, integer_types + (bool, float)):
+    if not isinstance(num, INTEGER_TYPES + (bool, float)):
         raise TypeError("unsupported operand type: %r", type(num).__name__)
     return num > 0
 
@@ -486,6 +486,6 @@ def is_negative(num):
     :returns:
         ``True`` if positive; ``False`` otherwise.
     """
-    if not isinstance(num, integer_types + (bool, float)):
+    if not isinstance(num, INTEGER_TYPES + (bool, float)):
         raise TypeError("unsupported operand type: %r", type(num).__name__)
     return num < 0

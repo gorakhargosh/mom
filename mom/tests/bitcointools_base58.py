@@ -29,13 +29,13 @@ However, the implementation is still a broken one. DO NOT USE.
 """
 
 import math
-from mom._compat import ZERO_BYTE, EMPTY_BYTE, have_python3
+from mom._compat import ZERO_BYTE, EMPTY_BYTE, HAVE_PYTHON3
 from mom.builtins import byte_ord, byte, b
 
 ALPHABET = b('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
 BASE = len(ALPHABET)
 
-if have_python3:
+if HAVE_PYTHON3:
     def _chr(c):
         return byte(c)
 else:

@@ -46,40 +46,40 @@ else:
     UINT_MAX = UINT64_MAX
 
 try:
-    long_type = long
+    LONG_TYPE = long
 except NameError:
-    long_type = int
+    LONG_TYPE = int
 
     
 # They fucking removed long too! Should I call them bastards? No? Bastards!
 try:
-    int_type = long
-    integer_types = (int, long)
+    INT_TYPE = long
+    INTEGER_TYPES = (int, long)
 except NameError:
-    int_type = int
-    integer_types = (int,)
+    INT_TYPE = int
+    INTEGER_TYPES = (int,)
 
 try:
     # Python 2.6 or higher.
-    bytes_type = bytes
+    BYTES_TYPE = bytes
 except NameError:
     # Python 2.5
-    bytes_type = str
+    BYTES_TYPE = str
 
 try:
     # Not Python3
-    unicode_type = unicode
-    basestring_type = basestring
-    have_python3 = False
+    UNICODE_TYPE = unicode
+    BASESTRING_TYPE = basestring
+    HAVE_PYTHON3 = False
     def byte_ord(c):
         return ord(c)
 except NameError:
     # Python3.
     def byte_ord(c):
         return c
-    unicode_type = str
-    basestring_type = (str, bytes)
-    have_python3 = True
+    UNICODE_TYPE = str
+    BASESTRING_TYPE = (str, bytes)
+    HAVE_PYTHON3 = True
 
 # Integral range.
 try:
@@ -90,7 +90,7 @@ except NameError:
     range = range
 
 # Fake byte literals for python2.5
-if str is unicode_type:
+if str is UNICODE_TYPE:
     def byte_literal(s):
         """
         This innocent-looking byte literal faker can be detrimental to
@@ -153,7 +153,7 @@ try:
     next = next
 except NameError:
     # Taken from
-    # http://stackoverflow.com/questions/1716428/def-next-for-python-pre-2-6-instead-of-object-next-method/1716464#1716464
+    # http://goo.gl/ZNDXN
     class Throw(object):
         pass
 

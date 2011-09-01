@@ -69,7 +69,7 @@ Functions
 
 from __future__ import absolute_import, division
 
-from mom._compat import have_python3, range
+from mom._compat import HAVE_PYTHON3, range
 from mom.builtins import byte
 from mom.codec._base import base_encode, base_decode
 
@@ -93,7 +93,7 @@ ALT58_BYTES = ("123456789"
 # Therefore, b'1' represents b'\0'.
 ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_BYTES))
 
-if have_python3:
+if HAVE_PYTHON3:
     ASCII58_BYTES = tuple(byte(x) for x in ASCII58_BYTES)
     ALT58_BYTES = tuple(byte(x) for x in ALT58_BYTES)
 
