@@ -13,7 +13,8 @@ from __future__ import absolute_import
 
 import os
 import sys
-from array import array
+from struct import pack
+#from array import array
 
 try:
     INT_MAX = sys.maxsize
@@ -71,12 +72,12 @@ try:
     UNICODE_TYPE = unicode
     BASESTRING_TYPE = basestring
     HAVE_PYTHON3 = False
-    def byte_ord(c):
-        return ord(c)
+    def byte_ord(byte_):
+        return ord(byte_)
 except NameError:
     # Python3.
-    def byte_ord(c):
-        return c
+    def byte_ord(byte_):
+        return byte_
     UNICODE_TYPE = str
     BASESTRING_TYPE = (str, bytes)
     HAVE_PYTHON3 = True
@@ -91,21 +92,21 @@ except NameError:
 
 # Fake byte literals for python2.5
 if str is UNICODE_TYPE:
-    def byte_literal(s):
+    def byte_literal(literal):
         """
         This innocent-looking byte literal faker can be detrimental to
         performance so define these as constants in your code instead.
         Don't call it repeatedly inside tight loops.
         """
-        return s.encode('latin1')
+        return literal.encode('latin1')
 else:
-    def byte_literal(s):
+    def byte_literal(literal):
         """
         This innocent-looking byte literal faker can be detrimental to
         performance so define these as constants in your code instead.
         Don't call it repeatedly inside tight loops.
         """
-        return s
+        return literal
 
 # These are used in a large number of places. Do not remove.
 # This may not make sense, but remember that our code may be used within
@@ -121,7 +122,9 @@ UNDERSCORE_BYTE = byte_literal('_')
 DIGIT_ZERO_BYTE = byte_literal('0')
 
 
-have_little_endian = bool(byte_ord(array("i",[1]).tostring()[0]))
+HAVE_LITTLE_ENDIAN = bool(pack('h', 1) == '\x01\x00')
+#HAVE_LITTLE_ENDIAN = bool(byte_ord(array("i", [1]).tostring()[0]))
+
 
 try:
     # Check whether we have reduce as a built-in.
