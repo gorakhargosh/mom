@@ -47,9 +47,9 @@ class Test_AttributeDict(unittest2.TestCase):
     def test_delattr(self):
         d = AttributeDict(something="foobar", another_thing="haha")
         del d.another_thing
-        self.assertDictEqual(d.__dict__, dict(something="foobar"))
+        self.assertDictEqual(d, dict(something="foobar"))
         del d["something"]
-        self.assertDictEqual(d.__dict__, dict())
+        self.assertDictEqual(d, dict())
 
 
     def test_getattr(self):
@@ -70,13 +70,13 @@ class Test_AttributeDict(unittest2.TestCase):
     def test_subclass_attribute_shadows_dict_key(self):
         class Foobar(AttributeDict):
             def __init__(self, *args, **kwargs):
-                self.foo = 0
                 super(Foobar, self).__init__(*args, **kwargs)
+                self.foo = 0
 
         d = Foobar(foo="something")
-        self.assertEqual(d["foo"], "something")
+        self.assertEqual(d["foo"], 0)
         d.foo = 1
-        self.assertNotEqual(d["foo"], "something")
+        self.assertNotEqual(d["foo"], 0)
         self.assertEqual(d.foo, 1)
 
     def test_items(self):
@@ -84,17 +84,44 @@ class Test_AttributeDict(unittest2.TestCase):
         another = AttributeDict()
         for k, v in d.items():
             another[k] = v
-        self.assertDictEqual(d.__dict__, another.__dict__)
+        self.assertDictEqual(d, another)
+
+    def test_keys_items_and_values(self):
+        d = AttributeDict(a="ah", b="bh", c="ch")
+        self.assertEqual(set(d.keys()), set(["a", "b", "c"]))
+        self.assertEqual(set(d.values()), set(["ah", "bh", "ch"]))
+        self.assertEqual(set(d.items()),
+            set([("a", "ah"), ("b", "bh"), ("c", "ch")]))
+
+    def test_get(self):
+        d = AttributeDict(a="ah")
+        self.assertEqual(d.get("a"), "ah")
+        self.assertEqual(d.get("b"), None)
+        self.assertEqual(d.get("b", "foo"), "foo")
+
+    def test_clear(self):
+        d = AttributeDict(a="ah", b="foo")
+        d.clear()
+        self.assertDictEqual(d, dict())
+
+    def test_instance(self):
+        d = AttributeDict(a="foo")
+        self.assertTrue(isinstance(d, AttributeDict))
+        self.assertTrue(isinstance(d, dict))
 
     def test_fromkeys(self):
         d = AttributeDict(a="a", b="b", c="c")
         another = AttributeDict.fromkeys(d, "Hmm")
-        self.assertDictEqual(another.__dict__, dict(a="Hmm", b="Hmm", c="Hmm"))
+        self.assertDictEqual(another, dict(a="Hmm", b="Hmm", c="Hmm"))
 
     def test_update(self):
         d = AttributeDict(a="b")
         d.update(AttributeDict(b="c"))
-        self.assertDictEqual(d.__dict__, dict(a="b", b="c"))
+        self.assertDictEqual(d, dict(a="b", b="c"))
+
+    def test_repr(self):
+        d = AttributeDict(a="b")
+        self.assertEqual(repr(d), "AttributeDict(%s)" % repr(dict(a="b")))
 
 class TestSetQueue(unittest2.TestCase):
     def test_behavior(self):
