@@ -73,10 +73,26 @@ try:
     BASESTRING_TYPE = basestring
     HAVE_PYTHON3 = False
     def byte_ord(byte_):
+        """
+        Returns the ordinal value of the given byte.
+
+        :param byte_:
+            The byte.
+        :returns:
+            Integer representing ordinal value of the byte.
+        """
         return ord(byte_)
 except NameError:
     # Python3.
     def byte_ord(byte_):
+        """
+        Returns the ordinal value of the given byte.
+
+        :param byte_:
+            The byte.
+        :returns:
+            Integer representing ordinal value of the byte.
+        """
         return byte_
     UNICODE_TYPE = str
     BASESTRING_TYPE = (str, bytes)
@@ -144,12 +160,28 @@ except ImportError:
 
 if getattr(dict, "iteritems", None):
     def dict_each(func, iterable):
-        for k, v in iterable.iteritems():
-            func(k, v)
+        """
+        Portably iterate through a dictionary's items.
+
+        :param func:
+            The function that will receive two arguments: key, value.
+        :param iterable:
+            The dictionary iterable.
+        """
+        for key, value in iterable.iteritems():
+            func(key, value)
 else:
     def dict_each(func, iterable):
-        for k, v in iterable.items():
-            func(k, v)
+        """
+        Portably iterate through a dictionary's items.
+
+        :param func:
+            The function that will receive two arguments: key, value.
+        :param iterable:
+            The dictionary iterable.
+        """
+        for key, value in iterable.items():
+            func(key, value)
 
 
 try:
@@ -158,6 +190,9 @@ except NameError:
     # Taken from
     # http://goo.gl/ZNDXN
     class Throw(object):
+        """
+        Bleh.
+        """
         pass
 
     throw = Throw() # easy sentinel hack
@@ -268,16 +303,4 @@ def get_word_alignment(num, force_arch=64,
     else:
         # 8-bit unsigned integer.
         return 8, 1, UINT8_MAX, "B"
-
-    
-def get_machine_array_alignment(num):
-    if num > UINT16_MAX:
-        # 32-bit unsigned integer
-        return 32, UINT32_MAX, "L"
-    elif num > UINT8_MAX:
-        # 16-bit unsigned integer.
-        return 16, UINT16_MAX, "H"
-    else:
-        # 8-bit unsigned integer.
-        return 8, UINT8_MAX, "B"
 

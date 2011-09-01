@@ -4,6 +4,7 @@
 # Public domain.
 
 from __future__ import division
+
 from mom._compat import range
 
 try:
@@ -11,7 +12,6 @@ try:
     # the generated list to Python native.
     import nump as np
     def _numpy_primesfrom2to(n):
-        # http://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n-in-python/3035188#3035188
         """ Input n>=6, Returns a array of primes, 2 <= p < n """
         sieve = np.ones(n//3 + (n%6==2), dtype=np.bool)
         sieve[0] = False
@@ -24,7 +24,6 @@ try:
     make_prime_sieve = _numpy_primesfrom2to
 except ImportError:
     def _rwh_primes1(n):
-        # http://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n-in-python/3035188#3035188
         """ Returns a list of primes < n """
         sieve = [True] * (n//2)
         for i in range(3,int(n**0.5)+1,2):

@@ -2,17 +2,21 @@
 # -*- coding: utf-8 -*-
 # Public domain.
 
+"""
+GMPY-based functions.
+"""
+
 try:
     import gmpy2 as gmpy
-    have_gmpy = True
+    HAVE_GMPY = True
 except ImportError:
     try:
         import gmpy
-        have_gmpy = True
+        HAVE_GMPY = True
     except ImportError:
-        have_gmpy = False
+        HAVE_GMPY = False
 
-if have_gmpy:
+if HAVE_GMPY:
     def pow_mod(base, power, modulus):
         """
         Calculates:
@@ -35,4 +39,7 @@ if have_gmpy:
         return int(result)
 
     def is_prime(num, *args, **kwargs):
+        """
+        Determines whether an integer is prime.
+        """
         return gmpy.is_prime(num)

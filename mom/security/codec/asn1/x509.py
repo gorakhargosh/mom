@@ -20,7 +20,8 @@
 :synopsis: ASN.1/DER decoding & encoding for X.509 certificates and public keys.
 
 X.509 Certificate parser.
-http://www.java2s.com/Open-Source/Python/Development/ASN.1-library-for-Python/pyasn1-0.0.11a/examples/x509.py.htm
+http://www.java2s.com/Open-Source/Python/Development/\
+ASN.1-library-for-Python/pyasn1-0.0.11a/examples/x509.py.htm
 
 Basic Certification Fields (http://tools.ietf.org/html/rfc3280#section-4.1):
 ----------------------------------------------------------------------------
