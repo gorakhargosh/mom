@@ -14,7 +14,6 @@ from __future__ import absolute_import
 import os
 import sys
 from struct import pack
-#from array import array
 
 try:
     INT_MAX = sys.maxsize
