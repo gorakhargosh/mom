@@ -18,6 +18,8 @@
 from __future__ import absolute_import
 
 import unittest2
+
+from mom.tests.test_mom_builtins import unicode_string
 from mom.builtins import b
 from mom.security.random import \
     generate_random_bytes, generate_random_uint_between
@@ -32,17 +34,6 @@ from mom.codec import \
     bin_decode, \
     base85_encode, base85_decode, base58_encode, base58_decode, \
     base64_urlsafe_encode, base64_urlsafe_decode
-from mom.codec._alt_integer import \
-    uint_to_bytes_naive_array_based, \
-    uint_to_bytes_naive, \
-    uint_to_bytes_pycrypto, \
-    uint_to_bytes_array_based, \
-    bytes_to_uint_naive, bytes_to_uint_simple
-from mom.codec.integer import \
-    bytes_to_uint, \
-    uint_to_bytes
-from mom.prime_sieve import sieve
-from mom.tests.test_mom_builtins import unicode_string
 
 # Generates a 1024-bit strength random byte string.
 random_bytes_1024 = generate_random_bytes(1024 >> 3)
