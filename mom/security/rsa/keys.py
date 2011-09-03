@@ -97,8 +97,6 @@ class Key(object):
 
         :param digest:
             The SHA-1 digest of the data.
-        :param encoder:
-            The encoding method to use. Default EMSA-PKCS1-v1.5
         :returns:
             Signature byte string.
         """
@@ -113,8 +111,6 @@ class Key(object):
             The SHA-1 digest of the data.
         :param signature_bytes:
             The signature raw byte string.
-        :param encoder:
-            The encoding method to use. Default EMSA-PKCS1-v1.5
         :returns:
             ``True`` if the signature matches; ``False`` otherwise.
         """

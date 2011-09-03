@@ -53,7 +53,7 @@ from __future__ import absolute_import, division
 
 from mom import string
 from mom._compat import range, generate_random_bytes as _generate_random_bytes
-from mom.builtins import integer_bit_length, is_integer, byte, integer_bit_size
+from mom.builtins import is_integer, byte, integer_bit_size
 from mom.codec import hex_encode
 from mom.codec.integer import bytes_to_uint
 

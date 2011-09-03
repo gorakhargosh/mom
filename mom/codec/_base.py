@@ -91,8 +91,6 @@ def base_to_uint(encoded,
         The ordinal lookup table to use.
     :param powers:
         Pre-computed tuple of powers of length ``powers_length``.
-    :param powers_length:
-        The length of the powers tuple.
     """
     # Convert to big integer.
 #    number = 0

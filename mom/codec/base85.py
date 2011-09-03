@@ -74,6 +74,7 @@ try:
     import psyco #pragma: no cover
     psyco.full() #pragma: no cover
 except ImportError:
+    psyco = None
     pass
 
 from array import array
@@ -523,8 +524,6 @@ def ipv6_b85encode(uint128,
         A 128-bit unsigned integer to be encoded.
     :param _base85_bytes:
         (Internal) Base85 encoding charset lookup table.
-    :param _pow_85:
-        (Internal) Powers of 85 lookup table.
     :returns:
         RFC1924 Base85-encoded string.
     """

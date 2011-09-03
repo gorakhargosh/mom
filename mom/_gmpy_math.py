@@ -14,6 +14,7 @@ except ImportError:
         import gmpy
         HAVE_GMPY = True
     except ImportError:
+        gmpy = None
         HAVE_GMPY = False
 
 if HAVE_GMPY:

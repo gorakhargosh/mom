@@ -288,6 +288,7 @@ try:
     import psyco #pragma: no cover
     psyco.full() #pragma: no cover
 except ImportError:
+    psyco = None
     pass
 
 import binascii

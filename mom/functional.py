@@ -369,7 +369,7 @@ def reduce(transform, iterable, *args):
             f(x, y)
     :param iterable:
         Iterable sequence.
-    :param initial:
+    :param args:
         Initial value.
     :returns:
         Aggregated item.
@@ -1445,11 +1445,11 @@ def loob(arg):
     return not bool(arg)
 
 
-def always(arg):
+def always(_):
     """
     Predicate function that returns ``True`` always.
 
-    :param arg:
+    :param _:
         Argument
     :returns:
         ``True``.
@@ -1457,11 +1457,11 @@ def always(arg):
     return True
 
 
-def never(arg):
+def never(_):
     """
     Predicate function that returns ``False`` always.
 
-    :param arg:
+    :param _:
         Argument
     :returns:
         ``False``.

@@ -27,6 +27,7 @@ try: # pragma: no cover
     import psyco
     psyco.full()
 except ImportError: # pragma: no cover
+    psyco = None
     pass
 
 from array import array

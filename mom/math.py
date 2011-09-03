@@ -74,9 +74,9 @@ def lcm(num_a, num_b):
     Least common multiple.
 
     :param num_a:
-        Long value.
-    :param v:
-        Long value.
+        Integer value.
+    :param num_b:
+        Integer value.
     :returns:
         Least common multiple.
     """

@@ -259,6 +259,7 @@ except AttributeError:
                 assert len(random_bytes) == count
                 return random_bytes
         except ImportError:
+            win32prng = None
             # What the fuck?!
             def generate_random_bytes(_):
                 """

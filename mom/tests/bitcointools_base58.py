@@ -28,7 +28,8 @@ The original code has been ported to run on Python 2.x and Python 3.x.
 However, the implementation is still a broken one. DO NOT USE.
 """
 
-import math
+from __future__ import absolute_import
+
 from mom._compat import ZERO_BYTE, EMPTY_BYTE, HAVE_PYTHON3
 from mom.builtins import byte_ord, byte, b
 

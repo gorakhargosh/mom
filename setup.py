@@ -25,6 +25,7 @@ try:
     if Crypto.version_info[0:3] < (2, 3, 0):
         pycrypto_complain(Crypto.version_info)
 except ImportError:
+    Crypto = None
     pycrypto_complain(None)
 
 

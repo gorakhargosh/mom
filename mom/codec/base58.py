@@ -139,8 +139,6 @@ def b58decode(encoded,
     :param base_ords:
         (Internal) Ordinal-to-character lookup table for the specified
         character set.
-    :param _powers:
-        (Internal) Tuple of Pre-computed powers of 58.
     :returns:
         Raw bytes.
     """

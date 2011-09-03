@@ -98,9 +98,9 @@ def _match_path(pathname,
     if common_patterns:
         raise ValueError('conflicting patterns `%s` included and excluded'\
                          % common_patterns)
-    return (match_path_against(pathname, included_patterns, case_sensitive)\
-            and not match_path_against(pathname, excluded_patterns,
-                                       case_sensitive))
+    return (match_path_against(pathname, included_patterns, case_sensitive) and
+            not match_path_against(pathname, excluded_patterns,
+                                   case_sensitive))
 
 
 def match_path(pathname,
