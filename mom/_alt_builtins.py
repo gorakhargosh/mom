@@ -88,8 +88,8 @@ def _integer_raw_bytes_without_leading(num,
 
     # Count the number of zero prefix bytes.
     zero_leading = 0
-    for zero_leading, x in enumerate(raw_bytes):
-        if x != _zero_byte[0]:
+    for zero_leading, raw_byte in enumerate(raw_bytes):
+        if raw_byte != _zero_byte[0]:
             break
 
     # Bytes remaining without zero padding is the number of bytes required

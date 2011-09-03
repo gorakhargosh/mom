@@ -15,34 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-try:
-    unicode
-    have_py3 = False
-except NameError:
-    have_py3 = True
+from __future__ import absolute_import
+from mom._compat import HAVE_PYTHON3
 
-if not have_py3:
+
+if not HAVE_PYTHON3:
     import unittest2
     from pyasn1.error import SubstrateUnderrunError
     from mom.security.codec import public_key_pem_decode, private_key_pem_decode
 
-    private_key='''
------BEGIN PRIVATE KEY-----
-MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALRiMLAh9iimur8V
-A7qVvdqxevEuUkW4K+2KdMXmnQbG9Aa7k7eBjK1S+0LYmVjPKlJGNXHDGuy5Fw/d
-7rjVJ0BLB+ubPK8iA/Tw3hLQgXMRRGRXXCn8ikfuQfjUS1uZSatdLB81mydBETlJ
-hI6GH4twrbDJCR2Bwy/XWXgqgGRzAgMBAAECgYBYWVtleUzavkbrPjy0T5FMou8H
-X9u2AC2ry8vD/l7cqedtwMPp9k7TubgNFo+NGvKsl2ynyprOZR1xjQ7WgrgVB+mm
-uScOM/5HVceFuGRDhYTCObE+y1kxRloNYXnx3ei1zbeYLPCHdhxRYW7T0qcynNmw
-rn05/KO2RLjgQNalsQJBANeA3Q4Nugqy4QBUCEC09SqylT2K9FrrItqL2QKc9v0Z
-zO2uwllCbg0dwpVuYPYXYvikNHHg+aCWF+VXsb9rpPsCQQDWR9TT4ORdzoj+Nccn
-qkMsDmzt0EfNaAOwHOmVJ2RVBspPcxt5iN4HI7HNeG6U5YsFBb+/GZbgfBT3kpNG
-WPTpAkBI+gFhjfJvRw38n3g/+UeAkwMI2TJQS4n8+hid0uus3/zOjDySH3XHCUno
-cn1xOJAyZODBo47E+67R4jV1/gzbAkEAklJaspRPXP877NssM5nAZMU0/O/NGCZ+
-3jPgDUno6WbJn5cqm8MqWhW1xGkImgRk+fkDBquiq4gPiT898jusgQJAd5Zrr6Q8
-AO/0isr/3aa6O6NLQxISLKcPDk2NOccAfS/xOtfOz4sJYM3+Bs4Io9+dZGSDCA54
-Lw03eHTNQghS0A==
------END PRIVATE KEY-----'''
+    from mom.tests.test_mom_security_codec_pem import private_key, \
+        public_key, certificate
 
     private_key_decoded = {
         'coefficient': 6263309813628295397107400643432350851721956841159071320214251700452060114366343340155171376140395643703716902907125213041289999255650845147022475122987728,
@@ -56,32 +39,10 @@ Lw03eHTNQghS0A==
         'version': 0,
     }
 
-    certificate='''\
------BEGIN CERTIFICATE-----
-MIIBpjCCAQ+gAwIBAgIBATANBgkqhkiG9w0BAQUFADAZMRcwFQYDVQQDDA5UZXN0
-IFByaW5jaXBhbDAeFw03MDAxMDEwODAwMDBaFw0zODEyMzEwODAwMDBaMBkxFzAV
-BgNVBAMMDlRlc3QgUHJpbmNpcGFsMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
-gQC0YjCwIfYoprq/FQO6lb3asXrxLlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlY
-zypSRjVxwxrsuRcP3e641SdASwfrmzyvIgP08N4S0IFzEURkV1wp/IpH7kH41Etb
-mUmrXSwfNZsnQRE5SYSOhh+LcK2wyQkdgcMv11l4KoBkcwIDAQABMA0GCSqGSIb3
-DQEBBQUAA4GBAGZLPEuJ5SiJ2ryq+CmEGOXfvlTtEL2nuGtr9PewxkgnOjZpUy+d
-4TvuXJbNQc8f4AMWL/tO9w0Fk80rWKp9ea8/df4qMq5qlFWlx6yOLQxumNOmECKb
-WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
------END CERTIFICATE-----'''
-
     public_key_decoded = {
         'exponent': 65537,
         'modulus': 126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731,
     }
-
-    public_key='''\
------BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC0YjCwIfYoprq/FQO6lb3asXrx
-LlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlYzypSRjVxwxrsuRcP3e641SdASwfr
-mzyvIgP08N4S0IFzEURkV1wp/IpH7kH41EtbmUmrXSwfNZsnQRE5SYSOhh+LcK2w
-yQkdgcMv11l4KoBkcwIDAQAB
------END PUBLIC KEY-----'''
-
 
     junk = """\
 eqp1iAIIh89/WHE3rfwNVPeBl2ZU9ywUk9vvhUot8yuCrlprR6avhfIkUm1LCSqi
@@ -107,6 +68,7 @@ cTfUdnrMUw7Q/Jxa1VCpn7RzeHlTLrSXkdq3xVB9gq6DG+umJRfsKPLmw9t5TbD1
 CIfb09GR/D1+6ogCfayqZoXe/xaRRjM3nzOLP4Z4ouMyZC7krj/UsItg0Y8FS0Wq
 gZU88x/X78LlryEvfB0KH/GuULo6ziAzsSsB5Okfm68lFLdaNWA2d3f8lPvQNmL3
 bZI="""
+    
     junk_private_key = """\
     -----BEGIN PRIVATE KEY-----
     %s
@@ -123,23 +85,32 @@ bZI="""
 
     class Test_public_key_pem_decode(unittest2.TestCase):
         def test_decode(self):
-            self.assertDictEqual(public_key_pem_decode(public_key), public_key_decoded)
-            self.assertDictEqual(public_key_pem_decode(certificate), public_key_decoded)
+            self.assertDictEqual(public_key_pem_decode(public_key),
+                                 public_key_decoded)
+            self.assertDictEqual(public_key_pem_decode(certificate),
+                                 public_key_decoded)
 
         def test_NotImplementedError_when_not_public_key(self):
-            self.assertRaises(NotImplementedError, public_key_pem_decode, private_key)
+            self.assertRaises(NotImplementedError,
+                              public_key_pem_decode, private_key)
 
         def test_fails_on_junk(self):
-            self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_public_key)
-            self.assertRaises(SubstrateUnderrunError, public_key_pem_decode, junk_certificate)
+            self.assertRaises(SubstrateUnderrunError,
+                              public_key_pem_decode, junk_public_key)
+            self.assertRaises(SubstrateUnderrunError,
+                              public_key_pem_decode, junk_certificate)
 
     class Test_private_key_pem_decode(unittest2.TestCase):
         def test_decode(self):
-            self.assertDictEqual(private_key_pem_decode(private_key), private_key_decoded)
+            self.assertDictEqual(private_key_pem_decode(private_key),
+                                 private_key_decoded)
 
         def test_NotImplementedError_when_not_private_key(self):
-            self.assertRaises(NotImplementedError, private_key_pem_decode, public_key)
-            self.assertRaises(NotImplementedError, private_key_pem_decode, certificate)
+            self.assertRaises(NotImplementedError,
+                              private_key_pem_decode, public_key)
+            self.assertRaises(NotImplementedError,
+                              private_key_pem_decode, certificate)
 
         def test_fails_on_junk(self):
-            self.assertRaises(SubstrateUnderrunError, private_key_pem_decode, junk_private_key)
+            self.assertRaises(SubstrateUnderrunError,
+                              private_key_pem_decode, junk_private_key)
