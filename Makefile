@@ -49,7 +49,7 @@ test: doc-rebuild
 	@py.test -n4 --cov mom --cov-report html
 
 lint:
-	@pylint $(PKG_NAME)
+	@-pylint $(PKG_NAME)
 
 auto: tools/nosy.py
 	@bin/python tools/nosy.py .
