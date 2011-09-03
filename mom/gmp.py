@@ -527,7 +527,7 @@ class Float(object):
 
     #Extra apply_ret for 3 args with return - for _eq
     def __apply_ret_3_1(self, func, op1, op2, op3):
-        if(not isinstance(op2, Float)):
+        if not isinstance(op2, Float):
             op2 = Float(op2)
         return func(op1, op2, op3)
 
@@ -542,7 +542,7 @@ class Float(object):
 
     def __str__(self):
         exp = (c_byte * 4)()
-        exp = cast(exp, POINTER((c_int)))
+        exp = cast(exp, POINTER(c_int))
         return _MPF_get_str(None, exp, 10, 10, self)
 
     def __repr__(self):

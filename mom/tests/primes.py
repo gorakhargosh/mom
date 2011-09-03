@@ -79,11 +79,11 @@ def rwh_primes2(n):
 
 def sieve_wheel_30(N):
     # http://zerovolt.com/?p=88
-    ''' Returns a list of primes <= N using wheel criterion 2*3*5 = 30
+    """ Returns a list of primes <= N using wheel criterion 2*3*5 = 30
 
 Copyright 2009 by zerovolt.com
 This code is free for non-commercial purposes, in which case you can just leave this comment as a credit for my work.
-If you need this code for commercial purposes, please contact me by sending an email to: info [at] zerovolt [dot] com.'''
+If you need this code for commercial purposes, please contact me by sending an email to: info [at] zerovolt [dot] com."""
     __smallp = ( 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59,
     61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139,
     149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227,
@@ -320,7 +320,7 @@ def sieveOfAtkin(end):
                 sieve[k >> 1] = False
 
     s  = int(sqrt(end)) + 1
-    if s  % 2 == 0:
+    if s % 2 == 0:
         s += 1
     primes.extend([i for i in xrange(s, end, 2) if sieve[i >> 1]])
 
@@ -337,7 +337,7 @@ def ambi_sieve_plain(n):
 def sundaram3(max_n):
     # http://stackoverflow.com/questions/2068372/fastest-way-to-list-all-primes-below-n-in-python/2073279#2073279
     numbers = range(3, max_n+1, 2)
-    half = (max_n)//2
+    half = max_n //2
     initial = 4
 
     for step in xrange(3, max_n+1, 2):

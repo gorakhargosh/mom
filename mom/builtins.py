@@ -391,7 +391,7 @@ def integer_bit_length(number):
     if number < 0:
         number = -number
     # Make sure this is an int and not float.
-    number & 1
+    _ = number & 1
     hex_num = "%x" % number
     return ((len(hex_num) - 1) * 4) + {
         '0':0, '1':1, '2':2, '3':2,

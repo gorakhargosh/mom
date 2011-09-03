@@ -75,14 +75,14 @@ class Key(object):
         """
         Returns the internal key.
         """
-        raise NotImplementedError("Override this property.")
+        return NotImplemented
 
     @property
     def size(self):
         """
         Returns the size of the key (n).
         """
-        raise NotImplementedError("Override this property.")
+        return NotImplemented
 
     @property
     def key_info(self):

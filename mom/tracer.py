@@ -50,15 +50,15 @@ import sys
 
 
 def name(item):
-    " Return an item's name. "
+    """ Return an item's name. """
     return item.__name__
 
 def is_classmethod(instancemethod):
-    " Determine if an instancemethod is a classmethod. "
+    """ Determine if an instancemethod is a classmethod. """
     return instancemethod.im_self is not None
 
 def is_class_private_name(name):
-    " Determine if a name is a class private name. "
+    """ Determine if a name is a class private name. """
     # Exclude system defined names such as __init__, __add__ etc
     return name.startswith("__") and not name.endswith("__")
 
