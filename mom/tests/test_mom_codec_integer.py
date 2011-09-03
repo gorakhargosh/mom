@@ -122,9 +122,9 @@ class Test_unsigned_integer_to_bytes(unittest2.TestCase):
         self.assertEqual(uint_to_bytes(0), b('\x00'))
         self.assertEqual(uint_to_bytes(0, 4), b('\x00') * 4)
         self.assertEqual(uint_to_bytes(0, 7), b('\x00') * 7)
-        self.assertEqual(uint_to_bytes(0, 0, 1), b('\x00'))
-        self.assertEqual(uint_to_bytes(0, 0, 4), b('\x00') * 4)
-        self.assertEqual(uint_to_bytes(0, 0, 7), b('\x00') * 7)
+        self.assertEqual(uint_to_bytes(0, chunk_size=1), b('\x00'))
+        self.assertEqual(uint_to_bytes(0, chunk_size=4), b('\x00') * 4)
+        self.assertEqual(uint_to_bytes(0, chunk_size=7), b('\x00') * 7)
 
         self.assertEqual(uint_to_bytes_naive(0), b('\x00'))
         self.assertEqual(uint_to_bytes_naive(0, 4), b('\x00') * 4)

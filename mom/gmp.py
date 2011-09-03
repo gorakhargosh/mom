@@ -285,13 +285,13 @@ class Integer(object):
         return self._apply_ret(_MPZ_mul, Integer(), self, other)
 
     def __divmod__(self, divisor):
-        if divisor == 0 or divisor == Integer(0):
+        if divisor == 0 or divisor == Integer():
             raise ZeroDivisionError("integer division or modulo by zero")
         return self._apply_2_rets(_MPZ_fdivmod,
                                    Integer(), Integer(), self, divisor)
 
     def __rdivmod__(self, dividend):
-        if self == 0 or self == Integer(0):
+        if self == 0 or self == Integer():
             raise ZeroDivisionError("integer division or modulo by zero")
         return self._apply_2_rets(_MPZ_fdivmod,
                                    Integer(), Integer(), dividend, self)
@@ -303,7 +303,7 @@ class Integer(object):
         raise NotImplementedError("True division is not supported.")
 
     def __floordiv__(self, other):
-        if other == 0 or other == Integer(0):
+        if other == 0 or other == Integer():
             raise ZeroDivisionError("integer division or modulo by zero")
         return self._apply_ret(_MPZ_fdiv, Integer(), self, other)
 
@@ -311,7 +311,7 @@ class Integer(object):
         return self._apply_ret(_MPZ_and, Integer(), self, other)
 
     def __mod__(self, other):
-        if other == 0 or other == Integer(0):
+        if other == 0 or other == Integer():
             raise ZeroDivisionError("integer division or modulo by zero")
         return self._apply_ret(_MPZ_fmod, Integer(), self, other)
 
@@ -340,7 +340,7 @@ class Integer(object):
         raise NotImplementedError("True division is not supported.")
 
     def __ifloordiv__(self, other):
-        if other == 0 or other == Integer(0):
+        if other == 0 or other == Integer():
             raise ZeroDivisionError("integer division or modulo by zero")
         return self._apply_ret(_MPZ_fdiv, self, self, other)
 
@@ -369,12 +369,12 @@ class Integer(object):
         raise NotImplementedError("True division is not supported.")
 
     def __rfloordiv__(self, other):
-        if self == 0 or self == Integer(0):
+        if self == 0 or self == Integer():
             raise ZeroDivisionError("integer division or modulo by zero")
         return self._apply_ret(_MPZ_fdiv, Integer(), other, self)
 
     def __rmod__(self, other):
-        if self == 0 or self == Integer(0):
+        if self == 0 or self == Integer():
             raise ZeroDivisionError("integer division or modulo by zero")
         return self._apply_ret(_MPZ_fmod, Integer(), other, self)
 

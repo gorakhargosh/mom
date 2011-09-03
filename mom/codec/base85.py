@@ -452,7 +452,7 @@ def b85decode(encoded,
 
     # Replace all the 'z' occurrences with '!!!!!'
     if _uncompact_zero:
-        _check_compact_char_occurrence(encoded, _compact_char, 5)
+        _check_compact_char_occurrence(encoded, _compact_char)
         encoded = encoded.replace(_compact_char, EXCLAMATION_CHUNK)
 
     return _b85decode_chunks(encoded, _base85_bytes, _base85_ords)

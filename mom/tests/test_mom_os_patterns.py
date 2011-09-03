@@ -26,7 +26,7 @@ class Test_match_path_against(unittest2.TestCase):
         self.assertTrue(match_path_against(
             "/home/username/foobar/blah.py", ["*.py", "*.txt"], False))
         self.assertFalse(match_path_against(
-            "/home/username/foobar/blah.py", ["*.PY", "*.txt"], True))
+            "/home/username/foobar/blah.py", ["*.PY", "*.txt"]))
         self.assertTrue(match_path_against(
             "/home/username/foobar/blah.py", ["*.PY", "*.txt"], False))
         self.assertFalse(match_path_against(
@@ -39,7 +39,7 @@ class Test__match_path(unittest2.TestCase):
         self.assertTrue(_match_path("/users/gorakhargosh/foobar.py",
             ["*.py"], ["*.PY"]))
         self.assertFalse(_match_path("/users/gorakhargosh/FOOBAR.PY",
-            ["*.py"], ["*.PY"], True))
+            ["*.py"], ["*.PY"]))
         self.assertFalse(_match_path("/users/gorakhargosh/foobar/",
             ["*.py"], ["*.txt"], False))
 
@@ -54,9 +54,9 @@ class Test_match_path(unittest2.TestCase):
         self.assertTrue(match_path("/Users/gorakhargosh/foobar.py",
                                    case_sensitive=False))
         self.assertTrue(match_path("/users/gorakhargosh/foobar.py",
-                                   ["*.py"], ["*.PY"], True))
+                                   ["*.py"], ["*.PY"]))
         self.assertFalse(match_path("/users/gorakhargosh/FOOBAR.PY",
-                                    ["*.py"], ["*.PY"], True))
+                                    ["*.py"], ["*.PY"]))
         self.assertFalse(match_path("/users/gorakhargosh/foobar/",
                                     ["*.py"], ["*.txt"], False))
 
@@ -77,8 +77,7 @@ class Test_filter_paths(unittest2.TestCase):
                          pathnames)
         self.assertEqual(set(filter_paths(pathnames,
                                           ["*.py", "*.conf"],
-                                          ["*.status"],
-                                          case_sensitive=True)),
+                                          ["*.status"])),
                          set(["/users/gorakhargosh/foobar.py",
                               "/etc/pdnsd.conf"]))
 
@@ -93,9 +92,7 @@ class Test_match_any_paths(unittest2.TestCase):
         self.assertTrue(match_any_paths(pathnames))
         self.assertTrue(match_any_paths(pathnames, case_sensitive=False))
         self.assertTrue(match_any_paths(pathnames, ["*.py", "*.conf"],
-            ["*.status"],
-            case_sensitive=True))
+            ["*.status"]))
         self.assertFalse(match_any_paths(pathnames, ["*.txt"],
             case_sensitive=False))
-        self.assertFalse(match_any_paths(pathnames, ["*.txt"],
-                                         case_sensitive=True))
+        self.assertFalse(match_any_paths(pathnames, ["*.txt"]))

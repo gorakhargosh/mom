@@ -113,7 +113,7 @@ class Test__leading(unittest2.TestCase):
 
     def test_start(self):
         self.assertEqual(_leading(lambda w: w == "0", "0001"), 3)
-        self.assertEqual(_leading(lambda w: w == "0", "0001", 0), 3)
+        self.assertEqual(_leading(lambda w: w == "0", "0001"), 3)
         self.assertEqual(_leading(lambda w: w == "0", "0001", 1), 2)
 
     def test_full_count(self):
@@ -133,7 +133,7 @@ class Test_leading(unittest2.TestCase):
 
     def test_start(self):
         self.assertEqual(leading(lambda w: w == "0", "0001"), 3)
-        self.assertEqual(leading(lambda w: w == "0", "0001", 0), 3)
+        self.assertEqual(leading(lambda w: w == "0", "0001"), 3)
         self.assertEqual(leading(lambda w: w == "0", "0001", 1), 2)
 
     def test_full_count(self):
@@ -596,7 +596,7 @@ class Test_unique(unittest2.TestCase):
     def test_uniques(self):
         self.assertEqual(unique('aabbccyyyyyyyyyyyyyyyyy', True),
             ["a", "b", "c", "y"])
-        self.assertEqual(unique('google', False),
+        self.assertEqual(unique('google'),
             ["g", "o", "l", "e"])
         self.assertEqual(unique(""), "")
 
@@ -649,7 +649,7 @@ class Test_nth(unittest2.TestCase):
     def test_nth(self):
         self.assertEqual(nth("abcd", 0), "a")
         self.assertEqual(nth("abcd", 3), "d")
-        self.assertEqual(nth("abcd", 4, None), None)
+        self.assertEqual(nth("abcd", 4), None)
         self.assertEqual(nth("abcd", 4), None)
 
 

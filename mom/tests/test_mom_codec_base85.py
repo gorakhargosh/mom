@@ -120,8 +120,7 @@ class Test_check_compact_char_occurrence(unittest2.TestCase):
     def test_valid(self):
         self.assertEqual(
             _check_compact_char_occurrence(b('z12345z12345zz123!'),
-                                           b('z'),
-                                           5), None
+                                           b('z')), None
         )
 
     def test_ValueError_when_invalid_index(self):

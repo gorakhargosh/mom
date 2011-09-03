@@ -82,7 +82,7 @@ class Test_IntegerAddition(unittest2.TestCase):
         self.assertEqual(150 + self.large_gmp, gmp.Integer(5000000000 + 150))
 
     def test_AdditionWithNegatives(self):
-        self.assertEqual(self.large_gmp + self.large_neg_gmp, gmp.Integer(0))
+        self.assertEqual(self.large_gmp + self.large_neg_gmp, gmp.Integer())
         self.assertEqual(self.large_gmp + self.small_neg_gmp,
                          gmp.Integer(5000000000 + -199))
         self.assertEqual(self.small_gmp + self.large_neg_gmp,
@@ -156,7 +156,7 @@ class Test_IntegerSubtraction(unittest2.TestCase):
     def test_InPlaceSubtraction(self):
         i = self.small_gmp
         i -= self.small_gmp
-        self.assertEqual(i, gmp.Integer(0))
+        self.assertEqual(i, gmp.Integer())
         i -= 5000000000
         self.assertEqual(i, gmp.Integer(-5000000000))
 
@@ -454,8 +454,8 @@ class Test_IntegerBitOps(unittest2.TestCase):
         self.assertEqual(i, 5000000000 & 19 & 250)
 
     def test_Or(self):
-        self.assertEqual(self.large_gmp | gmp.Integer(0), self.large_gmp)
-        self.assertEqual(gmp.Integer(0) | self.large_gmp, self.large_gmp)
+        self.assertEqual(self.large_gmp | gmp.Integer(), self.large_gmp)
+        self.assertEqual(gmp.Integer() | self.large_gmp, self.large_gmp)
         self.assertEqual(self.large_gmp | self.small_gmp,
                          gmp.Integer(5000000000 | 19))
         self.assertEqual(self.large_gmp | 250, gmp.Integer(5000000000 | 250))
@@ -470,9 +470,9 @@ class Test_IntegerBitOps(unittest2.TestCase):
         self.assertEqual(i, gmp.Integer(5000000000 | 19 | 250))
 
     def test_Xor(self):
-        self.assertEqual(self.large_gmp ^ self.large_gmp, gmp.Integer(0))
-        self.assertEqual(self.large_gmp ^ gmp.Integer(0), self.large_gmp)
-        self.assertEqual(gmp.Integer(0) ^ self.large_gmp, self.large_gmp)
+        self.assertEqual(self.large_gmp ^ self.large_gmp, gmp.Integer())
+        self.assertEqual(self.large_gmp ^ gmp.Integer(), self.large_gmp)
+        self.assertEqual(gmp.Integer() ^ self.large_gmp, self.large_gmp)
         self.assertEqual(self.large_gmp ^ self.small_gmp,
                          gmp.Integer(5000000000 ^ 19))
         self.assertEqual(self.large_gmp ^ 250, gmp.Integer(5000000000 ^ 250))
@@ -499,31 +499,31 @@ class Test_IntegerAdditionals(unittest2.TestCase):
     def test_Negation(self):
         self.assertEqual(-self.large_gmp, self.large_neg_gmp)
         self.assertEqual(-self.large_neg_gmp, self.large_gmp)
-        self.assertEqual(-gmp.Integer(0), gmp.Integer(0))
+        self.assertEqual(-gmp.Integer(), gmp.Integer())
 
     def test_Absolute(self):
         self.assertEqual(abs(self.large_gmp), self.large_gmp)
         self.assertEqual(abs(self.large_neg_gmp), self.large_gmp)
-        self.assertEqual(abs(gmp.Integer(0)), gmp.Integer(0))
+        self.assertEqual(abs(gmp.Integer()), gmp.Integer())
 
 
 class Test_IntegerErrorCases(unittest2.TestCase):
     def test_DivisionBy0(self):
-        self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), gmp.Integer())
         self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), 0)
-        self.assertRaises(ZeroDivisionError, operator.floordiv, 1, gmp.Integer(0))
-        self.assertRaises(ZeroDivisionError, operator.ifloordiv, gmp.Integer(1), gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.floordiv, 1, gmp.Integer())
+        self.assertRaises(ZeroDivisionError, operator.ifloordiv, gmp.Integer(1), gmp.Integer())
         self.assertRaises(ZeroDivisionError, operator.ifloordiv, gmp.Integer(1), 0)
-        self.assertRaises(ZeroDivisionError, operator.ifloordiv, 1, gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.ifloordiv, 1, gmp.Integer())
 #       python 3 removed this.
 #        self.assertRaises(ZeroDivisionError, operator.idiv, gmp.Integer(1), gmp.Integer(0))
 #        self.assertRaises(ZeroDivisionError, operator.idiv, gmp.Integer(1), 0)
 #        self.assertRaises(ZeroDivisionError, operator.idiv, 1, gmp.Integer(0))
 
     def test_ModBy0(self):
-        self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), gmp.Integer())
         self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), 0)
-        self.assertRaises(ZeroDivisionError, operator.mod, 1, gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, operator.mod, 1, gmp.Integer())
 
     def test_RealDivisionRaisesError(self):
         self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), 1)
@@ -535,8 +535,8 @@ class Test_IntegerErrorCases(unittest2.TestCase):
 
     def test_DivModBy0(self):
         self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), 0)
-        self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), gmp.Integer(0))
-        self.assertRaises(ZeroDivisionError, divmod, 10, gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), gmp.Integer())
+        self.assertRaises(ZeroDivisionError, divmod, 10, gmp.Integer())
 
         
 class Test_IntegerPyTypeCompatibility(unittest2.TestCase):

@@ -40,4 +40,4 @@ if __name__ == '__main__':
         tests = all_tests
     tests = ['%s' % t for t in tests]
     suite = get_suite(tests)
-    unittest.TextTestRunner(verbosity=1).run(suite)
+    unittest.TextTestRunner().run(suite)

@@ -32,7 +32,7 @@ def erat2():
     D = {}
     yield 2
     for q in itertools.islice(itertools.count(3), 0, None, 2):
-        p = D.pop(q, None)
+        p = D.pop(q)
         if p is None:
             D[q*q] = q
             yield q
