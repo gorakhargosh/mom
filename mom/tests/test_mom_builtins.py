@@ -41,19 +41,8 @@ from mom.builtins import \
     is_positive, byte, bytes_leading, bytes_trailing, b, \
     integer_byte_size, integer_bit_count, integer_bit_size
 
-try:
-    unicode
-    from mom.tests.constants import unicode_string, unicode_string2, \
-        utf8_bytes, utf8_bytes2, latin1_bytes
-except NameError:
-    from mom.tests.py3kconstants import unicode_string, unicode_string2, \
-        utf8_bytes, utf8_bytes2, latin1_bytes
-
-unicode_string = unicode_string
-unicode_string2 = unicode_string2
-utf8_bytes = utf8_bytes
-utf8_bytes2 = utf8_bytes2
-latin1_bytes = latin1_bytes
+from mom.tests.constants import unicode_string, unicode_string2, \
+    utf8_bytes, utf8_bytes2, latin1_bytes
 
 random_bytes = generate_random_bytes(100)
 

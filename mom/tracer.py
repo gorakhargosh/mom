@@ -47,23 +47,24 @@ from __future__ import absolute_import
 
 import inspect
 import sys
+import functools
 
 
 def name(item):
-    """ Return an item's name. """
+    """Return an item's name."""
     return item.__name__
 
 def is_classmethod(instancemethod):
-    """ Determine if an instancemethod is a classmethod. """
+    """Determine if an instancemethod is a classmethod."""
     return instancemethod.im_self is not None
 
 def is_class_private_name(name):
-    """ Determine if a name is a class private name. """
+    """Determine if a name is a class private name."""
     # Exclude system defined names such as __init__, __add__ etc
     return name.startswith("__") and not name.endswith("__")
 
 def method_name(method):
-    """ Return a method's name.
+    """Return a method's name.
 
     This function returns the name the method is accessed by from
     outside the class (i.e. it prefixes "private" methods appropriately).
@@ -74,7 +75,7 @@ def method_name(method):
     return mname
 
 def format_arg_value(arg_val):
-    """ Return a string representing a (name, value) pair.
+    """Return a string representing a (name, value) pair.
 
     >>> format_arg_value(('x', (1, 2, 3)))
     'x=(1, 2, 3)'
@@ -83,13 +84,12 @@ def format_arg_value(arg_val):
     return "%s=%r" % (arg, val)
 
 def trace(fn, write=sys.stdout.write):
-    """ Echo calls to a function.
+    """Echo calls to a function.
 
     Returns a decorated version of the input function which "tracees" calls
     made to it by writing out the function's name and the arguments it was
     called with.
     """
-    import functools
     # Unpack function's arg count, arg names, arg defaults
     code = fn.func_code
     argcount = code.co_argcount
@@ -112,7 +112,7 @@ def trace(fn, write=sys.stdout.write):
     return wrapped
 
 def trace_instancemethod(klass, method, write=sys.stdout.write):
-    """ Change an instancemethod so that calls to it are traceed.
+    """Change an instancemethod so that calls to it are traceed.
 
     Replacing a classmethod is a little more tricky.
     See: http://www.python.org/doc/current/ref/types.html
@@ -127,7 +127,7 @@ def trace_instancemethod(klass, method, write=sys.stdout.write):
         setattr(klass, mname, trace(method, write))
 
 def trace_class(klass, write=sys.stdout.write):
-    """ Echo calls to class methods and static functions
+    """Echo calls to class methods and static functions
     """
     for _, method in inspect.getmembers(klass, inspect.ismethod):
         trace_instancemethod(klass, method, write)
@@ -135,7 +135,7 @@ def trace_class(klass, write=sys.stdout.write):
         setattr(klass, name(fn), staticmethod(trace(fn, write)))
 
 def trace_module(mod, write=sys.stdout.write):
-    """ Echo calls to functions and methods in a module.
+    """Echo calls to functions and methods in a module.
     """
     for fname, fn in inspect.getmembers(mod, inspect.isfunction):
         setattr(mod, fname, trace(fn, write))

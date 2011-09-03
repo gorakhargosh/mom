@@ -265,7 +265,7 @@ def hex(number, prefix="0x"):
         prefix = "-" + prefix
 
     # Make sure this is an int and not float.
-    number & 1
+    _ = number & 1
 
     hex_num = "%x" % number
     return prefix + hex_num.lower()

@@ -23,7 +23,7 @@ def get_suite(tests):
         suite.addTest(loader.loadTestsFromName(test))
     return suite
 
-if __name__ == '__main__':
+def main():
     """
     To run all tests:
         $ python run_tests.py
@@ -41,3 +41,6 @@ if __name__ == '__main__':
     tests = ['%s' % t for t in tests]
     suite = get_suite(tests)
     unittest.TextTestRunner().run(suite)
+
+if __name__ == '__main__':
+    main()
