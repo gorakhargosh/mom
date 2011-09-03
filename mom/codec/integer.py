@@ -125,7 +125,7 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
         raise ValueError("You can either fill or pad chunks, but not both")
 
     # Ensure these are integers.
-    number & 1 and chunk_size & 1 and fill_size & 1
+    _ = number & 1 and chunk_size & 1 and fill_size & 1
 
     raw_bytes = EMPTY_BYTE
 
