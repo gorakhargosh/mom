@@ -199,7 +199,6 @@ Predicates, transforms, and walkers
 
 from __future__ import absolute_import
 
-
 from collections import defaultdict, deque
 from functools import partial
 try:
