@@ -40,11 +40,17 @@
 
 from __future__ import absolute_import
 
-from ctypes import CDLL, Structure, POINTER, byref,\
-    c_int, c_ulonglong, c_voidp, c_long, c_byte, cast, c_char_p, c_ulong
+from ctypes import CDLL, Structure, POINTER, byref, \
+    c_int, c_ulonglong, c_voidp, c_long, c_char_p
+#    c_byte, \
+#    cast,\
+#    c_ulong
+
 from ctypes.util import find_library
 from mom._compat import HAVE_PYTHON3
 
+# pylint: disable-msg=W0212
+# pylint: disable-msg=C0103
 
 if HAVE_PYTHON3:
     def number_to_pybytes(num):
@@ -90,6 +96,7 @@ _libgmp = CDLL(_libgmp_path)
 #  and 32-bit/64-bit systems.
 #
 class c_mpz_struct(Structure):
+    """Internal structure."""
     _fields_ = [
         ('_mp_alloc', c_int),
         ('_mp_size', c_int),
@@ -97,6 +104,7 @@ class c_mpz_struct(Structure):
 
 
 class c_gmp_randstate_struct(Structure):
+    """Internal structure."""
     _fields_ = [
         ('_mp_seed', c_mpz_struct),
         ('_mp_alg', c_int),
@@ -104,12 +112,14 @@ class c_gmp_randstate_struct(Structure):
 
 
 class c_mpq_struct(Structure):
+    """Internal structure."""
     _fields_ = [
         ('_mp_num', c_mpz_struct),
         ('_mp_den', c_mpz_struct)]
 
 
 class c_mpf_struct(Structure):
+    """Internal structure."""
     _fields_ = [
         ('_mp_prec', c_int),
         ('_mp_size', c_int),
@@ -189,6 +199,7 @@ RAND_ALGO_MT = _GMP_randinit_mt
 #------------------------------------------------------------------------------
 
 class Integer(object):
+    """GNU MP arbitrarily long integer."""
     def __init__(self, init_value=0):
         self._mpz = c_mpz_struct()
         self._mpzp = byref(self._mpz)
@@ -200,14 +211,17 @@ class Integer(object):
 
     @property
     def _as_parameter_(self):
+        """as parameter."""
         return self._mpzp
 
     @staticmethod
     def from_param(arg):
+        """From param."""
         assert isinstance(arg, Integer)
         return arg
 
     def _apply_ret(self, func, ret, op1, op2):
+        """Applies a GNU MP function over arguments and returns a result."""
         #assert isinstance(ret, Integer)
         if not isinstance(op1, Integer):
             op1 = Integer(op1)
@@ -217,6 +231,7 @@ class Integer(object):
         return ret
 
     def _apply_2_rets(self, func, ret1, ret2, op1, op2):
+        """Applies a GNU MP function over arguments and returns a tuple."""
         #assert isinstance(ret1, Integer)
         #assert isinstance(ret2, Integer)
         if not isinstance(op1, Integer):
@@ -227,12 +242,14 @@ class Integer(object):
         return ret1, ret2
 
     def _apply_ret_2_0(self, func, ret, op1):
-        #assert isinstance(ret, Integer)
+        """Applies a GNU MP function over arguments and returns a result."""
+                #assert isinstance(ret, Integer)
         #assert isinstance(op1, Integer)
         func(ret, op1)
         return ret
 
     def _apply_ret_2_1(self, func, op1, op2):
+        """Applies a GNU MP function over arguments and returns a result."""
         if not isinstance(op1, Integer):
             op1 = Integer(op1)
         if not isinstance(op2, Integer):
@@ -240,6 +257,7 @@ class Integer(object):
         return func(op1, op2)
 
     def set(self, value):
+        """Set integer."""
         if isinstance(value, Integer):
             _MPZ_set_str(self, value._tobytes(), 10)
         else:
@@ -249,6 +267,7 @@ class Integer(object):
                 raise TypeError("non an integer")
 
     def _tobytes(self):
+        """To Python byte string."""
         return _MPZ_get_str(None, 10, self)
 
     def __str__(self):
@@ -385,278 +404,279 @@ class Integer(object):
         return self._apply_ret_2_0(_MPZ_neg, Integer(), self)
 
 
-class Rational(object):
-    def __init__(self):
-        self._mpq = c_mpq_struct()
-        self._mpqp = byref(self._mpq)
-        _MPQ_init(self)
-
-    def __del__(self):
-        _MPQ_clear(self)
-
-    @property
-    def _as_parameter_(self):
-        return self._mpqp
-
-    @staticmethod
-    def from_param(arg):
-        assert isinstance(arg, Rational)
-        return arg
-
-    def __apply_ret(self, func, ret, op1, op2):
-        assert isinstance(ret, Rational)
-        if not isinstance(op1, Rational):
-            op1 = Rational(op1)
-        if not isinstance(op2, Rational):
-            op2 = Rational(op2)
-        func(ret, op1, op2)
-        return ret
-
-    def __apply_ret_2_0(self, func, ret, op1):
-        assert isinstance(ret, Rational)
-        assert isinstance(op1, Rational)
-        func(ret, op1)
-        return ret
-
-    def __apply_ret_2_1(self, func, op1, op2):
-        if not isinstance(op1, Rational):
-            op1 = Rational(op1)
-        if not isinstance(op2, Rational):
-            op2 = Rational(op2)
-        return func(op1, op2)
-
-    def set(self, value):
-        if isinstance(value, Rational):
-            _MPQ_set_str(self, value.__str__(), 10)
-        else:
-            try:
-                _MPQ_set_str(self, str(float(value)), 10)
-            except Exception:
-                raise TypeError("non-rational")
-
-    def __str__(self):
-        return _MPQ_get_str(None, 10, self)
-
-    def __repr__(self):
-        return self.__str__()
-
-    def __lt__(self, other):
-        return self.__apply_ret_2_1(_MPQ_cmp, self, other) < 0
-
-    def __le__(self, other):
-        return self.__lt__(other) or self.__eq__(other)
-
-    def __eq__(self, other):
-        return self.__apply_ret_2_1(_MPQ_cmp, self, other) == 0
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __gt__(self, other):
-        return self.__apply_ret_2_1(_MPQ_cmp, self, other) > 0
-
-
-    def __ge__(self, other):
-        return self.__gt__(other) or self.__eq__(other)
-
-    def __add__(self, other):
-        return self.__apply_ret(_MPQ_add, Rational(), self, other)
-
-    def __sub__(self, other):
-        return self.__apply_ret(_MPQ_sub, Rational(), self, other)
-
-    def __mul__(self, other):
-        return self.__apply_ret(_MPQ_mul, Rational(), self, other)
-
-    def __iadd__(self, other):
-        return self.__apply_ret(_MPQ_add, self, self, other)
-
-    def __isub__(self, other):
-        return self.__apply_ret(_MPQ_sub, self, self, other)
-
-    def __imul__(self, other):
-        return self.__apply_ret(_MPQ_mul, self, self, other)
-
-    def __abs__(self):
-        return self.__apply_ret_2_0(_MPQ_abs, Rational(), self)
-
-    def __neg__(self):
-        return self.__apply_ret_2_0(_MPQ_neg, Rational(), self)
-
-
-class Float(object):
-    def __init__(self, init_value=0.0, precision=None):
-        self._mpf = c_mpf_struct()
-        self._mpfp = byref(self._mpf)
-        _MPF_init(self)
-        self.set(init_value)
-
-    def __del__(self):
-        _MPF_clear(self)
-
-    def set(self, value):
-        if isinstance(value, Float):
-            _MPF_set_str(self, value.__str__(), 10)
-        else:
-            try:
-                _MPF_set_str(self, str(float(value)), 10)
-            except Exception:
-                raise TypeError("non-float")
-
-    def __apply_ret(self, func, ret, op1, op2):
-        assert isinstance(ret, Float)
-        if not isinstance(op1, Float):
-            op1 = Float(op1)
-        if not isinstance(op2, Float):
-            op2 = Float(op2)
-        func(ret, op1, op2)
-        return ret
-
-    def __apply_ret_2_0(self, func, ret, op1):
-        assert isinstance(ret, Float)
-        assert isinstance(op1, Float)
-        func(ret, op1)
-        return ret
-
-    def __apply_ret_2_1(self, func, op1, op2):
-        if not isinstance(op1, Float):
-            op1 = Float(op2)
-        if not isinstance(op2, Float):
-            op2 = Float(op2)
-        return func(op1, op2)
-
-    #Extra apply_ret for 3 args with return - for _eq
-    def __apply_ret_3_1(self, func, op1, op2, op3):
-        if not isinstance(op2, Float):
-            op2 = Float(op2)
-        return func(op1, op2, op3)
-
-    @property
-    def _as_parameter_(self):
-        return self._mpfp
-
-    @staticmethod
-    def from_param(arg):
-        assert isinstance(arg, Float)
-        return arg
-
-    def __str__(self):
-        exp = (c_byte * 4)()
-        exp = cast(exp, POINTER(c_int))
-        return _MPF_get_str(None, exp, 10, 10, self)
-
-    def __repr__(self):
-        return self.__str__()
-
-    def __lt__(self, other):
-        return self.__apply_ret_2_1(_MPF_cmp, self, other) < 0
-
-    def __le__(self, other):
-        return self.__lt__(other) or self.__eq__(other)
-
-    def __eq__(self, other):
-        return self.__apply_ret_3_1(_MPF_eq, self, other, c_int(32)) != 0
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __gt__(self, other):
-        return self.__apply_ret_2_1(_MPF_cmp, self, other) > 0
-
-    def __ge__(self, other):
-        return self.__gt__(other) or self.__eq__(other)
-
-    def __add__(self, other):
-        return self.__apply_ret(_MPF_add, Float(), self, other)
-
-    def __sub__(self, other):
-        return self.__apply_ret(_MPF_sub, Float(), self, other)
-
-    def __mul__(self, other):
-        return self.__apply_ret(_MPF_mul, Float(), self, other)
-
-    def __div__(self, other):
-        return self.__apply_ret(_MPF_div, Float(), self, other)
-
-    def __iadd__(self, other):
-        return self.__apply_ret(_MPF_add, self, self, other)
-
-    def __isub__(self, other):
-        return self.__apply_ret(_MPF_sub, self, self, other)
-
-    def __imul__(self, other):
-        return self.__apply_ret(_MPF_mul, self, self, other)
-
-    def __radd__(self, other):
-        return self.__apply_ret(_MPF_add, Float(), other, self)
-
-    def __rsub__(self, other):
-        return self.__apply_ret(_MPF_sub, Float(), other, self)
-
-    def __rmul__(self, other):
-        return self.__apply_ret(_MPF_mul, Float(), other, self)
-
-    def __rdiv__(self, other):
-        return self.__apply_ret(_MPF_div, Float(), other, self)
-
-    def __idiv__(self, other):
-        return self.__apply_ret(_MPF_div, self, self, other)
-
-    def __abs__(self):
-        return self.__apply_ret_2_0(_MPF_abs, Float(), self)
-
-    def __neg__(self):
-        return self.__apply_ret_2_0(_MPF_neg, Float(), self)
-
-
-class Random(object):
-    def __init__(self, algo=RAND_ALGO_DEFAULT):
-        self._gmp = c_gmp_randstate_struct()
-        self._gmpp = byref(self._gmp)
-
-        if algo in [RAND_ALGO_DEFAULT, RAND_ALGO_MT]:
-            algo(self)
-        else:
-            raise NotImplementedError("Algorithm not available")
-
-    def __del__(self):
-        _GMP_randclear(self)
-
-    @property
-    def _as_parameter_(self):
-        return self._gmpp
-
-    @staticmethod
-    def from_param(arg):
-        assert isinstance(arg, Random)
-        return arg
-
-    def __apply_ret(self, func, ret, op1, op2):
-        func(ret, op1, op2)
-        return ret
-
-    def seed(self, s):
-        if not isinstance(s, Integer):
-            s = Integer(s)
-        _GMP_randseed(self, s)
-
-    def urandom(self, n):
-        ret = Integer()
-        if not isinstance(n, Integer):
-            n = Integer(n)
-        _GMP_urandomm(ret, self, n)
-        return ret
+#class Rational(object):
+#    def __init__(self):
+#        self._mpq = c_mpq_struct()
+#        self._mpqp = byref(self._mpq)
+#        _MPQ_init(self)
+#
+#    def __del__(self):
+#        _MPQ_clear(self)
+#
+#    @property
+#    def _as_parameter_(self):
+#        return self._mpqp
+#
+#    @staticmethod
+#    def from_param(arg):
+#        assert isinstance(arg, Rational)
+#        return arg
+#
+#    def __apply_ret(self, func, ret, op1, op2):
+#        assert isinstance(ret, Rational)
+#        if not isinstance(op1, Rational):
+#            op1 = Rational(op1)
+#        if not isinstance(op2, Rational):
+#            op2 = Rational(op2)
+#        func(ret, op1, op2)
+#        return ret
+#
+#    def __apply_ret_2_0(self, func, ret, op1):
+#        assert isinstance(ret, Rational)
+#        assert isinstance(op1, Rational)
+#        func(ret, op1)
+#        return ret
+#
+#    def __apply_ret_2_1(self, func, op1, op2):
+#        if not isinstance(op1, Rational):
+#            op1 = Rational(op1)
+#        if not isinstance(op2, Rational):
+#            op2 = Rational(op2)
+#        return func(op1, op2)
+#
+#    def set(self, value):
+#        if isinstance(value, Rational):
+#            _MPQ_set_str(self, value.__str__(), 10)
+#        else:
+#            try:
+#                _MPQ_set_str(self, str(float(value)), 10)
+#            except Exception:
+#                raise TypeError("non-rational")
+#
+#    def __str__(self):
+#        return _MPQ_get_str(None, 10, self)
+#
+#    def __repr__(self):
+#        return self.__str__()
+#
+#    def __lt__(self, other):
+#        return self.__apply_ret_2_1(_MPQ_cmp, self, other) < 0
+#
+#    def __le__(self, other):
+#        return self.__lt__(other) or self.__eq__(other)
+#
+#    def __eq__(self, other):
+#        return self.__apply_ret_2_1(_MPQ_cmp, self, other) == 0
+#
+#    def __ne__(self, other):
+#        return not self.__eq__(other)
+#
+#    def __gt__(self, other):
+#        return self.__apply_ret_2_1(_MPQ_cmp, self, other) > 0
+#
+#
+#    def __ge__(self, other):
+#        return self.__gt__(other) or self.__eq__(other)
+#
+#    def __add__(self, other):
+#        return self.__apply_ret(_MPQ_add, Rational(), self, other)
+#
+#    def __sub__(self, other):
+#        return self.__apply_ret(_MPQ_sub, Rational(), self, other)
+#
+#    def __mul__(self, other):
+#        return self.__apply_ret(_MPQ_mul, Rational(), self, other)
+#
+#    def __iadd__(self, other):
+#        return self.__apply_ret(_MPQ_add, self, self, other)
+#
+#    def __isub__(self, other):
+#        return self.__apply_ret(_MPQ_sub, self, self, other)
+#
+#    def __imul__(self, other):
+#        return self.__apply_ret(_MPQ_mul, self, self, other)
+#
+#    def __abs__(self):
+#        return self.__apply_ret_2_0(_MPQ_abs, Rational(), self)
+#
+#    def __neg__(self):
+#        return self.__apply_ret_2_0(_MPQ_neg, Rational(), self)
+#
+#
+#class Float(object):
+#    def __init__(self, init_value=0.0, precision=None):
+#        self._mpf = c_mpf_struct()
+#        self._mpfp = byref(self._mpf)
+#        _MPF_init(self)
+#        self.set(init_value)
+#
+#    def __del__(self):
+#        _MPF_clear(self)
+#
+#    def set(self, value):
+#        if isinstance(value, Float):
+#            _MPF_set_str(self, value.__str__(), 10)
+#        else:
+#            try:
+#                _MPF_set_str(self, str(float(value)), 10)
+#            except Exception:
+#                raise TypeError("non-float")
+#
+#    def __apply_ret(self, func, ret, op1, op2):
+#        assert isinstance(ret, Float)
+#        if not isinstance(op1, Float):
+#            op1 = Float(op1)
+#        if not isinstance(op2, Float):
+#            op2 = Float(op2)
+#        func(ret, op1, op2)
+#        return ret
+#
+#    def __apply_ret_2_0(self, func, ret, op1):
+#        assert isinstance(ret, Float)
+#        assert isinstance(op1, Float)
+#        func(ret, op1)
+#        return ret
+#
+#    def __apply_ret_2_1(self, func, op1, op2):
+#        if not isinstance(op1, Float):
+#            op1 = Float(op2)
+#        if not isinstance(op2, Float):
+#            op2 = Float(op2)
+#        return func(op1, op2)
+#
+#    #Extra apply_ret for 3 args with return - for _eq
+#    def __apply_ret_3_1(self, func, op1, op2, op3):
+#        if not isinstance(op2, Float):
+#            op2 = Float(op2)
+#        return func(op1, op2, op3)
+#
+#    @property
+#    def _as_parameter_(self):
+#        return self._mpfp
+#
+#    @staticmethod
+#    def from_param(arg):
+#        assert isinstance(arg, Float)
+#        return arg
+#
+#    def __str__(self):
+#        exp = (c_byte * 4)()
+#        exp = cast(exp, POINTER(c_int))
+#        return _MPF_get_str(None, exp, 10, 10, self)
+#
+#    def __repr__(self):
+#        return self.__str__()
+#
+#    def __lt__(self, other):
+#        return self.__apply_ret_2_1(_MPF_cmp, self, other) < 0
+#
+#    def __le__(self, other):
+#        return self.__lt__(other) or self.__eq__(other)
+#
+#    def __eq__(self, other):
+#        return self.__apply_ret_3_1(_MPF_eq, self, other, c_int(32)) != 0
+#
+#    def __ne__(self, other):
+#        return not self.__eq__(other)
+#
+#    def __gt__(self, other):
+#        return self.__apply_ret_2_1(_MPF_cmp, self, other) > 0
+#
+#    def __ge__(self, other):
+#        return self.__gt__(other) or self.__eq__(other)
+#
+#    def __add__(self, other):
+#        return self.__apply_ret(_MPF_add, Float(), self, other)
+#
+#    def __sub__(self, other):
+#        return self.__apply_ret(_MPF_sub, Float(), self, other)
+#
+#    def __mul__(self, other):
+#        return self.__apply_ret(_MPF_mul, Float(), self, other)
+#
+#    def __div__(self, other):
+#        return self.__apply_ret(_MPF_div, Float(), self, other)
+#
+#    def __iadd__(self, other):
+#        return self.__apply_ret(_MPF_add, self, self, other)
+#
+#    def __isub__(self, other):
+#        return self.__apply_ret(_MPF_sub, self, self, other)
+#
+#    def __imul__(self, other):
+#        return self.__apply_ret(_MPF_mul, self, self, other)
+#
+#    def __radd__(self, other):
+#        return self.__apply_ret(_MPF_add, Float(), other, self)
+#
+#    def __rsub__(self, other):
+#        return self.__apply_ret(_MPF_sub, Float(), other, self)
+#
+#    def __rmul__(self, other):
+#        return self.__apply_ret(_MPF_mul, Float(), other, self)
+#
+#    def __rdiv__(self, other):
+#        return self.__apply_ret(_MPF_div, Float(), other, self)
+#
+#    def __idiv__(self, other):
+#        return self.__apply_ret(_MPF_div, self, self, other)
+#
+#    def __abs__(self):
+#        return self.__apply_ret_2_0(_MPF_abs, Float(), self)
+#
+#    def __neg__(self):
+#        return self.__apply_ret_2_0(_MPF_neg, Float(), self)
+#
+#
+#class Random(object):
+#    def __init__(self, algo=RAND_ALGO_DEFAULT):
+#        self._gmp = c_gmp_randstate_struct()
+#        self._gmpp = byref(self._gmp)
+#
+#        if algo in [RAND_ALGO_DEFAULT, RAND_ALGO_MT]:
+#            algo(self)
+#        else:
+#            raise NotImplementedError("Algorithm not available")
+#
+#    def __del__(self):
+#        _GMP_randclear(self)
+#
+#    @property
+#    def _as_parameter_(self):
+#        return self._gmpp
+#
+#    @staticmethod
+#    def from_param(arg):
+#        assert isinstance(arg, Random)
+#        return arg
+#
+#    def __apply_ret(self, func, ret, op1, op2):
+#        func(ret, op1, op2)
+#        return ret
+#
+#    def seed(self, s):
+#        if not isinstance(s, Integer):
+#            s = Integer(s)
+#        _GMP_randseed(self, s)
+#
+#    def urandom(self, n):
+#        ret = Integer()
+#        if not isinstance(n, Integer):
+#            n = Integer(n)
+#        _GMP_urandomm(ret, self, n)
+#        return ret
+#
 
 #------------------------------------------------------------------------------
 # Argument/return-type specs for Gnu MP routines
 #------------------------------------------------------------------------------
 
-# Gnu MP random generator routines
-_GMP_randinit_default.argtypes = (Random,)
-_GMP_randinit_mt.artypes = (Random,)
-_GMP_randclear.argtypes = (Random,)
-_GMP_randseed.argtypes = (Random, Integer)
-_GMP_urandomm.argtypes = (Integer, Random, Integer)
+## Gnu MP random generator routines
+#_GMP_randinit_default.argtypes = (Random,)
+#_GMP_randinit_mt.artypes = (Random,)
+#_GMP_randclear.argtypes = (Random,)
+#_GMP_randseed.argtypes = (Random, Integer)
+#_GMP_urandomm.argtypes = (Integer, Random, Integer)
 
 # Gnu MP integer routines
 _MPZ_init.argtypes = (Integer,)
@@ -677,31 +697,31 @@ _MPZ_get_str.argtypes = (c_char_p, c_int, Integer,)
 _MPZ_get_str.restype = c_char_p
 
 # Gnu MP rational number routines
-_MPQ_init.argtypes = (Rational,)
-_MPQ_clear.argtypes = (Rational,)
-_MPQ_add.argtypes = (Rational, Rational, Rational)
-_MPQ_sub.argtypes = (Rational, Rational, Rational)
-_MPQ_mul.argtypes = (Rational, Rational, Rational)
-_MPQ_abs.argtypes = (Rational, Rational)
-_MPQ_neg.argtypes = (Rational, Rational)
-_MPQ_cmp.argtypes = (Rational, Rational)
-_MPQ_set_str.argtypes = (Rational, c_char_p, c_int)
-_MPQ_get_str.argtypes = (c_char_p, c_int, Rational,)
-# non-default (int) return types
-_MPQ_get_str.restype = c_char_p
+#_MPQ_init.argtypes = (Rational,)
+#_MPQ_clear.argtypes = (Rational,)
+#_MPQ_add.argtypes = (Rational, Rational, Rational)
+#_MPQ_sub.argtypes = (Rational, Rational, Rational)
+#_MPQ_mul.argtypes = (Rational, Rational, Rational)
+#_MPQ_abs.argtypes = (Rational, Rational)
+#_MPQ_neg.argtypes = (Rational, Rational)
+#_MPQ_cmp.argtypes = (Rational, Rational)
+#_MPQ_set_str.argtypes = (Rational, c_char_p, c_int)
+#_MPQ_get_str.argtypes = (c_char_p, c_int, Rational,)
+## non-default (int) return types
+#_MPQ_get_str.restype = c_char_p
 
 # Gnu MP floating point routines
-_MPF_set_default_prec.argtypes = (c_ulong,)
-_MPF_init.argtypes = (Float,)
-_MPF_clear.argtypes = (Float,)
-_MPF_add.argtypes = (Float, Float, Float)
-_MPF_sub.argtypes = (Float, Float, Float)
-_MPF_mul.argtypes = (Float, Float, Float)
-_MPF_abs.argtypes = (Float, Float)
-_MPF_neg.argtypes = (Float, Float)
-_MPF_cmp.argtypes = (Float, Float)
-_MPF_eq.argtypes = (Float, Float, c_int)
-_MPF_set_str.argtypes = (Float, c_char_p, c_int)
-_MPF_get_str.argtypes = (c_char_p, POINTER(c_int), c_int, c_int, Float)
-# non-default (int) return types
-_MPF_get_str.restype = c_char_p
+#_MPF_set_default_prec.argtypes = (c_ulong,)
+#_MPF_init.argtypes = (Float,)
+#_MPF_clear.argtypes = (Float,)
+#_MPF_add.argtypes = (Float, Float, Float)
+#_MPF_sub.argtypes = (Float, Float, Float)
+#_MPF_mul.argtypes = (Float, Float, Float)
+#_MPF_abs.argtypes = (Float, Float)
+#_MPF_neg.argtypes = (Float, Float)
+#_MPF_cmp.argtypes = (Float, Float)
+#_MPF_eq.argtypes = (Float, Float, c_int)
+#_MPF_set_str.argtypes = (Float, c_char_p, c_int)
+#_MPF_get_str.argtypes = (c_char_p, POINTER(c_int), c_int, c_int, Float)
+## non-default (int) return types
+#_MPF_get_str.restype = c_char_p

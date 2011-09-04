@@ -509,33 +509,45 @@ class Test_IntegerAdditionals(unittest2.TestCase):
 
 class Test_IntegerErrorCases(unittest2.TestCase):
     def test_DivisionBy0(self):
-        self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), gmp.Integer())
-        self.assertRaises(ZeroDivisionError, operator.floordiv, gmp.Integer(1), 0)
-        self.assertRaises(ZeroDivisionError, operator.floordiv, 1, gmp.Integer())
-        self.assertRaises(ZeroDivisionError, operator.ifloordiv, gmp.Integer(1), gmp.Integer())
-        self.assertRaises(ZeroDivisionError, operator.ifloordiv, gmp.Integer(1), 0)
-        self.assertRaises(ZeroDivisionError, operator.ifloordiv, 1, gmp.Integer())
-#       python 3 removed this.
-#        self.assertRaises(ZeroDivisionError, operator.idiv, gmp.Integer(1), gmp.Integer(0))
-#        self.assertRaises(ZeroDivisionError, operator.idiv, gmp.Integer(1), 0)
-#        self.assertRaises(ZeroDivisionError, operator.idiv, 1, gmp.Integer(0))
+        self.assertRaises(ZeroDivisionError,
+                          operator.floordiv, gmp.Integer(1), gmp.Integer())
+        self.assertRaises(ZeroDivisionError,
+                          operator.floordiv, gmp.Integer(1), 0)
+        self.assertRaises(ZeroDivisionError,
+                          operator.floordiv, 1, gmp.Integer())
+        self.assertRaises(ZeroDivisionError,
+                          operator.ifloordiv, gmp.Integer(1), gmp.Integer())
+        self.assertRaises(ZeroDivisionError,
+                          operator.ifloordiv, gmp.Integer(1), 0)
+        self.assertRaises(ZeroDivisionError,
+                          operator.ifloordiv, 1, gmp.Integer())
 
     def test_ModBy0(self):
-        self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), gmp.Integer())
-        self.assertRaises(ZeroDivisionError, operator.mod, gmp.Integer(1), 0)
-        self.assertRaises(ZeroDivisionError, operator.mod, 1, gmp.Integer())
+        self.assertRaises(ZeroDivisionError,
+                          operator.mod, gmp.Integer(1), gmp.Integer())
+        self.assertRaises(ZeroDivisionError,
+                          operator.mod, gmp.Integer(1), 0)
+        self.assertRaises(ZeroDivisionError,
+                          operator.mod, 1, gmp.Integer())
 
     def test_RealDivisionRaisesError(self):
-        self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), 1)
-        self.assertRaises(NotImplementedError, operator.truediv, gmp.Integer(1), gmp.Integer(1))
-        self.assertRaises(NotImplementedError, operator.truediv, 1, gmp.Integer(1))
-        self.assertRaises(NotImplementedError, operator.itruediv, gmp.Integer(1), 1)
-        self.assertRaises(NotImplementedError, operator.itruediv, gmp.Integer(1), gmp.Integer(1))
-        self.assertRaises(NotImplementedError, operator.itruediv, 1, gmp.Integer(1))
+        self.assertRaises(NotImplementedError,
+                          operator.truediv, gmp.Integer(1), 1)
+        self.assertRaises(NotImplementedError,
+                          operator.truediv, gmp.Integer(1), gmp.Integer(1))
+        self.assertRaises(NotImplementedError,
+                          operator.truediv, 1, gmp.Integer(1))
+        self.assertRaises(NotImplementedError,
+                          operator.itruediv, gmp.Integer(1), 1)
+        self.assertRaises(NotImplementedError,
+                          operator.itruediv, gmp.Integer(1), gmp.Integer(1))
+        self.assertRaises(NotImplementedError,
+                          operator.itruediv, 1, gmp.Integer(1))
 
     def test_DivModBy0(self):
         self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), 0)
-        self.assertRaises(ZeroDivisionError, divmod, gmp.Integer(10), gmp.Integer())
+        self.assertRaises(ZeroDivisionError,
+                          divmod, gmp.Integer(10), gmp.Integer())
         self.assertRaises(ZeroDivisionError, divmod, 10, gmp.Integer())
 
         
@@ -639,12 +651,14 @@ class Test_IntegerPyTypeCompatibility(unittest2.TestCase):
 #     def test_PyFloatAddition(self):
 #         self.assertEqual(self.small_gmp + 10.1, gmp.Float(20.2))
 #         self.assertEqual(self.large_gmp + 10.1, gmp.Float(4294967310.2))
-#         self.assertEqual(self.prec_gmp + 10.1, gmp.Float("20.5294967300101010"))
+#         self.assertEqual(self.prec_gmp + 10.1,
+#                          gmp.Float("20.5294967300101010"))
 
 #     def test_PyFloatReverseAddition(self):
 #         self.assertEqual(10.1 + self.small_gmp, gmp.Float(20.2))
 #         self.assertEqual(10.1 + self.large_gmp, gmp.Float(4294967310.2))
-#         self.assertEqual(10.1 + self.prec_gmp, gmp.Float("20.5294967300101010"))
+#         self.assertEqual(10.1 + self.prec_gmp,
+#                          gmp.Float("20.5294967300101010"))
 
 #     def test_NegativeAddition(self):
 #         self.assertEqual(self.large_gmp + self.large_neg_gmp, gmp.Float(0.0))
