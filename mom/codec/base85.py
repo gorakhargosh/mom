@@ -75,7 +75,6 @@ try:
     psyco.full() #pragma: no cover
 except ImportError:
     psyco = None
-    pass
 
 from array import array
 from struct import unpack, pack
@@ -185,8 +184,8 @@ def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
         5 (default).
     """
     counter = 0
-    for i, x in enumerate(encoded):
-        if x == zero_char[0]:
+    for i, char in enumerate(encoded):
+        if char == zero_char[0]:
             if counter % chunk_size:
                 raise ValueError(
                     'zero char `%r` occurs in the middle of a chunk ' \
@@ -242,18 +241,18 @@ def _b85encode_chunks(raw_bytes,
     # ASCII85 uses a big-endian convention.
     # See: http://en.wikipedia.org/wiki/Ascii85
     i = 0
-    for x in unpack('>' + 'L' * num_uint32, raw_bytes):
+    for uint32 in unpack('>' + 'L' * num_uint32, raw_bytes):
 #        chars = list(range(5))
 #        for i in reversed(chars):
 #            x, mod = divmod(x, 85)
 #            chars[i] = _base85_chars[mod]
 #        ascii_chars.extend(chars)
         # Above loop unrolled:
-        encoded[i]   = base85_bytes[x // pow_85[4]] # Don't need %85.is<85
-        encoded[i+1] = base85_bytes[(x // pow_85[3]) % 85]
-        encoded[i+2] = base85_bytes[(x // pow_85[2]) % 85]
-        encoded[i+3] = base85_bytes[(x // 85) % 85]     # 85**1 = 85
-        encoded[i+4] = base85_bytes[x % 85]             # 85**0 = 1
+        encoded[i]   = base85_bytes[uint32 // pow_85[4]] # Don't need %85.is<85
+        encoded[i+1] = base85_bytes[(uint32 // pow_85[3]) % 85]
+        encoded[i+2] = base85_bytes[(uint32 // pow_85[2]) % 85]
+        encoded[i+3] = base85_bytes[(uint32 // 85) % 85]     # 85**1 = 85
+        encoded[i+4] = base85_bytes[uint32 % 85]             # 85**0 = 1
         i += 5
 
     if padding_size and not padding:
