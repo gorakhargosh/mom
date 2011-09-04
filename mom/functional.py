@@ -197,6 +197,8 @@ Predicates, transforms, and walkers
 .. autofunction:: never
 """
 
+# pylint: disable-msg=C0302
+
 from __future__ import absolute_import
 
 from collections import defaultdict, deque
@@ -204,18 +206,19 @@ from functools import partial
 try:
     # Python 2.x
     from itertools import \
-        ifilter as _ifilter, ifilterfalse as _ifilterfalse, imap as _imap
+        ifilter as _ifilter, ifilterfalse as _ifilterfalse, imap as map
 except ImportError: # pragma: no cover
     # Python 3 nuisance.
     _ifilter = filter
     def _ifilterfalse(predicate, iterable):
+        """ifilterfalse replacement for python 3."""
         predicate = predicate or bool
         def _complement(item):
+            """Negates a predicate."""
             return not predicate(item)
         return filter(_complement, iterable)
-    _imap = map
-from itertools import islice, takewhile,\
-    dropwhile,\
+from itertools import islice, takewhile, \
+    dropwhile, \
     cycle, repeat, groupby
 
 from mom.itertools import chain, starmap
@@ -298,11 +301,13 @@ def compose(function, *functions):
         A composition function.
     """
 
-    def _composition(a, b):
-        def wrap(*args, **kwargs):
-            return a(b(*args, **kwargs))
+    def _composition(a_func, b_func):
+        """Composition."""
+        def _wrap(*args, **kwargs):
+            """Wrapper."""
+            return a_func(b_func(*args, **kwargs))
 
-        return wrap
+        return _wrap
 
     return _reduce(_composition, functions, function)
 
@@ -323,6 +328,7 @@ def _compose(function, *functions):
     functions = (function, ) + functions if functions else (function, )
 
     def _composition(*args_tuple):
+        """Composition."""
         args = list(args_tuple)
         for function in reversed(functions):
             args = [function(*args)]
@@ -343,6 +349,7 @@ def complement(predicate):
     """
 
     def _negate(*args, **kwargs):
+        """Negation."""
         return not predicate(*args, **kwargs)
 
     return _negate
@@ -412,15 +419,15 @@ def some(predicate, iterable):
         ``True`` if the predicate applied to any element of the iterable
         is true; ``False`` otherwise.
     """
-    for x in iterable:
-        if predicate(x):
+    for item in iterable:
+        if predicate(item):
             return True
     return False
 
 
 def _some1(predicate, iterable):
     """Alternative implementation of :func:`some`."""
-    return any(_imap(predicate, iterable))
+    return any(map(predicate, iterable))
 
 
 def _some2(predicate, iterable):
@@ -445,10 +452,10 @@ def every(predicate, iterable):
         ``True`` if the predicate is true for all elements in the iterable.
     """
     # Equivalent to
-    # return all(_imap(predicate, iterable))
+    # return all(map(predicate, iterable))
     # but the following short-circuits.
-    for x in iterable:
-        if not predicate(x):
+    for item in iterable:
+        if not predicate(item):
             return False
     return True
 
@@ -551,7 +558,7 @@ def tally(predicate, iterable):
     :returns:
         The number of times a predicate is true.
     """
-    return sum(_imap(predicate, iterable))
+    return sum(map(predicate, iterable))
 
 
 def select(predicate, iterable):
@@ -634,6 +641,7 @@ def partition(predicate, iterable):
     """
 
     def _partitioner(memo, item):
+        """Partitioner."""
         part = memo[0] if predicate(item) else memo[1]
         part.append(item)
         return memo
@@ -658,10 +666,11 @@ def partition_dict(predicate, dictionary):
         Tuple (selected_dict, rejected_dict)
     """
     def _pred(tup):
+        """Apply arguments to predicate."""
         return predicate(*tup)
 
-    a, b = partition(_pred, dictionary.items())
-    return dict(a), dict(b)
+    pairs_a, pairs_b = partition(_pred, dictionary.items())
+    return dict(pairs_a), dict(pairs_b)
 
 
 def map_dict(transform, dictionary):
@@ -689,6 +698,7 @@ def select_dict(predicate, dictionary):
         New dictionary of selected ``key=value`` pairs.
     """
     def _pred(tup):
+        """Apply arguments to predicate."""
         return predicate(*tup)
     _predicate = _pred if predicate else all
     return dict(_ifilter(_predicate, dictionary.items()))
@@ -705,6 +715,7 @@ def reject_dict(predicate, dictionary):
         New dictionary of selected ``key=value`` pairs.
     """
     def _pred(tup):
+        """Apply arguments to predicate."""
         return predicate(*tup)
 
     _predicate = _pred if predicate else all
@@ -758,11 +769,12 @@ def ipluck(dicts, key, *args, **kwargs):
     if args or kwargs:
         default = kwargs['default'] if kwargs else args[0]
 
-        def _get_value_from_dict(d):
-            return d.get(key, default)
+        def _get_value_from_dict(dictionary):
+            """Obtains a value from the dictionary for the given key."""
+            return dictionary.get(key, default)
     else:
         _get_value_from_dict = lambda w: w[key]
-    return _imap(_get_value_from_dict, dicts)
+    return map(_get_value_from_dict, dicts)
 
 
 # Sequences
@@ -920,20 +932,20 @@ def itail(iterable):
     return islice(iterable, 1, None, 1)
 
 
-def nth(iterable, n, default=None):
+def nth(iterable, index, default=None):
     """
     Returns the nth element out of an iterable.
 
     :param iterable:
         Iterable sequence.
-    :param n:
+    :param index:
         Index
     :param default:
         If not found, this or ``None`` will be returned.
     :returns:
         nth element of the iterable sequence.
     """
-    return next(islice(iterable, n, None), default)
+    return next(islice(iterable, index, None), default)
 
 
 def last(iterable):
@@ -959,10 +971,10 @@ def occurrences(iterable):
     :returns:
         A dictionary of counts of each element in the iterable.
     """
-    d = defaultdict(int)
+    multiset = defaultdict(int)
     for k in iterable:
-        d[k] += 1
-    return d
+        multiset[k] += 1
+    return multiset
 
 
 def peel(iterable, count=1):
@@ -1083,9 +1095,9 @@ def chunks(iterable, size, *args, **kwargs):
             else:
                 iterable = list(iterable)
                 padding = [padding]
-        it = iterable + (padding * (size - (length % size)))
+        sequence = iterable + (padding * (size - (length % size)))
         for i in range(0, length, size):
-            yield it[i:i + size]
+            yield sequence[i:i + size]
     else:
         for i in range(0, length, size):
             yield iterable[i:i + size]
@@ -1170,6 +1182,7 @@ def flatten(iterable):
     """
 
     def _flatten(memo, item):
+        """Flattener."""
         if isinstance(item, (list, tuple)):
             return memo + _reduce(_flatten, item, [])
         else:
@@ -1195,6 +1208,7 @@ def flatten1(iterable):
     """
 
     def _flatten(memo, item):
+        """Flattener."""
         if isinstance(item, (list, tuple)):
             return memo + list(item)
         else:
@@ -1285,6 +1299,7 @@ def unique(iterable, is_sorted=False):
     # does not have that problem. We can improve this implementation.
     if iterable:
         def _unique(memo, item):
+            """Find uniques."""
             cond = last(memo) != item if is_sorted else omits(memo, item)
             if cond:
                 memo.append(item)
@@ -1326,28 +1341,29 @@ def intersection(iterable, *iterables):
         return iterable
 
     def _does_other_contain(item):
+        """Determines whether the other list contains an item."""
         return every(partial(contains, item=item), iterables)
 
     return select(_does_other_contain, unique(iterable))
 
 
-def take(iterable, n):
+def take(iterable, amount):
     """
     Return first n items of the iterable as a tuple.
 
     Taken from the Python documentation. Under the PSF license.
 
-    :param n:
+    :param amount:
         The number of items to obtain.
     :param iterable:
         Iterable sequence.
     :returns:
         First n items of the iterable as a tuple.
     """
-    return tuple(islice(iterable, n))
+    return tuple(islice(iterable, amount))
 
 
-def eat(iterator, n):
+def eat(iterator, amount):
     """
     Advance an iterator n-steps ahead. If n is None, eat entirely.
 
@@ -1355,24 +1371,25 @@ def eat(iterator, n):
 
     :param iterator:
         An iterator.
-    :param n:
+    :param amount:
         The number of steps to advance.
     :yields:
         An iterator.
     """
     # Use functions that consume iterators at C speed.
-    if n is None:
+    if amount is None:
         # Feed the entire iterator into a zero-length deque.
         deque(iterator)
     else:
         # Advance to the empty slice starting at position n.
-        next(islice(iterator, n, n), None)
+        next(islice(iterator, amount, amount), None)
 
 
-def _get_iter_next(it):
-    attr = getattr(it, "next", None)
+def _get_iter_next(iterator):
+    """Gets the next item in the iterator."""
+    attr = getattr(iterator, "next", None)
     if not attr:
-        attr = getattr(it, "__next__")
+        attr = getattr(iterator, "__next__")
     return attr
 
 
@@ -1403,7 +1420,7 @@ def round_robin(*iterables):
             nexts = cycle(islice(nexts, pending))
 
 
-def ncycles(iterable, n):
+def ncycles(iterable, times):
     """
     Yields the sequence elements n times.
 
@@ -1411,12 +1428,12 @@ def ncycles(iterable, n):
 
     :param iterable:
         Iterable sequence.
-    :param n:
+    :param times:
         The number of times to yield the sequence.
     :yields:
         Iterator.
     """
-    return chain.from_iterable(repeat(tuple(iterable), n))
+    return chain.from_iterable(repeat(tuple(iterable), times))
 
 
 # Predicates, transforms, and walkers
