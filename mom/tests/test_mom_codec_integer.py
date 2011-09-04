@@ -21,7 +21,7 @@ from mom.codec._alt_integer import uint_to_bytes_naive, \
     uint_to_bytes_simple, uint_to_bytes_pycrypto, uint_to_bytes_array_based, \
     uint_to_bytes_naive_array_based, bytes_to_uint_naive, bytes_to_uint_simple
 from mom.codec.integer import uint_to_bytes, bytes_to_uint
-from mom.prime_sieve import sieve
+from mom.prime_sieve import SIEVE
 
 # Long value from Python-RSA.
 from mom.tests.constants import unicode_string
@@ -113,7 +113,7 @@ class Test_unsigned_integer_to_bytes(unittest2.TestCase):
                              "Boom %d" % value)
 
     def test_correctness_for_primes(self):
-        for prime in sieve:
+        for prime in SIEVE:
             self.assertEqual(uint_to_bytes(prime),
                              uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
@@ -285,7 +285,7 @@ class Test_uint_to_bytes(unittest2.TestCase):
                              "Boom %d" % value)
 
     def test_correctness_for_primes(self):
-        for prime in sieve:
+        for prime in SIEVE:
             self.assertEqual(uint_to_bytes(prime), uint_to_bytes_naive(prime),
                              "Boom %d" % prime)
             self.assertEqual(uint_to_bytes_array_based(prime),

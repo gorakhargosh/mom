@@ -30,12 +30,12 @@ Primes
 ------
 .. autofunction:: generate_random_prime
 .. autofunction:: generate_random_safe_prime
-.. autofunction:: is_prime
+.. autofunction:: is_prime(num, iterations=5, sieve=sieve)
 """
 
 from __future__ import absolute_import, division
 from mom.security.random import generate_random_uint_between
-from mom.prime_sieve import sieve
+from mom.prime_sieve import SIEVE
 from mom._compat import range
 
 
@@ -204,7 +204,7 @@ def _pure_pow_mod(base, power, modulus):
     return prod
 
 
-def _pure_is_prime(num, iterations=5, _sieve=sieve):
+def _pure_is_prime(num, iterations=5, _sieve=SIEVE):
     """
     Determines whether a number is prime.
 
