@@ -143,10 +143,10 @@ def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
     # Doesn't perform any floating-point operations.
-    q, r = divmod(n_bits, 8)
-    if r:
-        q += 1
-    random_bytes = rand_func(q)
+    quotient, remainder = divmod(n_bits, 8)
+    if remainder:
+        quotient += 1
+    random_bytes = rand_func(quotient)
     mask = (1 << n_bits) - 1
     return mask & bytes_to_uint(random_bytes)
 
@@ -193,10 +193,10 @@ def generate_random_uint_between(low, high, rand_func=generate_random_bytes):
                         % (type(low).__name__, type(high).__name__))
     if low >= high:
         raise ValueError("high value must be greater than low value.")
-    r = high - low - 1
-    bits = integer_bit_size(r)
+    substrate = high - low - 1
+    bits = integer_bit_size(substrate)
     value = generate_random_uint_atmost(bits, rand_func=rand_func)
-    while value > r:
+    while value > substrate:
         value = generate_random_uint_atmost(bits, rand_func=rand_func)
     return low + value
 
@@ -246,9 +246,9 @@ def random_shuffle(sequence, rand_func=generate_random_bytes):
     # Choose a random item (without replacement) until all the items have been
     # chosen.
     for i in range(len(sequence)):
-        p = generate_random_uint_between(0, len(copy), rand_func)
-        sequence[i] = copy[p]
-        del copy[p]
+        random_uint = generate_random_uint_between(0, len(copy), rand_func)
+        sequence[i] = copy[random_uint]
+        del copy[random_uint]
     return sequence
 
 
