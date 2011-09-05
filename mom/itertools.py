@@ -109,9 +109,9 @@ def permutations(iterable, r=None):
               CPython, :ref:`license details <psf-license>`.
     """
     pool = tuple(iterable)
-    n = len(pool)
-    r = n if r is None else r
-    for indices in product(range(n), repeat=r):
+    pool_length = len(pool)
+    r = pool_length if r is None else r
+    for indices in product(range(pool_length), repeat=r):
         if len(set(indices)) == r:
             yield tuple(pool[i] for i in indices)
 

@@ -30,12 +30,11 @@ Functions
 
 from __future__ import absolute_import
 
-try:
+try:  # pragma: no cover
     # Python 2.x
-    from itertools import imap
-except ImportError:   # pragma: no cover
-    # Python 3.x
-    imap = map
+    from itertools import imap as map
+except ImportError: # pragma: no cover
+    pass
 from functools import partial
 from fnmatch import fnmatch, fnmatchcase
 from mom.functional import some, identity
@@ -46,16 +45,16 @@ __all__ = ['match_path',
            'filter_paths']
 
 
-def _string_lower(s):
+def _string_lower(string):
     """
     Convenience function to lowercase a string.
 
-    :param s:
+    :param string:
         The string which will be lowercased.
     :returns:
         Lowercased copy of string s.
     """
-    return s.lower()
+    return string.lower()
 
 
 def match_path_against(pathname, patterns, case_sensitive=True):
@@ -78,7 +77,7 @@ def match_path_against(pathname, patterns, case_sensitive=True):
     else:
         match_func = partial(fnmatch, pathname.lower())
         transform = _string_lower
-    return some(match_func, imap(transform, set(patterns)))
+    return some(match_func, map(transform, set(patterns)))
 
 
 def _match_path(pathname,

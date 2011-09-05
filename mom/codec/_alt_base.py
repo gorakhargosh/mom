@@ -14,9 +14,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from array import array
+
+"""Alternative base conversion implementations, but slower."""
+
+from __future__ import absolute_import
+
+# pylint: disable-msg=R0801
+try: #pragma: no cover
+    import psyco
+    psyco.full()
+except ImportError: #pragma: no cover
+    psyco = None
+# pylint: enable-msg=R0801
 
 import re
+from array import array
 from mom._compat import ZERO_BYTE, UINT128_MAX, EMPTY_BYTE
 from mom.builtins import is_bytes, b
 from mom.codec import uint_to_bytes
@@ -127,8 +139,8 @@ def b62decode_naive(encoded,
 
     # Convert to big integer.
     number = 0
-    for i, x in enumerate(reversed(encoded)):
-        number += _lookup[x] * (62**i)
+    for i, char in enumerate(reversed(encoded)):
+        number += _lookup[char] * (62**i)
 
     # Obtain raw bytes.
     if number:
@@ -179,8 +191,8 @@ def b58decode_naive(encoded,
 
     # Convert to big integer.
     number = 0
-    for i, x in enumerate(reversed(encoded)):
-        number += _lookup[x] * (58**i)
+    for i, char in enumerate(reversed(encoded)):
+        number += _lookup[char] * (58**i)
 
     # Obtain raw bytes.
     if number:

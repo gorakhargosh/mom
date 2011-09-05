@@ -38,14 +38,13 @@ where ``g`` is the decoder and ``f`` is a encoder.
 
 from __future__ import absolute_import, division
 
-try:
-    # Utilize psyco if it is available.
-    # This should help speed up 32-bit versions of Python if you have
-    # psyco installed.
-    import psyco # pragma: no cover
-    psyco.full()  # pragma: no cover
-except ImportError:
-    pass
+# pylint: disable-msg=R0801
+try: #pragma: no cover
+    import psyco
+    psyco.full()
+except ImportError: #pragma: no cover
+    psyco = None
+# pylint: enable-msg=R0801
 
 import binascii
 from struct import pack

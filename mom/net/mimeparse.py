@@ -41,7 +41,7 @@ Contents:
  - best_match():        Choose the mime-type with the highest quality ('q')
                           from a list of candidates.
 """
-from mom._compat import EMPTY_BYTE
+from mom._compat import EMPTY_BYTE, EQUAL_BYTE, FORWARD_SLASH_BYTE
 
 from mom.builtins import b
 
@@ -52,6 +52,12 @@ __license__ = 'MIT License'
 __credits__ = ''
 
 
+SEMICOLON_BYTE = b(';')
+ASTERISK_BYTE = b('*')
+
+FULL_TYPE = b('*/*')
+
+
 def parse_mime_type(mime_type):
     """Parses a mime-type into its component parts.
 
@@ -60,18 +66,18 @@ def parse_mime_type(mime_type):
     For example, the media range b'application/xhtml;q=0.5' would get parsed
     into:
 
-       (b'application', b'xhtml', {b'q', b'0.5'})
+       (b'application', b'xhtml', {'q': b'0.5'})
        """
-    parts = mime_type.split(b(';'))
-    params = dict([tuple([s.strip() for s in param.split(b('='), 1)])\
+    parts = mime_type.split(SEMICOLON_BYTE)
+    params = dict([tuple([s.strip() for s in param.split(EQUAL_BYTE, 1)])\
             for param in parts[1:]
                   ])
     full_type = parts[0].strip()
     # Java URLConnection class sends an Accept header that includes a
     # single '*'. Turn it into a legal wildcard.
-    if full_type == b('*'):
-        full_type = b('*/*')
-    (type, subtype) = full_type.split(b('/'))
+    if full_type == ASTERISK_BYTE:
+        full_type = FULL_TYPE
+    (type, subtype) = full_type.split(FORWARD_SLASH_BYTE)
 
     return type.strip(), subtype.strip(), params
 
@@ -91,10 +97,10 @@ def parse_media_range(range):
     necessary.
     """
     (type, subtype, params) = parse_mime_type(range)
-    if not params.has_key(b('q')) or not params[b('q')] or \
-            not float(params[b('q')]) or float(params[b('q')]) > 1\
-            or float(params[b('q')]) < 0:
-        params[b('q')] = '1'
+    if not params.has_key('q') or not params['q'] or \
+            not float(params['q']) or float(params['q']) > 1\
+            or float(params['q']) < 0:
+        params['q'] = '1'
 
     return type, subtype, params
 
@@ -113,22 +119,22 @@ def fitness_and_quality_parsed(mime_type, parsed_ranges):
     (target_type, target_subtype, target_params) =\
             parse_media_range(mime_type)
     for (type, subtype, params) in parsed_ranges:
-        type_match = (type == target_type or\
-                      type == b('*') or\
-                      target_type == b('*'))
-        subtype_match = (subtype == target_subtype or\
-                         subtype == b('*') or\
-                         target_subtype == b('*'))
+        type_match = (type == target_type or
+                      type == ASTERISK_BYTE or
+                      target_type == ASTERISK_BYTE)
+        subtype_match = (subtype == target_subtype or
+                         subtype == ASTERISK_BYTE or
+                         target_subtype == ASTERISK_BYTE)
         if type_match and subtype_match:
             param_matches = reduce(lambda x, y: x + y, [1 for (key, value) in \
-                    target_params.iteritems() if key != b('q') and \
+                    target_params.iteritems() if key != 'q' and \
                     params.has_key(key) and value == params[key]], 0)
             fitness = (type == target_type) and 100 or 0
             fitness += (subtype == target_subtype) and 10 or 0
             fitness += param_matches
             if fitness > best_fitness:
                 best_fitness = fitness
-                best_fit_q = params[b('q')]
+                best_fit_q = params['q']
 
     return best_fitness, float(best_fit_q)
 

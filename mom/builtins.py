@@ -93,14 +93,13 @@ People screw these up too. Useful in functional programming.
 
 from __future__ import absolute_import
 
-try:
-    # Use Psyco (if available) because it cuts execution time into almost half
-    # on 32-bit architecture.
-    import psyco #pragma: no cover
-    psyco.full() #pragma: no cover
-except ImportError:
+# pylint: disable-msg=R0801
+try: #pragma: no cover
+    import psyco
+    psyco.full()
+except ImportError: #pragma: no cover
     psyco = None
-    pass
+# pylint: enable-msg=R0801
 
 from struct import pack
 from mom._compat import \

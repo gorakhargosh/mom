@@ -37,6 +37,7 @@ def deprecated(func):
     """
     @functools.wraps(func)
     def new_func(*args, **kwargs):
+        """Wrapper function."""
         warnings.warn_explicit(
             "Call to deprecated function %(funcname)s." % {
                 'funcname': func.__name__,

@@ -54,14 +54,17 @@ def name(item):
     """Return an item's name."""
     return item.__name__
 
+
 def is_classmethod(instancemethod):
     """Determine if an instancemethod is a classmethod."""
     return instancemethod.im_self is not None
 
-def is_class_private_name(name):
+
+def is_class_private_name(member_name):
     """Determine if a name is a class private name."""
     # Exclude system defined names such as __init__, __add__ etc
-    return name.startswith("__") and not name.endswith("__")
+    return member_name.startswith("__") and not member_name.endswith("__")
+
 
 def method_name(method):
     """Return a method's name.
@@ -74,6 +77,7 @@ def method_name(method):
         mname = "_%s%s" % (name(method.im_class), mname)
     return mname
 
+
 def format_arg_value(arg_val):
     """Return a string representing a (name, value) pair.
 
@@ -83,7 +87,8 @@ def format_arg_value(arg_val):
     arg, val = arg_val
     return "%s=%r" % (arg, val)
 
-def trace(fn, write=sys.stdout.write):
+
+def trace(func, write=sys.stdout.write):
     """Echo calls to a function.
 
     Returns a decorated version of the input function which "tracees" calls
@@ -91,25 +96,26 @@ def trace(fn, write=sys.stdout.write):
     called with.
     """
     # Unpack function's arg count, arg names, arg defaults
-    code = fn.func_code
+    code = func.func_code
     argcount = code.co_argcount
     argnames = code.co_varnames[:argcount]
-    fn_defaults = fn.func_defaults or list()
+    fn_defaults = func.func_defaults or list()
     argdefs = dict(zip(argnames[-len(fn_defaults):], fn_defaults))
 
-    @functools.wraps(fn)
+    @functools.wraps(func)
     def wrapped(*v, **k):
-        # Collect function arguments by chaining together positional,
-        # defaulted, extra positional and keyword arguments.
+        """Collect function arguments by chaining together positional,
+        defaulted, extra positional and keyword arguments."""
         positional = map(format_arg_value, zip(argnames, v))
         defaulted = [format_arg_value((a, argdefs[a]))
                      for a in argnames[len(v):] if a not in k]
         nameless = map(repr, v[argcount:])
         keyword = map(format_arg_value, k.items())
         args = positional + defaulted + nameless + keyword
-        write("%s(%s)\n" % (name(fn), ", ".join(args)))
-        return fn(*v, **k)
+        write("%s(%s)\n" % (name(func), ", ".join(args)))
+        return func(*v, **k)
     return wrapped
+
 
 def trace_instancemethod(klass, method, write=sys.stdout.write):
     """Change an instancemethod so that calls to it are traceed.
@@ -126,25 +132,28 @@ def trace_instancemethod(klass, method, write=sys.stdout.write):
     else:
         setattr(klass, mname, trace(method, write))
 
+
 def trace_class(klass, write=sys.stdout.write):
     """Echo calls to class methods and static functions
     """
     for _, method in inspect.getmembers(klass, inspect.ismethod):
         trace_instancemethod(klass, method, write)
-    for _, fn in inspect.getmembers(klass, inspect.isfunction):
-        setattr(klass, name(fn), staticmethod(trace(fn, write)))
+    for _, func in inspect.getmembers(klass, inspect.isfunction):
+        setattr(klass, name(func), staticmethod(trace(func, write)))
+
 
 def trace_module(mod, write=sys.stdout.write):
     """Echo calls to functions and methods in a module.
     """
-    for fname, fn in inspect.getmembers(mod, inspect.isfunction):
-        setattr(mod, fname, trace(fn, write))
+    for fname, func in inspect.getmembers(mod, inspect.isfunction):
+        setattr(mod, fname, trace(func, write))
     for _, klass in inspect.getmembers(mod, inspect.isclass):
         trace_class(klass, write)
 
+
 if __name__ == "__main__":
     import doctest
-    optionflags=doctest.ELLIPSIS
-    doctest.testfile('traceexample.txt', optionflags=optionflags)
-    doctest.testmod(optionflags=optionflags)
+    option_flags = doctest.ELLIPSIS
+    doctest.testfile('traceexample.txt', optionflags=option_flags)
+    doctest.testmod(optionflags=option_flags)
 

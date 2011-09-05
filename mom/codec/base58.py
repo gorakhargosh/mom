@@ -69,6 +69,14 @@ Functions
 
 from __future__ import absolute_import, division
 
+# pylint: disable-msg=R0801
+try: #pragma: no cover
+    import psyco
+    psyco.full()
+except ImportError: #pragma: no cover
+    psyco = None
+# pylint: enable-msg=R0801
+
 from mom._compat import HAVE_PYTHON3, range
 from mom.builtins import byte
 from mom.codec._base import base_encode, base_decode

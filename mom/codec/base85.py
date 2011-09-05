@@ -69,12 +69,13 @@ Functions
 
 from __future__ import absolute_import, division
 
-try:
-    # Use psyco if available.
-    import psyco #pragma: no cover
-    psyco.full() #pragma: no cover
-except ImportError:
+# pylint: disable-msg=R0801
+try: #pragma: no cover
+    import psyco
+    psyco.full()
+except ImportError: #pragma: no cover
     psyco = None
+# pylint: enable-msg=R0801
 
 from array import array
 from struct import unpack, pack

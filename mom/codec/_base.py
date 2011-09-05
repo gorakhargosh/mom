@@ -23,15 +23,17 @@
 .. autofunction:: base_decode
 .. autofunction:: base_to_uint
 .. autofunction:: uint_to_base256
-
 """
 
-try:
-    # Use psyco if available.
-    import psyco #pragma: no cover
-    psyco.full() #pragma: no cover
-except ImportError:
-    pass
+from __future__ import absolute_import
+
+# pylint: disable-msg=R0801
+try: #pragma: no cover
+    import psyco
+    psyco.full()
+except ImportError: #pragma: no cover
+    psyco = None
+# pylint: enable-msg=R0801
 
 from mom._compat import ZERO_BYTE, EMPTY_BYTE
 from mom.codec.integer import uint_to_bytes, bytes_to_uint
@@ -66,6 +68,7 @@ def base_encode(raw_bytes, base, base_bytes, base_zero, padding=True):
 
 
 def base_decode(encoded, base, base_ords, base_zero, powers):
+    """Decode from base to base 256."""
     if not is_bytes(encoded):
         raise TypeError("encoded data must be bytes: got %r" %
                         type(encoded).__name__)
@@ -100,15 +103,16 @@ def base_to_uint(encoded,
     number = 0
     length = len(encoded)
     powers_length = len(powers)
-    for i, x in enumerate(encoded[length:-powers_length-1:-1]):
-        number += ord_lookup_table[x] * powers[i]
+    for i, char in enumerate(encoded[length:-powers_length-1:-1]):
+        number += ord_lookup_table[char] * powers[i]
     for i in range(powers_length, length):
-        x = encoded[length - i - 1]
-        number += ord_lookup_table[x] * (base**i)
+        char = encoded[length - i - 1]
+        number += ord_lookup_table[char] * (base**i)
     return number
 
 
 def uint_to_base256(number, encoded, base_zero):
+    """Convert uint to base 256."""
     if number == 0:
         raw_bytes = EMPTY_BYTE
     else:

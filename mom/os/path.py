@@ -63,11 +63,12 @@ def get_dir_walker(recursive, topdown=True, followlinks=False):
         A walker function.
     """
     if recursive:
-        walk = partial(_walk, topdown=topdown, followlinks=followlinks)
+        walker = partial(_walk, topdown=topdown, followlinks=followlinks)
     else:
-        def walk(path, topdown=topdown, followlinks=followlinks):
+        def walker(path, topdown=topdown, followlinks=followlinks):
+            """Alternative walker."""
             yield next(_walk(path, topdown=topdown, followlinks=followlinks))
-    return walk
+    return walker
 
 
 def walk(dir_pathname, recursive=True, topdown=True, followlinks=False):

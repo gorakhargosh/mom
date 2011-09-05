@@ -15,20 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Alternative implementations of integer module routines that
-# were benchmarked to be slower.
+
+"""Alternative implementations of integer module routines that
+were bench-marked to be slower."""
+
 
 from __future__ import absolute_import
 
-try: # pragma: no cover
-    # Utilize psyco if it is available.
-    # This should help speed up 32-bit versions of Python if you have
-    # psyco installed.
+# pylint: disable-msg=R0801
+try: #pragma: no cover
     import psyco
     psyco.full()
-except ImportError: # pragma: no cover
+except ImportError: #pragma: no cover
     psyco = None
-    pass
+# pylint: enable-msg=R0801
 
 from array import array
 from struct import pack, pack_into, unpack
@@ -125,7 +125,7 @@ def uint_to_bytes_naive(number, block_size=0):
 
 
 # From pycrypto (for verification only).
-def uint_to_bytes_pycrypto(n, blocksize=0):
+def uint_to_bytes_pycrypto(uint, blocksize=0):
     """long_to_bytes(n:long, blocksize:int) : string
     Convert a long integer to a byte string.
 
@@ -134,25 +134,26 @@ def uint_to_bytes_pycrypto(n, blocksize=0):
     blocksize.
     """
     # after much testing, this algorithm was deemed to be the fastest
-    s = EMPTY_BYTE
-    n = int(n)
-    while n > 0:
-        s = pack('>I', n & 0xffffffff) + s
-        n >>= 32
+    raw_bytes = EMPTY_BYTE
+    uint = int(uint)
+    while uint > 0:
+        raw_bytes = pack('>I', uint & 0xffffffff) + raw_bytes
+        uint >>= 32
     # strip off leading zeros
-    for i in range(len(s)):
-        if s[i] != ZERO_BYTE[0]:
+    for i in range(len(raw_bytes)):
+        if raw_bytes[i] != ZERO_BYTE[0]:
             break
     else:
         # only happens when n == 0
-        s = ZERO_BYTE
+        raw_bytes = ZERO_BYTE
         i = 0
-    s = s[i:]
+    raw_bytes = raw_bytes[i:]
     # add back some pad bytes. this could be done more efficiently w.r.t. the
     # de-padding being done above, but sigh...
-    if blocksize > 0 and len(s) % blocksize:
-        s = (blocksize - len(s) % blocksize) * ZERO_BYTE + s
-    return s
+    if blocksize > 0 and len(raw_bytes) % blocksize:
+        raw_bytes = (blocksize - len(raw_bytes) % blocksize) * ZERO_BYTE + \
+                    raw_bytes
+    return raw_bytes
 
 
 def uint_to_bytes_array_based(number, chunk_size=0):
@@ -191,19 +192,19 @@ def uint_to_bytes_array_based(number, chunk_size=0):
     pack_format = ">" + pack_type
 
     temp_buffer = array("B", [0] * word_bytes)
-    a = array("B", raw_bytes)
+    byte_array = array("B", raw_bytes)
     while num > 0:
         pack_into(pack_format, temp_buffer, 0, num & max_uint)
-        a = temp_buffer + a
+        byte_array = temp_buffer + byte_array
         num >>= word_bits
 
     # Count the number of zero prefix bytes.
     zero_leading = 0
-    length = len(a)
+    length = len(byte_array)
     for zero_leading in range(length):
-        if a[zero_leading]:
+        if byte_array[zero_leading]:
             break
-    raw_bytes = a[zero_leading:].tostring()
+    raw_bytes = byte_array[zero_leading:].tostring()
 
     if chunk_size > 0:
         # Bounds checking. We're not doing this up-front because the
@@ -259,76 +260,19 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
     return int_value
 
 
-#def uint_to_bytes(number, chunk_size=0):
-#    """
-#    Convert an unsigned integer to bytes (base-256 representation)::
-#    Does not preserve leading zeros if you don't specify a chunk size.
-#
-#    :param number:
-#        Integer value
-#    :param chunk_size:
-#        If optional chunk size is given and greater than zero, pad the front of
-#        the byte string with binary zeros so that the length is a multiple of
-#        ``chunk_size``.
-#    :returns:
-#        Raw bytes (base-256 representation).
-#    :raises:
-#        ``OverflowError`` when block_size is given and the number takes up more
-#        bytes than fit into the block.
-#    """
-#    # Machine word-aligned implementation and unsurprisingly the fastest of
-#    # all these implementations.
-#    if number < 0:
-#        raise ValueError('Number must be unsigned integer: %d' % number)
-#
-#    raw_bytes = EMPTY_BYTE
-#    # Align packing to machine word size.
-#    num = number
-#    word_bits, word_bytes, max_uint, pack_type = get_word_alignment(num)
-#    pack_format = ">" + pack_type
-#    while num > 0:
-#        raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
-#        num >>= word_bits
-#    # Get the index of the first non-zero byte.
-#    first_non_zero = bytes_leading(raw_bytes)
-#
-#    if number == 0:
-#        raw_bytes = ZERO_BYTE
-#
-#    if chunk_size > 0:
-#        # Bounds checking. We're not doing this up-front because the
-#        # most common use case is not specifying a chunk size. In the worst
-#        # case, the number will already have been converted to bytes above.
-#        length = len(raw_bytes) - first_non_zero
-#        if length > chunk_size:
-#            raise OverflowError(
-#                "Need %d bytes for number, but chunk size is %d" %
-#                (length, chunk_size)
-#            )
-#        remainder = length % chunk_size
-#        if remainder:
-#            padding_size = (chunk_size - remainder)
-#            if first_non_zero > 0:
-#                raw_bytes = raw_bytes[first_non_zero-padding_size:]
-#            else:
-#                raw_bytes = (padding_size * ZERO_BYTE) + raw_bytes
-#    else:
-#        raw_bytes = raw_bytes[first_non_zero:]
-#    return raw_bytes
-#
-
-
 def uint_to_bytes_simple(num):
+    """Simple uint to bytes converter."""
     assert num >= 0
     if num == 0:
         return ZERO_BYTE
-    rv = []
+    byte_array = []
     while num:
-        rv.append(byte(num & 0xff))
+        byte_array.append(byte(num & 0xff))
         num >>= 8
-    return EMPTY_BYTE.join(reversed(rv))
+    return EMPTY_BYTE.join(reversed(byte_array))
 
 
-def bytes_to_uint_simple(bytes):
-    return reduce(lambda a, b: a << 8 | b, map(byte_ord, bytes), 0)
+def bytes_to_uint_simple(raw_bytes):
+    """Simple bytes to uint converter."""
+    return reduce(lambda a, b: a << 8 | b, map(byte_ord, raw_bytes), 0)
 
