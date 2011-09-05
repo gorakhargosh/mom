@@ -21,14 +21,19 @@
 """
 
 from __future__ import absolute_import
+from mom._compat import ZERO_BYTE
+from mom.builtins import b
 from mom.codec.integer import uint_to_bytes, bytes_to_uint
 
+SHA1_DIGESTINFO = \
+    b('\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14')
+SHA1_DIGESTINFO_LEN = len(SHA1_DIGESTINFO)
+ZERO_ONE_BYTES = b('\x00\x01')
+FF_BYTE = b('\xff')
 
 def pkcs1_v1_5_encode(key_size, data):
     """
     Encodes a key using PKCS1's emsa-pkcs1-v1_5 encoding.
-
-    Adapted from paramiko.
 
     :author:
         Rick Copeland <rcopeland@geek.net>
@@ -41,10 +46,9 @@ def pkcs1_v1_5_encode(key_size, data):
         A blob of data as large as the key's N, using PKCS1's
         "emsa-pkcs1-v1_5" encoding.
     """
-    SHA1_DIGESTINFO = '\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14'
     size = len(uint_to_bytes(key_size))
-    filler = '\xff' * (size - len(SHA1_DIGESTINFO) - len(data) - 3)
-    return '\x00\x01' + filler + '\x00' + SHA1_DIGESTINFO + data
+    filler = FF_BYTE * (size - SHA1_DIGESTINFO_LEN - len(data) - 3)
+    return ZERO_ONE_BYTES + filler + ZERO_BYTE + SHA1_DIGESTINFO + data
 
 
 class Key(object):
