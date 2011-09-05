@@ -283,13 +283,13 @@ Use them. They will help prevent unexpected bugs.
 
 from __future__ import absolute_import
 
-try:
-    # Use psyco if available.
-    import psyco #pragma: no cover
-    psyco.full() #pragma: no cover
-except ImportError:
+# pylint: disable-msg=R0801
+try: #pragma: no cover
+    import psyco
+    psyco.full()
+except ImportError: #pragma: no cover
     psyco = None
-    pass
+# pylint: enable-msg=R0801
 
 import binascii
 
