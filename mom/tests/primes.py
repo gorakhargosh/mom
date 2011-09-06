@@ -6,6 +6,7 @@
 """
 Prime number generation.
 """
+from __future__ import absolute_import
 
 from math import sqrt, ceil
 import numpy as np
