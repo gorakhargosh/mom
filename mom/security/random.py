@@ -117,10 +117,10 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
     if n_bits <= 0:
         raise ValueError("number of bits must be greater than 0.")
     # Doesn't perform any floating-point operations.
-    q, r = divmod(n_bits, 8)
-    random_bytes = rand_func(q)
-    if r:
-        offset = ord(rand_func(1)) >> (8 - r)
+    quotient, remainder = divmod(n_bits, 8)
+    random_bytes = rand_func(quotient)
+    if remainder:
+        offset = ord(rand_func(1)) >> (8 - remainder)
         random_bytes = byte(offset) + random_bytes
     return random_bytes
 

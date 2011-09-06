@@ -97,13 +97,13 @@ def inverse_mod(num_a, num_b):
         Inverse of a mod b, zero if none.
     """
     num_c, num_d = num_a, num_b
-    uc, ud = 1, 0
+    num_uc, num_ud = 1, 0
     while num_c:
         quotient = num_d // num_c
         num_c, num_d = num_d - (quotient * num_c), num_c
-        uc, ud = ud - (quotient * uc), uc
+        num_uc, num_ud = num_ud - (quotient * num_uc), num_uc
     if num_d == 1:
-        return ud % num_b
+        return num_ud % num_b
     return 0
 
 
@@ -197,10 +197,10 @@ def _pure_pow_mod(base, power, modulus):
 
     #TREV - Added support for negative exponents
     if negative_result:
-        prodInv = inverse_mod(prod, modulus)
+        prod_inv = inverse_mod(prod, modulus)
         #Check to make sure the inverse is correct
-        assert (prod * prodInv) % modulus == 1
-        return prodInv
+        assert (prod * prod_inv) % modulus == 1
+        return prod_inv
     return prod
 
 
@@ -216,32 +216,33 @@ def _pure_is_prime(num, iterations=5, _sieve=SIEVE):
         ``True`` if prime; ``False`` otherwise.
     """
 
-    #Trial division with sieve
-    for x in _sieve:
-        if x >= num:
+    # Trial division with sieve
+    for prime_number in _sieve:
+        if prime_number >= num:
             return True
-        if not num % x:
+        if not num % prime_number:
             return False
-    #Passed trial division, proceed to Rabin-Miller
-    #Rabin-Miller implemented per Ferguson & Schneier
-    #Compute s, t for Rabin-Miller
-    s, t = num-1, 0
-    while not s % 2:
-        s, t = s // 2, t+1
-    #Repeat Rabin-Miller x times
-    a = 2 #Use 2 as a base for first iteration speedup, per HAC
+    # Passed trial division, proceed to Rabin-Miller
+    # Rabin-Miller implemented per Ferguson & Schneier
+    # Compute s, t for Rabin-Miller
+    num_s, num_t = num - 1, 0
+    while not num_s % 2:
+        num_s, num_t = num_s // 2, num_t + 1
+    # Repeat Rabin-Miller x times
+    base = 2 # Use 2 as a base for first iteration speedup, per HAC
     for _ in range(iterations):
-        v = _pure_pow_mod(a, s, num)
-        if v == 1:
+        num_v = _pure_pow_mod(base, num_s, num)
+        if num_v == 1:
             continue
         i = 0
-        while v != num-1:
-            if i == t-1:
+        while num_v != num - 1:
+            if i == num_t - 1:
                 return False
             else:
-                v, i = _pure_pow_mod(v, 2, num), i+1
-        a = generate_random_uint_between(2, num)
+                num_v, i = _pure_pow_mod(num_v, 2, num), i + 1
+        base = generate_random_uint_between(2, num)
     return True
+
 
 try:
     from mom._gmpy_math import is_prime as _is_prime, pow_mod as _pow_mod
@@ -273,15 +274,15 @@ def generate_random_prime(bits):
     #high = 2 ** bits - 30
     low = (1 << (bits - 1)) * 3 // 2
     high = (1 << bits) - 30
-    p = generate_random_uint_between(low, high)
-    p += 29 - (p % 30)
+    random_uint = generate_random_uint_between(low, high)
+    random_uint += 29 - (random_uint % 30)
     while 1:
-        p += 30
-        if p >= high:
-            p = generate_random_uint_between(low, high)
-            p += 29 - (p % 30)
-        if is_prime(p):
-            return p
+        random_uint += 30
+        if random_uint >= high:
+            random_uint = generate_random_uint_between(low, high)
+            random_uint += 29 - (random_uint % 30)
+        if is_prime(random_uint):
+            return random_uint
 
 
 def generate_random_safe_prime(bits):
@@ -306,17 +307,17 @@ def generate_random_safe_prime(bits):
     #high = (2 ** (bits-1)) - 30
     low = (1 << (bits - 2)) * 3 // 2
     high = (1 << (bits - 1)) - 30
-    q = generate_random_uint_between(low, high)
-    q += 29 - (q % 30)
+    random_uint = generate_random_uint_between(low, high)
+    random_uint += 29 - (random_uint % 30)
     while 1:
-        q += 30
-        if q >= high:
-            q = generate_random_uint_between(low, high)
-            q += 29 - (q % 30)
+        random_uint += 30
+        if random_uint >= high:
+            random_uint = generate_random_uint_between(low, high)
+            random_uint += 29 - (random_uint % 30)
         #Ideas from Tom Wu's SRP code
         #Do trial division on p and q before Rabin-Miller
-        if is_prime(q, 0):
-            p = (2 * q) + 1
-            if is_prime(p):
-                if is_prime(q):
-                    return p
+        if is_prime(random_uint, 0):
+            possible_prime = (2 * random_uint) + 1
+            if is_prime(possible_prime):
+                if is_prime(random_uint):
+                    return possible_prime

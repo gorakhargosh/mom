@@ -148,9 +148,11 @@ class Key(object):
         return self.verify(digest, signature_bytes)
 
     def _sign(self, digest):
+        """Sign."""
         raise NotImplementedError("Override this method.")
 
     def _verify(self, digest, signature):
+        """Verify"""
         raise NotImplementedError("Override this method.")
 
 

@@ -184,9 +184,9 @@ def bytes_leading(raw_bytes, needle=ZERO_BYTE):
                         type(raw_bytes).__name__)
     leading = 0
     # Indexing keeps compatibility between Python 2.x and Python 3.x
-    _byte = needle[0]
-    for x in raw_bytes:
-        if x == _byte:
+    needle_byte = needle[0]
+    for raw_byte in raw_bytes:
+        if raw_byte == needle_byte:
             leading += 1
         else:
             break
@@ -211,9 +211,9 @@ def bytes_trailing(raw_bytes, needle=ZERO_BYTE):
                         type(raw_bytes).__name__)
     trailing = 0
     # Indexing keeps compatibility between Python 2.x and Python 3.x
-    _byte = needle[0]
-    for x in reversed(raw_bytes):
-        if x == _byte:
+    needle_byte = needle[0]
+    for raw_byte in reversed(raw_bytes):
+        if raw_byte == needle_byte:
             trailing += 1
         else:
             break

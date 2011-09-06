@@ -331,16 +331,16 @@ __all__ = [
 
 # Bytes base-encoding.
 
-_B85_DECODE_MAP = {
+B85_DECODE_MAP = {
     "ASCII85": b85decode,
     "RFC1924": rfc1924_b85decode,
 }
-_B85_ENCODE_MAP = {
+B85_ENCODE_MAP = {
     "ASCII85": b85encode,
     "RFC1924": rfc1924_b85encode,
 }
 
-def base85_encode(raw_bytes, charset="ASCII85", _encode_map=_B85_ENCODE_MAP):
+def base85_encode(raw_bytes, charset="ASCII85"):
     """
     Encodes raw bytes into ASCII85 representation.
 
@@ -354,12 +354,12 @@ def base85_encode(raw_bytes, charset="ASCII85", _encode_map=_B85_ENCODE_MAP):
         ASCII85 encoded string.
     """
     try:
-        return _encode_map[charset.upper()](raw_bytes)
+        return B85_ENCODE_MAP[charset.upper()](raw_bytes)
     except KeyError:
         raise ValueError("Invalid character set specified: %r" % charset)
 
 
-def base85_decode(encoded, charset="ASCII85", _decode_map=_B85_DECODE_MAP):
+def base85_decode(encoded, charset="ASCII85"):
     """
     Decodes ASCII85-encoded bytes into raw bytes.
 
@@ -371,7 +371,7 @@ def base85_decode(encoded, charset="ASCII85", _decode_map=_B85_DECODE_MAP):
         Raw bytes.
     """
     try:
-        return _decode_map[charset.upper()](encoded)
+        return B85_DECODE_MAP[charset.upper()](encoded)
     except KeyError:
         raise ValueError("Invalid character set specified: %r" % charset)
 

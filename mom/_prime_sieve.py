@@ -3,6 +3,8 @@
 # http://goo.gl/9qEXu
 # Public domain.
 
+"""Generates a prime sieve."""
+
 from __future__ import division
 
 from mom._compat import range

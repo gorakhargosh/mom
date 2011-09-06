@@ -817,8 +817,8 @@ def _contains_fallback(iterable, item):
         ``True`` if the iterable sequence contains the value; ``False``
         otherwise.
     """
-    for x in iter(iterable):
-        if x == item:
+    for element in iter(iterable):
+        if element == item:
             return True
     return False
 
