@@ -228,7 +228,6 @@ def _b85encode_chunks(raw_bytes,
     # ceil_div(length, 4).
     num_uint32, remainder = divmod(len(raw_bytes), 4)
     if remainder:
-        # TODO: Write a test for this.
         # If we have a remainder, upto 3 padding bytes are added,
         # which means in the encoded output sans-padding, the final 5-tuple
         # chunk will have at least 2 characters.
