@@ -118,9 +118,9 @@ ASCII85_BYTES = array('B', [(num + 33) for num in range(85)])
 
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_BYTES = array('B', (string.digits +
-                string.ascii_uppercase +
-                string.ascii_lowercase +
+RFC1924_BYTES = array('B', (string.DIGITS +
+                string.ASCII_UPPERCASE +
+                string.ASCII_LOWERCASE +
                 "!#$%&()*+-;<=>?@^_`{|}~").encode("ascii"))
 
 # I've left this approach in here to warn you to NOT use it.

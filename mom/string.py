@@ -12,12 +12,12 @@
 
 from __future__ import absolute_import
 
-ascii_uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-ascii_lowercase = "abcdefghijklmnopqrstuvwxyz"
-ascii_letters = ascii_lowercase + ascii_uppercase
-digits = "0123456789"
+ASCII_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ASCII_LOWERCASE = "abcdefghijklmnopqrstuvwxyz"
+ASCII_LETTERS = ASCII_LOWERCASE + ASCII_UPPERCASE
+DIGITS = "0123456789"
 
-punctuation = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-printable = '0123456789abcdefghijklmnopqrstuvwxyz\
+PUNCTUATION = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
+PRINTABLE = '0123456789abcdefghijklmnopqrstuvwxyz\
 ABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c'
-whitespace = '\t\n\x0b\x0c\r '
+WHITESPACE = '\t\n\x0b\x0c\r '

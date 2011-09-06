@@ -171,9 +171,9 @@ from mom.codec._base import base_encode, base_decode
 
 
 # Follows ASCII order.
-ASCII62_BYTES = (string.digits +
-                 string.ascii_uppercase +
-                 string.ascii_lowercase).encode("ascii")
+ASCII62_BYTES = (string.DIGITS +
+                 string.ASCII_UPPERCASE +
+                 string.ASCII_LOWERCASE).encode("ascii")
 # Therefore, b'0' represents b'\0'.
 ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_BYTES))
 
@@ -183,9 +183,9 @@ ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_BYTES))
 # is what you will need:
 #
 # Does not follow ASCII order.
-ALT62_BYTES = (string.digits +
-               string.ascii_lowercase +
-               string.ascii_uppercase).encode("ascii")
+ALT62_BYTES = (string.DIGITS +
+               string.ASCII_LOWERCASE +
+               string.ASCII_UPPERCASE).encode("ascii")
 # Therefore, b'0' represents b'\0'.
 ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_BYTES))
 

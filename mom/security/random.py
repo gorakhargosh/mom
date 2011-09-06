@@ -273,17 +273,17 @@ def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
     return [random_choice(pool, rand_func) for _ in range(length)]
 
 
-HEXADECIMAL_DIGITS = string.digits + "abcdef"
-DIGITS = string.digits
-LOWERCASE_ALPHA = string.ascii_lowercase
-UPPERCASE_ALPHA = string.ascii_uppercase
-LOWERCASE_ALPHANUMERIC = LOWERCASE_ALPHA + string.digits
-UPPERCASE_ALPHANUMERIC = UPPERCASE_ALPHA + string.digits
-ALPHA = string.ascii_letters
-ALPHANUMERIC = ALPHA + string.digits
-ASCII_PRINTABLE = ALPHA + string.digits + string.punctuation
-ALL_PRINTABLE = string.printable
-PUNCTUATION = string.punctuation
+HEXADECIMAL_DIGITS = string.DIGITS + "abcdef"
+DIGITS = string.DIGITS
+LOWERCASE_ALPHA = string.ASCII_LOWERCASE
+UPPERCASE_ALPHA = string.ASCII_UPPERCASE
+LOWERCASE_ALPHANUMERIC = LOWERCASE_ALPHA + string.DIGITS
+UPPERCASE_ALPHANUMERIC = UPPERCASE_ALPHA + string.DIGITS
+ALPHA = string.ASCII_LETTERS
+ALPHANUMERIC = ALPHA + string.DIGITS
+ASCII_PRINTABLE = ALPHA + string.DIGITS + string.PUNCTUATION
+ALL_PRINTABLE = string.PRINTABLE
+PUNCTUATION = string.PUNCTUATION
 
 def generate_random_string(length, pool=ALPHANUMERIC,
                            rand_func=generate_random_bytes):
