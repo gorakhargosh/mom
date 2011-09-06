@@ -140,6 +140,7 @@ def uint_to_bytes_pycrypto(uint, blocksize=0):
         raw_bytes = pack('>I', uint & 0xffffffff) + raw_bytes
         uint >>= 32
     # strip off leading zeros
+    i = 0
     for i in range(len(raw_bytes)):
         if raw_bytes[i] != ZERO_BYTE[0]:
             break
