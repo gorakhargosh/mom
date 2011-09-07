@@ -19,6 +19,7 @@ __MACOSX__
 *.bkp
 \#*\#
 .idea/
+.settings/
 
 # Build specific files.
 .installed.cfg
