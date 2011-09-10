@@ -11,7 +11,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
 
 DIR_PATH = os.path.abspath(os.path.dirname(__file__))
