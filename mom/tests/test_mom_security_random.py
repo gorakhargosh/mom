@@ -38,7 +38,7 @@ class Test_generate_random_bits(unittest2.TestCase):
             self.assertTrue(value >= 0 and value < (1 << n_bits))
 
     def test_uniqueness(self):
-        # The likelyhood of recurrence should be tiny if a large enough
+        # The likely-hood of recurrence should be tiny if a large enough
         # bit size is chosen.
         self.assertNotEqual(generate_random_bits(64), generate_random_bits(64))
 

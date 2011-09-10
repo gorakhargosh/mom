@@ -50,9 +50,9 @@ def _string_lower(string):
     Convenience function to lowercase a string.
 
     :param string:
-        The string which will be lowercased.
+        The string which will be lower-cased.
     :returns:
-        Lowercased copy of string s.
+        Lower-cased copy of string s.
     """
     return string.lower()
 
