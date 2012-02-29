@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 # Copyright (C) 2012 Google, Inc.
