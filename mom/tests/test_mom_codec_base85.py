@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -220,7 +221,7 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
                          random_256_mercurial)
         for a, e in zip(random_bytes_list, rfc_encoded_bytes_list):
             self.assertEqual(rfc1924_b85encode(a), e)
-        
+
     def test_decoding(self):
         self.assertEqual(rfc1924_b85decode(mercurial_encoded), mercurial_bytes)
         self.assertEqual(rfc1924_b85decode(random_256_mercurial),
@@ -243,7 +244,7 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
         self.assertRaises(TypeError, rfc1924_b85decode, [])
         self.assertRaises(TypeError, rfc1924_b85decode, 1)
         self.assertRaises(TypeError, rfc1924_b85decode, False)
-        
+
         self.assertRaises(TypeError, rfc1924_b85encode, unicode_string)
         self.assertRaises(TypeError, rfc1924_b85encode, None)
         self.assertRaises(TypeError, rfc1924_b85encode, object)

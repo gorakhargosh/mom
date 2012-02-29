@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# path.py: Path functions.
+# -*- coding: utf8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ def walk(dir_pathname, recursive=True, topdown=True, followlinks=False):
     for root, dir_names, file_names in walk_func(dir_pathname):
         yield (root, dir_names, file_names)
 
-    
+
 def listdir(dir_pathname,
             recursive=True,
             topdown=True,

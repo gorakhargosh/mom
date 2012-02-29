@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -101,7 +102,7 @@ class Test_unsigned_integer_to_bytes(unittest2.TestCase):
                          b('\xee\xee\xff\xff'))
         self.assertEqual(uint_to_bytes_simple(0xeeeeff),
                          b('\xee\xee\xff'))
-        
+
     def test_correctness_against_base_implementation(self):
         # Slow test.
         values = [
@@ -131,7 +132,7 @@ class Test_unsigned_integer_to_bytes(unittest2.TestCase):
         self.assertEqual(uint_to_bytes_naive(0), b('\x00'))
         self.assertEqual(uint_to_bytes_naive(0, 4), b('\x00') * 4)
         self.assertEqual(uint_to_bytes_naive(0, 7), b('\x00') * 7)
-        
+
         self.assertEqual(uint_to_bytes_simple(0), b('\x00'))
 
 

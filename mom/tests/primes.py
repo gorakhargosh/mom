@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-#import psyco; psyco.full()
+# Public domain.
+# #import psyco; psyco.full()
 # http://stackoverflow.com/questions/2068372/
 # fastest-way-to-list-all-primes-below-n-in-python/2073279
 

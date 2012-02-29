@@ -3,29 +3,19 @@
 #
 # Copyright (C) 2009 Noah Watkins <noah@noahdesu.com>
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
-# MIT License
-# -----------
-# Permission is hereby granted, free of charge, to any person
-# obtaining a copy of this software and associated documentation
-# files (the "Software"), to deal in the Software without
-# restriction, including without limitation the rights to use,
-# copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following
-# conditions:
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT  OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-# OTHER DEALINGS IN THE SOFTWARE.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 # Some tests depend on new div.
 from __future__ import absolute_import, division
@@ -261,7 +251,7 @@ class Test_IntegerDivision(unittest2.TestCase):
                          divmod(gmp.Integer(5000000000), gmp.Integer(19)))
         self.assertEqual(divmod(5000000000, 19),
                          divmod(gmp.Integer(5000000000), 19))
-        self.assertEqual(divmod(5000000000, 19), 
+        self.assertEqual(divmod(5000000000, 19),
                          divmod(5000000000, gmp.Integer(19)))
 
 class Test_IntegerMod(unittest2.TestCase):
@@ -550,7 +540,7 @@ class Test_IntegerErrorCases(unittest2.TestCase):
                           divmod, gmp.Integer(10), gmp.Integer())
         self.assertRaises(ZeroDivisionError, divmod, 10, gmp.Integer())
 
-        
+
 class Test_IntegerPyTypeCompatibility(unittest2.TestCase):
     def test_IntCompatibility(self):
         print("TODO: Test_s for interation with python ints")

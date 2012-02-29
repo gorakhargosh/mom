@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -138,7 +139,7 @@ def b58decode(encoded,
               base_ords=ASCII58_ORDS):
     """
     Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
-    
+
     :param encoded:
         Base-58 encoded bytes.
     :param base_bytes:

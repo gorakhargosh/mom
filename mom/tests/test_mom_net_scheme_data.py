@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -89,7 +90,7 @@ class Test_encoding(unittest2.TestCase):
         self.assertEqual(data_urlencode(b('A brief note'),
                                         b(''),
                                         b(''), None), rfc_note_data_url)
-        
+
 
     def test_raises_TypeError_when_not_raw_bytes(self):
         self.assertRaises(TypeError,

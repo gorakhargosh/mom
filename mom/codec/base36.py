@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +35,7 @@ except ImportError: #pragma: no cover
     psyco = None
 # pylint: enable-msg=R0801
 
-    
+
 from mom import string
 from mom._compat import HAVE_PYTHON3, EMPTY_BYTE
 from mom.builtins import byte

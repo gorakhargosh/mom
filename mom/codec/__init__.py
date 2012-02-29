@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -522,7 +523,7 @@ def base58_decode(encoded):
 def base36_encode(raw_bytes):
     """
     Encodes raw bytes into base-36 representation.
-    
+
     Encode your Unicode strings to a byte encoding before base-58-encoding
     them.
 

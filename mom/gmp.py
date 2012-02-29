@@ -3,6 +3,7 @@
 #
 # Copyright (C) 2009 Noah Watkins <noah@noahdesu.com>
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # MIT License
 # -----------
@@ -72,7 +73,7 @@ else:
         Converts number to bytes.
         """
         return str(num)
-    
+
     def to_str(raw_bytes_num):
         """
         Converts bytes to the appropriate string representation for the Python
@@ -80,7 +81,7 @@ else:
         """
         return raw_bytes_num
 
-    
+
 # Find the GMP library
 _libgmp_path = find_library("gmp")
 if not _libgmp_path:

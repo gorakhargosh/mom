@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -131,7 +132,7 @@ instead. For example::
     in hexadecimal representation) may have a length of either 27 or 28.
     Similarly, for the SHA-1 hash (40 characters in hex), the base62-encoded
     version may have a length of either 26 or 27.
-    
+
     Therefore, please ensure that your rewriting rules take variable length
     into account.
 

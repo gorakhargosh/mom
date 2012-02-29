@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -424,10 +425,10 @@ def integer_bit_count(number):
     Returns the number of set (1) bits in an unsigned integer.
 
     :param number:
-        An integer. If this is a negative integer, its absolute 
+        An integer. If this is a negative integer, its absolute
         value will be considered.
     :returns:
-        The number of set bits in an unsigned integer. 
+        The number of set bits in an unsigned integer.
     """
     # Licensed under the PSF License.
     # Taken from http://wiki.python.org/moin/BitManipulation

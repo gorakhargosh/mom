@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -85,7 +86,7 @@ class Test_base85_codec(unittest2.TestCase):
                           base85_encode, base85_raw, "BADCHARSET")
         self.assertRaises(ValueError,
                           base85_decode, base85_encoded, "BADCHARSET")
-        
+
 class Test_base58_codec(unittest2.TestCase):
     def test_codec_identity(self):
         self.assertEqual(base58_decode(base58_encode(random_bytes_1024)),
@@ -124,7 +125,7 @@ class Test_base64_codec(unittest2.TestCase):
         self.assertRaises(TypeError, base64_decode, unicode_string)
         self.assertRaises(TypeError, base64_decode, None)
 
-        
+
 class Test_base64_urlsafe_codec(unittest2.TestCase):
     def test_encodes_without_trailing_newline(self):
         self.assertFalse(base64_urlsafe_encode(zero_bytes).endswith(b("\n")))
@@ -159,7 +160,7 @@ class Test_base64_urlsafe_codec(unittest2.TestCase):
             base64_urlsafe_decode(url_safety_test_standard_encoded),
             url_safety_test_bytes
         )
-        
+
     def test_TypeError_non_bytes_argument(self):
         self.assertRaises(TypeError, base64_urlsafe_encode, unicode_string)
         self.assertRaises(TypeError, base64_urlsafe_encode, None)

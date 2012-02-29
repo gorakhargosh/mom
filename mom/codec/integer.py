@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,11 +80,11 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     """
     Convert an unsigned integer to bytes (base-256 representation).
 
-    Leading zeros are not preserved for positive integers unless a 
-    chunk size or a fill size is specified. A single zero byte is 
+    Leading zeros are not preserved for positive integers unless a
+    chunk size or a fill size is specified. A single zero byte is
     returned if the number is 0 and no padding is specified.
 
-    When a chunk size or a fill size is specified, the resulting bytes 
+    When a chunk size or a fill size is specified, the resulting bytes
     are prefix-padded with zero bytes to satisfy the size. The total
     size of the number in bytes is either the fill size or an integral
     multiple of the chunk size.
@@ -101,8 +102,8 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
         this error and allow overflow, you may set the ``overfloww``
         argument to this function to ``True``.
     :param chunk_size:
-        If optional chunk size is given and greater than zero, the 
-        resulting sequence of bytes is prefix-padded with zero bytes so 
+        If optional chunk size is given and greater than zero, the
+        resulting sequence of bytes is prefix-padded with zero bytes so
         that the total number of bytes is a multiple of ``chunk_size``.
     :param overflow:
         ``False`` (default). If this is ``True``, no ``OverflowError``
@@ -112,7 +113,7 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
     :returns:
         Raw bytes (base-256 representation).
     :raises:
-        ``OverflowError`` when a fill size is given and the number takes up 
+        ``OverflowError`` when a fill size is given and the number takes up
         more bytes than fit into the block. This requires the ``overflow``
         argument to this function to be set to ``False`` otherwise, no
         error will be raised.

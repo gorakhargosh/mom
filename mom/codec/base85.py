@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright (C) 2012 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -141,7 +142,7 @@ else:
     ASCII85_ORDS = dict((byte(x), x - 33) for x in ASCII85_BYTES)
     RFC1924_ORDS = dict((byte(x), i) for i, x in enumerate(RFC1924_BYTES))
 
-    
+
 # Pre-computed powers (array index) of 85 used to unroll encoding loops
 # Therefore, 85**i is equivalent to POW_85[i] for index 0 through 19
 # (inclusive).
@@ -320,7 +321,7 @@ def _b85decode_chunks(encoded, base85_bytes, base85_ords):
             # (encoded as "s8W-!") will cause a decoding error. Bad byte?
             if uint32_value > UINT32_MAX: # 2**32 - 1
                 raise OverflowError("Cannot decode chunk `%r`" % chunk)
-            
+
             uint32s[j] = uint32_value
             j += 1
     except KeyError:
@@ -388,7 +389,7 @@ def b85encode(raw_bytes,
     if not is_bytes(raw_bytes):
         raise TypeError("data must be raw bytes: got %r" %
                         type(raw_bytes).__name__)
-    
+
     # Encode into ASCII85 characters.
     encoded = _b85encode_chunks(raw_bytes, _base85_bytes, _padding)
     encoded = encoded.replace(EXCLAMATION_CHUNK, _compact_char) \
