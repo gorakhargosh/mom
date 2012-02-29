@@ -30,48 +30,48 @@ from __future__ import absolute_import
 from mom.security.codec import private_key_pem_decode, public_key_pem_decode
 
 try:
-    from mom.security.rsa.pycrypto import PrivateKey, PublicKey
+  from mom.security.rsa.pycrypto import PrivateKey, PublicKey
 except ImportError:
-    PrivateKey = None
-    PublicKey = None
-    raise NotImplementedError("RSA implementation not found.")
+  PrivateKey = None
+  PublicKey = None
+  raise NotImplementedError("RSA implementation not found.")
 
 __all__ = [
-    "parse_private_key",
-    "parse_public_key",
-]
+  "parse_private_key",
+  "parse_public_key",
+  ]
 
 def parse_private_key(encoded_key, encoding="PEM"):
-    """
-    Parses a private key in the given format.
+  """
+  Parses a private key in the given format.
 
-    :param encoded_key:
-        The encoded key.
-    :param encoding:
-        The encoding used to encode the key. Default "PEM".
-    """
-    encoding = encoding.upper()
-    if encoding == "PEM":
-        key_info = private_key_pem_decode(encoded_key)
-    else:
-        raise NotImplementedError("Key encoding not supported.")
-    key = PrivateKey(key_info, encoded_key, encoding)
-    return key
+  :param encoded_key:
+      The encoded key.
+  :param encoding:
+      The encoding used to encode the key. Default "PEM".
+  """
+  encoding = encoding.upper()
+  if encoding == "PEM":
+    key_info = private_key_pem_decode(encoded_key)
+  else:
+    raise NotImplementedError("Key encoding not supported.")
+  key = PrivateKey(key_info, encoded_key, encoding)
+  return key
 
 
 def parse_public_key(encoded_key, encoding="PEM"):
-    """
-    Parses a public key in the given format.
+  """
+  Parses a public key in the given format.
 
-    :param encoded_key:
-        The encoded key.
-    :param encoding:
-        The encoding used to encode the key. Default "PEM".
-    """
-    encoding = encoding.upper()
-    if encoding == "PEM":
-        key_info = public_key_pem_decode(encoded_key)
-    else:
-        raise NotImplementedError("Key encoding not supported.")
-    key = PublicKey(key_info, encoded_key, encoding)
-    return key
+  :param encoded_key:
+      The encoded key.
+  :param encoding:
+      The encoding used to encode the key. Default "PEM".
+  """
+  encoding = encoding.upper()
+  if encoding == "PEM":
+    key_info = public_key_pem_decode(encoded_key)
+  else:
+    raise NotImplementedError("Key encoding not supported.")
+  key = PublicKey(key_info, encoded_key, encoding)
+  return key

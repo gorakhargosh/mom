@@ -43,20 +43,18 @@ from functools import partial
 from mom.codec import base64_decode, base64_encode
 
 __all__ = [
-    'der_to_pem',
-    'der_to_pem_certificate',
-    'der_to_pem_private_key',
-    'der_to_pem_public_key',
-    'der_to_pem_private_rsa_key',
-    'pem_to_der',
-    'pem_to_der_certificate',
-    'pem_to_der_private_key',
-    'pem_to_der_public_key',
-    'pem_to_der_private_rsa_key',
-    'cert_time_to_seconds',
-]
-
-
+  'der_to_pem',
+  'der_to_pem_certificate',
+  'der_to_pem_private_key',
+  'der_to_pem_public_key',
+  'der_to_pem_private_rsa_key',
+  'pem_to_der',
+  'pem_to_der_certificate',
+  'pem_to_der_private_key',
+  'pem_to_der_public_key',
+  'pem_to_der_private_rsa_key',
+  'cert_time_to_seconds',
+  ]
 
 CERT_PEM_HEADER = '-----BEGIN CERTIFICATE-----'
 CERT_PEM_FOOTER = '-----END CERTIFICATE-----'
@@ -72,68 +70,68 @@ RSA_PRIVATE_KEY_PEM_FOOTER = '-----END RSA PRIVATE KEY-----'
 
 
 def cert_time_to_seconds(cert_time):
-    """
-    Takes a date-time string in standard ASN1_print form
-    ("MON DAY 24HOUR:MINUTE:SEC YEAR TIMEZONE") and return
-    a Python time value in seconds past the epoch.
+  """
+  Takes a date-time string in standard ASN1_print form
+  ("MON DAY 24HOUR:MINUTE:SEC YEAR TIMEZONE") and return
+  a Python time value in seconds past the epoch.
 
-    :param cert_time:
-        Time value in the certificate.
-    :returns:
-        Python time value.
-    """
-    import time
+  :param cert_time:
+      Time value in the certificate.
+  :returns:
+      Python time value.
+  """
+  import time
 
-    return time.mktime(time.strptime(cert_time, "%b %d %H:%M:%S %Y GMT"))
+  return time.mktime(time.strptime(cert_time, "%b %d %H:%M:%S %Y GMT"))
 
 
 def pem_to_der(pem_cert_string, pem_header, pem_footer):
-    """
-    Extracts the DER as a byte sequence out of an ASCII PEM formatted
-    certificate or key.
+  """
+  Extracts the DER as a byte sequence out of an ASCII PEM formatted
+  certificate or key.
 
-    Taken from the Python SSL module.
+  Taken from the Python SSL module.
 
-    :param pem_cert_string:
-        The PEM certificate or key string.
-    :param pem_header:
-        The PEM header to find.
-    :param pem_footer:
-        The PEM footer to find.
-    """
-    # Be a little lenient.
-    pem_cert_string = pem_cert_string.strip()
-    if not pem_cert_string.startswith(pem_header):
-        raise ValueError("Invalid PEM encoding; must start with %s"
-                         % pem_header)
-    if not pem_cert_string.endswith(pem_footer):
-        raise ValueError("Invalid PEM encoding; must end with %s"
-                         % pem_footer)
-    encoded = pem_cert_string[len(pem_header):-len(pem_footer)]
-    return base64_decode(encoded)
+  :param pem_cert_string:
+      The PEM certificate or key string.
+  :param pem_header:
+      The PEM header to find.
+  :param pem_footer:
+      The PEM footer to find.
+  """
+  # Be a little lenient.
+  pem_cert_string = pem_cert_string.strip()
+  if not pem_cert_string.startswith(pem_header):
+    raise ValueError("Invalid PEM encoding; must start with %s"
+    % pem_header)
+  if not pem_cert_string.endswith(pem_footer):
+    raise ValueError("Invalid PEM encoding; must end with %s"
+    % pem_footer)
+  encoded = pem_cert_string[len(pem_header):-len(pem_footer)]
+  return base64_decode(encoded)
 
 
 def der_to_pem(der_cert_bytes, pem_header, pem_footer):
-    """
-    Takes a certificate in binary DER format and returns the
-    PEM version of it as a string.
+  """
+  Takes a certificate in binary DER format and returns the
+  PEM version of it as a string.
 
-    Taken from the Python SSL module.
+  Taken from the Python SSL module.
 
-    :param der_cert_bytes:
-        A byte string of the DER.
-    :param pem_header:
-        The PEM header to use.
-    :param pem_footer:
-        The PEM footer to use.
-    """
-    # Does what base64.b64encode without the `altchars` argument does.
-    import textwrap
+  :param der_cert_bytes:
+      A byte string of the DER.
+  :param pem_header:
+      The PEM header to use.
+  :param pem_footer:
+      The PEM footer to use.
+  """
+  # Does what base64.b64encode without the `altchars` argument does.
+  import textwrap
 
-    encoded = base64_encode(der_cert_bytes)
-    return (pem_header + '\n' +
-            textwrap.fill(encoded, 64) + '\n' +
-            pem_footer + '\n')
+  encoded = base64_encode(der_cert_bytes)
+  return (pem_header + '\n' +
+          textwrap.fill(encoded, 64) + '\n' +
+          pem_footer + '\n')
 
 
 # Helper functions. Use these instead of using der_to_per and per_to_der.

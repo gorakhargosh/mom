@@ -26,121 +26,121 @@ from mom.builtins import byte_ord
 
 
 def integer_byte_length_shift_counting(num):
-    """
-    Number of bytes needed to represent a integer.
+  """
+  Number of bytes needed to represent a integer.
 
-    :param num:
-        Integer value. If num is 0, returns 0.
-    :returns:
-        The number of bytes in the integer.
-    """
-    # Do not change this to `not num` otherwise a TypeError will not
-    # be raised when `None` is passed in as a value.
-    if num == 0:
-        return 0
-    bits = integer_bit_length_shift_counting(num)
-    quanta, remainder = divmod(bits, 8)
-    if remainder:
-        quanta += 1
-    return quanta
-    # The following does floating point division.
-    #return int(math.ceil(bits / 8.0))
+  :param num:
+      Integer value. If num is 0, returns 0.
+  :returns:
+      The number of bytes in the integer.
+  """
+  # Do not change this to `not num` otherwise a TypeError will not
+  # be raised when `None` is passed in as a value.
+  if num == 0:
+    return 0
+  bits = integer_bit_length_shift_counting(num)
+  quanta, remainder = divmod(bits, 8)
+  if remainder:
+    quanta += 1
+  return quanta
+  # The following does floating point division.
+  #return int(math.ceil(bits / 8.0))
 
 
 def integer_bit_length_shift_counting(num):
-    """
-    Number of bits needed to represent a integer excluding any prefix
-    0 bits.
+  """
+  Number of bits needed to represent a integer excluding any prefix
+  0 bits.
 
-    :param num:
-        Integer value. If num is 0, returns 0. Only the absolute value of the
-        number is considered. Therefore, signed integers will be abs(num)
-        before the number's bit length is determined.
-    :returns:
-        Returns the number of bits in the integer.
-    """
-    bits = 0
-    if num < 0:
-        num = -num
+  :param num:
+      Integer value. If num is 0, returns 0. Only the absolute value of the
+      number is considered. Therefore, signed integers will be abs(num)
+      before the number's bit length is determined.
+  :returns:
+      Returns the number of bits in the integer.
+  """
+  bits = 0
+  if num < 0:
+    num = -num
     # Do not change this to `not num` otherwise a TypeError will not
-    # be raised when `None` is passed in as a value.
-    if num == 0:
-        return 0
-    while num >> bits:
-        bits += 1
-    return bits
+  # be raised when `None` is passed in as a value.
+  if num == 0:
+    return 0
+  while num >> bits:
+    bits += 1
+  return bits
 
 
 def _integer_raw_bytes_without_leading(num,
-                      _zero_byte=ZERO_BYTE,
-                      _get_machine_alignment=get_word_alignment):
-    # Do not change this to `not num` otherwise a TypeError will not
-    # be raised when `None` is passed in as a value.
-    if num == 0:
-        return EMPTY_BYTE
-    if num < 0:
-        num = -num
-    raw_bytes = EMPTY_BYTE
-    word_bits, _, max_uint, pack_type = _get_machine_alignment(num)
-    pack_format = ">" + pack_type
-    while num > 0:
-        raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
-        num >>= word_bits
+                                       _zero_byte=ZERO_BYTE,
+                                       _get_machine_alignment=get_word_alignment):
+  # Do not change this to `not num` otherwise a TypeError will not
+  # be raised when `None` is passed in as a value.
+  if num == 0:
+    return EMPTY_BYTE
+  if num < 0:
+    num = -num
+  raw_bytes = EMPTY_BYTE
+  word_bits, _, max_uint, pack_type = _get_machine_alignment(num)
+  pack_format = ">" + pack_type
+  while num > 0:
+    raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
+    num >>= word_bits
 
-    # Count the number of zero prefix bytes.
-    zero_leading = 0
-    for zero_leading, raw_byte in enumerate(raw_bytes):
-        if raw_byte != _zero_byte[0]:
-            break
+  # Count the number of zero prefix bytes.
+  zero_leading = 0
+  for zero_leading, raw_byte in enumerate(raw_bytes):
+    if raw_byte != _zero_byte[0]:
+      break
 
-    # Bytes remaining without zero padding is the number of bytes required
-    # to represent this integer.
-    return raw_bytes[zero_leading:]
+  # Bytes remaining without zero padding is the number of bytes required
+  # to represent this integer.
+  return raw_bytes[zero_leading:]
 
 
 def integer_byte_length_word_aligned(num):
-    """
-    Number of bytes needed to represent a integer.
+  """
+  Number of bytes needed to represent a integer.
 
-    :param num:
-        Integer value. If num is 0, returns 0. If num is negative,
-        its absolute value will be considered.
-    :returns:
-        The number of bytes in the integer.
-    """
-    return len(_integer_raw_bytes_without_leading(num))
+  :param num:
+      Integer value. If num is 0, returns 0. If num is negative,
+      its absolute value will be considered.
+  :returns:
+      The number of bytes in the integer.
+  """
+  return len(_integer_raw_bytes_without_leading(num))
 
 
 def integer_bit_length_word_aligned(num):
-    """
-    Number of bits needed to represent a integer excluding any prefix
-    0 bits.
+  """
+  Number of bits needed to represent a integer excluding any prefix
+  0 bits.
 
-    :param num:
-        Integer value. If num is 0, returns 0. Only the absolute value of the
-        number is considered. Therefore, signed integers will be abs(num)
-        before the number's bit length is determined.
-    :returns:
-        Returns the number of bits in the integer.
-    """
-    # Do not change this to `not num` otherwise a TypeError will not
-    # be raised when `None` is passed in as a value.
-    if num == 0:
-        return 0
-    if num < 0:
-        num = -num
-    if num > 0x80:
-        raw_bytes = _integer_raw_bytes_without_leading(num)
-        first_byte = byte_ord(raw_bytes[0])
-        bits = 0
-        while first_byte >> bits:
-            bits += 1
-        return ((len(raw_bytes)-1) * 8) + bits
-    else:
-        bits = 0
-        while num >> bits:
-            bits += 1
-        return bits
+  :param num:
+      Integer value. If num is 0, returns 0. Only the absolute value of the
+      number is considered. Therefore, signed integers will be abs(num)
+      before the number's bit length is determined.
+  :returns:
+      Returns the number of bits in the integer.
+  """
+  # Do not change this to `not num` otherwise a TypeError will not
+  # be raised when `None` is passed in as a value.
+  if num == 0:
+    return 0
+  if num < 0:
+    num = -num
+  if num > 0x80:
+    raw_bytes = _integer_raw_bytes_without_leading(num)
+    first_byte = byte_ord(raw_bytes[0])
+    bits = 0
+    while first_byte >> bits:
+      bits += 1
+    return ((len(raw_bytes) - 1) * 8) + bits
+  else:
+    bits = 0
+    while num >> bits:
+      bits += 1
+    return bits
 
 
 #def _bin_lookup(num, prefix="0b"):

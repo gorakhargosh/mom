@@ -286,412 +286,414 @@ from __future__ import absolute_import
 
 # pylint: disable-msg=R0801
 try: #pragma: no cover
-    import psyco
-    psyco.full()
+  import psyco
+
+  psyco.full()
 except ImportError: #pragma: no cover
-    psyco = None
+  psyco = None
 # pylint: enable-msg=R0801
 
 import binascii
 
-from mom._compat import HAVE_PYTHON3, ZERO_BYTE, EMPTY_BYTE, \
-    UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE, \
-    EQUAL_BYTE, DIGIT_ZERO_BYTE
+from mom._compat import HAVE_PYTHON3, ZERO_BYTE, EMPTY_BYTE,\
+  UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE,\
+  EQUAL_BYTE, DIGIT_ZERO_BYTE
 from mom.builtins import is_bytes, b, bytes_leading
 from mom.codec.base36 import b36encode, b36decode
 from mom.functional import chunks
 from mom.codec.integer import bytes_to_uint, uint_to_bytes
 from mom.codec.base62 import b62encode, b62decode
 from mom.codec.base58 import b58decode, b58encode
-from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode, \
-    rfc1924_b85decode
+from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode,\
+  rfc1924_b85decode
 
 
 __all__ = [
-    "base85_encode",
-    "base85_decode",
-    "base64_encode",
-    "base64_decode",
-    "base64_urlsafe_encode",
-    "base64_urlsafe_decode",
-    "base62_encode",
-    "base62_decode",
-    "base58_encode",
-    "base58_decode",
-    "base36_encode",
-    "base36_decode",
-    "hex_encode",
-    "hex_decode",
-    "decimal_encode",
-    "decimal_decode",
-    "bin_encode",
-    "bin_decode",
-]
+  "base85_encode",
+  "base85_decode",
+  "base64_encode",
+  "base64_decode",
+  "base64_urlsafe_encode",
+  "base64_urlsafe_decode",
+  "base62_encode",
+  "base62_decode",
+  "base58_encode",
+  "base58_decode",
+  "base36_encode",
+  "base36_decode",
+  "hex_encode",
+  "hex_decode",
+  "decimal_encode",
+  "decimal_decode",
+  "bin_encode",
+  "bin_decode",
+  ]
 
 
 
 # Bytes base-encoding.
 
 B85_DECODE_MAP = {
-    "ASCII85": b85decode,
-    "RFC1924": rfc1924_b85decode,
-}
+  "ASCII85": b85decode,
+  "RFC1924": rfc1924_b85decode,
+  }
 B85_ENCODE_MAP = {
-    "ASCII85": b85encode,
-    "RFC1924": rfc1924_b85encode,
-}
+  "ASCII85": b85encode,
+  "RFC1924": rfc1924_b85encode,
+  }
 
 def base85_encode(raw_bytes, charset="ASCII85"):
-    """
-    Encodes raw bytes into ASCII85 representation.
+  """
+  Encodes raw bytes into ASCII85 representation.
 
-    Encode your Unicode strings to a byte encoding before base85-encoding them.
+  Encode your Unicode strings to a byte encoding before base85-encoding them.
 
-    :param raw_bytes:
-        Bytes to encode.
-    :param charset:
-        "ASCII85" (default) or "RFC1924".
-    :returns:
-        ASCII85 encoded string.
-    """
-    try:
-        return B85_ENCODE_MAP[charset.upper()](raw_bytes)
-    except KeyError:
-        raise ValueError("Invalid character set specified: %r" % charset)
+  :param raw_bytes:
+      Bytes to encode.
+  :param charset:
+      "ASCII85" (default) or "RFC1924".
+  :returns:
+      ASCII85 encoded string.
+  """
+  try:
+    return B85_ENCODE_MAP[charset.upper()](raw_bytes)
+  except KeyError:
+    raise ValueError("Invalid character set specified: %r" % charset)
 
 
 def base85_decode(encoded, charset="ASCII85"):
-    """
-    Decodes ASCII85-encoded bytes into raw bytes.
+  """
+  Decodes ASCII85-encoded bytes into raw bytes.
 
-    :param encoded:
-        ASCII85 encoded representation.
-    :param charset:
-        "ASCII85" (default) or "RFC1924".
-    :returns:
-        Raw bytes.
-    """
-    try:
-        return B85_DECODE_MAP[charset.upper()](encoded)
-    except KeyError:
-        raise ValueError("Invalid character set specified: %r" % charset)
+  :param encoded:
+      ASCII85 encoded representation.
+  :param charset:
+      "ASCII85" (default) or "RFC1924".
+  :returns:
+      Raw bytes.
+  """
+  try:
+    return B85_DECODE_MAP[charset.upper()](encoded)
+  except KeyError:
+    raise ValueError("Invalid character set specified: %r" % charset)
 
 
 def base64_urlsafe_encode(raw_bytes):
-    """
-    Encodes raw bytes into URL-safe base64 bytes.
+  """
+  Encodes raw bytes into URL-safe base64 bytes.
 
-    Encode your Unicode strings to a byte encoding before base64-encoding them.
+  Encode your Unicode strings to a byte encoding before base64-encoding them.
 
-    :param raw_bytes:
-        Bytes to encode.
-    :returns:
-        Base64 encoded string without newline characters.
-    """
-    if not is_bytes(raw_bytes):
-        raise TypeError("argument must be bytes: got %r" %
-                        type(raw_bytes).__name__)
+  :param raw_bytes:
+      Bytes to encode.
+  :returns:
+      Base64 encoded string without newline characters.
+  """
+  if not is_bytes(raw_bytes):
+    raise TypeError("argument must be bytes: got %r" %
+                    type(raw_bytes).__name__)
     # This is 3-4x faster than urlsafe_b64decode() -Guido.
-    # We're not using the base64.py wrapper around binascii because
-    # this module itself is a wrapper. binascii is implemented in C, so
-    # we avoid module overhead however small.
-    encoded = binascii.b2a_base64(raw_bytes)[:-1]
-    return encoded.rstrip(EQUAL_BYTE).\
-        replace(PLUS_BYTE, HYPHEN_BYTE).\
-        replace(FORWARD_SLASH_BYTE, UNDERSCORE_BYTE)
+  # We're not using the base64.py wrapper around binascii because
+  # this module itself is a wrapper. binascii is implemented in C, so
+  # we avoid module overhead however small.
+  encoded = binascii.b2a_base64(raw_bytes)[:-1]
+  return encoded.rstrip(EQUAL_BYTE).\
+  replace(PLUS_BYTE, HYPHEN_BYTE).\
+  replace(FORWARD_SLASH_BYTE, UNDERSCORE_BYTE)
 
 
 def base64_urlsafe_decode(encoded):
-    """
-    Decodes URL-safe base64-encoded bytes into raw bytes.
+  """
+  Decodes URL-safe base64-encoded bytes into raw bytes.
 
-    :param encoded:
-        Base-64 encoded representation.
-    :returns:
-        Raw bytes.
-    """
-    if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" %
-                        type(encoded).__name__)
-    remainder = len(encoded) % 4
-    if remainder:
-        encoded += EQUAL_BYTE * (4 - remainder)
+  :param encoded:
+      Base-64 encoded representation.
+  :returns:
+      Raw bytes.
+  """
+  if not is_bytes(encoded):
+    raise TypeError("argument must be bytes: got %r" %
+                    type(encoded).__name__)
+  remainder = len(encoded) % 4
+  if remainder:
+    encoded += EQUAL_BYTE * (4 - remainder)
     # This is 3-4x faster than urlsafe_b64decode() -Guido.
-    # We're not using the base64.py wrapper around binascii because
-    # this module itself is a wrapper. binascii is implemented in C, so
-    # we avoid module overhead however small.
-    encoded = encoded.replace(HYPHEN_BYTE, PLUS_BYTE).\
-        replace(UNDERSCORE_BYTE, FORWARD_SLASH_BYTE)
-    return binascii.a2b_base64(encoded)
+  # We're not using the base64.py wrapper around binascii because
+  # this module itself is a wrapper. binascii is implemented in C, so
+  # we avoid module overhead however small.
+  encoded = encoded.replace(HYPHEN_BYTE, PLUS_BYTE).\
+  replace(UNDERSCORE_BYTE, FORWARD_SLASH_BYTE)
+  return binascii.a2b_base64(encoded)
 
 
 def base64_encode(raw_bytes):
-    """
-    Encodes raw bytes into base64 representation without appending a trailing
-    newline character. Not URL-safe.
+  """
+  Encodes raw bytes into base64 representation without appending a trailing
+  newline character. Not URL-safe.
 
-    Encode your Unicode strings to a byte encoding before base64-encoding them.
+  Encode your Unicode strings to a byte encoding before base64-encoding them.
 
-    :param raw_bytes:
-        Bytes to encode.
-    :returns:
-        Base64 encoded bytes without newline characters.
-    """
-    if not is_bytes(raw_bytes):
-        raise TypeError("argument must be bytes: got %r" %
-                        type(raw_bytes).__name__)
-    return binascii.b2a_base64(raw_bytes)[:-1]
+  :param raw_bytes:
+      Bytes to encode.
+  :returns:
+      Base64 encoded bytes without newline characters.
+  """
+  if not is_bytes(raw_bytes):
+    raise TypeError("argument must be bytes: got %r" %
+                    type(raw_bytes).__name__)
+  return binascii.b2a_base64(raw_bytes)[:-1]
 
 
 def base64_decode(encoded):
-    """
-    Decodes base64-encoded bytes into raw bytes. Not URL-safe.
+  """
+  Decodes base64-encoded bytes into raw bytes. Not URL-safe.
 
-    :param encoded:
-        Base-64 encoded representation.
-    :returns:
-        Raw bytes.
-    """
-    if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" %
-                        type(encoded).__name__)
-    return binascii.a2b_base64(encoded)
+  :param encoded:
+      Base-64 encoded representation.
+  :returns:
+      Raw bytes.
+  """
+  if not is_bytes(encoded):
+    raise TypeError("argument must be bytes: got %r" %
+                    type(encoded).__name__)
+  return binascii.a2b_base64(encoded)
 
 
 def base62_encode(raw_bytes):
-    """
-    Encodes raw bytes into base-62 representation. URL-safe and human safe.
+  """
+  Encodes raw bytes into base-62 representation. URL-safe and human safe.
 
-    Encode your Unicode strings to a byte encoding before base-62-encoding
-    them.
+  Encode your Unicode strings to a byte encoding before base-62-encoding
+  them.
 
-    Convenience wrapper for consistency.
+  Convenience wrapper for consistency.
 
-    :param raw_bytes:
-        Bytes to encode.
-    :returns:
-        Base-62 encoded bytes.
-    """
-    return b62encode(raw_bytes)
+  :param raw_bytes:
+      Bytes to encode.
+  :returns:
+      Base-62 encoded bytes.
+  """
+  return b62encode(raw_bytes)
 
 
 def base62_decode(encoded):
-    """
-    Decodes base-62-encoded bytes into raw bytes.
+  """
+  Decodes base-62-encoded bytes into raw bytes.
 
-    Convenience wrapper for consistency.
+  Convenience wrapper for consistency.
 
-    :param encoded:
-        Base-62 encoded bytes.
-    :returns:
-        Raw bytes.
-    """
-    return b62decode(encoded)
+  :param encoded:
+      Base-62 encoded bytes.
+  :returns:
+      Raw bytes.
+  """
+  return b62decode(encoded)
 
 
 def base58_encode(raw_bytes):
-    """
-    Encodes raw bytes into base-58 representation. URL-safe and human safe.
+  """
+  Encodes raw bytes into base-58 representation. URL-safe and human safe.
 
-    Encode your Unicode strings to a byte encoding before base-58-encoding
-    them.
+  Encode your Unicode strings to a byte encoding before base-58-encoding
+  them.
 
-    Convenience wrapper for consistency.
+  Convenience wrapper for consistency.
 
-    :param raw_bytes:
-        Bytes to encode.
-    :returns:
-        Base-58 encoded bytes.
-    """
-    return b58encode(raw_bytes)
+  :param raw_bytes:
+      Bytes to encode.
+  :returns:
+      Base-58 encoded bytes.
+  """
+  return b58encode(raw_bytes)
 
 
 def base58_decode(encoded):
-    """
-    Decodes base-58-encoded bytes into raw bytes.
+  """
+  Decodes base-58-encoded bytes into raw bytes.
 
-    Convenience wrapper for consistency.
+  Convenience wrapper for consistency.
 
-    :param encoded:
-        Base-58 encoded bytes.
-    :returns:
-        Raw bytes.
-    """
-    return b58decode(encoded)
+  :param encoded:
+      Base-58 encoded bytes.
+  :returns:
+      Raw bytes.
+  """
+  return b58decode(encoded)
 
 
 def base36_encode(raw_bytes):
-    """
-    Encodes raw bytes into base-36 representation.
+  """
+  Encodes raw bytes into base-36 representation.
 
-    Encode your Unicode strings to a byte encoding before base-58-encoding
-    them.
+  Encode your Unicode strings to a byte encoding before base-58-encoding
+  them.
 
-    Convenience wrapper for consistency.
+  Convenience wrapper for consistency.
 
-    :param raw_bytes:
-        Bytes to encode.
-    :returns:
-        Base-36 encoded bytes.
-    """
-    return b36encode(raw_bytes)
+  :param raw_bytes:
+      Bytes to encode.
+  :returns:
+      Base-36 encoded bytes.
+  """
+  return b36encode(raw_bytes)
 
 
 def base36_decode(encoded):
-    """
-    Decodes base-36-encoded bytes into raw bytes.
+  """
+  Decodes base-36-encoded bytes into raw bytes.
 
-    Convenience wrapper for consistency.
+  Convenience wrapper for consistency.
 
-    :param encoded:
-        Base-36 encoded bytes.
-    :returns:
-        Raw bytes.
-    """
-    return b36decode(encoded)
+  :param encoded:
+      Base-36 encoded bytes.
+  :returns:
+      Raw bytes.
+  """
+  return b36decode(encoded)
 
 
 def hex_encode(raw_bytes):
-    """
-    Encodes raw bytes into hexadecimal representation.
+  """
+  Encodes raw bytes into hexadecimal representation.
 
-    Encode your Unicode strings to a byte encoding before hex-encoding them.
+  Encode your Unicode strings to a byte encoding before hex-encoding them.
 
-    :param raw_bytes:
-        Bytes.
-    :returns:
-        Hex-encoded representation.
-    """
-    if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" %
-                        type(raw_bytes).__name__)
-    return binascii.b2a_hex(raw_bytes)
+  :param raw_bytes:
+      Bytes.
+  :returns:
+      Hex-encoded representation.
+  """
+  if not is_bytes(raw_bytes):
+    raise TypeError("argument must be raw bytes: got %r" %
+                    type(raw_bytes).__name__)
+  return binascii.b2a_hex(raw_bytes)
 
 
 def hex_decode(encoded):
-    """
-    Decodes hexadecimal-encoded bytes into raw bytes.
+  """
+  Decodes hexadecimal-encoded bytes into raw bytes.
 
-    :param encoded:
-        Hex representation.
-    :returns:
-        Raw bytes.
-    """
-    if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" %
-                        type(encoded).__name__)
-    return binascii.a2b_hex(encoded)
+  :param encoded:
+      Hex representation.
+  :returns:
+      Raw bytes.
+  """
+  if not is_bytes(encoded):
+    raise TypeError("argument must be bytes: got %r" %
+                    type(encoded).__name__)
+  return binascii.a2b_hex(encoded)
 
 
 def decimal_encode(raw_bytes):
-    """
-    Encodes raw bytes into decimal representation. Leading zero bytes are
-    preserved.
+  """
+  Encodes raw bytes into decimal representation. Leading zero bytes are
+  preserved.
 
-    Encode your Unicode strings to a byte encoding before decimal-encoding them.
+  Encode your Unicode strings to a byte encoding before decimal-encoding them.
 
-    :param raw_bytes:
-        Bytes.
-    :returns:
-        Decimal-encoded representation.
-    """
-    padding = DIGIT_ZERO_BYTE * bytes_leading(raw_bytes)
-    int_val = bytes_to_uint(raw_bytes)
-    if int_val:
-        encoded = padding + str(int_val).encode("ascii")
-    else:
-        encoded = padding
-    return encoded
+  :param raw_bytes:
+      Bytes.
+  :returns:
+      Decimal-encoded representation.
+  """
+  padding = DIGIT_ZERO_BYTE * bytes_leading(raw_bytes)
+  int_val = bytes_to_uint(raw_bytes)
+  if int_val:
+    encoded = padding + str(int_val).encode("ascii")
+  else:
+    encoded = padding
+  return encoded
 
 
 def decimal_decode(encoded):
-    """
-    Decodes decimal-encoded bytes to raw bytes. Leading zeros are converted to
-    leading zero bytes.
+  """
+  Decodes decimal-encoded bytes to raw bytes. Leading zeros are converted to
+  leading zero bytes.
 
-    :param encoded:
-        Decimal-encoded representation.
-    :returns:
-        Raw bytes.
-    """
-    padding = ZERO_BYTE * bytes_leading(encoded, DIGIT_ZERO_BYTE)
-    int_val = int(encoded)
-    if int_val:
-        decoded = padding + uint_to_bytes(int_val)
-    else:
-        decoded = padding
-    return decoded
+  :param encoded:
+      Decimal-encoded representation.
+  :returns:
+      Raw bytes.
+  """
+  padding = ZERO_BYTE * bytes_leading(encoded, DIGIT_ZERO_BYTE)
+  int_val = int(encoded)
+  if int_val:
+    decoded = padding + uint_to_bytes(int_val)
+  else:
+    decoded = padding
+  return decoded
 
 
 _HEX_TO_BIN_LOOKUP = {
-    b('0'): b('0000'),
-    b('1'): b('0001'),
-    b('2'): b('0010'),
-    b('3'): b('0011'),
-    b('4'): b('0100'),
-    b('5'): b('0101'),
-    b('6'): b('0110'),
-    b('7'): b('0111'),
-    b('8'): b('1000'),
-    b('9'): b('1001'),
-    b('a'): b('1010'), b('A'): b('1010'),
-    b('b'): b('1011'), b('B'): b('1011'),
-    b('c'): b('1100'), b('C'): b('1100'),
-    b('d'): b('1101'), b('D'): b('1101'),
-    b('e'): b('1110'), b('E'): b('1110'),
-    b('f'): b('1111'), b('F'): b('1111'),
-}
+  b('0'): b('0000'),
+  b('1'): b('0001'),
+  b('2'): b('0010'),
+  b('3'): b('0011'),
+  b('4'): b('0100'),
+  b('5'): b('0101'),
+  b('6'): b('0110'),
+  b('7'): b('0111'),
+  b('8'): b('1000'),
+  b('9'): b('1001'),
+  b('a'): b('1010'), b('A'): b('1010'),
+  b('b'): b('1011'), b('B'): b('1011'),
+  b('c'): b('1100'), b('C'): b('1100'),
+  b('d'): b('1101'), b('D'): b('1101'),
+  b('e'): b('1110'), b('E'): b('1110'),
+  b('f'): b('1111'), b('F'): b('1111'),
+  }
 if HAVE_PYTHON3: # pragma: no cover
-    # Indexing into Python 3 bytes yields ords, not single-byte strings.
-    _HEX_TO_BIN_LOOKUP = \
-        dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())
+  # Indexing into Python 3 bytes yields ords, not single-byte strings.
+  _HEX_TO_BIN_LOOKUP =\
+  dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())
 _BIN_TO_HEX_LOOKUP = {
-    b('0000'): b('0'),
-    b('0001'): b('1'),
-    b('0010'): b('2'),
-    b('0011'): b('3'),
-    b('0100'): b('4'),
-    b('0101'): b('5'),
-    b('0110'): b('6'),
-    b('0111'): b('7'),
-    b('1000'): b('8'),
-    b('1001'): b('9'),
-    b('1010'): b('a'),
-    b('1011'): b('b'),
-    b('1100'): b('c'),
-    b('1101'): b('d'),
-    b('1110'): b('e'),
-    b('1111'): b('f'),
-}
+  b('0000'): b('0'),
+  b('0001'): b('1'),
+  b('0010'): b('2'),
+  b('0011'): b('3'),
+  b('0100'): b('4'),
+  b('0101'): b('5'),
+  b('0110'): b('6'),
+  b('0111'): b('7'),
+  b('1000'): b('8'),
+  b('1001'): b('9'),
+  b('1010'): b('a'),
+  b('1011'): b('b'),
+  b('1100'): b('c'),
+  b('1101'): b('d'),
+  b('1110'): b('e'),
+  b('1111'): b('f'),
+  }
+
 def bin_encode(raw_bytes):
-    """
-    Encodes raw bytes into binary representation.
+  """
+  Encodes raw bytes into binary representation.
 
-    Encode your Unicode strings to a byte encoding before binary-encoding them.
+  Encode your Unicode strings to a byte encoding before binary-encoding them.
 
-    :param raw_bytes:
-        Raw bytes.
-    :returns:
-        Binary representation.
-    """
-    if not is_bytes(raw_bytes):
-        raise TypeError("argument must be raw bytes: got %r" %
-                        type(raw_bytes).__name__)
-    return EMPTY_BYTE.join(_HEX_TO_BIN_LOOKUP[hex_char]
-                   for hex_char in binascii.b2a_hex(raw_bytes))
+  :param raw_bytes:
+      Raw bytes.
+  :returns:
+      Binary representation.
+  """
+  if not is_bytes(raw_bytes):
+    raise TypeError("argument must be raw bytes: got %r" %
+                    type(raw_bytes).__name__)
+  return EMPTY_BYTE.join(_HEX_TO_BIN_LOOKUP[hex_char]
+  for hex_char in binascii.b2a_hex(raw_bytes))
 
 
 def bin_decode(encoded):
-    """
-    Decodes binary-encoded bytes into raw bytes.
+  """
+  Decodes binary-encoded bytes into raw bytes.
 
-    :param encoded:
-        Binary representation.
-    :returns:
-        Raw bytes.
-    """
-    if not is_bytes(encoded):
-        raise TypeError("argument must be bytes: got %r" %
-                        type(encoded).__name__)
-    return binascii.a2b_hex(EMPTY_BYTE.join(_BIN_TO_HEX_LOOKUP[nibble]
-                                            for nibble in chunks(encoded, 4)))
+  :param encoded:
+      Binary representation.
+  :returns:
+      Raw bytes.
+  """
+  if not is_bytes(encoded):
+    raise TypeError("argument must be bytes: got %r" %
+                    type(encoded).__name__)
+  return binascii.a2b_hex(EMPTY_BYTE.join(_BIN_TO_HEX_LOOKUP[nibble]
+  for nibble in chunks(encoded, 4)))

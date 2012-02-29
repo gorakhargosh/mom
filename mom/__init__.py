@@ -41,5 +41,4 @@ this library and think it should, speak up.
 .. automodule:: mom.itertools
 .. automodule:: mom.math
 .. automodule:: mom.string
-
 """

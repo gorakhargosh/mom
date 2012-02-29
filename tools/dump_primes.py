@@ -20,8 +20,8 @@ import sys
 import os
 
 sys.path[0:0] = [
-    os.curdir,
-]
+  os.curdir,
+  ]
 
 from mom._prime_sieve import make_prime_sieve
 from pprint import pprint

@@ -527,7 +527,7 @@ def leading(predicate, iterable, start=0):
 def _leading(predicate, iterable, start=0):
   """Alternative implementation of :func:`leading`."""
   return len(tuple(map(identity,
-    takewhile(predicate, islice(iterable, start, None, 1)))))
+                       takewhile(predicate, islice(iterable, start, None, 1)))))
 
 
 def trailing(predicate, iterable, start=-1):
@@ -691,7 +691,7 @@ def map_dict(transform, dictionary):
       New dictionary of ``new key=new value`` pairs.
   """
   return dict(starmap(transform or (lambda k, v: (k, v)),
-    dictionary.items()))
+                      dictionary.items()))
 
 
 def select_dict(predicate, dictionary):
@@ -1058,8 +1058,8 @@ def ichunks(iterable, size, *args, **kwargs):
     padding = kwargs["padding"] if kwargs else args[0]
     for i in range(0, length, size):
       yield islice(chain(iterable,
-        repeat(padding, (size - (length % size)))),
-        i, i + size)
+                         repeat(padding, (size - (length % size)))),
+                   i, i + size)
   else:
     for i in range(0, length, size):
       yield islice(iterable, i, i + size)

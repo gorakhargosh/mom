@@ -37,59 +37,59 @@ ALPHABET = b('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
 BASE = len(ALPHABET)
 
 if HAVE_PYTHON3:
-    def _chr(c):
-        return byte(c)
+  def _chr(c):
+    return byte(c)
 else:
-    def _chr(c):
-        return c
+  def _chr(c):
+    return c
 
 
 def b58encode_bitcoin(v):
-    """ encode v, which is a string of bytes, to base58.
-    """
+  """ encode v, which is a string of bytes, to base58.
+  """
 
-    long_value = 0
-    for i, c in enumerate(v[::-1]):
-        long_value += (256 ** i) * byte_ord(c)
+  long_value = 0
+  for i, c in enumerate(v[::-1]):
+    long_value += (256 ** i) * byte_ord(c)
 
-    result = EMPTY_BYTE
-    while long_value >= BASE:
-        div, mod = divmod(long_value, BASE)
-        result = _chr(ALPHABET[mod]) + result
-        long_value = div
-    result = _chr(ALPHABET[long_value]) + result
+  result = EMPTY_BYTE
+  while long_value >= BASE:
+    div, mod = divmod(long_value, BASE)
+    result = _chr(ALPHABET[mod]) + result
+    long_value = div
+  result = _chr(ALPHABET[long_value]) + result
 
-    # Bitcoin does a little leading-zero-compression:
-    # leading 0-bytes in the input become leading-1s
-    nPad = 0
-    for c in v:
-        if c == ZERO_BYTE: nPad += 1
-        else: break
+  # Bitcoin does a little leading-zero-compression:
+  # leading 0-bytes in the input become leading-1s
+  nPad = 0
+  for c in v:
+    if c == ZERO_BYTE: nPad += 1
+    else: break
 
-    return (_chr(ALPHABET[0]) * nPad) + result
+  return (_chr(ALPHABET[0]) * nPad) + result
 
 
 def b58decode_bitcoin(encoded, length=None):
-    """ decode v into a string of len bytes
-    """
-    long_value = 0
-    for i, c in enumerate(encoded[::-1]):
-        long_value += ALPHABET.find(_chr(c)) * (BASE ** i)
+  """ decode v into a string of len bytes
+  """
+  long_value = 0
+  for i, c in enumerate(encoded[::-1]):
+    long_value += ALPHABET.find(_chr(c)) * (BASE ** i)
 
-    result = EMPTY_BYTE
-    while long_value >= 256:
-        div, mod = divmod(long_value, 256)
-        result = byte(mod) + result
-        long_value = div
-    result = byte(long_value) + result
+  result = EMPTY_BYTE
+  while long_value >= 256:
+    div, mod = divmod(long_value, 256)
+    result = byte(mod) + result
+    long_value = div
+  result = byte(long_value) + result
 
-    nPad = 0
-    for c in encoded:
-        if c == ALPHABET[0]: nPad += 1
-        else: break
+  nPad = 0
+  for c in encoded:
+    if c == ALPHABET[0]: nPad += 1
+    else: break
 
-    result = byte(0) * nPad + result
-    if length is not None and len(result) != length:
-        return None
+  result = byte(0) * nPad + result
+  if length is not None and len(result) != length:
+    return None
 
-    return result
+  return result

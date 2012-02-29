@@ -27,6 +27,6 @@
 from mom.os import path, patterns
 
 __all__ = [
-    "path",
-    "patterns",
-]
+  "path",
+  "patterns",
+  ]

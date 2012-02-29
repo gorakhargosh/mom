@@ -41,8 +41,8 @@
 
 from __future__ import absolute_import
 
-from ctypes import CDLL, Structure, POINTER, byref, \
-    c_int, c_ulonglong, c_voidp, c_long, c_char_p
+from ctypes import CDLL, Structure, POINTER, byref,\
+  c_int, c_ulonglong, c_voidp, c_long, c_char_p
 #    c_byte, \
 #    cast,\
 #    c_ulong
@@ -54,39 +54,39 @@ from mom._compat import HAVE_PYTHON3
 # pylint: disable-msg=C0103
 
 if HAVE_PYTHON3:
-    def number_to_pybytes(num):
-        """
-        Converts number to bytes.
-        """
-        return str(num).encode("latin1")
+  def number_to_pybytes(num):
+    """
+    Converts number to bytes.
+    """
+    return str(num).encode("latin1")
 
-    def to_str(raw_bytes_num):
-        """
-        Converts bytes to the appropriate string representation for the Python
-        version.
-        """
-        #return raw_bytes_num.decode("latin1")
-        return str(raw_bytes_num, "latin1")
+  def to_str(raw_bytes_num):
+    """
+    Converts bytes to the appropriate string representation for the Python
+    version.
+    """
+    #return raw_bytes_num.decode("latin1")
+    return str(raw_bytes_num, "latin1")
 else:
-    def number_to_pybytes(num):
-        """
-        Converts number to bytes.
-        """
-        return str(num)
+  def number_to_pybytes(num):
+    """
+    Converts number to bytes.
+    """
+    return str(num)
 
-    def to_str(raw_bytes_num):
-        """
-        Converts bytes to the appropriate string representation for the Python
-        version.
-        """
-        return raw_bytes_num
+  def to_str(raw_bytes_num):
+    """
+    Converts bytes to the appropriate string representation for the Python
+    version.
+    """
+    return raw_bytes_num
 
 
 # Find the GMP library
 _libgmp_path = find_library("gmp")
 if not _libgmp_path:
-    raise ImportError("Unable to find libgmp")
-    # raise EnvironmentError('Unable to find libgmp')
+  raise ImportError("Unable to find libgmp")
+  # raise EnvironmentError('Unable to find libgmp')
 _libgmp = CDLL(_libgmp_path)
 
 
@@ -97,35 +97,35 @@ _libgmp = CDLL(_libgmp_path)
 #  and 32-bit/64-bit systems.
 #
 class c_mpz_struct(Structure):
-    """Internal structure."""
-    _fields_ = [
-        ('_mp_alloc', c_int),
-        ('_mp_size', c_int),
-        ('_mp_d', POINTER(c_ulonglong))]
+  """Internal structure."""
+  _fields_ = [
+    ('_mp_alloc', c_int),
+    ('_mp_size', c_int),
+    ('_mp_d', POINTER(c_ulonglong))]
 
 
 class c_gmp_randstate_struct(Structure):
-    """Internal structure."""
-    _fields_ = [
-        ('_mp_seed', c_mpz_struct),
-        ('_mp_alg', c_int),
-        ('_mp_algdata', c_voidp)]
+  """Internal structure."""
+  _fields_ = [
+    ('_mp_seed', c_mpz_struct),
+    ('_mp_alg', c_int),
+    ('_mp_algdata', c_voidp)]
 
 
 class c_mpq_struct(Structure):
-    """Internal structure."""
-    _fields_ = [
-        ('_mp_num', c_mpz_struct),
-        ('_mp_den', c_mpz_struct)]
+  """Internal structure."""
+  _fields_ = [
+    ('_mp_num', c_mpz_struct),
+    ('_mp_den', c_mpz_struct)]
 
 
 class c_mpf_struct(Structure):
-    """Internal structure."""
-    _fields_ = [
-        ('_mp_prec', c_int),
-        ('_mp_size', c_int),
-        ('_mp_exp', c_long),
-        ('_mp_d', POINTER(c_long))]
+  """Internal structure."""
+  _fields_ = [
+    ('_mp_prec', c_int),
+    ('_mp_size', c_int),
+    ('_mp_exp', c_long),
+    ('_mp_d', POINTER(c_long))]
 
 #------------------------------------------------------------------------------
 # Function references into MP library
@@ -200,209 +200,210 @@ RAND_ALGO_MT = _GMP_randinit_mt
 #------------------------------------------------------------------------------
 
 class Integer(object):
-    """GNU MP arbitrarily long integer."""
-    def __init__(self, init_value=0):
-        self._mpz = c_mpz_struct()
-        self._mpzp = byref(self._mpz)
-        _MPZ_init(self)
-        self.set(init_value)
+  """GNU MP arbitrarily long integer."""
 
-    def __del__(self):
-        _MPZ_clear(self)
+  def __init__(self, init_value=0):
+    self._mpz = c_mpz_struct()
+    self._mpzp = byref(self._mpz)
+    _MPZ_init(self)
+    self.set(init_value)
 
-    @property
-    def _as_parameter_(self):
-        """as parameter."""
-        return self._mpzp
+  def __del__(self):
+    _MPZ_clear(self)
 
-    @staticmethod
-    def from_param(arg):
-        """From param."""
-        assert isinstance(arg, Integer)
-        return arg
+  @property
+  def _as_parameter_(self):
+    """as parameter."""
+    return self._mpzp
 
-    def _apply_ret(self, func, ret, op1, op2):
-        """Applies a GNU MP function over arguments and returns a result."""
-        #assert isinstance(ret, Integer)
-        if not isinstance(op1, Integer):
-            op1 = Integer(op1)
-        if not isinstance(op2, Integer):
-            op2 = Integer(op2)
-        func(ret, op1, op2)
-        return ret
+  @staticmethod
+  def from_param(arg):
+    """From param."""
+    assert isinstance(arg, Integer)
+    return arg
 
-    def _apply_2_rets(self, func, ret1, ret2, op1, op2):
-        """Applies a GNU MP function over arguments and returns a tuple."""
-        #assert isinstance(ret1, Integer)
-        #assert isinstance(ret2, Integer)
-        if not isinstance(op1, Integer):
-            op1 = Integer(op1)
-        if not isinstance(op2, Integer):
-            op2 = Integer(op2)
-        func(ret1, ret2, op1, op2)
-        return ret1, ret2
+  def _apply_ret(self, func, ret, op1, op2):
+    """Applies a GNU MP function over arguments and returns a result."""
+    #assert isinstance(ret, Integer)
+    if not isinstance(op1, Integer):
+      op1 = Integer(op1)
+    if not isinstance(op2, Integer):
+      op2 = Integer(op2)
+    func(ret, op1, op2)
+    return ret
 
-    def _apply_ret_2_0(self, func, ret, op1):
-        """Applies a GNU MP function over arguments and returns a result."""
-                #assert isinstance(ret, Integer)
-        #assert isinstance(op1, Integer)
-        func(ret, op1)
-        return ret
+  def _apply_2_rets(self, func, ret1, ret2, op1, op2):
+    """Applies a GNU MP function over arguments and returns a tuple."""
+    #assert isinstance(ret1, Integer)
+    #assert isinstance(ret2, Integer)
+    if not isinstance(op1, Integer):
+      op1 = Integer(op1)
+    if not isinstance(op2, Integer):
+      op2 = Integer(op2)
+    func(ret1, ret2, op1, op2)
+    return ret1, ret2
 
-    def _apply_ret_2_1(self, func, op1, op2):
-        """Applies a GNU MP function over arguments and returns a result."""
-        if not isinstance(op1, Integer):
-            op1 = Integer(op1)
-        if not isinstance(op2, Integer):
-            op2 = Integer(op2)
-        return func(op1, op2)
+  def _apply_ret_2_0(self, func, ret, op1):
+    """Applies a GNU MP function over arguments and returns a result."""
+    #assert isinstance(ret, Integer)
+    #assert isinstance(op1, Integer)
+    func(ret, op1)
+    return ret
 
-    def set(self, value):
-        """Set integer."""
-        if isinstance(value, Integer):
-            _MPZ_set_str(self, value._tobytes(), 10)
-        else:
-            try:
-                _MPZ_set_str(self, number_to_pybytes(int(value)), 10)
-            except Exception:
-                raise TypeError("non an integer")
+  def _apply_ret_2_1(self, func, op1, op2):
+    """Applies a GNU MP function over arguments and returns a result."""
+    if not isinstance(op1, Integer):
+      op1 = Integer(op1)
+    if not isinstance(op2, Integer):
+      op2 = Integer(op2)
+    return func(op1, op2)
 
-    def _tobytes(self):
-        """To Python byte string."""
-        return _MPZ_get_str(None, 10, self)
+  def set(self, value):
+    """Set integer."""
+    if isinstance(value, Integer):
+      _MPZ_set_str(self, value._tobytes(), 10)
+    else:
+      try:
+        _MPZ_set_str(self, number_to_pybytes(int(value)), 10)
+      except Exception:
+        raise TypeError("non an integer")
 
-    def __str__(self):
-        return to_str(self._tobytes())
+  def _tobytes(self):
+    """To Python byte string."""
+    return _MPZ_get_str(None, 10, self)
 
-    def __repr__(self):
-        return self.__str__()
+  def __str__(self):
+    return to_str(self._tobytes())
 
-    def __lt__(self, other):
-        return self._apply_ret_2_1(_MPZ_cmp, self, other) < 0
+  def __repr__(self):
+    return self.__str__()
 
-    def __le__(self, other):
-        return self.__lt__(other) or self.__eq__(other)
+  def __lt__(self, other):
+    return self._apply_ret_2_1(_MPZ_cmp, self, other) < 0
 
-    def __eq__(self, other):
-        return self._apply_ret_2_1(_MPZ_cmp, self, other) == 0
+  def __le__(self, other):
+    return self.__lt__(other) or self.__eq__(other)
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
+  def __eq__(self, other):
+    return self._apply_ret_2_1(_MPZ_cmp, self, other) == 0
 
-    def __gt__(self, other):
-        return self._apply_ret_2_1(_MPZ_cmp, self, other) > 0
+  def __ne__(self, other):
+    return not self.__eq__(other)
 
-    def __ge__(self, other):
-        return self.__gt__(other) or self.__eq__(other)
+  def __gt__(self, other):
+    return self._apply_ret_2_1(_MPZ_cmp, self, other) > 0
 
-    def __add__(self, other):
-        return self._apply_ret(_MPZ_add, Integer(), self, other)
+  def __ge__(self, other):
+    return self.__gt__(other) or self.__eq__(other)
 
-    def __sub__(self, other):
-        return self._apply_ret(_MPZ_sub, Integer(), self, other)
+  def __add__(self, other):
+    return self._apply_ret(_MPZ_add, Integer(), self, other)
 
-    def __mul__(self, other):
-        return self._apply_ret(_MPZ_mul, Integer(), self, other)
+  def __sub__(self, other):
+    return self._apply_ret(_MPZ_sub, Integer(), self, other)
 
-    def __divmod__(self, divisor):
-        if divisor == 0 or divisor == Integer():
-            raise ZeroDivisionError("integer division or modulo by zero")
-        return self._apply_2_rets(_MPZ_fdivmod,
-                                   Integer(), Integer(), self, divisor)
+  def __mul__(self, other):
+    return self._apply_ret(_MPZ_mul, Integer(), self, other)
 
-    def __rdivmod__(self, dividend):
-        if self == 0 or self == Integer():
-            raise ZeroDivisionError("integer division or modulo by zero")
-        return self._apply_2_rets(_MPZ_fdivmod,
-                                   Integer(), Integer(), dividend, self)
+  def __divmod__(self, divisor):
+    if divisor == 0 or divisor == Integer():
+      raise ZeroDivisionError("integer division or modulo by zero")
+    return self._apply_2_rets(_MPZ_fdivmod,
+                              Integer(), Integer(), self, divisor)
 
-    def __div__(self, other):
-        return self.__floordiv__(other)
+  def __rdivmod__(self, dividend):
+    if self == 0 or self == Integer():
+      raise ZeroDivisionError("integer division or modulo by zero")
+    return self._apply_2_rets(_MPZ_fdivmod,
+                              Integer(), Integer(), dividend, self)
 
-    def __truediv__(self, other):
-        raise NotImplementedError("True division is not supported.")
+  def __div__(self, other):
+    return self.__floordiv__(other)
 
-    def __floordiv__(self, other):
-        if other == 0 or other == Integer():
-            raise ZeroDivisionError("integer division or modulo by zero")
-        return self._apply_ret(_MPZ_fdiv, Integer(), self, other)
+  def __truediv__(self, other):
+    raise NotImplementedError("True division is not supported.")
 
-    def __and__(self, other):
-        return self._apply_ret(_MPZ_and, Integer(), self, other)
+  def __floordiv__(self, other):
+    if other == 0 or other == Integer():
+      raise ZeroDivisionError("integer division or modulo by zero")
+    return self._apply_ret(_MPZ_fdiv, Integer(), self, other)
 
-    def __mod__(self, other):
-        if other == 0 or other == Integer():
-            raise ZeroDivisionError("integer division or modulo by zero")
-        return self._apply_ret(_MPZ_fmod, Integer(), self, other)
+  def __and__(self, other):
+    return self._apply_ret(_MPZ_and, Integer(), self, other)
 
-    def __xor__(self, other):
-        return self._apply_ret(_MPZ_xor, Integer(), self, other)
+  def __mod__(self, other):
+    if other == 0 or other == Integer():
+      raise ZeroDivisionError("integer division or modulo by zero")
+    return self._apply_ret(_MPZ_fmod, Integer(), self, other)
 
-    def __or__(self, other):
-        return self._apply_ret(_MPZ_ior, Integer(), self, other)
+  def __xor__(self, other):
+    return self._apply_ret(_MPZ_xor, Integer(), self, other)
 
-    def __iadd__(self, other):
-        return self._apply_ret(_MPZ_add, self, self, other)
+  def __or__(self, other):
+    return self._apply_ret(_MPZ_ior, Integer(), self, other)
 
-    def __isub__(self, other):
-        return self._apply_ret(_MPZ_sub, self, self, other)
+  def __iadd__(self, other):
+    return self._apply_ret(_MPZ_add, self, self, other)
 
-    def __imul__(self, other):
-        return self._apply_ret(_MPZ_mul, self, self, other)
+  def __isub__(self, other):
+    return self._apply_ret(_MPZ_sub, self, self, other)
 
-    def __imod__(self, other):
-        return self._apply_ret(_MPZ_fmod, self, self, other)
+  def __imul__(self, other):
+    return self._apply_ret(_MPZ_mul, self, self, other)
 
-    def __idiv__(self, other):
-        return self.__floordiv__(other)
+  def __imod__(self, other):
+    return self._apply_ret(_MPZ_fmod, self, self, other)
 
-    def __itruediv__(self, other):
-        raise NotImplementedError("True division is not supported.")
+  def __idiv__(self, other):
+    return self.__floordiv__(other)
 
-    def __ifloordiv__(self, other):
-        if other == 0 or other == Integer():
-            raise ZeroDivisionError("integer division or modulo by zero")
-        return self._apply_ret(_MPZ_fdiv, self, self, other)
+  def __itruediv__(self, other):
+    raise NotImplementedError("True division is not supported.")
 
-    def __iand__(self, other):
-        return self._apply_ret(_MPZ_and, self, self, other)
+  def __ifloordiv__(self, other):
+    if other == 0 or other == Integer():
+      raise ZeroDivisionError("integer division or modulo by zero")
+    return self._apply_ret(_MPZ_fdiv, self, self, other)
 
-    def __ixor__(self, other):
-        return self._apply_ret(_MPZ_xor, self, self, other)
+  def __iand__(self, other):
+    return self._apply_ret(_MPZ_and, self, self, other)
 
-    def __ior__(self, other):
-        return self._apply_ret(_MPZ_ior, self, self, other)
+  def __ixor__(self, other):
+    return self._apply_ret(_MPZ_xor, self, self, other)
 
-    def __radd__(self, other):
-        return self._apply_ret(_MPZ_add, Integer(), other, self)
+  def __ior__(self, other):
+    return self._apply_ret(_MPZ_ior, self, self, other)
 
-    def __rsub__(self, other):
-        return self._apply_ret(_MPZ_sub, Integer(), other, self)
+  def __radd__(self, other):
+    return self._apply_ret(_MPZ_add, Integer(), other, self)
 
-    def __rmul__(self, other):
-        return self._apply_ret(_MPZ_mul, Integer(), other, self)
+  def __rsub__(self, other):
+    return self._apply_ret(_MPZ_sub, Integer(), other, self)
 
-    def __rdiv__(self, other):
-        return self.__rfloordiv__(other)
+  def __rmul__(self, other):
+    return self._apply_ret(_MPZ_mul, Integer(), other, self)
 
-    def __rtruediv__(self, other):
-        raise NotImplementedError("True division is not supported.")
+  def __rdiv__(self, other):
+    return self.__rfloordiv__(other)
 
-    def __rfloordiv__(self, other):
-        if self == 0 or self == Integer():
-            raise ZeroDivisionError("integer division or modulo by zero")
-        return self._apply_ret(_MPZ_fdiv, Integer(), other, self)
+  def __rtruediv__(self, other):
+    raise NotImplementedError("True division is not supported.")
 
-    def __rmod__(self, other):
-        if self == 0 or self == Integer():
-            raise ZeroDivisionError("integer division or modulo by zero")
-        return self._apply_ret(_MPZ_fmod, Integer(), other, self)
+  def __rfloordiv__(self, other):
+    if self == 0 or self == Integer():
+      raise ZeroDivisionError("integer division or modulo by zero")
+    return self._apply_ret(_MPZ_fdiv, Integer(), other, self)
 
-    def __abs__(self):
-        return self._apply_ret_2_0(_MPZ_abs, Integer(), self)
+  def __rmod__(self, other):
+    if self == 0 or self == Integer():
+      raise ZeroDivisionError("integer division or modulo by zero")
+    return self._apply_ret(_MPZ_fmod, Integer(), other, self)
 
-    def __neg__(self):
-        return self._apply_ret_2_0(_MPZ_neg, Integer(), self)
+  def __abs__(self):
+    return self._apply_ret_2_0(_MPZ_abs, Integer(), self)
+
+  def __neg__(self):
+    return self._apply_ret_2_0(_MPZ_neg, Integer(), self)
 
 
 #class Rational(object):

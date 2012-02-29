@@ -67,15 +67,15 @@ Functions
 .. autofunction:: b58decode
 """
 
-
 from __future__ import absolute_import, division
 
 # pylint: disable-msg=R0801
 try: #pragma: no cover
-    import psyco
-    psyco.full()
+  import psyco
+
+  psyco.full()
 except ImportError: #pragma: no cover
-    psyco = None
+  psyco = None
 # pylint: enable-msg=R0801
 
 from mom._compat import HAVE_PYTHON3, range
@@ -103,55 +103,55 @@ ALT58_BYTES = ("123456789"
 ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_BYTES))
 
 if HAVE_PYTHON3:
-    ASCII58_BYTES = tuple(byte(x) for x in ASCII58_BYTES)
-    ALT58_BYTES = tuple(byte(x) for x in ALT58_BYTES)
+  ASCII58_BYTES = tuple(byte(x) for x in ASCII58_BYTES)
+  ALT58_BYTES = tuple(byte(x) for x in ALT58_BYTES)
 
 # If you're going to make people type stuff longer than this length
 # I don't know what to tell you. Beyond this length powers
 # are computed, so be careful if you care about computation speed.
 # I think this is a VERY generous range. Decoding bytes fewer than 512
 # will use this pre-computed lookup table, and hence, be faster.
-POW_58 = tuple(58**power for power in range(512))
+POW_58 = tuple(58 ** power for power in range(512))
 
 
 def b58encode(raw_bytes,
               base_bytes=ASCII58_BYTES, _padding=True):
-    """
-    Base58 encodes a sequence of raw bytes. Zero-byte sequences are
-    preserved by default.
+  """
+  Base58 encodes a sequence of raw bytes. Zero-byte sequences are
+  preserved by default.
 
-    :param raw_bytes:
-        Raw bytes to encode.
-    :param base_bytes:
-        The character set to use. Defaults to ``ASCII58_BYTES``
-        that uses natural ASCII order.
-    :param _padding:
-        (Internal) ``True`` (default) to include prefixed zero-byte sequence
-        padding converted to appropriate representation.
-    :returns:
-        Base-58 encoded bytes.
-    """
-    return base_encode(raw_bytes, 58, base_bytes, base_bytes[0], _padding)
+  :param raw_bytes:
+      Raw bytes to encode.
+  :param base_bytes:
+      The character set to use. Defaults to ``ASCII58_BYTES``
+      that uses natural ASCII order.
+  :param _padding:
+      (Internal) ``True`` (default) to include prefixed zero-byte sequence
+      padding converted to appropriate representation.
+  :returns:
+      Base-58 encoded bytes.
+  """
+  return base_encode(raw_bytes, 58, base_bytes, base_bytes[0], _padding)
 
 
 def b58decode(encoded,
               base_bytes=ASCII58_BYTES,
               base_ords=ASCII58_ORDS):
-    """
-    Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
+  """
+  Base-58 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
 
-    :param encoded:
-        Base-58 encoded bytes.
-    :param base_bytes:
-        (Internal) The character set to use. Defaults to ``ASCII58_BYTES``
-        that uses natural ASCII order.
-    :param base_ords:
-        (Internal) Ordinal-to-character lookup table for the specified
-        character set.
-    :returns:
-        Raw bytes.
-    """
-    # Zero byte is represented using the first character in the character set.
-    # Adds zero byte prefix padding if required.
-    return base_decode(encoded, 58, base_ords, base_bytes[0], POW_58)
+  :param encoded:
+      Base-58 encoded bytes.
+  :param base_bytes:
+      (Internal) The character set to use. Defaults to ``ASCII58_BYTES``
+      that uses natural ASCII order.
+  :param base_ords:
+      (Internal) Ordinal-to-character lookup table for the specified
+      character set.
+  :returns:
+      Raw bytes.
+  """
+  # Zero byte is represented using the first character in the character set.
+  # Adds zero byte prefix padding if required.
+  return base_decode(encoded, 58, base_ords, base_bytes[0], POW_58)
 

@@ -33,41 +33,41 @@ from mom.codec._json_compat import json_dumps as _json_dumps, json_loads
 
 
 if HAVE_PYTHON3:
-    json_dumps = _json_dumps
+  json_dumps = _json_dumps
 else:
-    json_dumps = lambda o: _json_dumps(o).decode('utf-8')
+  json_dumps = lambda o: _json_dumps(o).decode('utf-8')
 
 
 def json_encode(obj):
-    """
-    Encodes a Python value into its equivalent JSON string.
+  """
+  Encodes a Python value into its equivalent JSON string.
 
-    JSON permits but does not require forward slashes to be escaped.
-    This is useful when json data is emitted in a <script> tag
-    in HTML, as it prevents </script> tags from prematurely terminating
-    the javscript. Some json libraries do this escaping by default,
-    although python's standard library does not, so we do it here.
+  JSON permits but does not require forward slashes to be escaped.
+  This is useful when json data is emitted in a <script> tag
+  in HTML, as it prevents </script> tags from prematurely terminating
+  the javscript. Some json libraries do this escaping by default,
+  although python's standard library does not, so we do it here.
 
-    :see: http://stackoverflow.com/questions/1580647/json-why-are-forward-slashes-escaped
-    :param obj:
-        Python value.
-    :returns:
-        JSON string.
-    """
-    if is_bytes(obj):
-        raise TypeError("Cannot work with bytes.")
-    return json_dumps(utf8_decode_recursive(obj)).replace("</", "<\\/")
+  :see: http://stackoverflow.com/questions/1580647/json-why-are-forward-slashes-escaped
+  :param obj:
+      Python value.
+  :returns:
+      JSON string.
+  """
+  if is_bytes(obj):
+    raise TypeError("Cannot work with bytes.")
+  return json_dumps(utf8_decode_recursive(obj)).replace("</", "<\\/")
 
 
 def json_decode(encoded):
-    """
-    Decodes a JSON string into its equivalent Python value.
+  """
+  Decodes a JSON string into its equivalent Python value.
 
-    :param encoded:
-        JSON string.
-    :returns:
-        Decoded Python value.
-    """
-    if is_bytes(encoded):
-        raise TypeError("Cannot work with bytes.")
-    return json_loads(encoded)
+  :param encoded:
+      JSON string.
+  :returns:
+      Decoded Python value.
+  """
+  if is_bytes(encoded):
+    raise TypeError("Cannot work with bytes.")
+  return json_loads(encoded)

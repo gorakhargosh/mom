@@ -42,71 +42,71 @@ padding_raw = b('''\
 ''')
 
 class Test_base62_codec(unittest2.TestCase):
-    def test_ensure_charset_length(self):
-        self.assertEqual(len(ASCII62_BYTES), 62)
-        self.assertEqual(len(ALT62_BYTES), 62)
+  def test_ensure_charset_length(self):
+    self.assertEqual(len(ASCII62_BYTES), 62)
+    self.assertEqual(len(ALT62_BYTES), 62)
 
-    def test_codec_identity(self):
-        self.assertEqual(
-            b62decode(b62encode(random_bytes_len_512)),
-            random_bytes_len_512
-        )
-        self.assertEqual(
-            b62decode_naive(b62encode(random_bytes_len_512)),
-            random_bytes_len_512
-        )
-        self.assertEqual(
-            b62decode(b62encode_naive(random_bytes_len_512)),
-            random_bytes_len_512
-        )
-        self.assertEqual(
-            b62decode_naive(b62encode_naive(random_bytes_len_512)),
-            random_bytes_len_512
-        )
-        self.assertEqual(
-            base62_decode(base62_encode(random_bytes_len_512)),
-            random_bytes_len_512
-        )
+  def test_codec_identity(self):
+    self.assertEqual(
+      b62decode(b62encode(random_bytes_len_512)),
+      random_bytes_len_512
+    )
+    self.assertEqual(
+      b62decode_naive(b62encode(random_bytes_len_512)),
+      random_bytes_len_512
+    )
+    self.assertEqual(
+      b62decode(b62encode_naive(random_bytes_len_512)),
+      random_bytes_len_512
+    )
+    self.assertEqual(
+      b62decode_naive(b62encode_naive(random_bytes_len_512)),
+      random_bytes_len_512
+    )
+    self.assertEqual(
+      base62_decode(base62_encode(random_bytes_len_512)),
+      random_bytes_len_512
+    )
 
-    def test_encodes_zero_prefixed_padding(self):
-        self.assertEqual(b62decode(b62encode(padding_raw)), padding_raw)
-        self.assertEqual(b62decode_naive(b62encode(padding_raw)), padding_raw)
+  def test_encodes_zero_prefixed_padding(self):
+    self.assertEqual(b62decode(b62encode(padding_raw)), padding_raw)
+    self.assertEqual(b62decode_naive(b62encode(padding_raw)), padding_raw)
 
-        self.assertEqual(b62decode(b62encode_naive(padding_raw)), padding_raw)
-        self.assertEqual(b62decode_naive(b62encode_naive(padding_raw)), padding_raw)
+    self.assertEqual(b62decode(b62encode_naive(padding_raw)), padding_raw)
+    self.assertEqual(b62decode_naive(b62encode_naive(padding_raw)), padding_raw)
 
-        self.assertEqual(base62_decode(base62_encode(padding_raw)), padding_raw)
+    self.assertEqual(base62_decode(base62_encode(padding_raw)), padding_raw)
 
-    def test_zero_bytes(self):
-        self.assertEqual(b62encode(zero_bytes), b('0000'))
-        self.assertEqual(b62encode_naive(zero_bytes), b('0000'))
-        self.assertEqual(b62decode(b('0000')), zero_bytes)
-        self.assertEqual(b62decode_naive(b('0000')), zero_bytes)
-        self.assertEqual(b62encode(one_zero_byte), b('0'))
-        self.assertEqual(b62encode_naive(one_zero_byte), b('0'))
-        self.assertEqual(b62decode(b('0')), one_zero_byte)
-        self.assertEqual(b62decode_naive(b('0')), one_zero_byte)
+  def test_zero_bytes(self):
+    self.assertEqual(b62encode(zero_bytes), b('0000'))
+    self.assertEqual(b62encode_naive(zero_bytes), b('0000'))
+    self.assertEqual(b62decode(b('0000')), zero_bytes)
+    self.assertEqual(b62decode_naive(b('0000')), zero_bytes)
+    self.assertEqual(b62encode(one_zero_byte), b('0'))
+    self.assertEqual(b62encode_naive(one_zero_byte), b('0'))
+    self.assertEqual(b62decode(b('0')), one_zero_byte)
+    self.assertEqual(b62decode_naive(b('0')), one_zero_byte)
 
-        self.assertEqual(base62_encode(zero_bytes), b('0000'))
-        self.assertEqual(base62_decode(b('0000')), zero_bytes)
-        self.assertEqual(base62_encode(one_zero_byte), b('0'))
-        self.assertEqual(base62_decode(b('0')), one_zero_byte)
+    self.assertEqual(base62_encode(zero_bytes), b('0000'))
+    self.assertEqual(base62_decode(b('0000')), zero_bytes)
+    self.assertEqual(base62_encode(one_zero_byte), b('0'))
+    self.assertEqual(base62_decode(b('0')), one_zero_byte)
 
-    def test_encoding_and_decoding(self):
-        self.assertEqual(b62encode(raw_data), encoded)
-        self.assertEqual(b62encode_naive(raw_data), encoded)
-        self.assertEqual(b62decode(encoded), raw_data)
-        self.assertEqual(b62decode(encoded_with_whitespace), raw_data)
-        self.assertEqual(b62decode_naive(encoded), raw_data)
-        self.assertEqual(b62decode_naive(encoded_with_whitespace), raw_data)
+  def test_encoding_and_decoding(self):
+    self.assertEqual(b62encode(raw_data), encoded)
+    self.assertEqual(b62encode_naive(raw_data), encoded)
+    self.assertEqual(b62decode(encoded), raw_data)
+    self.assertEqual(b62decode(encoded_with_whitespace), raw_data)
+    self.assertEqual(b62decode_naive(encoded), raw_data)
+    self.assertEqual(b62decode_naive(encoded_with_whitespace), raw_data)
 
-        self.assertEqual(base62_encode(raw_data), encoded)
-        self.assertEqual(base62_decode(encoded), raw_data)
-        self.assertEqual(base62_decode(encoded_with_whitespace), raw_data)
+    self.assertEqual(base62_encode(raw_data), encoded)
+    self.assertEqual(base62_decode(encoded), raw_data)
+    self.assertEqual(base62_decode(encoded_with_whitespace), raw_data)
 
-    def test_TypeError_when_bad_type(self):
-        self.assertRaises(TypeError, b62encode, unicode_string)
-        self.assertRaises(TypeError, b62encode_naive, unicode_string)
-        self.assertRaises(TypeError, b62decode, unicode_string)
-        self.assertRaises(TypeError, b62decode_naive, unicode_string)
+  def test_TypeError_when_bad_type(self):
+    self.assertRaises(TypeError, b62encode, unicode_string)
+    self.assertRaises(TypeError, b62encode_naive, unicode_string)
+    self.assertRaises(TypeError, b62decode, unicode_string)
+    self.assertRaises(TypeError, b62decode_naive, unicode_string)
 

@@ -21,15 +21,15 @@ from __future__ import absolute_import
 from mom._compat import HAVE_PYTHON3
 
 if HAVE_PYTHON3:
-    from mom.tests.py3kconstants import \
-        unicode_string, unicode_string2, foo, ufoo, \
-        json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte, \
-        utf8_bytes, utf8_bytes2, latin1_bytes
+  from mom.tests.py3kconstants import\
+    unicode_string, unicode_string2, foo, ufoo,\
+    json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte,\
+    utf8_bytes, utf8_bytes2, latin1_bytes
 else:
-    from mom.tests.py2kconstants import \
-        unicode_string, unicode_string2, foo, ufoo, \
-        json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte, \
-        utf8_bytes, utf8_bytes2, latin1_bytes
+  from mom.tests.py2kconstants import\
+    unicode_string, unicode_string2, foo, ufoo,\
+    json_foo, json_ufoo, json_unicode_value, unicode_value, x_byte,\
+    utf8_bytes, utf8_bytes2, latin1_bytes
 
 unicode_string = unicode_string
 unicode_string2 = unicode_string2

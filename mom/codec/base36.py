@@ -29,10 +29,11 @@ from __future__ import absolute_import
 
 # pylint: disable-msg=R0801
 try: #pragma: no cover
-    import psyco
-    psyco.full()
+  import psyco
+
+  psyco.full()
 except ImportError: #pragma: no cover
-    psyco = None
+  psyco = None
 # pylint: enable-msg=R0801
 
 
@@ -43,47 +44,47 @@ from mom.codec._base import base_encode, uint_to_base256
 
 # Follows ASCII order.
 ASCII36_BYTES = (string.DIGITS +
-                string.ASCII_UPPERCASE).encode("ascii")
+                 string.ASCII_UPPERCASE).encode("ascii")
 # Therefore, b'1' represents b'\0'.
 if HAVE_PYTHON3:
-    ASCII36_BYTES = tuple(byte(x) for x in ASCII36_BYTES)
+  ASCII36_BYTES = tuple(byte(x) for x in ASCII36_BYTES)
 
 
 def b36encode(raw_bytes, base_bytes=ASCII36_BYTES, _padding=True):
-    """
-    Base-36 encodes a sequence of raw bytes. Zero-byte sequences are
-    preserved by default.
+  """
+  Base-36 encodes a sequence of raw bytes. Zero-byte sequences are
+  preserved by default.
 
-    :param raw_bytes:
-        Raw bytes to encode.
-    :param base_bytes:
-        The character set to use. Defaults to ``ASCII36_BYTES``
-        that uses natural ASCII order.
-    :param _padding:
-        (Internal) ``True`` (default) to include prefixed zero-byte sequence
-        padding converted to appropriate representation.
-    :returns:
-        Uppercase (default) base-36 encoded bytes.
-    """
-    return base_encode(raw_bytes, 36, base_bytes, base_bytes[0], _padding)
+  :param raw_bytes:
+      Raw bytes to encode.
+  :param base_bytes:
+      The character set to use. Defaults to ``ASCII36_BYTES``
+      that uses natural ASCII order.
+  :param _padding:
+      (Internal) ``True`` (default) to include prefixed zero-byte sequence
+      padding converted to appropriate representation.
+  :returns:
+      Uppercase (default) base-36 encoded bytes.
+  """
+  return base_encode(raw_bytes, 36, base_bytes, base_bytes[0], _padding)
 
 
 def b36decode(encoded, base_bytes=ASCII36_BYTES):
-    """
-    Base-36 decodes a sequence of bytes into raw bytes.
+  """
+  Base-36 decodes a sequence of bytes into raw bytes.
 
-    Leading, trailing, and internal whitespace is ignored. The case
-    of the encoded byte string is also ignored. For example, you may pass
-    in ``AbCd`` instead of ``ABCD``.
+  Leading, trailing, and internal whitespace is ignored. The case
+  of the encoded byte string is also ignored. For example, you may pass
+  in ``AbCd`` instead of ``ABCD``.
 
-    :param encoded:
-        Case-insensitive base-36 encoded bytes.
-    :param base_bytes:
-        (Internal) The character set to use. Defaults to ``ASCII36_BYTES``
-        that uses natural ASCII order.
-    :returns:
-        Raw bytes.
-    """
-    # Ignore whitespace.
-    encoded = EMPTY_BYTE.join(encoded.split())
-    return uint_to_base256(int(encoded, 36), encoded, base_bytes[0])
+  :param encoded:
+      Case-insensitive base-36 encoded bytes.
+  :param base_bytes:
+      (Internal) The character set to use. Defaults to ``ASCII36_BYTES``
+      that uses natural ASCII order.
+  :returns:
+      Raw bytes.
+  """
+  # Ignore whitespace.
+  encoded = EMPTY_BYTE.join(encoded.split())
+  return uint_to_base256(int(encoded, 36), encoded, base_bytes[0])

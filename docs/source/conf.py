@@ -18,7 +18,7 @@ THEMES_PATH = os.path.join(DIR_PATH, '_themes', 'webapp2')
 
 PROJECT_NAME = u'mom'
 AUTHOR_NAME = u"Yesudeep Mangalapilly"
-COPYRIGHT = u"2011, " + AUTHOR_NAME
+COPYRIGHT = u"2011, " + "Google, Inc."
 VERSION = "0.0.1"
 
 # If extensions (or modules to document with autodoc) are in another directory,
