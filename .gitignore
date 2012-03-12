@@ -5,10 +5,10 @@
 *.egg-info
 
 # Operating system-specific files.
-.DS_Store
 *~
 .\#*
 ._*
+.DS_Store
 Desktop.ini
 Thumbs.db
 __MACOSX__
