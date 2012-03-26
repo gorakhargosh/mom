@@ -1,4 +1,5 @@
 include README
+include COPYING
 include LICENSE
 include AUTHORS
 recursive-include mom *.py *.c *.pyx *.pyd
