@@ -2,7 +2,7 @@ RM = rm -rf
 
 PKG_NAME=mom
 
-.PHONY: all clean distclean develop lint test upload-doc view-doc doc docs build dist release auto submodules push
+.PHONY: all clean distclean develop lint test upload-doc view-doc doc docs build dist release auto submodules push push-github push-google
 
 all: build
 
@@ -66,9 +66,13 @@ bin/buildout: buildout.cfg setup.py
 bin/python: bin/buildout
 	@bin/buildout
 
-push:
+push: push-github push-google
+
+push-github:
 	@echo "Pushing repository to remote:github [github.com]"
 	@git push github master
+
+push-google:
 	@echo "Pushing repository to remote:google [code.google.com]"
 	@git push google master
 
