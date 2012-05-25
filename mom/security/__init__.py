@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2009 Facebook.
-# Copyright 2010, 2011, 2012 Google Inc.
+# Copyright 2010, 2011, 2012 Google Inc. All Rights Reserved.
 # Copyright 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
