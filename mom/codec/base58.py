@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-# Copyright 2012 Google, Inc.
+# Copyright 2012 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -154,4 +154,3 @@ def b58decode(encoded,
   # Zero byte is represented using the first character in the character set.
   # Adds zero byte prefix padding if required.
   return base_decode(encoded, 58, base_ords, base_bytes[0], POW_58)
-

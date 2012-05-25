@@ -3,7 +3,7 @@
 #
 # Copyright 2009 Noah Watkins <noah@noahdesu.com>
 # Copyright 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-# Copyright 2012 Google, Inc.
+# Copyright 2012 Google Inc.
 #
 # MIT License
 # -----------

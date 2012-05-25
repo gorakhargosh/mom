@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-# Copyright 2012 Google, Inc.
+# Copyright 2012 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -277,4 +277,3 @@ def uint_to_bytes_simple(num):
 def bytes_to_uint_simple(raw_bytes):
   """Simple bytes to uint converter."""
   return reduce(lambda a, b: a << 8 | b, map(byte_ord, raw_bytes), 0)
-

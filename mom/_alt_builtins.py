@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
-# Copyright 2012 Google, Inc.
+# Copyright 2012 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -186,4 +186,3 @@ def integer_bit_length_word_aligned(num):
 #    else:
 #        bitstring = _bin_recursive(num >> 1) + bytes(num & 1)
 #    return prefix + bitstring
-
