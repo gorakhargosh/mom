@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from __future__ import absolute_import
 
 import unittest2
@@ -32,13 +33,17 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 INPUT_MD5_DIGEST = b('\xe8\x0bP\x17\t\x89P\xfcX\xaa\xd8<\x8c\x14\x97\x8e')
+
 INPUT_SHA1_DIGEST = b(
   '\x1f\x8a\xc1\x0f#\xc5\xb5\xbc\x11g\xbd\xa8K\x83>\\\x05zw\xd2')
+
 INPUTS = [b("ab"), b("cd"), b("ef")]
+
 UNICODE_INPUTS = [UNICODE_STRING, UNICODE_STRING2]
 
 # HMAC-SHA1 data.
 KEY = b("kd94hf93k423kf44&pfkkdhi9sl3r4s00")
+
 BASE_STRING = b("""GET&\
 http%3A%2F%2Fphotos.example.net%2Fphotos&\
 file%3Dvacation.jpg%26\
@@ -48,7 +53,9 @@ oauth_signature_method%3DHMAC-SHA1%26\
 oauth_timestamp%3D137131202%26\
 oauth_token%3Dnnch734d00sl2jdk%26\
 size%3Doriginal""")
+
 EXPECTED_HMAC_SHA1_DIGEST = b('1\xdaPqO"=%#Z\x83\x7fP3,+k.\x8b\xd2')
+
 EXPECTED_HMAC_SHA1_BASE64_DIGEST = b("MdpQcU8iPSUjWoN/UDMsK2sui9I=")
 
 
