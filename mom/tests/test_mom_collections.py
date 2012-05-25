@@ -28,6 +28,7 @@ except ImportError:
 from threading import Thread
 from mom.collections import SetQueue, AttributeDict, attrdict
 
+
 class Test_AttributeDict(unittest2.TestCase):
   def test_behavior(self):
     d = AttributeDict(something="foobar", another_thing="haha")
@@ -54,7 +55,6 @@ class Test_AttributeDict(unittest2.TestCase):
     self.assertDictEqual(d, dict(something="foobar"))
     del d["something"]
     self.assertDictEqual(d, dict())
-
 
   def test_getattr(self):
     d = AttributeDict(something="foobar", another_thing="haha")

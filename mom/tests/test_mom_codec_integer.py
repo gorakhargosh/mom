@@ -28,8 +28,8 @@ from mom.prime_sieve import SIEVE
 
 # Long value from Python-RSA.
 from mom.tests.constants import UNICODE_STRING
-from mom.tests.test_mom_codec import long_value_blocksize,\
-  expected_blocksize_bytes, zero_bytes, one_zero_byte
+from mom.tests.test_mom_codec import LONG_VALUE_BLOCKSIZE,\
+  EXPECTED_BLOCKSIZE_BYTES, ZERO_BYTES, ONE_ZERO_BYTE
 
 LONG_VALUE = 71671831749689734735896910666236152091910950933161125188784836897624039426313152092699961904060141667369
 EXPECTED_FILL_BYTES = b('''\
@@ -165,12 +165,12 @@ class Test_bytes_uint_codec(unittest2.TestCase):
                      expected_bytes)
 
   def test_zero_bytes(self):
-    self.assertEqual(uint_to_bytes(bytes_to_uint(zero_bytes)),
-                     one_zero_byte)
-    self.assertEqual(uint_to_bytes(bytes_to_uint_naive(zero_bytes)),
-                     one_zero_byte)
-    self.assertEqual(uint_to_bytes(bytes_to_uint_simple(zero_bytes)),
-                     one_zero_byte)
+    self.assertEqual(uint_to_bytes(bytes_to_uint(ZERO_BYTES)),
+                     ONE_ZERO_BYTE)
+    self.assertEqual(uint_to_bytes(bytes_to_uint_naive(ZERO_BYTES)),
+                     ONE_ZERO_BYTE)
+    self.assertEqual(uint_to_bytes(bytes_to_uint_simple(ZERO_BYTES)),
+                     ONE_ZERO_BYTE)
 
   def test_TypeError_non_bytes_argument(self):
     self.assertRaises(TypeError, bytes_to_uint, UNICODE_STRING)
@@ -204,20 +204,20 @@ class Test_uint_to_bytes(unittest2.TestCase):
 
   def test_chunk_size(self):
     self.assertEqual(uint_to_bytes(LONG_VALUE,
-                                   long_value_blocksize),
-                     expected_blocksize_bytes)
+                                   LONG_VALUE_BLOCKSIZE),
+                     EXPECTED_BLOCKSIZE_BYTES)
     self.assertEqual(uint_to_bytes_pycrypto(LONG_VALUE,
-                                            long_value_blocksize),
-                     expected_blocksize_bytes)
+                                            LONG_VALUE_BLOCKSIZE),
+                     EXPECTED_BLOCKSIZE_BYTES)
     self.assertEqual(uint_to_bytes_array_based(LONG_VALUE,
-                                               long_value_blocksize),
-                     expected_blocksize_bytes)
+                                               LONG_VALUE_BLOCKSIZE),
+                     EXPECTED_BLOCKSIZE_BYTES)
     self.assertEqual(uint_to_bytes_naive(LONG_VALUE,
-                                         long_value_blocksize),
-                     expected_blocksize_bytes)
+                                         LONG_VALUE_BLOCKSIZE),
+                     EXPECTED_BLOCKSIZE_BYTES)
     self.assertEqual(uint_to_bytes_naive_array_based(LONG_VALUE,
-                                                     long_value_blocksize),
-                     expected_blocksize_bytes)
+                                                     LONG_VALUE_BLOCKSIZE),
+                     EXPECTED_BLOCKSIZE_BYTES)
 
     self.assertEqual(uint_to_bytes(123456789, 6),
                      b('\x00\x00\x07[\xcd\x15'))

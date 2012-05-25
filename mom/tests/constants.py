@@ -19,7 +19,8 @@
 from __future__ import absolute_import
 
 from mom._compat import HAVE_PYTHON3
-
+from mom.builtins import b
+from mom.codec import base64_decode
 
 if HAVE_PYTHON3:
   from mom.tests.py3kconstants import\
@@ -86,7 +87,7 @@ a/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJl\
 ZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uis\
 F81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PH\
 hhx4dbgYKAAA7""")
-RFC_GIF = datauri.Base64Decode(RFC_BASE64_GIF)
+RFC_GIF = base64_decode(RFC_BASE64_GIF)
 
 
 RFC_GIF_DATA_URL = b("""\

@@ -27,6 +27,7 @@ from mom.codec.text import utf8_encode_if_unicode,\
   utf8_decode, utf8_decode_if_bytes
 from mom.tests.constants import *
 
+
 class Test_to_utf8_if_unicode(unittest2.TestCase):
   def test_encodes_unicode_strings(self):
     self.assertEqual(utf8_encode_if_unicode(UNICODE_STRING), UTF8_BYTES)
@@ -34,7 +35,6 @@ class Test_to_utf8_if_unicode(unittest2.TestCase):
 
     self.assertEqual(utf8_encode_if_unicode(UNICODE_STRING2), UTF8_BYTES2)
     self.assertTrue(is_bytes(utf8_encode_if_unicode(UNICODE_STRING2)))
-
 
   def test_does_not_encode_else_to_utf8(self):
     self.assertEqual(utf8_encode_if_unicode(UTF8_BYTES), UTF8_BYTES)
@@ -225,4 +225,3 @@ class Test_unicode_to_utf8_recursive(unittest2.TestCase):
       "n": None,
       }
     self.assertDictEqual(utf8_encode_recursive(p), e)
-

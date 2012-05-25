@@ -24,6 +24,7 @@ import operator
 import unittest2
 from mom import gmp
 
+
 #TODO inplace long += gmp
 class Test_integer_init(unittest2.TestCase):
   def setUp(self):
