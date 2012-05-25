@@ -28,18 +28,18 @@ from mom.codec.integer import uint_to_bytes, bytes_to_uint
 from mom.security.random import generate_random_bytes
 from mom.tests.constants import UNICODE_STRING
 
-random_bytes = generate_random_bytes(384)
+RANDOM_BYTES = generate_random_bytes(384)
 
-zero_bytes_4 = ZERO_BYTE * 4
+ZERO_BYTES_4 = ZERO_BYTE * 4
 #raw_data = hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
-raw_data = b('\x00\\\xc8\x7fJ?\xdf\xe3\xa24kiS&|\xa8g(&0\xd3\xf9\xb7\x8ed')
-encoded = b('19TbMSWwHvnxAKy12iNm3KdbGfzfaMFViT')
-encoded_with_whitespace = b('''
+RAW_DATA = b('\x00\\\xc8\x7fJ?\xdf\xe3\xa24kiS&|\xa8g(&0\xd3\xf9\xb7\x8ed')
+ENCODED = b('19TbMSWwHvnxAKy12iNm3KdbGfzfaMFViT')
+ENCODED_WITH_WHITESPACE = b('''
 19TbMSWwHvnxAKy12iN
 m3KdbGfzfaMFViT
 ''')
 
-padding_raw = b('''\
+PADDING_RAW = b('''\
 \x00\x00\xa4\x97\xf2\x10\xfc\x9c]\x02\xfc}\xc7\xbd!\x1c\xb0\xc7M\xa0\xae\x16\
 ''')
 
@@ -49,29 +49,29 @@ class Test_base58_codec(unittest2.TestCase):
     self.assertEqual(len(ALT58_BYTES), 58)
 
   def test_codec_identity(self):
-    self.assertEqual(b58decode(b58encode(random_bytes)), random_bytes)
-    self.assertEqual(b58decode_naive(b58encode(random_bytes)), random_bytes)
-    self.assertEqual(base58_decode(base58_encode(random_bytes)),
-                     random_bytes)
+    self.assertEqual(b58decode(b58encode(RANDOM_BYTES)), RANDOM_BYTES)
+    self.assertEqual(b58decode_naive(b58encode(RANDOM_BYTES)), RANDOM_BYTES)
+    self.assertEqual(base58_decode(base58_encode(RANDOM_BYTES)),
+                     RANDOM_BYTES)
 
   def test_encodes_zero_prefixed_padding(self):
-    self.assertEqual(b58decode(b58encode(padding_raw)), padding_raw)
-    self.assertEqual(b58decode_naive(b58encode(padding_raw)), padding_raw)
-    self.assertEqual(base58_decode(base58_encode(padding_raw)), padding_raw)
+    self.assertEqual(b58decode(b58encode(PADDING_RAW)), PADDING_RAW)
+    self.assertEqual(b58decode_naive(b58encode(PADDING_RAW)), PADDING_RAW)
+    self.assertEqual(base58_decode(base58_encode(PADDING_RAW)), PADDING_RAW)
 
   def test_zero_bytes(self):
-    self.assertEqual(b58encode(zero_bytes_4), b('1111'))
-    self.assertEqual(b58decode(b('1111')), zero_bytes_4)
+    self.assertEqual(b58encode(ZERO_BYTES_4), b('1111'))
+    self.assertEqual(b58decode(b('1111')), ZERO_BYTES_4)
     self.assertEqual(b58encode(ZERO_BYTE), b('1'))
     self.assertEqual(b58decode(b('1')), ZERO_BYTE)
 
-    self.assertEqual(b58encode_naive(zero_bytes_4), b('1111'))
-    self.assertEqual(b58decode_naive(b('1111')), zero_bytes_4)
+    self.assertEqual(b58encode_naive(ZERO_BYTES_4), b('1111'))
+    self.assertEqual(b58decode_naive(b('1111')), ZERO_BYTES_4)
     self.assertEqual(b58encode_naive(ZERO_BYTE), b('1'))
     self.assertEqual(b58decode_naive(b('1')), ZERO_BYTE)
 
-    self.assertEqual(base58_encode(zero_bytes_4), b('1111'))
-    self.assertEqual(base58_decode(b('1111')), zero_bytes_4)
+    self.assertEqual(base58_encode(ZERO_BYTES_4), b('1111'))
+    self.assertEqual(base58_decode(b('1111')), ZERO_BYTES_4)
     self.assertEqual(base58_encode(ZERO_BYTE), b('1'))
     self.assertEqual(base58_decode(b('1')), ZERO_BYTE)
 
@@ -103,15 +103,15 @@ class Test_base58_codec(unittest2.TestCase):
     self.assertEqual(bytes_to_uint(b58decode(b("16Ho7Hs"))), 3471844090)
     self.assertEqual(b58encode(uint_to_bytes(3471844090, 5)), b("16Ho7Hs"))
 
-    self.assertEqual(b58encode(raw_data), encoded)
-    self.assertEqual(b58decode(encoded), raw_data)
-    self.assertEqual(b58decode(encoded_with_whitespace), raw_data)
-    self.assertEqual(b58decode_naive(encoded), raw_data)
-    self.assertEqual(b58decode_naive(encoded_with_whitespace), raw_data)
+    self.assertEqual(b58encode(RAW_DATA), ENCODED)
+    self.assertEqual(b58decode(ENCODED), RAW_DATA)
+    self.assertEqual(b58decode(ENCODED_WITH_WHITESPACE), RAW_DATA)
+    self.assertEqual(b58decode_naive(ENCODED), RAW_DATA)
+    self.assertEqual(b58decode_naive(ENCODED_WITH_WHITESPACE), RAW_DATA)
 
-    self.assertEqual(base58_encode(raw_data), encoded)
-    self.assertEqual(base58_decode(encoded), raw_data)
-    self.assertEqual(base58_decode(encoded_with_whitespace), raw_data)
+    self.assertEqual(base58_encode(RAW_DATA), ENCODED)
+    self.assertEqual(base58_decode(ENCODED), RAW_DATA)
+    self.assertEqual(base58_decode(ENCODED_WITH_WHITESPACE), RAW_DATA)
 
   def test_TypeError_when_bad_type(self):
     self.assertRaises(TypeError, b58encode, UNICODE_STRING)

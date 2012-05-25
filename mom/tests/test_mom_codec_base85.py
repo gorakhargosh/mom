@@ -22,41 +22,40 @@ import os
 import unittest2
 from mom.builtins import b
 from mom.codec._alt_base import ipv6_b85encode_naive, ipv6_b85decode_naive
-from mom.tests.constants import UNICODE_STRING
-from mom.tests.test_mom_builtins import UNICODE_STRING2
+from mom.tests.constants import UNICODE_STRING, UNICODE_STRING2
 
 from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode,\
   ipv6_b85decode, ASCII85_PREFIX, ASCII85_SUFFIX, rfc1924_b85encode,\
   rfc1924_b85decode, _check_compact_char_occurrence
 
-raw = b("""Man is distinguished, not only by his reason, but by this
+RAW = b("""Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
 mind, that by a perseverance of delight in the continued and
 indefatigable generation of knowledge, exceeds the short
 vehemence of any carnal pleasure.""").replace(b('\n'), b(' '))
 
-encoded = b("""\
+ENCODED = b("""\
 9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,\
 O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKY\
 i(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIa\
 l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G\
 >uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c""")
 
-encoded_with_ends = b("""\
+ENCODED_WITH_ENDS = b("""\
 <~9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,\
 O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKY\
 i(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIa\
 l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G\
 >uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c~>""")
 
-encoded_with_whitespace = b("""
+ENCODED_WITH_WHITESPACE = b("""
 9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,
 O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKY
 i(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIa
 l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G
 >uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c""")
 
-encoded_with_ends_and_whitespace = b("""
+ENCODED_WITH_ENDS_AND_WHITESPACE = b("""
 <~9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,
 O<DJ+*.@<*K0@<6L(Df-\\0Ec5e;DffZ(EZee.Bl.9pF"AGXBPCsi+DGm>@3BB/F*&OCAfu2/AKY
 i(DIb:@FD,*)+C]U=@3BN#EcYf8ATD3s@q?d$AftVqCh[NqF<G:8+EV:.+Cf>-FD5W8ARlolDIa
@@ -65,26 +64,26 @@ l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G
 
 
 #ipv6_address = '1080:0:0:0:8:800:200C:417A'
-ipv6_number = 21932261930451111902915077091070067066
-ipv6_raw_bytes = b('\x10\x80\x00\x00\x00\x00\x00\x00\x00\x08\x08\x00 \x0cAz')
-ipv6_encoded = b('4)+k&C#VzJ4br>0wv%Yp')
+IPV6_NUMBER = 21932261930451111902915077091070067066
+IPV6_RAW_BYTES = b('\x10\x80\x00\x00\x00\x00\x00\x00\x00\x08\x08\x00 \x0cAz')
+IPV6_ENCODED = b('4)+k&C#VzJ4br>0wv%Yp')
 
 # Wikipedia example.
 #ipv6_number_2 = 2**128 - 1  # 340282366920938463463374607431768211455L
-ipv6_number_2 = (1 << 128) - 1
-ipv6_encoded_2 = b('=r54lj&NUUO~Hi%c2ym0')
+IPV6_NUMBER_2 = (1 << 128) - 1
+IPV6_ENCODED_2 = b('=r54lj&NUUO~Hi%c2ym0')
 
 #ipv6_address_3 = '2607:f8f0:610:4000:214:38ff:feee:b65a'
-ipv6_number_3 = 50552058972053811105097158630017250906
-ipv6_encoded_3 = b('B7RDhRib#Y+VwlwuPBOG')
+IPV6_NUMBER_3 = 50552058972053811105097158630017250906
+IPV6_ENCODED_3 = b('B7RDhRib#Y+VwlwuPBOG')
 
 
 # Mercurial uses RFC1924 character set, but does not encode it like
 # IPv6.
-mercurial_bytes = b('\t\x91{W\xa80\xb1')
-mercurial_encoded = b('36XnOs4%e')
+MERCURIAL_BYTES = b('\t\x91{W\xa80\xb1')
+MERCURIAL_ENCODED = b('36XnOs4%e')
 
-random_256_bytes = b('''U\x94<Q\x1d\xad\xe4\xe3\xd1\xd1\xddR\xfb d\
+RANDOM_256_BYTES = b('''U\x94<Q\x1d\xad\xe4\xe3\xd1\xd1\xddR\xfb d\
 \x01R6\xadj\xa2\x03\xa4\xc1\xc7\x92\xa1U\x18\x19\xaep\r\xfe\xaa\
 \xd4\x11ob\xb2yV\x00\xb1\xb1\x98<O\x15\xf7?7\xbf\xc8\x0b\xbdR\
 \xe7\xf1rd\xe0:4\xe2\x9d\xd9I&v\x1cvN$\xb6\xca\xff\xc2?1\xa2\
@@ -97,23 +96,23 @@ random_256_bytes = b('''U\x94<Q\x1d\xad\xe4\xe3\xd1\xd1\xddR\xfb d\
 \x1fBX\x8cF\xc9\x88\x99[\\\xc4\xb1a\x80P\xe1\xa1\x9b\xd8\xe5j\
 \x817\x1a\xb58\x01\xfc\x80\xc5\x9e3\x80\xa4*''')
 
-random_256_mercurial = b('''\
+RANDOM_256_MERCURIAL = b('''\
 Rg^qY9j)Z!(b3&f`ygZiQZ}t>q64JC$C9B{7#Xf`4gRXs5pQC$c~$_iv6wth756_kzsL)\
 {Qs?n<WZ*h9;+@$^CUzWlP9(O<|H3~pqQPVf4OMVW{b+&Hb94mME}a8B<9*y~TmgS)?0_\
 nJP~S%^2nctEE{RO%e*LA$c!dYgM}Y9tlPJ4E2cZsR6fKCO6~YSb`x62iVSbb}N}zi@Z(\
 k@dH-SoyjoEmHp<s3<?%{<7obj;ILU8yGE6lKRGRLY&4PWkYaXYUN6@$1xSt+uV<yCWj5\
 g$TWj7G_bnOj`Mv0;Ev;h~$@<!XU98nrk9{D8%tGk~Nj''')
 
-random_odd_bytes = os.urandom(3333)
+RANDOM_ODD_BYTES = os.urandom(3333)
 
 # 31 bytes each.
-random_bytes_list = [
+RANDOM_BYTES_LIST = [
   b('a)X\xfb$$\xd1Q\xbe\xad\xb7\n\xf9\x99_\xc9\x90\xaf\rT\
 \xcf\x8d\xaaF\x0cz\xa8\xf2\x11\xd0\x1e'),
   b('Ep\xf7a&\xbd\xce.\x16BV~N;\xbe|\x80\xadZ\xc9\xbc\xf1\
 \xf7\xec\x15>\x1c\xb0\xd9\xcd&')
 ]
-rfc_encoded_bytes_list = [
+RFC_ENCODED_BYTES_LIST = [
   b('VJTSqBqY&MzOA<k`I%qIkgp9?&yA`^40@>Y5zrn'),
   b('MR50FCcVxs7D85jPCLGQfUR1|yz%$!6+RrW+07;'),
   ]
@@ -133,7 +132,7 @@ class Test_check_compact_char_occurrence(unittest2.TestCase):
 
 class Test_base85_encode(unittest2.TestCase):
   def test_encoding(self):
-    self.assertEqual(b85encode(raw), encoded)
+    self.assertEqual(b85encode(RAW), ENCODED)
 
   def test_encoding_wikipedia(self):
     self.assertEqual(b85encode(b("Man ")), b("9jqo^"))
@@ -149,18 +148,18 @@ class Test_base85_encode(unittest2.TestCase):
 
 class Test_base85_decode(unittest2.TestCase):
   def test_decoder(self):
-    self.assertEqual(b85decode(encoded, ASCII85_PREFIX, ASCII85_SUFFIX),
-                     raw)
+    self.assertEqual(b85decode(ENCODED, ASCII85_PREFIX, ASCII85_SUFFIX),
+                     RAW)
 
   def test_TypeError_on_unicode(self):
     self.assertRaises(TypeError, b85decode, UNICODE_STRING2)
 
   def test_decoder_ignores_whitespace_by_default(self):
-    self.assertEqual(b85decode(encoded_with_whitespace), raw)
+    self.assertEqual(b85decode(ENCODED_WITH_WHITESPACE), RAW)
 
   def test_decoder_ignores_ends_by_default(self):
-    self.assertEqual(b85decode(encoded_with_ends_and_whitespace,
-                               ASCII85_PREFIX, ASCII85_SUFFIX), raw)
+    self.assertEqual(b85decode(ENCODED_WITH_ENDS_AND_WHITESPACE,
+                               ASCII85_PREFIX, ASCII85_SUFFIX), RAW)
 
   def test_encoding_wikipedia(self):
     self.assertEqual(b85decode(b("9jqo^")), b("Man "))
@@ -189,10 +188,10 @@ class Test_codec(unittest2.TestCase):
   def test_identity(self):
     zero_bytes = b('\x00\x00\x00\x00\x00')
     self.assertEqual(b85decode(b85encode(zero_bytes)), zero_bytes)
-    self.assertEqual(b85decode(b85encode(random_256_bytes)),
-                     random_256_bytes)
-    self.assertEqual(b85decode(b85encode(random_odd_bytes)),
-                     random_odd_bytes)
+    self.assertEqual(b85decode(b85encode(RANDOM_256_BYTES)),
+                     RANDOM_256_BYTES)
+    self.assertEqual(b85decode(b85encode(RANDOM_ODD_BYTES)),
+                     RANDOM_ODD_BYTES)
 
   def test_raises_TypeError_when_invalid_argument(self):
     self.assertRaises(TypeError, b85encode, UNICODE_STRING)
@@ -216,18 +215,18 @@ class Test_codec(unittest2.TestCase):
 
 class Test_rfc1924_base85_encoding(unittest2.TestCase):
   def test_encoding(self):
-    self.assertEqual(rfc1924_b85encode(mercurial_bytes), mercurial_encoded)
-    self.assertEqual(rfc1924_b85encode(random_256_bytes),
-                     random_256_mercurial)
-    for a, e in zip(random_bytes_list, rfc_encoded_bytes_list):
+    self.assertEqual(rfc1924_b85encode(MERCURIAL_BYTES), MERCURIAL_ENCODED)
+    self.assertEqual(rfc1924_b85encode(RANDOM_256_BYTES),
+                     RANDOM_256_MERCURIAL)
+    for a, e in zip(RANDOM_BYTES_LIST, RFC_ENCODED_BYTES_LIST):
       self.assertEqual(rfc1924_b85encode(a), e)
 
   def test_decoding(self):
-    self.assertEqual(rfc1924_b85decode(mercurial_encoded), mercurial_bytes)
-    self.assertEqual(rfc1924_b85decode(random_256_mercurial),
-                     random_256_bytes)
+    self.assertEqual(rfc1924_b85decode(MERCURIAL_ENCODED), MERCURIAL_BYTES)
+    self.assertEqual(rfc1924_b85decode(RANDOM_256_MERCURIAL),
+                     RANDOM_256_BYTES)
     self.assertEqual(rfc1924_b85decode(b('|NsC0')), b('\xff\xff\xff\xff'))
-    for a, e in zip(random_bytes_list, rfc_encoded_bytes_list):
+    for a, e in zip(RANDOM_BYTES_LIST, RFC_ENCODED_BYTES_LIST):
       self.assertEqual(rfc1924_b85decode(e), a)
 
   def test_OverflowError_when_invalid_base85_byte_found(self):
@@ -254,53 +253,53 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
 
   def test_codec_identity(self):
     self.assertEqual(
-      rfc1924_b85decode(rfc1924_b85encode(mercurial_bytes)),
-      mercurial_bytes)
+      rfc1924_b85decode(rfc1924_b85encode(MERCURIAL_BYTES)),
+      MERCURIAL_BYTES)
     self.assertEqual(
-      rfc1924_b85decode(rfc1924_b85encode(random_256_bytes)),
-      random_256_bytes)
+      rfc1924_b85decode(rfc1924_b85encode(RANDOM_256_BYTES)),
+      RANDOM_256_BYTES)
     self.assertEqual(
-      rfc1924_b85decode(rfc1924_b85encode(random_odd_bytes)),
-      random_odd_bytes)
+      rfc1924_b85decode(rfc1924_b85encode(RANDOM_ODD_BYTES)),
+      RANDOM_ODD_BYTES)
 
 
 class Test_base85_ipv6_encoding(unittest2.TestCase):
   def test_encoding(self):
-    self.assertEqual(ipv6_b85encode(ipv6_number), ipv6_encoded)
-    self.assertEqual(ipv6_b85encode(ipv6_number_2), ipv6_encoded_2)
-    self.assertEqual(ipv6_b85encode(ipv6_number_3), ipv6_encoded_3)
+    self.assertEqual(ipv6_b85encode(IPV6_NUMBER), IPV6_ENCODED)
+    self.assertEqual(ipv6_b85encode(IPV6_NUMBER_2), IPV6_ENCODED_2)
+    self.assertEqual(ipv6_b85encode(IPV6_NUMBER_3), IPV6_ENCODED_3)
 
-    self.assertEqual(ipv6_b85encode_naive(ipv6_number), ipv6_encoded)
-    self.assertEqual(ipv6_b85encode_naive(ipv6_number_2), ipv6_encoded_2)
-    self.assertEqual(ipv6_b85encode_naive(ipv6_number_3), ipv6_encoded_3)
+    self.assertEqual(ipv6_b85encode_naive(IPV6_NUMBER), IPV6_ENCODED)
+    self.assertEqual(ipv6_b85encode_naive(IPV6_NUMBER_2), IPV6_ENCODED_2)
+    self.assertEqual(ipv6_b85encode_naive(IPV6_NUMBER_3), IPV6_ENCODED_3)
 
   def test_decoding(self):
-    self.assertEqual(ipv6_b85decode(ipv6_encoded), ipv6_number)
-    self.assertEqual(ipv6_b85decode(ipv6_encoded_2), ipv6_number_2)
-    self.assertEqual(ipv6_b85decode(ipv6_encoded_3), ipv6_number_3)
+    self.assertEqual(ipv6_b85decode(IPV6_ENCODED), IPV6_NUMBER)
+    self.assertEqual(ipv6_b85decode(IPV6_ENCODED_2), IPV6_NUMBER_2)
+    self.assertEqual(ipv6_b85decode(IPV6_ENCODED_3), IPV6_NUMBER_3)
 
-    self.assertEqual(ipv6_b85decode_naive(ipv6_encoded), ipv6_number)
-    self.assertEqual(ipv6_b85decode_naive(ipv6_encoded_2), ipv6_number_2)
-    self.assertEqual(ipv6_b85decode_naive(ipv6_encoded_3), ipv6_number_3)
+    self.assertEqual(ipv6_b85decode_naive(IPV6_ENCODED), IPV6_NUMBER)
+    self.assertEqual(ipv6_b85decode_naive(IPV6_ENCODED_2), IPV6_NUMBER_2)
+    self.assertEqual(ipv6_b85decode_naive(IPV6_ENCODED_3), IPV6_NUMBER_3)
 
   def test_TypeError_when_unicode(self):
     self.assertRaises(TypeError, ipv6_b85decode, UNICODE_STRING2)
     self.assertRaises(TypeError, ipv6_b85decode_naive, UNICODE_STRING2)
 
   def test_codec_identity(self):
-    self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number)),
-                     ipv6_number)
-    self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number_2)),
-                     ipv6_number_2)
-    self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number_3)),
-                     ipv6_number_3)
+    self.assertEqual(ipv6_b85decode(ipv6_b85encode(IPV6_NUMBER)),
+                     IPV6_NUMBER)
+    self.assertEqual(ipv6_b85decode(ipv6_b85encode(IPV6_NUMBER_2)),
+                     IPV6_NUMBER_2)
+    self.assertEqual(ipv6_b85decode(ipv6_b85encode(IPV6_NUMBER_3)),
+                     IPV6_NUMBER_3)
 
-    self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(ipv6_number)),
-                     ipv6_number)
-    self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(ipv6_number_2)),
-                     ipv6_number_2)
-    self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(ipv6_number_3)),
-                     ipv6_number_3)
+    self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(IPV6_NUMBER)),
+                     IPV6_NUMBER)
+    self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(IPV6_NUMBER_2)),
+                     IPV6_NUMBER_2)
+    self.assertEqual(ipv6_b85decode_naive(ipv6_b85encode_naive(IPV6_NUMBER_3)),
+                     IPV6_NUMBER_3)
 
   def test_ValueError_when_negative(self):
     self.assertRaises(ValueError, ipv6_b85encode, -1)
@@ -327,10 +326,10 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
 
   def test_ignores_whitespace(self):
     self.assertEqual(ipv6_b85decode(b('=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0')),
-                     ipv6_number_2)
+                     IPV6_NUMBER_2)
     self.assertEqual(
       ipv6_b85decode_naive(b('=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0')),
-      ipv6_number_2)
+      IPV6_NUMBER_2)
 
   def test_OverflowError_when_stray_characters_found(self):
     self.assertRaises(OverflowError, ipv6_b85decode,

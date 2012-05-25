@@ -25,10 +25,10 @@ if not HAVE_PYTHON3:
   from pyasn1.error import SubstrateUnderrunError
   from mom.security.codec import public_key_pem_decode, private_key_pem_decode
 
-  from mom.tests.test_mom_security_codec_pem import private_key,\
-    public_key, certificate
+  from mom.tests.test_mom_security_codec_pem import PRIVATE_KEY,\
+    PUBLIC_KEY, CERTIFICATE
 
-  private_key_decoded = {
+  PRIVATE_KEY_DECODED = {
     'coefficient': 6263309813628295397107400643432350851721956841159071320214251700452060114366343340155171376140395643703716902907125213041289999255650845147022475122987728
     ,
     'exponent1': 3822093812252919639580364669476622791207236895386024347699409509479994135036937701181018285803044904622661246121518351058015126950695870028830018671348955
@@ -47,13 +47,13 @@ if not HAVE_PYTHON3:
     'version': 0,
     }
 
-  public_key_decoded = {
+  PUBLIC_KEY_DECODED = {
     'exponent': 65537,
     'modulus': 126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731
     ,
     }
 
-  junk = """\
+  JUNK = """\
 eqp1iAIIh89/WHE3rfwNVPeBl2ZU9ywUk9vvhUot8yuCrlprR6avhfIkUm1LCSqi
 tqEwJqVmtJHmkM4VDFr6uiLknVaJYJ+SvK0mRlml5ACre1FH1rMBgvs3G+cvPNA9
 13Vh5VW/eHAzCLiqXEc74azybwhrQWeiRTlEE6BSlQ0Zg5zz2VhsAQN4KPxrD1lP
@@ -78,48 +78,48 @@ CIfb09GR/D1+6ogCfayqZoXe/xaRRjM3nzOLP4Z4ouMyZC7krj/UsItg0Y8FS0Wq
 gZU88x/X78LlryEvfB0KH/GuULo6ziAzsSsB5Okfm68lFLdaNWA2d3f8lPvQNmL3
 bZI="""
 
-  junk_private_key = """\
+  JUNK_PRIVATE_KEY = """\
     -----BEGIN PRIVATE KEY-----
     %s
-    -----END PRIVATE KEY-----""" % junk
-  junk_public_key = """\
+    -----END PRIVATE KEY-----""" % JUNK
+  JUNK_PUBLIC_KEY = """\
     -----BEGIN PUBLIC KEY-----
     %s
-    -----END PUBLIC KEY-----""" % junk
-  junk_certificate = """\
+    -----END PUBLIC KEY-----""" % JUNK
+  JUNK_CERTIFICATE = """\
     -----BEGIN CERTIFICATE-----
     %s
-    -----END CERTIFICATE-----""" % junk
+    -----END CERTIFICATE-----""" % JUNK
 
 
   class Test_public_key_pem_decode(unittest2.TestCase):
     def test_decode(self):
-      self.assertDictEqual(public_key_pem_decode(public_key),
-                           public_key_decoded)
-      self.assertDictEqual(public_key_pem_decode(certificate),
-                           public_key_decoded)
+      self.assertDictEqual(public_key_pem_decode(PUBLIC_KEY),
+                           PUBLIC_KEY_DECODED)
+      self.assertDictEqual(public_key_pem_decode(CERTIFICATE),
+                           PUBLIC_KEY_DECODED)
 
     def test_NotImplementedError_when_not_public_key(self):
       self.assertRaises(NotImplementedError,
-                        public_key_pem_decode, private_key)
+                        public_key_pem_decode, PRIVATE_KEY)
 
     def test_fails_on_junk(self):
       self.assertRaises(SubstrateUnderrunError,
-                        public_key_pem_decode, junk_public_key)
+                        public_key_pem_decode, JUNK_PUBLIC_KEY)
       self.assertRaises(SubstrateUnderrunError,
-                        public_key_pem_decode, junk_certificate)
+                        public_key_pem_decode, JUNK_CERTIFICATE)
 
   class Test_private_key_pem_decode(unittest2.TestCase):
     def test_decode(self):
-      self.assertDictEqual(private_key_pem_decode(private_key),
-                           private_key_decoded)
+      self.assertDictEqual(private_key_pem_decode(PRIVATE_KEY),
+                           PRIVATE_KEY_DECODED)
 
     def test_NotImplementedError_when_not_private_key(self):
       self.assertRaises(NotImplementedError,
-                        private_key_pem_decode, public_key)
+                        private_key_pem_decode, PUBLIC_KEY)
       self.assertRaises(NotImplementedError,
-                        private_key_pem_decode, certificate)
+                        private_key_pem_decode, CERTIFICATE)
 
     def test_fails_on_junk(self):
       self.assertRaises(SubstrateUnderrunError,
-                        private_key_pem_decode, junk_private_key)
+                        private_key_pem_decode, JUNK_PRIVATE_KEY)

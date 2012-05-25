@@ -31,21 +31,21 @@ from mom.tests.constants import UNICODE_STRING
 from mom.tests.test_mom_codec import long_value_blocksize,\
   expected_blocksize_bytes, zero_bytes, one_zero_byte
 
-long_value = 71671831749689734735896910666236152091910950933161125188784836897624039426313152092699961904060141667369
-expected_fill_bytes = b('''\
+LONG_VALUE = 71671831749689734735896910666236152091910950933161125188784836897624039426313152092699961904060141667369
+EXPECTED_FILL_BYTES = b('''\
 \x00\x01\xff\xff\xff\xff\xff\xff\xff\xff\x000 0\x0c\x06\x08*\x86H\x86\
 \xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)''')
-expected_bytes = b('''\
+EXPECTED_BYTES = b('''\
 \x01\xff\xff\xff\xff\xff\xff\xff\xff\x000 0\x0c\x06\x08*\x86H\x86\
 \xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)''')
 
 
 class Test_unsigned_integer_to_bytes(unittest2.TestCase):
   def test_long_value(self):
-    self.assertEqual(uint_to_bytes(long_value),
-                     expected_bytes)
-    self.assertEqual(uint_to_bytes(long_value, fill_size=45),
-                     expected_fill_bytes)
+    self.assertEqual(uint_to_bytes(LONG_VALUE),
+                     EXPECTED_BYTES)
+    self.assertEqual(uint_to_bytes(LONG_VALUE, fill_size=45),
+                     EXPECTED_FILL_BYTES)
 
   def test_fill_size(self):
     self.assertEqual(uint_to_bytes(0xc0ff, fill_size=4),
@@ -191,31 +191,31 @@ class Test_uint_to_bytes(unittest2.TestCase):
     self.assertEqual(uint_to_bytes_naive_array_based(123456789),
                      b('\x07[\xcd\x15'))
 
-    self.assertEqual(uint_to_bytes(long_value),
-                     expected_bytes)
-    self.assertEqual(uint_to_bytes_pycrypto(long_value),
-                     expected_bytes)
-    self.assertEqual(uint_to_bytes_array_based(long_value),
-                     expected_bytes)
-    self.assertEqual(uint_to_bytes_naive(long_value),
-                     expected_bytes)
-    self.assertEqual(uint_to_bytes_naive_array_based(long_value),
-                     expected_bytes)
+    self.assertEqual(uint_to_bytes(LONG_VALUE),
+                     EXPECTED_BYTES)
+    self.assertEqual(uint_to_bytes_pycrypto(LONG_VALUE),
+                     EXPECTED_BYTES)
+    self.assertEqual(uint_to_bytes_array_based(LONG_VALUE),
+                     EXPECTED_BYTES)
+    self.assertEqual(uint_to_bytes_naive(LONG_VALUE),
+                     EXPECTED_BYTES)
+    self.assertEqual(uint_to_bytes_naive_array_based(LONG_VALUE),
+                     EXPECTED_BYTES)
 
   def test_chunk_size(self):
-    self.assertEqual(uint_to_bytes(long_value,
+    self.assertEqual(uint_to_bytes(LONG_VALUE,
                                    long_value_blocksize),
                      expected_blocksize_bytes)
-    self.assertEqual(uint_to_bytes_pycrypto(long_value,
+    self.assertEqual(uint_to_bytes_pycrypto(LONG_VALUE,
                                             long_value_blocksize),
                      expected_blocksize_bytes)
-    self.assertEqual(uint_to_bytes_array_based(long_value,
+    self.assertEqual(uint_to_bytes_array_based(LONG_VALUE,
                                                long_value_blocksize),
                      expected_blocksize_bytes)
-    self.assertEqual(uint_to_bytes_naive(long_value,
+    self.assertEqual(uint_to_bytes_naive(LONG_VALUE,
                                          long_value_blocksize),
                      expected_blocksize_bytes)
-    self.assertEqual(uint_to_bytes_naive_array_based(long_value,
+    self.assertEqual(uint_to_bytes_naive_array_based(LONG_VALUE,
                                                      long_value_blocksize),
                      expected_blocksize_bytes)
 

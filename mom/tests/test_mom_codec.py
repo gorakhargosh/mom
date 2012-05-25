@@ -36,7 +36,7 @@ from mom.codec import\
   base85_encode, base85_decode, base58_encode, base58_decode,\
   base64_urlsafe_encode, base64_urlsafe_decode
 from mom.tests.test_mom_codec_base85 import raw as base85_raw,\
-  encoded as base85_encoded
+  ENCODED as base85_encoded
 
 # Generates a 1024-bit strength random byte string.
 random_bytes_1024 = generate_random_bytes(1024 >> 3)

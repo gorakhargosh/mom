@@ -26,9 +26,9 @@ from mom.codec.base36 import b36encode, b36decode, ASCII36_BYTES
 from mom.codec.integer import uint_to_bytes
 from mom.security.random import generate_random_bytes
 
-random_bytes = generate_random_bytes(384)
-zero_bytes_4 = ZERO_BYTE * 4
-raw_data = b('''\
+RANDOM_BYTES = generate_random_bytes(384)
+ZERO_BYTES_4 = ZERO_BYTE * 4
+RAW_DATA = b('''\
 \x00\x00\xa4\x97\xf2\x10\xfc\x9c]\x02\xfc}\xc7\xbd!\x1c\xb0\xc7M\xa0\xae\x16\
 ''')
 
@@ -37,22 +37,22 @@ class Test_base36_codec(unittest2.TestCase):
     self.assertEqual(len(ASCII36_BYTES), 36)
 
   def test_codec_identity(self):
-    self.assertEqual(b36decode(b36encode(random_bytes)), random_bytes)
-    self.assertEqual(base36_decode(base36_encode(random_bytes)),
-                     random_bytes)
+    self.assertEqual(b36decode(b36encode(RANDOM_BYTES)), RANDOM_BYTES)
+    self.assertEqual(base36_decode(base36_encode(RANDOM_BYTES)),
+                     RANDOM_BYTES)
 
   def test_encodes_zero_prefixed_padding(self):
-    self.assertEqual(b36decode(b36encode(raw_data)), raw_data)
-    self.assertEqual(base36_decode(base36_encode(raw_data)), raw_data)
+    self.assertEqual(b36decode(b36encode(RAW_DATA)), RAW_DATA)
+    self.assertEqual(base36_decode(base36_encode(RAW_DATA)), RAW_DATA)
 
   def test_zero_bytes(self):
-    self.assertEqual(b36encode(zero_bytes_4), b('0000'))
-    self.assertEqual(b36decode(b('0000')), zero_bytes_4)
+    self.assertEqual(b36encode(ZERO_BYTES_4), b('0000'))
+    self.assertEqual(b36decode(b('0000')), ZERO_BYTES_4)
     self.assertEqual(b36encode(ZERO_BYTE), b('0'))
     self.assertEqual(b36decode(b('0')), ZERO_BYTE)
 
-    self.assertEqual(base36_encode(zero_bytes_4), b('0000'))
-    self.assertEqual(base36_decode(b('0000')), zero_bytes_4)
+    self.assertEqual(base36_encode(ZERO_BYTES_4), b('0000'))
+    self.assertEqual(base36_decode(b('0000')), ZERO_BYTES_4)
     self.assertEqual(base36_encode(ZERO_BYTE), b('0'))
     self.assertEqual(base36_decode(b('0')), ZERO_BYTE)
 

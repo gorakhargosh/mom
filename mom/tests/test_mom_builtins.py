@@ -45,7 +45,7 @@ from mom.builtins import\
 from mom.tests.constants import UNICODE_STRING, UNICODE_STRING2,\
   UTF8_BYTES, UTF8_BYTES2, LATIN1_BYTES
 
-random_bytes = generate_random_bytes(100)
+RANDOM_BYTES = generate_random_bytes(100)
 
 class Test_byte(unittest2.TestCase):
   def test_byte(self):
@@ -367,7 +367,7 @@ class Test_integer_bit_size(unittest2.TestCase):
 class Test_is_bytes(unittest2.TestCase):
   def test_accepts_bytes(self):
     # Must accept any type of bytes.
-    self.assertTrue(is_bytes(random_bytes))
+    self.assertTrue(is_bytes(RANDOM_BYTES))
     self.assertTrue(is_bytes(UTF8_BYTES))
     self.assertTrue(is_bytes(UTF8_BYTES2))
     self.assertTrue(is_bytes(LATIN1_BYTES))
@@ -390,7 +390,7 @@ class Test_is_unicode(unittest2.TestCase):
     self.assertTrue(is_unicode(UNICODE_STRING2))
 
   def test_rejects_non_unicode(self):
-    self.assertFalse(is_unicode(random_bytes))
+    self.assertFalse(is_unicode(RANDOM_BYTES))
     self.assertFalse(is_unicode(UTF8_BYTES))
     self.assertFalse(is_unicode(UTF8_BYTES2))
     self.assertFalse(is_unicode(False))
@@ -404,7 +404,7 @@ class Test_is_unicode(unittest2.TestCase):
 
 class Test_is_bytes_or_unicode(unittest2.TestCase):
   def test_accepts_any_string(self):
-    self.assertTrue(is_bytes_or_unicode(random_bytes))
+    self.assertTrue(is_bytes_or_unicode(RANDOM_BYTES))
     self.assertTrue(is_bytes_or_unicode(UTF8_BYTES))
     self.assertTrue(is_bytes_or_unicode(UTF8_BYTES2))
     self.assertTrue(is_bytes_or_unicode(UNICODE_STRING))
