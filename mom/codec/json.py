@@ -32,6 +32,9 @@ from mom.codec.text import utf8_decode_recursive
 from mom.codec._json_compat import json_dumps as _json_dumps, json_loads
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 if HAVE_PYTHON3:
   json_dumps = _json_dumps
 else:

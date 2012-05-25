@@ -23,6 +23,10 @@ from mom.codec.json import json_encode, json_decode
 from mom.codec.text import utf8_encode
 from mom.tests.constants import *
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class Test_decode(unittest2.TestCase):
   def test_decode(self):
     # decode accepts unicode only.

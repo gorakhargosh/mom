@@ -28,6 +28,10 @@ from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode,\
   ipv6_b85decode, ASCII85_PREFIX, ASCII85_SUFFIX, rfc1924_b85encode,\
   rfc1924_b85decode, _check_compact_char_occurrence
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 RAW = b("""Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
 mind, that by a perseverance of delight in the continued and

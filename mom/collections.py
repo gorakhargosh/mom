@@ -36,6 +36,10 @@ except ImportError:
   import Queue as queue
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
+
 class SetQueue(queue.Queue):
   """
   Thread-safe implementation of an ordered set queue, which coalesces

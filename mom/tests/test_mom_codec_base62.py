@@ -26,6 +26,10 @@ from mom.codec.base62 import b62encode, b62decode, ASCII62_BYTES, ALT62_BYTES
 from mom.security.random import generate_random_bytes
 from mom.tests.constants import UNICODE_STRING
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 RANDOM_BYTES_LEN_512 = generate_random_bytes(512)
 
 ZERO_BYTES = b('\x00\x00\x00\x00')

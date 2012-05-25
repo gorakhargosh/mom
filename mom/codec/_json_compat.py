@@ -70,3 +70,6 @@ except Exception:
           "http://pypi.python.org/pypi/simplejson/")
 
       json_dumps = json_loads
+
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

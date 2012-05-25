@@ -28,3 +28,5 @@
 .. automodule:: mom.security.codec
 
 """
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

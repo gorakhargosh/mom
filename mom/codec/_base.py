@@ -42,6 +42,9 @@ from mom.codec.integer import uint_to_bytes, bytes_to_uint
 from mom.builtins import bytes_leading, is_bytes
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 def base_encode(raw_bytes, base, base_bytes, base_zero, padding=True):
   """
   Encodes raw bytes given a base.

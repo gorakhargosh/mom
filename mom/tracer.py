@@ -16,7 +16,7 @@ and the values of its arguments before making the call (which is more
 commonly referred to as "tracing", but Python already has a trace module).
 
 For example, to trace calls made to functions in "my_module" do::
-    
+
     from mom import tracer
     import my_module
     tracer.trace_module(my_module)
@@ -48,6 +48,9 @@ from __future__ import absolute_import
 import inspect
 import sys
 import functools
+
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 def name(item):
@@ -158,4 +161,3 @@ if __name__ == "__main__":
   option_flags = doctest.ELLIPSIS
   doctest.testfile('traceexample.txt', optionflags=option_flags)
   doctest.testmod(optionflags=option_flags)
-

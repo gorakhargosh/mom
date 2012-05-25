@@ -39,6 +39,10 @@ from functools import partial
 from fnmatch import fnmatch, fnmatchcase
 from mom.functional import some, identity
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = ['match_path',
            'match_path_against',
            'match_any_paths',

@@ -28,6 +28,9 @@ from mom.codec.text import utf8_encode_if_unicode,\
 from mom.tests.constants import *
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class Test_to_utf8_if_unicode(unittest2.TestCase):
   def test_encodes_unicode_strings(self):
     self.assertEqual(utf8_encode_if_unicode(UNICODE_STRING), UTF8_BYTES)

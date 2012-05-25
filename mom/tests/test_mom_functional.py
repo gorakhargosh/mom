@@ -35,6 +35,9 @@ from mom.functional import\
   never, partition_dict, occurrences, group_consecutive, flock
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class Test_some(unittest2.TestCase):
   def test_valid(self):
     self.assertTrue(some(lambda w: w > 0, [0, -1, 4, 6]))

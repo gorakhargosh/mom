@@ -47,11 +47,13 @@ from mom._compat import EMPTY_BYTE, EQUAL_BYTE, FORWARD_SLASH_BYTE
 
 from mom.builtins import b
 
+
 __version__ = '0.1.3'
 __author__ = 'Joe Gregorio'
 __email__ = 'joe@bitworking.org'
 __license__ = 'MIT License'
 __credits__ = ''
+
 
 SEMICOLON_BYTE = b(';')
 ASTERISK_BYTE = b('*')

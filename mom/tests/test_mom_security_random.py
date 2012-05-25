@@ -31,6 +31,9 @@ from mom.security.random import\
   random_shuffle
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class Test_generate_random_bits(unittest2.TestCase):
   def test_range(self):
     for _ in range(999):

@@ -25,6 +25,9 @@ from mom._compat import ZERO_BYTE, get_word_alignment, EMPTY_BYTE
 from mom.builtins import byte_ord
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 def integer_byte_length_shift_counting(num):
   """
   Number of bytes needed to represent a integer.

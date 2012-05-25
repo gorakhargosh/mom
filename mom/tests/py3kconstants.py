@@ -16,7 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 from mom.builtins import b
+
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
 
 UNICODE_STRING = '\u00ae'
 UNICODE_STRING2 = '深入 Python'

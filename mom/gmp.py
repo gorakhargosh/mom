@@ -50,6 +50,10 @@ from ctypes import CDLL, Structure, POINTER, byref,\
 from ctypes.util import find_library
 from mom._compat import HAVE_PYTHON3
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 # pylint: disable-msg=W0212
 # pylint: disable-msg=C0103
 

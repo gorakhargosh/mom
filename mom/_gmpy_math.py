@@ -6,6 +6,10 @@
 GMPY-based functions.
 """
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 try:
   import gmpy2 as gmpy
 

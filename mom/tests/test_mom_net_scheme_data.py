@@ -24,6 +24,10 @@ from mom.codec import base64_decode
 from mom.net.scheme.data import data_urlencode, data_urlparse
 from mom.tests.constants import UNICODE_STRING
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 PNG_BIN = b('''\
 \x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x05\x00\x00\x00\x05\
 \x08\x06\x00\x00\x00\x8do&\xe5\x00\x00\x00\x1cIDAT\x08\xd7c\xf8\xff\

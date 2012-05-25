@@ -40,6 +40,10 @@ from mom.codec.base85 import RFC1924_ORDS, RFC1924_BYTES
 from mom.codec.integer import bytes_to_uint
 from mom.functional import leading
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 

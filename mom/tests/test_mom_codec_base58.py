@@ -28,6 +28,10 @@ from mom.codec.integer import uint_to_bytes, bytes_to_uint
 from mom.security.random import generate_random_bytes
 from mom.tests.constants import UNICODE_STRING
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 RANDOM_BYTES = generate_random_bytes(384)
 
 ZERO_BYTES_4 = ZERO_BYTE * 4

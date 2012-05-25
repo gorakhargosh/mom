@@ -9,6 +9,10 @@ from __future__ import division
 
 from mom._compat import range
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 try:
   # TODO: numpy import disabled temporarily until we can convert
   # the generated list to Python native.

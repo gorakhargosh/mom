@@ -16,6 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+from __future__ import absolute_import
+
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 UNICODE_STRING = u'\u00ae'
 UNICODE_STRING2 = u'深入 Python'
 FOO = 'foo'

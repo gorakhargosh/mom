@@ -29,6 +29,9 @@ from threading import Thread
 from mom.collections import SetQueue, AttributeDict, attrdict
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class Test_AttributeDict(unittest2.TestCase):
   def test_behavior(self):
     d = AttributeDict(something="foobar", another_thing="haha")

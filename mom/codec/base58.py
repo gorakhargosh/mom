@@ -83,6 +83,9 @@ from mom.builtins import byte
 from mom.codec._base import base_encode, base_decode
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 # Follows ASCII order.
 ASCII58_BYTES = ("123456789"
                  "ABCDEFGHJKLMNPQRSTUVWXYZ"

@@ -36,6 +36,9 @@ from mom.security.codec.pem.x509 import X509Certificate
 from mom.security.codec.pem.rsa import RSAPrivateKey, RSAPublicKey
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 def public_key_pem_decode(pem_key):
   """
   Decodes a PEM-encoded public key/X.509 certificate string into

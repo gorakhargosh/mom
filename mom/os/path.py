@@ -40,6 +40,9 @@ from functools import partial
 from mom._compat import next
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   'get_dir_walker',
   'walk',

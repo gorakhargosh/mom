@@ -231,6 +231,9 @@ from mom.builtins import is_bytes_or_unicode
 from mom._compat import range, dict_each, reduce as _reduce, next
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "always",
   "chunks",

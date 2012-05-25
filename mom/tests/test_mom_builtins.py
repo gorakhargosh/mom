@@ -45,7 +45,12 @@ from mom.builtins import\
 from mom.tests.constants import UNICODE_STRING, UNICODE_STRING2,\
   UTF8_BYTES, UTF8_BYTES2, LATIN1_BYTES
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 RANDOM_BYTES = generate_random_bytes(100)
+
 
 class Test_byte(unittest2.TestCase):
   def test_byte(self):

@@ -172,6 +172,9 @@ from mom.builtins import byte
 from mom.codec._base import base_encode, base_decode
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 # Follows ASCII order.
 ASCII62_BYTES = (string.DIGITS +
                  string.ASCII_UPPERCASE +

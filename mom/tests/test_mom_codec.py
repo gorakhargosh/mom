@@ -38,6 +38,10 @@ from mom.codec import\
 from mom.tests.test_mom_codec_base85 import RAW as base85_raw,\
   ENCODED as base85_encoded
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 # Generates a 1024-bit strength random byte string.
 RANDOM_BYTES_1024 = generate_random_bytes(1024 >> 3)
 # Generates a 2048-bit strength random byte string.

@@ -42,3 +42,5 @@ this library and think it should, speak up.
 .. automodule:: mom.math
 .. automodule:: mom.string
 """
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

@@ -43,6 +43,9 @@ from __future__ import absolute_import
 from pyasn1.type import univ, namedtype, namedval, constraint
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class DSAPrivateKey(univ.Sequence):
   """PKIX compliant DSA private key structure"""
   componentType = namedtype.NamedTypes(

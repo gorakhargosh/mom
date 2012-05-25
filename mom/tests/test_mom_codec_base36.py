@@ -26,11 +26,16 @@ from mom.codec.base36 import b36encode, b36decode, ASCII36_BYTES
 from mom.codec.integer import uint_to_bytes
 from mom.security.random import generate_random_bytes
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 RANDOM_BYTES = generate_random_bytes(384)
 ZERO_BYTES_4 = ZERO_BYTE * 4
 RAW_DATA = b('''\
 \x00\x00\xa4\x97\xf2\x10\xfc\x9c]\x02\xfc}\xc7\xbd!\x1c\xb0\xc7M\xa0\xae\x16\
 ''')
+
 
 class Test_base36_codec(unittest2.TestCase):
   def test_ensure_charset_length(self):

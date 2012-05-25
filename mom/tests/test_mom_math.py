@@ -24,6 +24,10 @@ from mom.math import gcd, lcm, is_prime, _pure_is_prime,\
   generate_random_prime, generate_random_safe_prime, exact_log2
 from mom._prime_sieve import make_prime_sieve
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class Test__pure_is_prime(unittest2.TestCase):
   def test_pure_is_prime_for_sieves(self):
     for i in [10, 100, 1000, 10000]:

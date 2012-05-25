@@ -110,6 +110,9 @@ from mom._compat import\
   next, INTEGER_TYPES, byte_ord, ZERO_BYTE
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "byte",
   "byte_ord",
@@ -131,6 +134,7 @@ __all__ = [
   "is_odd",
   "is_positive",
   ]
+
 
 # Integral range
 range = range

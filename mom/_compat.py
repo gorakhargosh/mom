@@ -15,6 +15,10 @@ import os
 import sys
 from struct import pack
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 try:
   INT_MAX = sys.maxsize
 except AttributeError:
@@ -305,4 +309,3 @@ def get_word_alignment(num, force_arch=64,
   else:
     # 8-bit unsigned integer.
     return 8, 1, UINT8_MAX, "B"
-

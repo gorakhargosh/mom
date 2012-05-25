@@ -308,6 +308,9 @@ from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode,\
   rfc1924_b85decode
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "base85_encode",
   "base85_decode",

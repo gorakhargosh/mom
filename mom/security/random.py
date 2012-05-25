@@ -58,6 +58,8 @@ from mom.builtins import is_integer, byte, integer_bit_size
 from mom.codec import hex_encode
 from mom.codec.integer import bytes_to_uint
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
 
 __all__ = [
   "generate_random_bits",

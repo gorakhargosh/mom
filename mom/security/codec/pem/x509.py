@@ -33,6 +33,9 @@ from mom.security.codec.pem import\
 from mom.security.codec.asn1.x509 import Certificate
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 def bitarray_to_integer(bitarray):
   return int(reduce((lambda a, b: (int(a) << 1) + int(b)), bitarray))
 

@@ -31,6 +31,10 @@ from mom.tests.constants import UNICODE_STRING
 from mom.tests.test_mom_codec import LONG_VALUE_BLOCKSIZE,\
   EXPECTED_BLOCKSIZE_BYTES, ZERO_BYTES, ONE_ZERO_BYTE
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 LONG_VALUE = 71671831749689734735896910666236152091910950933161125188784836897624039426313152092699961904060141667369
 EXPECTED_FILL_BYTES = b('''\
 \x00\x01\xff\xff\xff\xff\xff\xff\xff\xff\x000 0\x0c\x06\x08*\x86H\x86\

@@ -40,6 +40,9 @@ from mom.prime_sieve import SIEVE
 from mom._compat import range
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "gcd",
   "lcm",

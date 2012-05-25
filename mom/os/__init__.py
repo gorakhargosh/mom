@@ -26,6 +26,10 @@
 
 from mom.os import path, patterns
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "path",
   "patterns",

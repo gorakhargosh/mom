@@ -29,9 +29,13 @@ import warnings
 import functools
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "deprecated",
   ]
+
 
 def deprecated(func):
   """

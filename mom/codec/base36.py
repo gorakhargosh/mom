@@ -42,6 +42,10 @@ from mom._compat import HAVE_PYTHON3, EMPTY_BYTE
 from mom.builtins import byte
 from mom.codec._base import base_encode, uint_to_base256
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 # Follows ASCII order.
 ASCII36_BYTES = (string.DIGITS +
                  string.ASCII_UPPERCASE).encode("ascii")

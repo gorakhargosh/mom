@@ -27,6 +27,10 @@ from mom.security.hash import sha1_hex_digest, md5_digest,\
   hmac_sha1_digest, hmac_sha1_base64_digest
 from mom.tests.constants import UNICODE_STRING, UNICODE_STRING2
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 INPUT_MD5_DIGEST = b('\xe8\x0bP\x17\t\x89P\xfcX\xaa\xd8<\x8c\x14\x97\x8e')
 INPUT_SHA1_DIGEST = b(
   '\x1f\x8a\xc1\x0f#\xc5\xb5\xbc\x11g\xbd\xa8K\x83>\\\x05zw\xd2')

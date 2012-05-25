@@ -11,8 +11,11 @@ from __future__ import absolute_import
 
 from math import sqrt, ceil
 import numpy as np
-
 import itertools
+
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
 
 def make_prime_sieve(size):
   """

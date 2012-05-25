@@ -42,6 +42,9 @@ from mom.net.mimeparse import parse_mime_type
 from mom.codec import base64_encode, base64_decode
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "data_urlencode",
   "data_urlparse",

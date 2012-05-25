@@ -108,6 +108,9 @@ from __future__ import absolute_import
 from mom.builtins import is_bytes, is_unicode
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "utf8_encode",
   "utf8_decode",

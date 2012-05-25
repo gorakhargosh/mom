@@ -42,6 +42,10 @@ from __future__ import absolute_import
 from functools import partial
 from mom.codec import base64_decode, base64_encode
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   'der_to_pem',
   'der_to_pem_certificate',

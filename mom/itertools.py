@@ -23,6 +23,9 @@ except ImportError:
 from itertools import repeat, chain
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 if getattr(chain, "from_iterable", None):
   chain = chain
 else:

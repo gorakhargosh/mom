@@ -20,3 +20,5 @@
 :module: mom.security.codec.asn1
 :synopsis: Contains ASN.1 parsing routines to parse PEM-encoded keys.
 """
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

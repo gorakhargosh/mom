@@ -23,6 +23,10 @@
 
 from __future__ import absolute_import
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 ASCII_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ASCII_LOWERCASE = "abcdefghijklmnopqrstuvwxyz"
 ASCII_LETTERS = ASCII_LOWERCASE + ASCII_UPPERCASE

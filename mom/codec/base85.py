@@ -87,6 +87,9 @@ from mom._compat import range, ZERO_BYTE, UINT128_MAX, UINT32_MAX,\
   HAVE_PYTHON3, EMPTY_BYTE
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "b85encode",
   "b85decode",

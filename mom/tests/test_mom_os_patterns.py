@@ -22,6 +22,10 @@ import unittest2
 from mom.os.patterns import\
   match_path_against, _match_path, match_path, filter_paths, match_any_paths
 
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 class Test_match_path_against(unittest2.TestCase):
   def test_all(self):
     self.assertTrue(match_path_against(

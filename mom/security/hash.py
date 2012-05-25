@@ -46,6 +46,9 @@ from mom.builtins import is_bytes
 from mom.codec import base64_encode, hex_encode
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "hmac_sha1_base64",
   "hmac_sha1_digest",

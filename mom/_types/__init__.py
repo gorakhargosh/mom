@@ -20,3 +20,5 @@
 :module: mom._types
 :synopsis: Internal types.
 """
+
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

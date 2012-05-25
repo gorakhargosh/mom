@@ -39,6 +39,9 @@ from mom._compat import range, ZERO_BYTE,\
 from mom.builtins import integer_byte_length, byte, is_bytes, byte_ord
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 def uint_to_bytes_naive_array_based(uint, chunk_size=0):
   """
   Converts an integer into bytes.

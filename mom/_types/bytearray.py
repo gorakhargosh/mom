@@ -45,6 +45,9 @@ from array import array
 from mom.builtins import integer_byte_length, integer_bit_length
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 def bytearray_create(sequence):
   """
   Creates a byte array from a given sequence.

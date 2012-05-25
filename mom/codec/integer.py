@@ -55,6 +55,9 @@ from mom._compat import get_word_alignment, ZERO_BYTE, EMPTY_BYTE
 from mom.builtins import is_bytes, bytes_leading
 
 
+__author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
 __all__ = [
   "bytes_to_uint",
   "uint_to_bytes",
