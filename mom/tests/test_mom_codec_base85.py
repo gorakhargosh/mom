@@ -22,8 +22,8 @@ import os
 import unittest2
 from mom.builtins import b
 from mom.codec._alt_base import ipv6_b85encode_naive, ipv6_b85decode_naive
-from mom.tests.constants import unicode_string
-from mom.tests.test_mom_builtins import unicode_string2
+from mom.tests.constants import UNICODE_STRING
+from mom.tests.test_mom_builtins import UNICODE_STRING2
 
 from mom.codec.base85 import b85decode, b85encode, ipv6_b85encode,\
   ipv6_b85decode, ASCII85_PREFIX, ASCII85_SUFFIX, rfc1924_b85encode,\
@@ -144,7 +144,7 @@ class Test_base85_encode(unittest2.TestCase):
     self.assertEqual(b85encode(b(".")), b("/c"))
 
   def test_TypeError_on_unicode(self):
-    self.assertRaises(TypeError, b85encode, unicode_string2)
+    self.assertRaises(TypeError, b85encode, UNICODE_STRING2)
 
 
 class Test_base85_decode(unittest2.TestCase):
@@ -153,7 +153,7 @@ class Test_base85_decode(unittest2.TestCase):
                      raw)
 
   def test_TypeError_on_unicode(self):
-    self.assertRaises(TypeError, b85decode, unicode_string2)
+    self.assertRaises(TypeError, b85decode, UNICODE_STRING2)
 
   def test_decoder_ignores_whitespace_by_default(self):
     self.assertEqual(b85decode(encoded_with_whitespace), raw)
@@ -195,23 +195,23 @@ class Test_codec(unittest2.TestCase):
                      random_odd_bytes)
 
   def test_raises_TypeError_when_invalid_argument(self):
-    self.assertRaises(TypeError, b85encode, unicode_string)
+    self.assertRaises(TypeError, b85encode, UNICODE_STRING)
     self.assertRaises(TypeError, b85encode, None)
-    self.assertRaises(TypeError, b85decode, unicode_string)
+    self.assertRaises(TypeError, b85decode, UNICODE_STRING)
     self.assertRaises(TypeError, b85decode, None)
 
   def test_raises_TypeError_when_bad_arg_types(self):
     # Prefix/suffix.
-    self.assertRaises(TypeError, b85encode, b('foo'), unicode_string, None)
-    self.assertRaises(TypeError, b85encode, b('foo'), None, unicode_string)
-    self.assertRaises(TypeError, b85decode, b('foo'), unicode_string, None)
-    self.assertRaises(TypeError, b85decode, b('foo'), None, unicode_string)
+    self.assertRaises(TypeError, b85encode, b('foo'), UNICODE_STRING, None)
+    self.assertRaises(TypeError, b85encode, b('foo'), None, UNICODE_STRING)
+    self.assertRaises(TypeError, b85decode, b('foo'), UNICODE_STRING, None)
+    self.assertRaises(TypeError, b85decode, b('foo'), None, UNICODE_STRING)
 
     # Compact char.
     self.assertRaises(TypeError, b85encode, b('foo'),
-                      _compact_char=unicode_string)
+                      _compact_char=UNICODE_STRING)
     self.assertRaises(TypeError, b85decode, b('foo'),
-                      _compact_char=unicode_string)
+                      _compact_char=UNICODE_STRING)
 
 
 class Test_rfc1924_base85_encoding(unittest2.TestCase):
@@ -238,14 +238,14 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
                       b('|NsC')) # 0x03030303
 
   def test_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, rfc1924_b85decode, unicode_string)
+    self.assertRaises(TypeError, rfc1924_b85decode, UNICODE_STRING)
     self.assertRaises(TypeError, rfc1924_b85decode, None)
     self.assertRaises(TypeError, rfc1924_b85decode, object)
     self.assertRaises(TypeError, rfc1924_b85decode, [])
     self.assertRaises(TypeError, rfc1924_b85decode, 1)
     self.assertRaises(TypeError, rfc1924_b85decode, False)
 
-    self.assertRaises(TypeError, rfc1924_b85encode, unicode_string)
+    self.assertRaises(TypeError, rfc1924_b85encode, UNICODE_STRING)
     self.assertRaises(TypeError, rfc1924_b85encode, None)
     self.assertRaises(TypeError, rfc1924_b85encode, object)
     self.assertRaises(TypeError, rfc1924_b85encode, [])
@@ -284,8 +284,8 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
     self.assertEqual(ipv6_b85decode_naive(ipv6_encoded_3), ipv6_number_3)
 
   def test_TypeError_when_unicode(self):
-    self.assertRaises(TypeError, ipv6_b85decode, unicode_string2)
-    self.assertRaises(TypeError, ipv6_b85decode_naive, unicode_string2)
+    self.assertRaises(TypeError, ipv6_b85decode, UNICODE_STRING2)
+    self.assertRaises(TypeError, ipv6_b85decode_naive, UNICODE_STRING2)
 
   def test_codec_identity(self):
     self.assertEqual(ipv6_b85decode(ipv6_b85encode(ipv6_number)),

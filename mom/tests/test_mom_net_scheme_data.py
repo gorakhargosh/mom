@@ -22,7 +22,7 @@ import unittest2
 from mom.builtins import b
 from mom.codec import base64_decode
 from mom.net.scheme.data import data_urlencode, data_urlparse
-from mom.tests.constants import unicode_string
+from mom.tests.constants import UNICODE_STRING
 
 png = b('''\
 \x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x05\x00\x00\x00\x05\
@@ -94,7 +94,7 @@ class Test_encoding(unittest2.TestCase):
 
   def test_raises_TypeError_when_not_raw_bytes(self):
     self.assertRaises(TypeError,
-                      data_urlencode, unicode_string, b('text/plain'),
+                      data_urlencode, UNICODE_STRING, b('text/plain'),
                       b("utf-8"))
     self.assertRaises(TypeError,
                       data_urlencode, None, b('text/plain'), b("utf-8"))
@@ -139,5 +139,5 @@ class Test_parsing(unittest2.TestCase):
 
 
   def test_raises_TypeError_when_not_raw_bytes(self):
-    self.assertRaises(TypeError, data_urlparse, unicode_string)
+    self.assertRaises(TypeError, data_urlparse, UNICODE_STRING)
     self.assertRaises(TypeError, data_urlparse, None)

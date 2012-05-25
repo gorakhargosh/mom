@@ -26,20 +26,20 @@ from mom.tests.constants import *
 class Test_decode(unittest2.TestCase):
   def test_decode(self):
     # decode accepts unicode only.
-    self.assertEqual(json_decode(json_ufoo), ufoo)
+    self.assertEqual(json_decode(JSON_UFOO), UFOO)
 
   def test_raises_error_when_invalid_type(self):
-    self.assertRaises(TypeError, json_decode, json_foo)
+    self.assertRaises(TypeError, json_decode, JSON_FOO)
 
 
 class Test_encode(unittest2.TestCase):
   def test_encode(self):
     # json deals with strings, not bytes.
-    self.assertEqual(json_decode(json_encode(unicode_value)), unicode_value)
+    self.assertEqual(json_decode(json_encode(UNICODE_VALUE)), UNICODE_VALUE)
 
   def test_raises_error_when_invalid_type(self):
-    self.assertRaises(TypeError, json_encode, utf8_encode(unicode_value))
-    self.assertRaises(TypeError, json_encode, x_byte)
+    self.assertRaises(TypeError, json_encode, utf8_encode(UNICODE_VALUE))
+    self.assertRaises(TypeError, json_encode, X_BYTE)
 
 if __name__ == "__main__":
   unittest2.main()

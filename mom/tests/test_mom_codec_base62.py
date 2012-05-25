@@ -24,7 +24,7 @@ from mom.codec import hex_decode, base62_decode, base62_encode
 from mom.codec._alt_base import b62decode_naive, b62encode_naive
 from mom.codec.base62 import b62encode, b62decode, ASCII62_BYTES, ALT62_BYTES
 from mom.security.random import generate_random_bytes
-from mom.tests.constants import unicode_string
+from mom.tests.constants import UNICODE_STRING
 
 random_bytes_len_512 = generate_random_bytes(512)
 
@@ -105,8 +105,8 @@ class Test_base62_codec(unittest2.TestCase):
     self.assertEqual(base62_decode(encoded_with_whitespace), raw_data)
 
   def test_TypeError_when_bad_type(self):
-    self.assertRaises(TypeError, b62encode, unicode_string)
-    self.assertRaises(TypeError, b62encode_naive, unicode_string)
-    self.assertRaises(TypeError, b62decode, unicode_string)
-    self.assertRaises(TypeError, b62decode_naive, unicode_string)
+    self.assertRaises(TypeError, b62encode, UNICODE_STRING)
+    self.assertRaises(TypeError, b62encode_naive, UNICODE_STRING)
+    self.assertRaises(TypeError, b62decode, UNICODE_STRING)
+    self.assertRaises(TypeError, b62decode_naive, UNICODE_STRING)
 

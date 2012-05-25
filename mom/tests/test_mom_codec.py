@@ -20,7 +20,7 @@ from __future__ import absolute_import
 
 import unittest2
 
-from mom.tests.test_mom_builtins import unicode_string
+from mom.tests.test_mom_builtins import UNICODE_STRING
 from mom.builtins import b
 from mom.security.random import\
   generate_random_bytes, generate_random_uint_between
@@ -96,9 +96,9 @@ class Test_base58_codec(unittest2.TestCase):
                      random_bytes_len_4093)
 
   def test_raises_TypeError_when_invalid_argument(self):
-    self.assertRaises(TypeError, base58_encode, unicode_string)
+    self.assertRaises(TypeError, base58_encode, UNICODE_STRING)
     self.assertRaises(TypeError, base58_encode, None)
-    self.assertRaises(TypeError, base58_decode, unicode_string)
+    self.assertRaises(TypeError, base58_decode, UNICODE_STRING)
     self.assertRaises(TypeError, base58_decode, None)
 
 
@@ -121,10 +121,10 @@ class Test_base64_codec(unittest2.TestCase):
                      random_bytes_len_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, base64_encode, unicode_string)
+    self.assertRaises(TypeError, base64_encode, UNICODE_STRING)
     self.assertRaises(TypeError, base64_encode, None)
 
-    self.assertRaises(TypeError, base64_decode, unicode_string)
+    self.assertRaises(TypeError, base64_decode, UNICODE_STRING)
     self.assertRaises(TypeError, base64_decode, None)
 
 
@@ -164,10 +164,10 @@ class Test_base64_urlsafe_codec(unittest2.TestCase):
     )
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, base64_urlsafe_encode, unicode_string)
+    self.assertRaises(TypeError, base64_urlsafe_encode, UNICODE_STRING)
     self.assertRaises(TypeError, base64_urlsafe_encode, None)
 
-    self.assertRaises(TypeError, base64_urlsafe_decode, unicode_string)
+    self.assertRaises(TypeError, base64_urlsafe_decode, UNICODE_STRING)
     self.assertRaises(TypeError, base64_urlsafe_decode, None)
 
 
@@ -184,10 +184,10 @@ class Test_hex_codec(unittest2.TestCase):
       random_bytes_len_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, hex_encode, unicode_string)
+    self.assertRaises(TypeError, hex_encode, UNICODE_STRING)
     self.assertRaises(TypeError, hex_encode, None)
 
-    self.assertRaises(TypeError, hex_decode, unicode_string)
+    self.assertRaises(TypeError, hex_decode, UNICODE_STRING)
     self.assertRaises(TypeError, hex_decode, None)
 
 
@@ -207,10 +207,10 @@ class Test_decimal_codec(unittest2.TestCase):
       random_bytes_len_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, decimal_encode, unicode_string)
+    self.assertRaises(TypeError, decimal_encode, UNICODE_STRING)
     self.assertRaises(TypeError, decimal_encode, None)
 
-    self.assertRaises(TypeError, decimal_decode, unicode_string)
+    self.assertRaises(TypeError, decimal_decode, UNICODE_STRING)
     self.assertRaises(TypeError, decimal_decode, None)
 
 
@@ -226,10 +226,8 @@ class Test_bin_codec(unittest2.TestCase):
       random_bytes_len_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, bin_encode, unicode_string)
+    self.assertRaises(TypeError, bin_encode, UNICODE_STRING)
     self.assertRaises(TypeError, bin_encode, None)
 
-    self.assertRaises(TypeError, bin_decode, unicode_string)
+    self.assertRaises(TypeError, bin_decode, UNICODE_STRING)
     self.assertRaises(TypeError, bin_decode, None)
-
-

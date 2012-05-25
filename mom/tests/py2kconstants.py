@@ -16,15 +16,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-unicode_string = u'\u00ae'
-unicode_string2 = u'深入 Python'
-foo = 'foo'
-ufoo = u'foo'
-json_foo = '"foo"'
-json_ufoo = u'"foo"'
-json_unicode_value = u'"\u00e9"'
-unicode_value = u'\u00e9'
-x_byte = "\xe9"
-utf8_bytes = '\xc2\xae'
-utf8_bytes2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
-latin1_bytes = "\xe9"
+UNICODE_STRING = u'\u00ae'
+UNICODE_STRING2 = u'深入 Python'
+FOO = 'foo'
+UFOO = u'foo'
+JSON_FOO = '"foo"'
+JSON_UFOO = u'"foo"'
+JSON_UNICODE_VALUE = u'"\u00e9"'
+UNICODE_VALUE = u'\u00e9'
+X_BYTE = "\xe9"
+UTF8_BYTES = '\xc2\xae'
+UTF8_BYTES2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
+LATIN1_BYTES = "\xe9"

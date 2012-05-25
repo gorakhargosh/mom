@@ -42,8 +42,8 @@ from mom.builtins import\
   is_positive, byte, bytes_leading, bytes_trailing, b,\
   integer_byte_size, integer_bit_count, integer_bit_size
 
-from mom.tests.constants import unicode_string, unicode_string2,\
-  utf8_bytes, utf8_bytes2, latin1_bytes
+from mom.tests.constants import UNICODE_STRING, UNICODE_STRING2,\
+  UTF8_BYTES, UTF8_BYTES2, LATIN1_BYTES
 
 random_bytes = generate_random_bytes(100)
 
@@ -80,10 +80,10 @@ class Test_bytes_leading_and_trailing(unittest2.TestCase):
     self.assertEqual(bytes_trailing(b('')), 0)
 
   def test_TypeError_when_bad_type(self):
-    self.assertRaises(TypeError, bytes_trailing, unicode_string)
+    self.assertRaises(TypeError, bytes_trailing, UNICODE_STRING)
     self.assertRaises(TypeError, bytes_trailing, 1)
     self.assertRaises(TypeError, bytes_trailing, None)
-    self.assertRaises(TypeError, bytes_leading, unicode_string)
+    self.assertRaises(TypeError, bytes_leading, UNICODE_STRING)
     self.assertRaises(TypeError, bytes_leading, 1)
     self.assertRaises(TypeError, bytes_leading, None)
 
@@ -368,13 +368,13 @@ class Test_is_bytes(unittest2.TestCase):
   def test_accepts_bytes(self):
     # Must accept any type of bytes.
     self.assertTrue(is_bytes(random_bytes))
-    self.assertTrue(is_bytes(utf8_bytes))
-    self.assertTrue(is_bytes(utf8_bytes2))
-    self.assertTrue(is_bytes(latin1_bytes))
+    self.assertTrue(is_bytes(UTF8_BYTES))
+    self.assertTrue(is_bytes(UTF8_BYTES2))
+    self.assertTrue(is_bytes(LATIN1_BYTES))
 
   def test_rejects_non_bytes(self):
-    self.assertFalse(is_bytes(unicode_string))
-    self.assertFalse(is_bytes(unicode_string2))
+    self.assertFalse(is_bytes(UNICODE_STRING))
+    self.assertFalse(is_bytes(UNICODE_STRING2))
     self.assertFalse(is_bytes(False))
     self.assertFalse(is_bytes(5))
     self.assertFalse(is_bytes(None))
@@ -386,13 +386,13 @@ class Test_is_bytes(unittest2.TestCase):
 
 class Test_is_unicode(unittest2.TestCase):
   def test_accepts_unicode(self):
-    self.assertTrue(is_unicode(unicode_string))
-    self.assertTrue(is_unicode(unicode_string2))
+    self.assertTrue(is_unicode(UNICODE_STRING))
+    self.assertTrue(is_unicode(UNICODE_STRING2))
 
   def test_rejects_non_unicode(self):
     self.assertFalse(is_unicode(random_bytes))
-    self.assertFalse(is_unicode(utf8_bytes))
-    self.assertFalse(is_unicode(utf8_bytes2))
+    self.assertFalse(is_unicode(UTF8_BYTES))
+    self.assertFalse(is_unicode(UTF8_BYTES2))
     self.assertFalse(is_unicode(False))
     self.assertFalse(is_unicode(5))
     self.assertFalse(is_unicode(None))
@@ -405,10 +405,10 @@ class Test_is_unicode(unittest2.TestCase):
 class Test_is_bytes_or_unicode(unittest2.TestCase):
   def test_accepts_any_string(self):
     self.assertTrue(is_bytes_or_unicode(random_bytes))
-    self.assertTrue(is_bytes_or_unicode(utf8_bytes))
-    self.assertTrue(is_bytes_or_unicode(utf8_bytes2))
-    self.assertTrue(is_bytes_or_unicode(unicode_string))
-    self.assertTrue(is_bytes_or_unicode(unicode_string2))
+    self.assertTrue(is_bytes_or_unicode(UTF8_BYTES))
+    self.assertTrue(is_bytes_or_unicode(UTF8_BYTES2))
+    self.assertTrue(is_bytes_or_unicode(UNICODE_STRING))
+    self.assertTrue(is_bytes_or_unicode(UNICODE_STRING2))
 
   def test_rejects_non_string(self):
     self.assertFalse(is_bytes_or_unicode(False))

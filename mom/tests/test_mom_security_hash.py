@@ -25,13 +25,13 @@ from mom.codec import base64_encode, hex_encode
 from mom.security.hash import sha1_hex_digest, md5_digest,\
   sha1_digest, sha1_base64_digest, md5_hex_digest, md5_base64_digest,\
   hmac_sha1_digest, hmac_sha1_base64_digest
-from mom.tests.constants import unicode_string, unicode_string2
+from mom.tests.constants import UNICODE_STRING, UNICODE_STRING2
 
 input_md5_digest = b('\xe8\x0bP\x17\t\x89P\xfcX\xaa\xd8<\x8c\x14\x97\x8e')
 input_sha1_digest = b(
   '\x1f\x8a\xc1\x0f#\xc5\xb5\xbc\x11g\xbd\xa8K\x83>\\\x05zw\xd2')
 inputs = [b("ab"), b("cd"), b("ef")]
-unicode_inputs = [unicode_string, unicode_string2]
+unicode_inputs = [UNICODE_STRING, UNICODE_STRING2]
 
 # HMAC-SHA1 data.
 key = b("kd94hf93k423kf44&pfkkdhi9sl3r4s00")
