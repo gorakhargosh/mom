@@ -59,7 +59,7 @@ if sys.version_info < (2, 6, 0):
 
 setup(
   name="mom",
-  version="0.0.1",
+  version="0.1",
   license="Apache Software License 2.0",
   url="http://github.com/gorakhargosh/mom",
   description="Python utility library.",
