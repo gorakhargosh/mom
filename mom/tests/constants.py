@@ -18,17 +18,20 @@
 
 from __future__ import absolute_import
 
-from mom._compat import HAVE_PYTHON3
-from mom.builtins import b
-from mom.codec import base64_decode
+from mom import _compat
+from mom import builtins
+from mom import codec
 
-if HAVE_PYTHON3:
+if _compat.HAVE_PYTHON3:
   from mom.tests import py3kconstants as pyxkconstants
 else:
   from mom.tests import py2kconstants as pyxkconstants
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
+b = builtins.b
 
 
 UNICODE_STRING = pyxkconstants.UNICODE_STRING
@@ -84,7 +87,7 @@ a/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJl\
 ZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uis\
 F81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PH\
 hhx4dbgYKAAA7""")
-RFC_GIF = base64_decode(RFC_BASE64_GIF)
+RFC_GIF = codec.base64_decode(RFC_BASE64_GIF)
 
 
 RFC_GIF_DATA_URL = b("""\
