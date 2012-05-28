@@ -23,15 +23,15 @@ from __future__ import absolute_import
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-UNICODE_STRING = u'\u00ae'
-UNICODE_STRING2 = u'深入 Python'
-FOO = 'foo'
-UFOO = u'foo'
-JSON_FOO = '"foo"'
-JSON_UFOO = u'"foo"'
-JSON_UNICODE_VALUE = u'"\u00e9"'
-UNICODE_VALUE = u'\u00e9'
+UNICODE_STRING = u"\u00ae"
+UNICODE_STRING2 = u"深入 Python"
+FOO = "foo"
+UFOO = u"foo"
+JSON_FOO = "\"foo\""
+JSON_UFOO = u"\"foo\""
+JSON_UNICODE_VALUE = u"\"\u00e9\""
+UNICODE_VALUE = u"\u00e9"
 X_BYTE = "\xe9"
-UTF8_BYTES = '\xc2\xae'
-UTF8_BYTES2 = '\xe6\xb7\xb1\xe5\x85\xa5 Python'
+UTF8_BYTES = "\xc2\xae"
+UTF8_BYTES2 = "\xe6\xb7\xb1\xe5\x85\xa5 Python"
 LATIN1_BYTES = "\xe9"

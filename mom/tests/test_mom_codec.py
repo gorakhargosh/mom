@@ -49,33 +49,33 @@ RANDOM_BYTES_2048 = generate_random_bytes(2048 >> 3)
 # Generates a 4093 byte length random byte string.
 RANDOM_BYTES_4093 = generate_random_bytes(4093)
 
-ZERO_BYTES = b('\x00\x00\x00\x00')
-ONE_ZERO_BYTE = b('\x00')
+ZERO_BYTES = b("\x00\x00\x00\x00")
+ONE_ZERO_BYTE = b("\x00")
 
 RANDOM_LONG_VALUE = generate_random_uint_between(0, 99999999999999999)
 ZERO_LONG = 0
 NEGATIVE_LONG_VALUE = -1
 
 LONG_VALUE = 71671831749689734735896910666236152091910950933161125188784836897624039426313152092699961904060141667369
-EXPECTED_BLOCKSIZE_BYTES = b('''\
+EXPECTED_BLOCKSIZE_BYTES = b("""\
 \x00\x01\xff\xff\xff\xff\xff\xff\xff\xff\x000 0\x0c\x06\x08*\x86H\x86\
-\xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)''')
+\xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)""")
 LONG_VALUE_BLOCKSIZE = 45
-EXPECTED_BYTES = b('''\
+EXPECTED_BYTES = b("""\
 \x01\xff\xff\xff\xff\xff\xff\xff\xff\x000 0\x0c\x06\x08*\x86H\x86\
-\xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)''')
+\xf7\r\x02\x05\x05\x00\x04\x10\xd6\xc7\xde\x19\xf6}\xb3#\xbdhI\xafDL\x04)""")
 
 
 # Base64 encoding this sequence of bytes using the standard Base-64 alphabet
 # produces a "/", "+", and "=" in the encoded sequence.
-URL_SAFETY_TEST_BYTES = b('''\
+URL_SAFETY_TEST_BYTES = b("""\
 G\x81Y\x9aK\x9d\xf2\xe9\x81\x06\xc6\xbe6\xa5\x0e\xc0k\x91I\x05\xde\xd8\
 \xdc\xd6\xa7\xf2\x9f\t\x8c\xa1\xa6\xf3\x19\xc7\x0b\xfd=z\x02Z\xbeR\xc0\
-\xc6~`\xddfzA''')
+\xc6~`\xddfzA""")
 URL_SAFETY_TEST_STANDARD_ENCODED =\
-b('R4FZmkud8umBBsa+NqUOwGuRSQXe2NzWp/KfCYyhpvMZxwv9PXoCWr5SwMZ+YN1mekE=')
+b("R4FZmkud8umBBsa+NqUOwGuRSQXe2NzWp/KfCYyhpvMZxwv9PXoCWr5SwMZ+YN1mekE=")
 URL_SAFETY_TEST_SAFE_ENCODED =\
-b('R4FZmkud8umBBsa-NqUOwGuRSQXe2NzWp_KfCYyhpvMZxwv9PXoCWr5SwMZ-YN1mekE')
+b("R4FZmkud8umBBsa-NqUOwGuRSQXe2NzWp_KfCYyhpvMZxwv9PXoCWr5SwMZ-YN1mekE")
 
 
 class Test_base85_codec(unittest2.TestCase):

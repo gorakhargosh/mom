@@ -31,10 +31,10 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 SHA1_DIGESTINFO =\
-b('\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14')
+b("\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14")
 SHA1_DIGESTINFO_LEN = len(SHA1_DIGESTINFO)
-ZERO_ONE_BYTES = b('\x00\x01')
-FF_BYTE = b('\xff')
+ZERO_ONE_BYTES = b("\x00\x01")
+FF_BYTE = b("\xff")
 
 
 def pkcs1_v1_5_encode(key_size, data):

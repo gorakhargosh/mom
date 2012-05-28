@@ -87,7 +87,7 @@ IPV6_ENCODED_3 = b('B7RDhRib#Y+VwlwuPBOG')
 MERCURIAL_BYTES = b('\t\x91{W\xa80\xb1')
 MERCURIAL_ENCODED = b('36XnOs4%e')
 
-RANDOM_256_BYTES = b('''U\x94<Q\x1d\xad\xe4\xe3\xd1\xd1\xddR\xfb d\
+RANDOM_256_BYTES = b("""U\x94<Q\x1d\xad\xe4\xe3\xd1\xd1\xddR\xfb d\
 \x01R6\xadj\xa2\x03\xa4\xc1\xc7\x92\xa1U\x18\x19\xaep\r\xfe\xaa\
 \xd4\x11ob\xb2yV\x00\xb1\xb1\x98<O\x15\xf7?7\xbf\xc8\x0b\xbdR\
 \xe7\xf1rd\xe0:4\xe2\x9d\xd9I&v\x1cvN$\xb6\xca\xff\xc2?1\xa2\
@@ -98,14 +98,14 @@ RANDOM_256_BYTES = b('''U\x94<Q\x1d\xad\xe4\xe3\xd1\xd1\xddR\xfb d\
 \x86\xa1`v&\xee\xe1\x85\x06\x9c\xf1\xb0\xd2Bp\xf8\x0f+\xcc\xb0r2\
 \xc7\xaaH\r_\xeeqq;\xaf\x10\x15\x83\xb8?Y)\xb2\x94\xe5Us~\x11\
 \x1fBX\x8cF\xc9\x88\x99[\\\xc4\xb1a\x80P\xe1\xa1\x9b\xd8\xe5j\
-\x817\x1a\xb58\x01\xfc\x80\xc5\x9e3\x80\xa4*''')
+\x817\x1a\xb58\x01\xfc\x80\xc5\x9e3\x80\xa4*""")
 
-RANDOM_256_MERCURIAL = b('''\
+RANDOM_256_MERCURIAL = b("""\
 Rg^qY9j)Z!(b3&f`ygZiQZ}t>q64JC$C9B{7#Xf`4gRXs5pQC$c~$_iv6wth756_kzsL)\
 {Qs?n<WZ*h9;+@$^CUzWlP9(O<|H3~pqQPVf4OMVW{b+&Hb94mME}a8B<9*y~TmgS)?0_\
 nJP~S%^2nctEE{RO%e*LA$c!dYgM}Y9tlPJ4E2cZsR6fKCO6~YSb`x62iVSbb}N}zi@Z(\
 k@dH-SoyjoEmHp<s3<?%{<7obj;ILU8yGE6lKRGRLY&4PWkYaXYUN6@$1xSt+uV<yCWj5\
-g$TWj7G_bnOj`Mv0;Ev;h~$@<!XU98nrk9{D8%tGk~Nj''')
+g$TWj7G_bnOj`Mv0;Ev;h~$@<!XU98nrk9{D8%tGk~Nj""")
 
 RANDOM_ODD_BYTES = os.urandom(3333)
 

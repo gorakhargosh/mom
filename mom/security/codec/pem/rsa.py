@@ -60,7 +60,7 @@ class RSAPrivateKey(object):
       Version ::= INTEGER
   """
   # http://tools.ietf.org/html/rfc3279 - Section 2.3.1
-  _RSA_OID = univ.ObjectIdentifier('1.2.840.113549.1.1.1')
+  _RSA_OID = univ.ObjectIdentifier("1.2.840.113549.1.1.1")
 
   def __init__(self, key):
     self._key = key
@@ -73,15 +73,15 @@ class RSAPrivateKey(object):
   def private_key(self):
     asn = self._private_key_asn1
     return dict(
-      version=int(asn.getComponentByName('version')),
-      modulus=int(asn.getComponentByName('modulus')),
-      publicExponent=int(asn.getComponentByName('publicExponent')),
-      privateExponent=int(asn.getComponentByName('privateExponent')),
-      prime1=int(asn.getComponentByName('prime1')),
-      prime2=int(asn.getComponentByName('prime2')),
-      exponent1=int(asn.getComponentByName('exponent1')),
-      exponent2=int(asn.getComponentByName('exponent2')),
-      coefficient=int(asn.getComponentByName('coefficient')),
+      version=int(asn.getComponentByName("version")),
+      modulus=int(asn.getComponentByName("modulus")),
+      publicExponent=int(asn.getComponentByName("publicExponent")),
+      privateExponent=int(asn.getComponentByName("privateExponent")),
+      prime1=int(asn.getComponentByName("prime1")),
+      prime2=int(asn.getComponentByName("prime2")),
+      exponent1=int(asn.getComponentByName("exponent1")),
+      exponent2=int(asn.getComponentByName("exponent2")),
+      coefficient=int(asn.getComponentByName("coefficient")),
       )
 
 
@@ -111,7 +111,7 @@ class RSAPrivateKey(object):
     return der_to_pem_private_rsa_key(encoder.encode(key_asn1))
 
 TEST_RSA_PRIVATE_KEYS = (
-  '''
+  """
 -----BEGIN PRIVATE KEY-----
 MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALRiMLAh9iimur8V
 A7qVvdqxevEuUkW4K+2KdMXmnQbG9Aa7k7eBjK1S+0LYmVjPKlJGNXHDGuy5Fw/d
@@ -127,7 +127,7 @@ cn1xOJAyZODBo47E+67R4jV1/gzbAkEAklJaspRPXP877NssM5nAZMU0/O/NGCZ+
 3jPgDUno6WbJn5cqm8MqWhW1xGkImgRk+fkDBquiq4gPiT898jusgQJAd5Zrr6Q8
 AO/0isr/3aa6O6NLQxISLKcPDk2NOccAfS/xOtfOz4sJYM3+Bs4Io9+dZGSDCA54
 Lw03eHTNQghS0A==
------END PRIVATE KEY-----''',
+-----END PRIVATE KEY-----""",
   )
 TEST_PRIVATE_KEYS = (0
                      ,
@@ -142,7 +142,7 @@ class RSAPublicKey(object):
           subjectPublicKey     BIT STRING  }
   """
   # http://tools.ietf.org/html/rfc3279 - Section 2.3.1
-  _RSA_OID = univ.ObjectIdentifier('1.2.840.113549.1.1.1')
+  _RSA_OID = univ.ObjectIdentifier("1.2.840.113549.1.1.1")
 
   def __init__(self, key):
     self._key = key
@@ -153,13 +153,13 @@ class RSAPublicKey(object):
 
   @property
   def public_key(self):
-    algorithm = self._key_asn1.getComponentByName('algorithm')[0]
+    algorithm = self._key_asn1.getComponentByName("algorithm")[0]
     if algorithm != self._RSA_OID:
       raise NotImplementedError(
         "Only RSA encryption is supported: got algorithm `%r`"\
         % algorithm)
     modulus, exponent = self.parse_public_rsa_key_bits(
-      self._key_asn1.getComponentByName('subjectPublicKey'))
+      self._key_asn1.getComponentByName("subjectPublicKey"))
     return dict(
       modulus=modulus,
       exponent=exponent,

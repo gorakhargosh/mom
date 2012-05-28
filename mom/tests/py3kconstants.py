@@ -24,15 +24,15 @@ from mom.builtins import b
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-UNICODE_STRING = '\u00ae'
-UNICODE_STRING2 = '深入 Python'
-FOO = b('foo')
-UFOO = 'foo'
-JSON_FOO = b('"foo"')
-JSON_UFOO = '"foo"'
-JSON_UNICODE_VALUE = '"\u00e9"'
-UNICODE_VALUE = '\u00e9'
+UNICODE_STRING = "\u00ae"
+UNICODE_STRING2 = "深入 Python"
+FOO = b("foo")
+UFOO = "foo"
+JSON_FOO = b("\"foo\"")
+JSON_UFOO = "\"foo\""
+JSON_UNICODE_VALUE = "\"\u00e9\""
+UNICODE_VALUE = "\u00e9"
 X_BYTE = b("\xe9")
-UTF8_BYTES = b('\xc2\xae')
-UTF8_BYTES2 = b('\xe6\xb7\xb1\xe5\x85\xa5 Python')
+UTF8_BYTES = b("\xc2\xae")
+UTF8_BYTES2 = b("\xe6\xb7\xb1\xe5\x85\xa5 Python")
 LATIN1_BYTES = b("\xe9")

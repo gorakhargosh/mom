@@ -36,14 +36,14 @@ ZERO_BYTES = b('\x00\x00\x00\x00')
 ONE_ZERO_BYTE = b('\x00')
 RAW_DATA = hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
 ENCODED = b('01041W9weGIezvwKmSO0laL8BGx4qp64Q8')
-ENCODED_WITH_WHITESPACE = b('''
+ENCODED_WITH_WHITESPACE = b("""
 01041W9weGIezvwKmS
 O0laL8BGx4qp64Q8
-''')
+""")
 
-PADDING_RAW = b('''\
+PADDING_RAW = b("""\
 \x00\x00\xa4\x97\xf2\x10\xfc\x9c]\x02\xfc}\xc7\xbd!\x1c\xb0\xc7M\xa0\xae\x16\
-''')
+""")
 
 class Test_base62_codec(unittest2.TestCase):
   def test_ensure_charset_length(self):

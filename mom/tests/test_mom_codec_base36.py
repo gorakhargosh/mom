@@ -32,9 +32,9 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 RANDOM_BYTES = generate_random_bytes(384)
 ZERO_BYTES_4 = ZERO_BYTE * 4
-RAW_DATA = b('''\
+RAW_DATA = b("""\
 \x00\x00\xa4\x97\xf2\x10\xfc\x9c]\x02\xfc}\xc7\xbd!\x1c\xb0\xc7M\xa0\xae\x16\
-''')
+""")
 
 
 class Test_base36_codec(unittest2.TestCase):

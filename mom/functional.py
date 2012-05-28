@@ -207,9 +207,10 @@ from functools import partial
 
 try:
   # Python 2.x
-  from itertools import\
-    ifilter as _ifilter, ifilterfalse as _ifilterfalse, imap as map
-except ImportError: # pragma: no cover
+  from itertools import ifilter as _ifilter
+  from itertools import ifilterfalse as _ifilterfalse
+  from itertools import imap as map
+except ImportError:  # pragma: no cover
   # Python 3 nuisance.
   _ifilter = filter
 
@@ -222,9 +223,12 @@ except ImportError: # pragma: no cover
       return not predicate(item)
 
     return filter(_complement, iterable)
-from itertools import islice, takewhile,\
-  dropwhile,\
-  cycle, repeat, groupby
+from itertools import islice
+from itertools import takewhile
+from itertools import dropwhile
+from itertools import cycle
+from itertools import repeat
+from itertools import groupby
 
 from mom.itertools import chain, starmap
 from mom.builtins import is_bytes_or_unicode
@@ -235,67 +239,68 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "always",
-  "chunks",
-  "complement",
-  "compose",
-  "contains",
-  "difference",
-  "each",
-  "every",
-  "falsy",
-  "find",
-  "head",
-  "flatten",
-  "flatten1",
-  "group_consecutive",
-  "flock",
-  "ichunks",
-  "identity",
-  "idifference",
-  "eat",
-  "ifalsy",
-  "intersection",
-  "invert_dict",
-  "ipeel",
-  "ipluck",
-  "ireject",
-  "itail",
-  "iselect",
-  "itruthy",
-  "last",
-  "leading",
-  "loob",
-  "map_dict",
-  "ncycles",
-  "never",
-  "none",
-  "nth",
-  "occurrences",
-  "omits",
-  "partition",
-  "partition_dict",
-  "peel",
-  "pluck",
-  "reduce",
-  "reject",
-  "reject_dict",
-  "tail",
-  "round_robin",
-  "select",
-  "select_dict",
-  "some",
-  "take",
-  "tally",
-  "trailing",
-  "truthy",
-  "union",
-  "unique",
-  "without",
-  ]
+    "always",
+    "chunks",
+    "complement",
+    "compose",
+    "contains",
+    "difference",
+    "each",
+    "eat",
+    "every",
+    "falsy",
+    "find",
+    "flatten",
+    "flatten1",
+    "flock",
+    "group_consecutive",
+    "head",
+    "ichunks",
+    "identity",
+    "idifference",
+    "ifalsy",
+    "intersection",
+    "invert_dict",
+    "ipeel",
+    "ipluck",
+    "ireject",
+    "iselect",
+    "itail",
+    "itruthy",
+    "last",
+    "leading",
+    "loob",
+    "map_dict",
+    "ncycles",
+    "never",
+    "none",
+    "nth",
+    "occurrences",
+    "omits",
+    "partition",
+    "partition_dict",
+    "peel",
+    "pluck",
+    "reduce",
+    "reject",
+    "reject_dict",
+    "round_robin",
+    "select",
+    "select_dict",
+    "some",
+    "tail",
+    "take",
+    "tally",
+    "trailing",
+    "truthy",
+    "union",
+    "unique",
+    "without",
+    ]
 
 
 # Higher-order functions that generate other functions.
+
 
 def compose(function, *functions):
   """
@@ -334,7 +339,7 @@ def _compose(function, *functions):
   :returns:
       A composition function.
   """
-  functions = (function, ) + functions if functions else (function, )
+  functions = (function,) + functions if functions else (function,)
 
   def _composition(*args_tuple):
     """Composition."""
@@ -365,6 +370,7 @@ def complement(predicate):
 
 
 # Higher-order functions.
+
 
 def reduce(transform, iterable, *args):
   """
@@ -780,7 +786,7 @@ def ipluck(dicts, key, *args, **kwargs):
       Iterator of values for the key.
   """
   if args or kwargs:
-    default = kwargs['default'] if kwargs else args[0]
+    default = kwargs["default"] if kwargs else args[0]
 
     def _get_value_from_dict(dictionary):
       """Obtains a value from the dictionary for the given key."""
@@ -862,10 +868,10 @@ def difference(iterable1, iterable2):
   to other modules using wildcard imports::
 
       >> difference(dir(mom.functional), mom.functional.__all__)
-      ['__all__',
+      ["__all__",
        # Elided...
-       'range',
-       'takewhile']
+       "range",
+       "takewhile"]
 
   :param iterable1:
       Iterable sequence.
@@ -1186,7 +1192,7 @@ def flatten(iterable):
 
   Example::
 
-      flatten((1, (0, 5, ('a', 'b')), (3, 4))) -> [1, 0, 5, 'a', 'b', 3, 4]
+      flatten((1, (0, 5, ("a", "b")), (3, 4))) -> [1, 0, 5, "a", "b", 3, 4]
 
   :param iterable:
       Iterable sequence of iterables.
@@ -1212,7 +1218,7 @@ def flatten1(iterable):
 
   Example::
 
-      flatten1((1, (0, 5, ('a', 'b')), (3, 4))) -> [1, 0, 5, ('a', 'b'), 3, 4]
+      flatten1((1, (0, 5, ("a", "b")), (3, 4))) -> [1, 0, 5, ("a", "b"), 3, 4]
 
   :param iterable:
       Iterable sequence of iterables.
@@ -1243,17 +1249,17 @@ def group_consecutive(predicate, iterable):
                 ("laptop", "macbook pro")]
 
       list(group_consecutive(lambda w: w[0], things))
-      -> [(('phone', 'android'), ('phone', 'iphone')),
-          (('tablet', 'ipad'),),
-          (('laptop', 'dell studio'),),
-          (('phone', 'nokia'),),
-          (('laptop', 'macbook pro'),)]
+      -> [(("phone", "android"), ("phone", "iphone")),
+          (("tablet", "ipad"),),
+          (("laptop", "dell studio"),),
+          (("phone", "nokia"),),
+          (("laptop", "macbook pro"),)]
 
       list(group_consecutive(lambda w: w[0], "mississippi"))
-      -> [('m',), ('i',),
-          ('s', 's'), ('i',),
-          ('s', 's'), ('i',),
-          ('p', 'p'), ('i',)]
+      -> [("m",), ("i",),
+          ("s", "s"), ("i",),
+          ("s", "s"), ("i",),
+          ("p", "p"), ("i",)]
 
   :param predicate:
       Predicate function that returns ``True`` or ``False`` for each
@@ -1278,12 +1284,12 @@ def flock(predicate, iterable):
                 ("laptop", "macbook pro")]
 
       list(flock(lambda w: w[0], things))
-      -> [(('laptop', 'dell studio'), ('laptop', 'macbook pro')),
-          (('phone', 'android'), ('phone', 'iphone'), ('phone', 'nokia')),
-          (('tablet', 'ipad'),)]
+      -> [(("laptop", "dell studio"), ("laptop", "macbook pro")),
+          (("phone", "android"), ("phone", "iphone"), ("phone", "nokia")),
+          (("tablet", "ipad"),)]
 
       list(flock(lambda w: w[0], "mississippi"))
-      -> [('i', 'i', 'i', 'i'), ('m',), ('p', 'p'), ('s', 's', 's', 's')]
+      -> [("i", "i", "i", "i"), ("m",), ("p", "p"), ("s", "s", "s", "s")]
 
   :param predicate:
       Predicate function that returns ``True`` or ``False`` for each
@@ -1415,7 +1421,7 @@ def round_robin(*iterables):
 
   Example::
 
-      round_robin('ABC', 'D', 'EF') --> A D E B F C"
+      round_robin("ABC", "D", "EF") --> A D E B F C"
 
   :param iterables:
       Variable number of inputs for iterable sequences.

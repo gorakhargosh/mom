@@ -393,4 +393,4 @@ def generate_random_password(entropy, pool=ASCII_PRINTABLE,
   :returns:
       Randomly generated password with specified entropy.
   """
-  return ''.join(generate_random_sequence_strong(entropy, pool, rand_func))
+  return "".join(generate_random_sequence_strong(entropy, pool, rand_func))

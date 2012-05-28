@@ -11,8 +11,10 @@ Borrowed from brownie.itools.
 """
 
 from __future__ import absolute_import
-from mom.builtins import is_bytes_or_unicode
+
+from itertools import repeat, chain
 from mom._compat import range
+from mom.builtins import is_bytes_or_unicode
 
 try:
   # Python 2.x
@@ -20,15 +22,30 @@ try:
 except ImportError:
   # Python 3.x
   izip = zip
-from itertools import repeat, chain
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
+__all__ = [
+    "chain",
+    "combinations_with_replacement",
+    "compress",
+    "count",
+    "flatten",
+    "grouped",
+    "izip_longest",
+    "permutations",
+    "product",
+    "starmap",
+    "unique",
+    ]
+
+
 if getattr(chain, "from_iterable", None):
   chain = chain
 else:
+
   class chain(object):
     """
     An iterator which yields elements from the given `iterables` until each
@@ -80,7 +97,7 @@ def izip_longest(*iterables, **kwargs):
   .. note:: Software and documentation for this function are taken from
             CPython, :ref:`license details <psf-license>`.
   """
-  fillvalue = kwargs.get('fillvalue')
+  fillvalue = kwargs.get("fillvalue")
 
   def sentinel(counter=([fillvalue] * (len(iterables) - 1)).pop):
     yield counter()
@@ -142,7 +159,7 @@ def product(*iterables, **kwargs):
   .. note:: Software and documentation for this function are taken from
             CPython, :ref:`license details <psf-license>`.
   """
-  pools = map(tuple, iterables) * kwargs.get('repeat', 1)
+  pools = map(tuple, iterables) * kwargs.get("repeat", 1)
   result = [[]]
   for pool in pools:
     result = [x + [y] for x in result for y in pool]
@@ -243,7 +260,7 @@ def unique(iterable, seen=None):
   item is not yielded again.
 
   :param seen:
-     An iterable specifying already 'seen' items which will be excluded
+     An iterable specifying already "seen" items which will be excluded
      from the result.
 
      .. versionadded:: 0.5
@@ -288,10 +305,3 @@ def flatten(iterable, ignore=None):
           yield item
     except StopIteration:
       stack.pop()
-
-
-__all__ = [
-  'chain', 'izip_longest', 'permutations', 'product', 'starmap',
-  'combinations_with_replacement', 'compress', 'count', 'grouped', 'unique',
-  'flatten'
-]

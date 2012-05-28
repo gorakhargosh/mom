@@ -47,30 +47,30 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  'der_to_pem',
-  'der_to_pem_certificate',
-  'der_to_pem_private_key',
-  'der_to_pem_public_key',
-  'der_to_pem_private_rsa_key',
-  'pem_to_der',
-  'pem_to_der_certificate',
-  'pem_to_der_private_key',
-  'pem_to_der_public_key',
-  'pem_to_der_private_rsa_key',
-  'cert_time_to_seconds',
+  "der_to_pem",
+  "der_to_pem_certificate",
+  "der_to_pem_private_key",
+  "der_to_pem_public_key",
+  "der_to_pem_private_rsa_key",
+  "pem_to_der",
+  "pem_to_der_certificate",
+  "pem_to_der_private_key",
+  "pem_to_der_public_key",
+  "pem_to_der_private_rsa_key",
+  "cert_time_to_seconds",
   ]
 
-CERT_PEM_HEADER = '-----BEGIN CERTIFICATE-----'
-CERT_PEM_FOOTER = '-----END CERTIFICATE-----'
+CERT_PEM_HEADER = "-----BEGIN CERTIFICATE-----"
+CERT_PEM_FOOTER = "-----END CERTIFICATE-----"
 
-PRIVATE_KEY_PEM_HEADER = '-----BEGIN PRIVATE KEY-----'
-PRIVATE_KEY_PEM_FOOTER = '-----END PRIVATE KEY-----'
+PRIVATE_KEY_PEM_HEADER = "-----BEGIN PRIVATE KEY-----"
+PRIVATE_KEY_PEM_FOOTER = "-----END PRIVATE KEY-----"
 
-PUBLIC_KEY_PEM_HEADER = '-----BEGIN PUBLIC KEY-----'
-PUBLIC_KEY_PEM_FOOTER = '-----END PUBLIC KEY-----'
+PUBLIC_KEY_PEM_HEADER = "-----BEGIN PUBLIC KEY-----"
+PUBLIC_KEY_PEM_FOOTER = "-----END PUBLIC KEY-----"
 
-RSA_PRIVATE_KEY_PEM_HEADER = '-----BEGIN RSA PRIVATE KEY-----'
-RSA_PRIVATE_KEY_PEM_FOOTER = '-----END RSA PRIVATE KEY-----'
+RSA_PRIVATE_KEY_PEM_HEADER = "-----BEGIN RSA PRIVATE KEY-----"
+RSA_PRIVATE_KEY_PEM_FOOTER = "-----END RSA PRIVATE KEY-----"
 
 
 def cert_time_to_seconds(cert_time):
@@ -133,9 +133,9 @@ def der_to_pem(der_cert_bytes, pem_header, pem_footer):
   import textwrap
 
   encoded = base64_encode(der_cert_bytes)
-  return (pem_header + '\n' +
-          textwrap.fill(encoded, 64) + '\n' +
-          pem_footer + '\n')
+  return (pem_header + "\n" +
+          textwrap.fill(encoded, 64) + "\n" +
+          pem_footer + "\n")
 
 
 # Helper functions. Use these instead of using der_to_per and per_to_der.

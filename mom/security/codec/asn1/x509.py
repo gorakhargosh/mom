@@ -94,27 +94,27 @@ MAX = 64  # TODO
 
 class DirectoryString(univ.Choice):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('teletexString',
+    namedtype.NamedType("teletexString",
                         char.TeletexString().subtype(
                           subtypeSpec=constraint.ValueSizeConstraint(
                             1, MAX))),
-    namedtype.NamedType('printableString',
+    namedtype.NamedType("printableString",
                         char.PrintableString().subtype(
                           subtypeSpec=constraint.ValueSizeConstraint(
                             1, MAX))),
-    namedtype.NamedType('universalString',
+    namedtype.NamedType("universalString",
                         char.UniversalString().subtype(
                           subtypeSpec=constraint.ValueSizeConstraint(
                             1, MAX))),
-    namedtype.NamedType('utf8String',
+    namedtype.NamedType("utf8String",
                         char.UTF8String().subtype(
                           subtypeSpec=constraint.ValueSizeConstraint(
                             1, MAX))),
-    namedtype.NamedType('bmpString',
+    namedtype.NamedType("bmpString",
                         char.BMPString().subtype(
                           subtypeSpec=constraint.ValueSizeConstraint(
                             1, MAX))),
-    namedtype.NamedType('ia5String',
+    namedtype.NamedType("ia5String",
                         char.IA5String().subtype(
                           subtypeSpec=constraint.ValueSizeConstraint(
                             1, MAX))) # hm, this should not be here!?
@@ -129,8 +129,8 @@ class AttributeType(univ.ObjectIdentifier): pass
 
 class AttributeTypeAndValue(univ.Sequence):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('type', AttributeType()),
-    namedtype.NamedType('value', AttributeValue())
+    namedtype.NamedType("type", AttributeType()),
+    namedtype.NamedType("value", AttributeValue())
   )
 
 
@@ -144,24 +144,24 @@ class RDNSequence(univ.SequenceOf):
 
 class Name(univ.Choice):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('', RDNSequence())
+    namedtype.NamedType("", RDNSequence())
   )
 
 
 class AlgorithmIdentifier(univ.Sequence):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('algorithm', univ.ObjectIdentifier()),
-    namedtype.OptionalNamedType('parameters', univ.Null())
+    namedtype.NamedType("algorithm", univ.ObjectIdentifier()),
+    namedtype.OptionalNamedType("parameters", univ.Null())
     # TODO syntax screwed?
-    #        namedtype.OptionalNamedType('parameters', univ.ObjectIdentifier())
+    #        namedtype.OptionalNamedType("parameters", univ.ObjectIdentifier())
   )
 
 
 class Extension(univ.Sequence):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('extnID', univ.ObjectIdentifier()),
-    namedtype.DefaultedNamedType('critical', univ.Boolean('False')),
-    namedtype.NamedType('extnValue', univ.OctetString())
+    namedtype.NamedType("extnID", univ.ObjectIdentifier()),
+    namedtype.DefaultedNamedType("critical", univ.Boolean("False")),
+    namedtype.NamedType("extnValue", univ.OctetString())
   )
 
 
@@ -172,8 +172,8 @@ class Extensions(univ.SequenceOf):
 
 class SubjectPublicKeyInfo(univ.Sequence):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('algorithm', AlgorithmIdentifier()),
-    namedtype.NamedType('subjectPublicKey', univ.BitString())
+    namedtype.NamedType("algorithm", AlgorithmIdentifier()),
+    namedtype.NamedType("subjectPublicKey", univ.BitString())
   )
 
 
@@ -182,15 +182,15 @@ class UniqueIdentifier(univ.BitString): pass
 
 class Time(univ.Choice):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('utcTime', useful.UTCTime()),
-    namedtype.NamedType('generalTime', useful.GeneralizedTime())
+    namedtype.NamedType("utcTime", useful.UTCTime()),
+    namedtype.NamedType("generalTime", useful.GeneralizedTime())
   )
 
 
 class Validity(univ.Sequence):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('notBefore', Time()),
-    namedtype.NamedType('notAfter', Time())
+    namedtype.NamedType("notBefore", Time()),
+    namedtype.NamedType("notAfter", Time())
   )
 
 
@@ -199,35 +199,35 @@ class CertificateSerialNumber(univ.Integer): pass
 
 class Version(univ.Integer):
   namedValues = namedval.NamedValues(
-    ('v1', 0), ('v2', 1), ('v3', 2)
+    ("v1", 0), ("v2", 1), ("v3", 2)
   )
 
 
 class TBSCertificate(univ.Sequence):
   componentType = namedtype.NamedTypes(
-    namedtype.DefaultedNamedType('version',
-                                 Version('v1',
+    namedtype.DefaultedNamedType("version",
+                                 Version("v1",
                                          tagSet=Version.tagSet.tagExplicitly(
                                            tag.Tag(
                                              tag.tagClassContext,
                                              tag.tagFormatSimple, 0)))),
-    namedtype.NamedType('serialNumber', CertificateSerialNumber()),
-    namedtype.NamedType('signature', AlgorithmIdentifier()),
-    namedtype.NamedType('issuer', Name()),
-    namedtype.NamedType('validity', Validity()),
-    namedtype.NamedType('subject', Name()),
-    namedtype.NamedType('subjectPublicKeyInfo', SubjectPublicKeyInfo()),
-    namedtype.OptionalNamedType('issuerUniqueID',
+    namedtype.NamedType("serialNumber", CertificateSerialNumber()),
+    namedtype.NamedType("signature", AlgorithmIdentifier()),
+    namedtype.NamedType("issuer", Name()),
+    namedtype.NamedType("validity", Validity()),
+    namedtype.NamedType("subject", Name()),
+    namedtype.NamedType("subjectPublicKeyInfo", SubjectPublicKeyInfo()),
+    namedtype.OptionalNamedType("issuerUniqueID",
                                 UniqueIdentifier().subtype(
                                   implicitTag=tag.Tag(
                                     tag.tagClassContext,
                                     tag.tagFormatSimple, 1))),
-    namedtype.OptionalNamedType('subjectUniqueID',
+    namedtype.OptionalNamedType("subjectUniqueID",
                                 UniqueIdentifier().subtype(
                                   implicitTag=tag.Tag(
                                     tag.tagClassContext,
                                     tag.tagFormatSimple, 2))),
-    namedtype.OptionalNamedType('extensions',
+    namedtype.OptionalNamedType("extensions",
                                 Extensions().subtype(
                                   explicitTag=tag.Tag(
                                     tag.tagClassContext,
@@ -237,9 +237,9 @@ class TBSCertificate(univ.Sequence):
 
 class Certificate(univ.Sequence):
   componentType = namedtype.NamedTypes(
-    namedtype.NamedType('tbsCertificate', TBSCertificate()),
-    namedtype.NamedType('signatureAlgorithm', AlgorithmIdentifier()),
-    namedtype.NamedType('signatureValue', univ.BitString())
+    namedtype.NamedType("tbsCertificate", TBSCertificate()),
+    namedtype.NamedType("signatureAlgorithm", AlgorithmIdentifier()),
+    namedtype.NamedType("signatureValue", univ.BitString())
   )
 
 # end of ASN.1 data structures
