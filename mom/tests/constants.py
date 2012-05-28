@@ -23,33 +23,26 @@ from mom.builtins import b
 from mom.codec import base64_decode
 
 if HAVE_PYTHON3:
-  from mom.tests.py3kconstants import\
-    UNICODE_STRING, UNICODE_STRING2, FOO, UFOO,\
-    JSON_FOO, JSON_UFOO, JSON_UNICODE_VALUE, UNICODE_VALUE, X_BYTE,\
-    UTF8_BYTES, UTF8_BYTES2, LATIN1_BYTES
+  from mom.tests import py3kconstants as pyxkconstants
 else:
-  from mom.tests.py2kconstants import\
-    UNICODE_STRING, UNICODE_STRING2, FOO, UFOO,\
-    JSON_FOO, JSON_UFOO, JSON_UNICODE_VALUE, UNICODE_VALUE, X_BYTE,\
-    UTF8_BYTES, UTF8_BYTES2, LATIN1_BYTES
+  from mom.tests import py2kconstants as pyxkconstants
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-UNICODE_STRING = UNICODE_STRING
-UNICODE_STRING2 = UNICODE_STRING2
-FOO = FOO
-UFOO = UFOO
-JSON_FOO = JSON_FOO
-JSON_UFOO = JSON_UFOO
-JSON_UNICODE_VALUE = JSON_UNICODE_VALUE
-UNICODE_VALUE = UNICODE_VALUE
-X_BYTE = X_BYTE
-UTF8_BYTES = UTF8_BYTES
-UTF8_BYTES2 = UTF8_BYTES2
-LATIN1_BYTES = LATIN1_BYTES
-
+UNICODE_STRING = pyxkconstants.UNICODE_STRING
+UNICODE_STRING2 = pyxkconstants.UNICODE_STRING2
+FOO = pyxkconstants.FOO
+UFOO = pyxkconstants.UFOO
+JSON_FOO = pyxkconstants.JSON_FOO
+JSON_UFOO = pyxkconstants.JSON_UFOO
+JSON_UNICODE_VALUE = pyxkconstants.JSON_UNICODE_VALUE
+UNICODE_VALUE = pyxkconstants.UNICODE_VALUE
+X_BYTE = pyxkconstants.X_BYTE
+UTF8_BYTES = pyxkconstants.UTF8_BYTES
+UTF8_BYTES2 = pyxkconstants.UTF8_BYTES2
+LATIN1_BYTES = pyxkconstants.LATIN1_BYTES
 
 
 PNG = b("""\
