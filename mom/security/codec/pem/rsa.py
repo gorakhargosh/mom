@@ -27,12 +27,12 @@
 from __future__ import absolute_import
 
 from mom import builtins
-from mom.security.codec import asn1
 from mom.security.codec import pem
+from mom.security.codec.asn1 import rsadsa
 from mom.security.codec.asn1.x509 import SubjectPublicKeyInfo
 from mom.security.codec.pem.x509 import X509Certificate
 from pyasn1 import type
-from pyasn1.codec import der
+from pyasn1.codec.der import decoder, encoder
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -89,7 +89,7 @@ class RSAPrivateKey(object):
     except Exception:
       der = pem.pem_to_der_private_key(key)
 
-    cover_asn1 = der.decoder.decode(der)[0]
+    cover_asn1 = decoder.decode(der)[0]
     if len(cover_asn1) < 1:
       raise ValueError("No RSA private key found after ASN.1 decoding.")
 
@@ -99,12 +99,12 @@ class RSAPrivateKey(object):
         "Only RSA encryption is supported: got algorithm `%r`"\
         % algorithm)
     key_der = builtins.bytes(cover_asn1[2])
-    key_asn1 = der.decoder.decode(key_der, asn1Spec=keyType)[0]
+    key_asn1 = decoder.decode(key_der, asn1Spec=keyType)[0]
     return cover_asn1, key_asn1
 
   @classmethod
   def encode_to_pem_private_key(cls, key_asn1):
-    return pem.der_to_pem_private_rsa_key(der.encoder.encode(key_asn1))
+    return pem.der_to_pem_private_rsa_key(encoder.encode(key_asn1))
 
 TEST_RSA_PRIVATE_KEYS = (
   """
@@ -175,14 +175,14 @@ class RSAPublicKey(object):
   def decode_from_pem_key(cls, key):
     keyType = SubjectPublicKeyInfo()
     der = pem.pem_to_der_public_key(key)
-    key_asn1 = der.decoder.decode(der, asn1Spec=keyType)[0]
+    key_asn1 = decoder.decode(der, asn1Spec=keyType)[0]
     if len(key_asn1) < 1:
       raise ValueError("No RSA public key found after ASN.1 decoding.")
     return key_asn1
 
   @classmethod
   def encode_to_pem_key(cls, key_asn1):
-    return pem.der_to_pem_public_key(der.encoder.encode(key_asn1))
+    return pem.der_to_pem_public_key(encoder.encode(key_asn1))
 
 
 TEST_PUBLIC_PEM_KEYS = ("""
