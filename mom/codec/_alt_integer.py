@@ -20,6 +20,7 @@
 """Alternative implementations of integer module routines that
 were bench-marked to be slower."""
 
+
 from __future__ import absolute_import
 
 # pylint: disable-msg=R0801
@@ -31,15 +32,19 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
-from array import array
-from struct import pack, pack_into, unpack
-from mom._compat import range, ZERO_BYTE,\
-  get_word_alignment, EMPTY_BYTE,\
-  map, reduce
-from mom.builtins import integer_byte_length, byte, is_bytes, byte_ord
+
+import array
+import struct
+
+from mom import _compat
+from mom import builtins
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
+ZERO_BYTE = _compat.ZERO_BYTE
+EMPTY_BYTE = _compat.EMPTY_BYTE
 
 
 def uint_to_bytes_naive_array_based(uint, chunk_size=0):
@@ -58,9 +63,9 @@ def uint_to_bytes_naive_array_based(uint, chunk_size=0):
   if uint == 0:
     bytes_count = 1
   else:
-    bytes_count = integer_byte_length(uint)
-  byte_array = array('B', [0] * bytes_count)
-  for count in range(bytes_count - 1, -1, -1):
+    bytes_count = builtins.integer_byte_length(uint)
+  byte_array = array.array('B', [0] * bytes_count)
+  for count in builtins.range(bytes_count - 1, -1, -1):
     byte_array[count] = uint & 0xff
     uint >>= 8
   raw_bytes = byte_array.tostring()
@@ -101,7 +106,7 @@ def uint_to_bytes_naive(number, block_size=0):
     raise ValueError('Negative numbers cannot be used: %d' % number)
 
   # Do some bounds checking
-  needed_bytes = integer_byte_length(number)
+  needed_bytes = builtins.integer_byte_length(number)
   if block_size > 0:
     if needed_bytes > block_size:
       raise OverflowError('Needed %i bytes for number, but block size '
@@ -114,7 +119,7 @@ def uint_to_bytes_naive(number, block_size=0):
     raw_bytes = []
     num = number
     while num > 0:
-      raw_bytes.insert(0, byte(num & 0xFF))
+      raw_bytes.insert(0, builtins.byte(num & 0xFF))
       num >>= 8
 
   # Pad with zeroes to fill the block
@@ -141,11 +146,11 @@ def uint_to_bytes_pycrypto(uint, blocksize=0):
   raw_bytes = EMPTY_BYTE
   uint = int(uint)
   while uint > 0:
-    raw_bytes = pack('>I', uint & 0xffffffff) + raw_bytes
+    raw_bytes = struct.pack('>I', uint & 0xffffffff) + raw_bytes
     uint >>= 32
     # strip off leading zeros
   i = 0
-  for i in range(len(raw_bytes)):
+  for i in builtins.range(len(raw_bytes)):
     if raw_bytes[i] != ZERO_BYTE[0]:
       break
   else:
@@ -193,20 +198,20 @@ def uint_to_bytes_array_based(number, chunk_size=0):
 
   # Align packing to machine word size.
   num = number
-  word_bits, word_bytes, max_uint, pack_type = get_word_alignment(num)
+  word_bits, word_bytes, max_uint, pack_type = _compat.get_word_alignment(num)
   pack_format = ">" + pack_type
 
-  temp_buffer = array("B", [0] * word_bytes)
-  byte_array = array("B", raw_bytes)
+  temp_buffer = array.array("B", [0] * word_bytes)
+  byte_array = array.array("B", raw_bytes)
   while num > 0:
-    pack_into(pack_format, temp_buffer, 0, num & max_uint)
+    struct.pack_into(pack_format, temp_buffer, 0, num & max_uint)
     byte_array = temp_buffer + byte_array
     num >>= word_bits
 
   # Count the number of zero prefix bytes.
   zero_leading = 0
   length = len(byte_array)
-  for zero_leading in range(length):
+  for zero_leading in builtins.range(length):
     if byte_array[zero_leading]:
       break
   raw_bytes = byte_array[zero_leading:].tostring()
@@ -244,7 +249,7 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
   :returns:
       Integer.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("argument must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
 
@@ -259,9 +264,9 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
 
   # Now unpack integers and accumulate.
   int_value = 0
-  for i in range(0, length, 4):
+  for i in builtins.range(0, length, 4):
     chunk = raw_bytes[i:i + 4]
-    int_value = (int_value << 32) + unpack('>I', chunk)[0]
+    int_value = (int_value << 32) + struct.unpack('>I', chunk)[0]
   return int_value
 
 
@@ -272,11 +277,11 @@ def uint_to_bytes_simple(num):
     return ZERO_BYTE
   byte_array = []
   while num:
-    byte_array.append(byte(num & 0xff))
+    byte_array.append(builtins.byte(num & 0xff))
     num >>= 8
   return EMPTY_BYTE.join(reversed(byte_array))
 
 
 def bytes_to_uint_simple(raw_bytes):
   """Simple bytes to uint converter."""
-  return reduce(lambda a, b: a << 8 | b, map(byte_ord, raw_bytes), 0)
+  return builtins.reduce(lambda a, b: a << 8 | b, builtins.map(builtins.byte_ord, raw_bytes), 0)

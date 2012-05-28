@@ -35,9 +35,10 @@ Primes
 """
 
 from __future__ import absolute_import, division
-from mom.security.random import generate_random_uint_between
-from mom.prime_sieve import SIEVE
-from mom._compat import range
+
+from mom import builtins
+from mom import prime_sieve
+from mom.security import random
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -45,18 +46,17 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 __all__ = [
   "gcd",
-  "lcm",
-  "pow_mod",
-  "inverse_mod",
-  "is_prime",
   "generate_random_prime",
   "generate_random_safe_prime",
+  "inverse_mod",
+  "is_prime",
+  "lcm",
+  "pow_mod",
   ]
 
 
 def gcd(num_a, num_b):
-  """
-  Calculates the greatest common divisor.
+  """Calculates the greatest common divisor.
 
   Non-recursive fast implementation.
 
@@ -74,8 +74,7 @@ def gcd(num_a, num_b):
 
 
 def lcm(num_a, num_b):
-  """
-  Least common multiple.
+  """Least common multiple.
 
   :param num_a:
       Integer value.
@@ -88,8 +87,7 @@ def lcm(num_a, num_b):
 
 
 def inverse_mod(num_a, num_b):
-  """
-  Returns inverse of a mod b, zero if none
+  """Returns inverse of a mod b, zero if none
 
   Uses Extended Euclidean Algorithm
 
@@ -112,9 +110,8 @@ def inverse_mod(num_a, num_b):
 
 
 def exact_log2(number):
-  """
-  Find and return an unsigned integer i >= 0 such that ``number == 2**i``.
-  If no such integer exists, this function raises ValueError.
+  """Find and return an unsigned integer i >= 0 such that ``number == 2**i``. If
+  no such integer exists, this function raises ValueError.
 
   .. NOTE:
       It essentially answers this question:
@@ -144,8 +141,7 @@ def exact_log2(number):
 
 
 def _pure_pow_mod(base, power, modulus):
-  """
-  Calculates:
+  """Calculates:
       base**pow mod modulus
 
   Uses multi bit scanning with nBitScan bits at a time.
@@ -184,7 +180,7 @@ def _pure_pow_mod(base, power, modulus):
 
   # Make a table of powers of base up to 2**nBitScan - 1
   low_powers = [1]
-  for i in range(1, exp2):
+  for i in builtins.range(1, exp2):
     low_powers.append((low_powers[i - 1] * base) % modulus)
 
   # To exponentiate by the first nibble, look it up in the table
@@ -195,7 +191,7 @@ def _pure_pow_mod(base, power, modulus):
   # base^nibble
   while nibbles:
     nib, nibbles = nibbles
-    for i in range(n_bit_scan):
+    for i in builtins.range(n_bit_scan):
       prod = (prod * prod) % modulus
     if nib: prod = (prod * low_powers[nib]) % modulus
 
@@ -208,9 +204,8 @@ def _pure_pow_mod(base, power, modulus):
   return prod
 
 
-def _pure_is_prime(num, iterations=5, _sieve=SIEVE):
-  """
-  Determines whether a number is prime.
+def _pure_is_prime(num, iterations=5, _sieve=prime_sieve.SIEVE):
+  """Determines whether a number is prime.
 
   :param num:
       Number
@@ -234,7 +229,7 @@ def _pure_is_prime(num, iterations=5, _sieve=SIEVE):
     num_s, num_t = num_s // 2, num_t + 1
     # Repeat Rabin-Miller x times
   base = 2 # Use 2 as a base for first iteration speedup, per HAC
-  for _ in range(iterations):
+  for _ in builtins.range(iterations):
     num_v = _pure_pow_mod(base, num_s, num)
     if num_v == 1:
       continue
@@ -244,7 +239,7 @@ def _pure_is_prime(num, iterations=5, _sieve=SIEVE):
         return False
       else:
         num_v, i = _pure_pow_mod(num_v, 2, num), i + 1
-    base = generate_random_uint_between(2, num)
+    base = random.generate_random_uint_between(2, num)
   return True
 
 
@@ -259,8 +254,7 @@ is_prime = _is_prime
 
 
 def generate_random_prime(bits):
-  """
-  Generates a random prime number.
+  """Generates a random prime number.
 
   :param bits:
       Number of bits.
@@ -278,20 +272,19 @@ def generate_random_prime(bits):
   #high = 2 ** bits - 30
   low = (1 << (bits - 1)) * 3 // 2
   high = (1 << bits) - 30
-  random_uint = generate_random_uint_between(low, high)
+  random_uint = random.generate_random_uint_between(low, high)
   random_uint += 29 - (random_uint % 30)
   while 1:
     random_uint += 30
     if random_uint >= high:
-      random_uint = generate_random_uint_between(low, high)
+      random_uint = random.generate_random_uint_between(low, high)
       random_uint += 29 - (random_uint % 30)
     if is_prime(random_uint):
       return random_uint
 
 
 def generate_random_safe_prime(bits):
-  """
-  Unused at the moment.
+  """Unused at the moment.
 
   Generates a random prime number.
 
@@ -311,12 +304,12 @@ def generate_random_safe_prime(bits):
   #high = (2 ** (bits-1)) - 30
   low = (1 << (bits - 2)) * 3 // 2
   high = (1 << (bits - 1)) - 30
-  random_uint = generate_random_uint_between(low, high)
+  random_uint = random.generate_random_uint_between(low, high)
   random_uint += 29 - (random_uint % 30)
   while 1:
     random_uint += 30
     if random_uint >= high:
-      random_uint = generate_random_uint_between(low, high)
+      random_uint = random.generate_random_uint_between(low, high)
       random_uint += 29 - (random_uint % 30)
       #Ideas from Tom Wu's SRP code
     #Do trial division on p and q before Rabin-Miller

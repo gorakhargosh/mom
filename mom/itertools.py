@@ -12,9 +12,8 @@ Borrowed from brownie.itools.
 
 from __future__ import absolute_import
 
-from itertools import repeat, chain
-from mom._compat import range
-from mom.builtins import is_bytes_or_unicode
+import itertools
+from mom import builtins
 
 try:
   # Python 2.x
@@ -42,13 +41,12 @@ __all__ = [
     ]
 
 
-if getattr(chain, "from_iterable", None):
-  chain = chain
+if getattr(itertools.chain, "from_iterable", None):
+  chain = itertools.chain
 else:
 
   class chain(object):
-    """
-    An iterator which yields elements from the given `iterables` until each
+    """An iterator which yields elements from the given `iterables` until each
     iterable is exhausted.
 
     .. versionadded:: 0.2
@@ -56,8 +54,7 @@ else:
 
     @classmethod
     def from_iterable(cls, iterable):
-      """
-      Alternative constructor which takes an `iterable` yielding iterators,
+      """Alternative constructor which takes an `iterable` yielding iterators,
       this can be used to chain an infinite number of iterators.
       """
       rv = object.__new__(cls)
@@ -83,8 +80,7 @@ else:
 
 
 def izip_longest(*iterables, **kwargs):
-  """
-  Make an iterator that aggregates elements from each of the iterables. If
+  """Make an iterator that aggregates elements from each of the iterables. If
   the iterables are of uneven length, missing values are filled-in with
   `fillvalue`. Iteration continues until the longest iterable is exhausted.
 
@@ -102,7 +98,7 @@ def izip_longest(*iterables, **kwargs):
   def sentinel(counter=([fillvalue] * (len(iterables) - 1)).pop):
     yield counter()
 
-  fillers = repeat(fillvalue)
+  fillers = itertools.repeat(fillvalue)
   iters = [chain(it, sentinel(), fillers) for it in iterables]
   try:
     for tup in izip(*iters):
@@ -112,8 +108,7 @@ def izip_longest(*iterables, **kwargs):
 
 
 def permutations(iterable, r=None):
-  """
-  Return successive `r` length permutations of elements in the `iterable`.
+  """Return successive `r` length permutations of elements in the `iterable`.
 
   If `r` is not specified or is ``None``, then `r` defaults to the length of
   the `iterable` and all possible full-length permutations are generated.
@@ -135,14 +130,13 @@ def permutations(iterable, r=None):
   pool = tuple(iterable)
   pool_length = len(pool)
   r = pool_length if r is None else r
-  for indices in product(range(pool_length), repeat=r):
+  for indices in product(builtins.range(pool_length), repeat=r):
     if len(set(indices)) == r:
       yield tuple(pool[i] for i in indices)
 
 
 def product(*iterables, **kwargs):
-  """
-  Cartesian product of input iterables.
+  """Cartesian product of input iterables.
 
   Equivalent to nested for-loops in a generator expression. For example,
   ``product(A, B)`` returns the same as ``((x, y) for x in A for y in B)``.
@@ -171,9 +165,9 @@ try:
 
   starmap = starmap
 except ImportError:
+
   def starmap(function, iterable):
-    """
-    Make an iterator that computes the function using arguments obtained from
+    """Make an iterator that computes the function using arguments obtained from
     the iterable. Used instead of :func:`itertools.imap` when an argument
     parameters are already grouped in tuples from a single iterable (the data
     has been "pre-zipped"). The difference between :func:`itertools.imap` and
@@ -188,8 +182,7 @@ except ImportError:
 
 
 def combinations_with_replacement(iterable, r):
-  """
-  Return `r` length sub-sequences of elements from the `iterable` allowing
+  """Return `r` length sub-sequences of elements from the `iterable` allowing
   individual elements to be replaced more than once.
 
   Combinations are emitted in lexicographic sort order. So, if the input
@@ -208,17 +201,15 @@ def combinations_with_replacement(iterable, r):
   """
   pool = tuple(iterable)
   n = len(pool)
-  for indices in product(range(n), repeat=r):
+  for indices in product(builtins.range(n), repeat=r):
     if sorted(indices) == list(indices):
       yield tuple(pool[i] for i in indices)
 
 
 def compress(data, selectors):
-  """
-  Make an iterator that filters elements from the `data` returning only
-  those that have a corresponding element in `selectors` that evaluates to
-  ``True``. Stops when either the `data` or `selectors` iterables have been
-  exhausted.
+  """Make an iterator that filters elements from the `data` returning only those
+  that have a corresponding element in `selectors` that evaluates to ``True``.
+  Stops when either the `data` or `selectors` iterables have been exhausted.
 
   .. note:: Software and documentation for this function are taken from
             CPython, :ref:`license details <psf-license>`.
@@ -227,14 +218,13 @@ def compress(data, selectors):
 
 
 def count(start=0, step=1):
-  """
-  Make an iterator that returns evenly spaced values starting with `start`.
-  Often used as an argument to :func:`imap` to generate consecutive data
-  points. Also, used with :func:`izip` to add sequence numbers.
+  """Make an iterator that returns evenly spaced values starting with `start`.
+  Often used as an argument to :func:`imap` to generate consecutive data points.
+  Also, used with :func:`izip` to add sequence numbers.
 
-  When counting with floating point numbers, better accuracy can sometimes
-  be achieved by substituting multiplicative code such as:
-  ``(start + step * i for i in count())``.
+  When counting with floating point numbers, better accuracy can sometimes be
+  achieved by substituting multiplicative code such as: ``(start + step * i for
+  i in count())``.
 
   .. note:: Software and documentation for this function are taken from
             CPython, :ref:`license details <psf-license>`.
@@ -246,17 +236,14 @@ def count(start=0, step=1):
 
 
 def grouped(n, iterable, fillvalue=None):
-  """
-  Groups the items in the given `iterable` to tuples of size `n`. In order
-  for groups to always be of the size `n` the `fillvalue` is used for
-  padding.
+  """Groups the items in the given `iterable` to tuples of size `n`. In order
+  for groups to always be of the size `n` the `fillvalue` is used for padding.
   """
   return izip_longest(fillvalue=fillvalue, *([iter(iterable)] * n))
 
 
 def unique(iterable, seen=None):
-  """
-  Yields items from the given `iterable` of (hashable) items, once seen an
+  """Yields items from the given `iterable` of (hashable) items, once seen an
   item is not yielded again.
 
   :param seen:
@@ -282,8 +269,7 @@ def unique(iterable, seen=None):
 
 
 def flatten(iterable, ignore=None):
-  """
-  Flattens a nested `iterable`.
+  """Flattens a nested `iterable`.
 
   :param ignore:
       Types of iterable objects which should be yielded as-is.
@@ -296,7 +282,7 @@ def flatten(iterable, ignore=None):
       item = stack[-1].next()
       if ignore and isinstance(item, ignore):
         yield item
-      elif is_bytes_or_unicode(item) and len(item) == 1:
+      elif builtins.is_bytes_or_unicode(item) and len(item) == 1:
         yield item
       else:
         try:

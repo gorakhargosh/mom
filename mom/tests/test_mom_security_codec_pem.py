@@ -18,20 +18,17 @@
 
 from __future__ import absolute_import
 
-from mom._compat import HAVE_PYTHON3
+from mom import _compat
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-if not HAVE_PYTHON3:
+if not _compat.HAVE_PYTHON3:
   import unittest2
-  from mom.security.codec.pem import\
-    pem_to_der_private_key, pem_to_der_private_rsa_key,\
-    pem_to_der_public_key, pem_to_der_certificate,\
-    der_to_pem_certificate, der_to_pem_private_key,\
-    der_to_pem_public_key, der_to_pem_private_rsa_key,\
-    cert_time_to_seconds
+
+  from mom.security.codec import pem
+
 
   PRIVATE_KEY = """
 -----BEGIN PRIVATE KEY-----
@@ -124,43 +121,43 @@ WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
 
   class Test_pem_to_der_private_key(unittest2.TestCase):
     def test_decode(self):
-      self.assertEqual(pem_to_der_private_key(PRIVATE_KEY),
+      self.assertEqual(pem.pem_to_der_private_key(PRIVATE_KEY),
                        PRIVATE_KEY_DER)
 
   class Test_pem_to_der_private_rsa_key(unittest2.TestCase):
     def test_decode(self):
-      self.assertEqual(pem_to_der_private_rsa_key(PRIVATE_RSA_KEY),
+      self.assertEqual(pem.pem_to_der_private_rsa_key(PRIVATE_RSA_KEY),
                        PRIVATE_KEY_DER)
 
   class Test_pem_to_der_public_key(unittest2.TestCase):
     def test_decode(self):
-      self.assertEqual(pem_to_der_public_key(PUBLIC_KEY), PUBLIC_KEY_DER)
+      self.assertEqual(pem.pem_to_der_public_key(PUBLIC_KEY), PUBLIC_KEY_DER)
 
   class Test_pem_to_der_certificate(unittest2.TestCase):
     def test_decode(self):
-      self.assertEqual(pem_to_der_certificate(CERTIFICATE), CERTIFICATE_DER)
+      self.assertEqual(pem.pem_to_der_certificate(CERTIFICATE), CERTIFICATE_DER)
 
   class Test_pem_der_codec(unittest2.TestCase):
     def test_codec_identity(self):
-      self.assertEqual(der_to_pem_public_key(
-        pem_to_der_public_key(PUBLIC_KEY)).strip(), PUBLIC_KEY.strip())
-      self.assertEqual(der_to_pem_certificate(
-        pem_to_der_certificate(CERTIFICATE)).strip(), CERTIFICATE.strip())
-      self.assertEqual(der_to_pem_private_key(
-        pem_to_der_private_key(PRIVATE_KEY)).strip(), PRIVATE_KEY.strip())
-      self.assertEqual(der_to_pem_private_rsa_key(
-        pem_to_der_private_rsa_key(PRIVATE_RSA_KEY)).strip(),
+      self.assertEqual(pem.der_to_pem_public_key(
+        pem.pem_to_der_public_key(PUBLIC_KEY)).strip(), PUBLIC_KEY.strip())
+      self.assertEqual(pem.der_to_pem_certificate(
+        pem.pem_to_der_certificate(CERTIFICATE)).strip(), CERTIFICATE.strip())
+      self.assertEqual(pem.der_to_pem_private_key(
+        pem.pem_to_der_private_key(PRIVATE_KEY)).strip(), PRIVATE_KEY.strip())
+      self.assertEqual(pem.der_to_pem_private_rsa_key(
+        pem.pem_to_der_private_rsa_key(PRIVATE_RSA_KEY)).strip(),
                        PRIVATE_RSA_KEY.strip())
 
     def test_ValueError_on_missing_suffix(self):
-      self.assertRaises(ValueError, pem_to_der_certificate,
+      self.assertRaises(ValueError, pem.pem_to_der_certificate,
                         CERTIFICATE_WITHOUT_SUFFIX)
 
     def test_ValueError_on_missing_prefix(self):
-      self.assertRaises(ValueError, pem_to_der_certificate,
+      self.assertRaises(ValueError, pem.pem_to_der_certificate,
                         CERTIFICATE_WITHOUT_PREFIX)
 
   class Test_cert_time_in_seconds(unittest2.TestCase):
     def test_format(self):
-      self.assertEqual(cert_time_to_seconds('Jul 17 18:24:41 2011 GMT'),
+      self.assertEqual(pem.cert_time_to_seconds('Jul 17 18:24:41 2011 GMT'),
                        1310907281.0)

@@ -34,10 +34,10 @@ Functions
 
 from __future__ import absolute_import
 
-from os import walk as _walk
-from os.path import abspath, normpath, realpath, dirname, join as path_join
-from functools import partial
-from mom._compat import next
+import os
+
+from mom import builtins
+from os import path
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -66,11 +66,11 @@ def get_dir_walker(recursive, topdown=True, followlinks=False):
       A walker function.
   """
   if recursive:
-    walker = partial(_walk, topdown=topdown, followlinks=followlinks)
+    walker = functools.partial(os.walk, topdown=topdown, followlinks=followlinks)
   else:
     def walker(path, topdown=topdown, followlinks=followlinks):
       """Alternative walker."""
-      yield next(_walk(path, topdown=topdown, followlinks=followlinks))
+      yield builtins.next(os.walk(path, topdown=topdown, followlinks=followlinks))
   return walker
 
 
@@ -115,9 +115,9 @@ def listdir(dir_pathname,
   for root, dir_names, file_names in walk(
     dir_pathname, recursive, topdown, followlinks):
     for dir_name in dir_names:
-      yield absolute_path(path_join(root, dir_name))
+      yield absolute_path(path.join(root, dir_name))
     for file_name in file_names:
-      yield absolute_path(path_join(root, file_name))
+      yield absolute_path(path.join(root, file_name))
 
 
 def list_directories(dir_pathname,
@@ -141,7 +141,7 @@ def list_directories(dir_pathname,
   for root, dir_names, _ in walk(
     dir_pathname, recursive, topdown, followlinks):
     for dir_name in dir_names:
-      yield absolute_path(path_join(root, dir_name))
+      yield absolute_path(path.join(root, dir_name))
 
 
 def list_files(dir_pathname,
@@ -165,7 +165,7 @@ def list_files(dir_pathname,
   for root, _, file_names in walk(
     dir_pathname, recursive, topdown, followlinks):
     for file_name in file_names:
-      yield absolute_path(path_join(root, file_name))
+      yield absolute_path(path.join(root, file_name))
 
 
 def absolute_path(path):
@@ -177,7 +177,7 @@ def absolute_path(path):
   :returns:
       Absolute normalized path.
   """
-  return abspath(normpath(path))
+  return path.abspath(path.normpath(path))
 
 
 def real_absolute_path(path):
@@ -189,7 +189,7 @@ def real_absolute_path(path):
   :returns:
       Real absolute normalized path.
   """
-  return realpath(absolute_path(path))
+  return path.realpath(absolute_path(path))
 
 
 def parent_dir_path(path):
@@ -201,4 +201,4 @@ def parent_dir_path(path):
   :returns:
       Parent directory path.
   """
-  return absolute_path(dirname(path))
+  return absolute_path(path.dirname(path))

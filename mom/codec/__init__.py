@@ -295,57 +295,70 @@ except ImportError: #pragma: no cover
 
 import binascii
 
-from mom._compat import HAVE_PYTHON3, ZERO_BYTE, EMPTY_BYTE,\
-  UNDERSCORE_BYTE, FORWARD_SLASH_BYTE, HYPHEN_BYTE, PLUS_BYTE,\
-  EQUAL_BYTE, DIGIT_ZERO_BYTE
-from mom.builtins import is_bytes, b, bytes_leading
-from mom.codec.base36 import b36encode, b36decode
-from mom.functional import chunks
-from mom.codec.integer import bytes_to_uint, uint_to_bytes
-from mom.codec.base62 import b62encode, b62decode
-from mom.codec.base58 import b58decode, b58encode
-from mom.codec.base85 import b85encode, b85decode, rfc1924_b85encode,\
-  rfc1924_b85decode
+from mom import _compat
+from mom import builtins
+from mom import functional
+from mom.codec import base36
+from mom.codec import integer
+from mom.codec import base62
+from mom.codec import base58
+from mom.codec import base85
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "base85_encode",
-  "base85_decode",
-  "base64_encode",
-  "base64_decode",
-  "base64_urlsafe_encode",
-  "base64_urlsafe_decode",
-  "base62_encode",
-  "base62_decode",
-  "base58_encode",
-  "base58_decode",
-  "base36_encode",
-  "base36_decode",
-  "hex_encode",
-  "hex_decode",
-  "decimal_encode",
-  "decimal_decode",
-  "bin_encode",
-  "bin_decode",
-  ]
+    "B85_ASCII",
+    "B85_RFC1924",
+    "base85_encode",
+    "base85_decode",
+    "base64_encode",
+    "base64_decode",
+    "base64_urlsafe_encode",
+    "base64_urlsafe_decode",
+    "base62_encode",
+    "base62_decode",
+    "base58_encode",
+    "base58_decode",
+    "base36_encode",
+    "base36_decode",
+    "hex_encode",
+    "hex_decode",
+    "decimal_encode",
+    "decimal_decode",
+    "bin_encode",
+    "bin_decode",
+    ]
 
+
+b = builtins.b
+
+ZERO_BYTE = _compat.ZERO_BYTE
+EMPTY_BYTE = _compat.EMPTY_BYTE
+UNDERSCORE_BYTE = _compat.UNDERSCORE_BYTE
+FORWARD_SLASH_BYTE = _compat.FORWARD_SLASH_BYTE
+HYPHEN_BYTE = _compat.HYPHEN_BYTE
+PLUS_BYTE = _compat.PLUS_BYTE
+EQUAL_BYTE = _compat.EQUAL_BYTE
+DIGIT_ZERO_BYTE = _compat.DIGIT_ZERO_BYTE
 
 
 # Bytes base-encoding.
 
-B85_DECODE_MAP = {
-  "ASCII85": b85decode,
-  "RFC1924": rfc1924_b85decode,
-  }
-B85_ENCODE_MAP = {
-  "ASCII85": b85encode,
-  "RFC1924": rfc1924_b85encode,
-  }
+B85_ASCII = "ASCII85"
+B85_RFC1924 = "RFC1924"
 
-def base85_encode(raw_bytes, charset="ASCII85"):
+B85_DECODE_MAP = {
+    B85_ASCII: base85.b85decode,
+    B85_RFC1924: base85.rfc1924_b85decode,
+    }
+B85_ENCODE_MAP = {
+    B85_ASCII: base85.b85encode,
+    B85_RFC1924: base85.rfc1924_b85encode,
+    }
+
+def base85_encode(raw_bytes, charset=B85_ASCII):
   """
   Encodes raw bytes into ASCII85 representation.
 
@@ -364,7 +377,7 @@ def base85_encode(raw_bytes, charset="ASCII85"):
     raise ValueError("Invalid character set specified: %r" % charset)
 
 
-def base85_decode(encoded, charset="ASCII85"):
+def base85_decode(encoded, charset=B85_ASCII):
   """
   Decodes ASCII85-encoded bytes into raw bytes.
 
@@ -392,7 +405,7 @@ def base64_urlsafe_encode(raw_bytes):
   :returns:
       Base64 encoded string without newline characters.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("argument must be bytes: got %r" %
                     type(raw_bytes).__name__)
     # This is 3-4x faster than urlsafe_b64decode() -Guido.
@@ -414,7 +427,7 @@ def base64_urlsafe_decode(encoded):
   :returns:
       Raw bytes.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError("argument must be bytes: got %r" %
                     type(encoded).__name__)
   remainder = len(encoded) % 4
@@ -441,7 +454,7 @@ def base64_encode(raw_bytes):
   :returns:
       Base64 encoded bytes without newline characters.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("argument must be bytes: got %r" %
                     type(raw_bytes).__name__)
   return binascii.b2a_base64(raw_bytes)[:-1]
@@ -456,7 +469,7 @@ def base64_decode(encoded):
   :returns:
       Raw bytes.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError("argument must be bytes: got %r" %
                     type(encoded).__name__)
   return binascii.a2b_base64(encoded)
@@ -476,7 +489,7 @@ def base62_encode(raw_bytes):
   :returns:
       Base-62 encoded bytes.
   """
-  return b62encode(raw_bytes)
+  return base62.b62encode(raw_bytes)
 
 
 def base62_decode(encoded):
@@ -490,7 +503,7 @@ def base62_decode(encoded):
   :returns:
       Raw bytes.
   """
-  return b62decode(encoded)
+  return base62.b62decode(encoded)
 
 
 def base58_encode(raw_bytes):
@@ -507,7 +520,7 @@ def base58_encode(raw_bytes):
   :returns:
       Base-58 encoded bytes.
   """
-  return b58encode(raw_bytes)
+  return base58.b58encode(raw_bytes)
 
 
 def base58_decode(encoded):
@@ -521,7 +534,7 @@ def base58_decode(encoded):
   :returns:
       Raw bytes.
   """
-  return b58decode(encoded)
+  return base58.b58decode(encoded)
 
 
 def base36_encode(raw_bytes):
@@ -538,7 +551,7 @@ def base36_encode(raw_bytes):
   :returns:
       Base-36 encoded bytes.
   """
-  return b36encode(raw_bytes)
+  return base36.b36encode(raw_bytes)
 
 
 def base36_decode(encoded):
@@ -552,7 +565,7 @@ def base36_decode(encoded):
   :returns:
       Raw bytes.
   """
-  return b36decode(encoded)
+  return base36.b36decode(encoded)
 
 
 def hex_encode(raw_bytes):
@@ -566,7 +579,7 @@ def hex_encode(raw_bytes):
   :returns:
       Hex-encoded representation.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("argument must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
   return binascii.b2a_hex(raw_bytes)
@@ -581,7 +594,7 @@ def hex_decode(encoded):
   :returns:
       Raw bytes.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError("argument must be bytes: got %r" %
                     type(encoded).__name__)
   return binascii.a2b_hex(encoded)
@@ -599,8 +612,8 @@ def decimal_encode(raw_bytes):
   :returns:
       Decimal-encoded representation.
   """
-  padding = DIGIT_ZERO_BYTE * bytes_leading(raw_bytes)
-  int_val = bytes_to_uint(raw_bytes)
+  padding = DIGIT_ZERO_BYTE * builtins.bytes_leading(raw_bytes)
+  int_val = integer.bytes_to_uint(raw_bytes)
   if int_val:
     encoded = padding + str(int_val).encode("ascii")
   else:
@@ -618,10 +631,10 @@ def decimal_decode(encoded):
   :returns:
       Raw bytes.
   """
-  padding = ZERO_BYTE * bytes_leading(encoded, DIGIT_ZERO_BYTE)
+  padding = ZERO_BYTE * builtins.bytes_leading(encoded, DIGIT_ZERO_BYTE)
   int_val = int(encoded)
   if int_val:
-    decoded = padding + uint_to_bytes(int_val)
+    decoded = padding + integer.uint_to_bytes(int_val)
   else:
     decoded = padding
   return decoded
@@ -645,7 +658,7 @@ _HEX_TO_BIN_LOOKUP = {
   b('e'): b('1110'), b('E'): b('1110'),
   b('f'): b('1111'), b('F'): b('1111'),
   }
-if HAVE_PYTHON3: # pragma: no cover
+if _compat.HAVE_PYTHON3: # pragma: no cover
   # Indexing into Python 3 bytes yields ords, not single-byte strings.
   _HEX_TO_BIN_LOOKUP =\
   dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())
@@ -679,7 +692,7 @@ def bin_encode(raw_bytes):
   :returns:
       Binary representation.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("argument must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
   return EMPTY_BYTE.join(_HEX_TO_BIN_LOOKUP[hex_char]
@@ -695,8 +708,8 @@ def bin_decode(encoded):
   :returns:
       Raw bytes.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError("argument must be bytes: got %r" %
                     type(encoded).__name__)
   return binascii.a2b_hex(EMPTY_BYTE.join(_BIN_TO_HEX_LOOKUP[nibble]
-  for nibble in chunks(encoded, 4)))
+  for nibble in functional.chunks(encoded, 4)))

@@ -20,12 +20,16 @@
 
 from __future__ import absolute_import
 
-from struct import pack
-from mom._compat import ZERO_BYTE, get_word_alignment, EMPTY_BYTE
-from mom.builtins import byte_ord
+import struct
+from mom import _compat
+from mom import builtins
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
+ZERO_BYTE = _compat.ZERO_BYTE
+EMPTY_BYTE = _compat.EMPTY_BYTE
 
 
 def integer_byte_length_shift_counting(num):
@@ -76,7 +80,7 @@ def integer_bit_length_shift_counting(num):
 
 def _integer_raw_bytes_without_leading(num,
                                        _zero_byte=ZERO_BYTE,
-                                       _get_machine_alignment=get_word_alignment):
+                                       _get_machine_alignment=_compat.get_word_alignment):
   # Do not change this to `not num` otherwise a TypeError will not
   # be raised when `None` is passed in as a value.
   if num == 0:
@@ -87,7 +91,7 @@ def _integer_raw_bytes_without_leading(num,
   word_bits, _, max_uint, pack_type = _get_machine_alignment(num)
   pack_format = ">" + pack_type
   while num > 0:
-    raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
+    raw_bytes = struct.pack(pack_format, num & max_uint) + raw_bytes
     num >>= word_bits
 
   # Count the number of zero prefix bytes.
@@ -134,7 +138,7 @@ def integer_bit_length_word_aligned(num):
     num = -num
   if num > 0x80:
     raw_bytes = _integer_raw_bytes_without_leading(num)
-    first_byte = byte_ord(raw_bytes[0])
+    first_byte = builtins.byte_ord(raw_bytes[0])
     bits = 0
     while first_byte >> bits:
       bits += 1

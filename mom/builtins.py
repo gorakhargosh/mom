@@ -104,10 +104,8 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
-from struct import pack
-from mom._compat import\
-  byte_literal, BYTES_TYPE, UNICODE_TYPE, BASESTRING_TYPE, range, reduce,\
-  next, INTEGER_TYPES, byte_ord, ZERO_BYTE
+import struct
+from mom import _compat
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -137,22 +135,25 @@ __all__ = [
 
 
 # Integral range
-range = range
-
-reduce = reduce
-next = next
+range = _compat.range
+map = _compat.map
+reduce = _compat.reduce
+next = _compat.next
 
 # Types and their meanings:
 #
 # * ``bytes`` = bytes (binary data or a sequence of bytes).
 # * ``unicode`` = Unicode string or text (for backward compatibility,
 #    2to3 converts these).
-bytes = BYTES_TYPE
+bytes = _compat.BYTES_TYPE
 
 # Fake byte literal support.
-b = byte_literal
+b = _compat.byte_literal
 
-byte_ord = byte_ord
+byte_ord = _compat.byte_ord
+
+
+dict_each = _compat.dict_each
 
 
 def byte(number):
@@ -170,10 +171,10 @@ def byte(number):
   :returns:
       A single byte.
   """
-  return pack("B", number)
+  return struct.pack("B", number)
 
 
-def bytes_leading(raw_bytes, needle=ZERO_BYTE):
+def bytes_leading(raw_bytes, needle=_compat.ZERO_BYTE):
   """
   Finds the number of prefixed byte occurrences in the haystack.
 
@@ -200,7 +201,7 @@ def bytes_leading(raw_bytes, needle=ZERO_BYTE):
   return leading
 
 
-def bytes_trailing(raw_bytes, needle=ZERO_BYTE):
+def bytes_trailing(raw_bytes, needle=_compat.ZERO_BYTE):
   """
   Finds the number of suffixed byte occurrences in the haystack.
 
@@ -306,7 +307,7 @@ def is_unicode(obj):
   :returns:
       ``True`` if value is a Unicode string; ``False`` otherwise.
   """
-  return isinstance(obj, UNICODE_TYPE)
+  return isinstance(obj, _compat.UNICODE_TYPE)
 
 
 def is_bytes(obj):
@@ -318,7 +319,7 @@ def is_bytes(obj):
   :returns:
       ``True`` if value is a bytes instance; ``False`` otherwise.
   """
-  return isinstance(obj, BYTES_TYPE)
+  return isinstance(obj, _compat.BYTES_TYPE)
 
 
 def is_bytes_or_unicode(obj):
@@ -331,7 +332,7 @@ def is_bytes_or_unicode(obj):
   :returns:
       ``True`` if value is any type of string; ``False`` otherwise.
   """
-  return isinstance(obj, BASESTRING_TYPE)
+  return isinstance(obj, _compat.BASESTRING_TYPE)
 
 
 def is_integer(obj):
@@ -343,7 +344,7 @@ def is_integer(obj):
   :returns:
       ``True`` if yes; ``False`` otherwise.
   """
-  return isinstance(obj, INTEGER_TYPES) and not isinstance(obj, bool)
+  return isinstance(obj, _compat.INTEGER_TYPES) and not isinstance(obj, bool)
 
 
 def integer_byte_length(number):
@@ -479,7 +480,7 @@ def is_positive(num):
   :returns:
       ``True`` if positive; ``False`` otherwise.
   """
-  if not isinstance(num, INTEGER_TYPES + (bool, float)):
+  if not isinstance(num, _compat.INTEGER_TYPES + (bool, float)):
     raise TypeError("unsupported operand type: %r", type(num).__name__)
   return num > 0
 
@@ -493,6 +494,6 @@ def is_negative(num):
   :returns:
       ``True`` if positive; ``False`` otherwise.
   """
-  if not isinstance(num, INTEGER_TYPES + (bool, float)):
+  if not isinstance(num, _compat.INTEGER_TYPES + (bool, float)):
     raise TypeError("unsupported operand type: %r", type(num).__name__)
   return num < 0

@@ -20,39 +20,33 @@ from __future__ import absolute_import
 
 import unittest2
 
-from mom.tests.test_mom_builtins import UNICODE_STRING
-from mom.builtins import b
-from mom.security.random import\
-  generate_random_bytes, generate_random_uint_between
-from mom.codec import\
-  base64_encode,\
-  base64_decode,\
-  hex_decode,\
-  hex_encode,\
-  decimal_decode,\
-  decimal_encode,\
-  bin_encode,\
-  bin_decode,\
-  base85_encode, base85_decode, base58_encode, base58_decode,\
-  base64_urlsafe_encode, base64_urlsafe_decode
-from mom.tests.test_mom_codec_base85 import RAW as base85_raw,\
-  ENCODED as base85_encoded
+from mom import builtins
+from mom.tests import constants
+from mom.security import random
+
+from mom import codec
+from mom.tests import test_mom_codec_base85
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
+b = builtins.b
+
+BASE85_RAW = test_mom_codec_base85.RAW
+BASE85_ENCODED = test_mom_codec_base85.ENCODED
+
 # Generates a 1024-bit strength random byte string.
-RANDOM_BYTES_1024 = generate_random_bytes(1024 >> 3)
+RANDOM_BYTES_1024 = random.generate_random_bytes(1024 >> 3)
 # Generates a 2048-bit strength random byte string.
-RANDOM_BYTES_2048 = generate_random_bytes(2048 >> 3)
+RANDOM_BYTES_2048 = random.generate_random_bytes(2048 >> 3)
 # Generates a 4093 byte length random byte string.
-RANDOM_BYTES_4093 = generate_random_bytes(4093)
+RANDOM_BYTES_4093 = random.generate_random_bytes(4093)
 
 ZERO_BYTES = b("\x00\x00\x00\x00")
 ONE_ZERO_BYTE = b("\x00")
 
-RANDOM_LONG_VALUE = generate_random_uint_between(0, 99999999999999999)
+RANDOM_LONG_VALUE = random.generate_random_uint_between(0, 99999999999999999)
 ZERO_LONG = 0
 NEGATIVE_LONG_VALUE = -1
 
@@ -80,158 +74,158 @@ b("R4FZmkud8umBBsa-NqUOwGuRSQXe2NzWp_KfCYyhpvMZxwv9PXoCWr5SwMZ-YN1mekE")
 
 class Test_base85_codec(unittest2.TestCase):
   def test_codec_identity(self):
-    self.assertEqual(base85_decode(base85_encode(base85_raw)), base85_raw)
+    self.assertEqual(codec.base85_decode(codec.base85_encode(BASE85_RAW)), BASE85_RAW)
 
   def test_encoding_and_decoding(self):
-    self.assertEqual(base85_encode(base85_raw), base85_encoded)
-    self.assertEqual(base85_decode(base85_encoded), base85_raw)
+    self.assertEqual(codec.base85_encode(BASE85_RAW), BASE85_ENCODED)
+    self.assertEqual(codec.base85_decode(BASE85_ENCODED), BASE85_RAW)
 
   def test_raises_KeyError_when_invalid_charset(self):
     self.assertRaises(ValueError,
-                      base85_encode, base85_raw, "BADCHARSET")
+                      codec.base85_encode, BASE85_RAW, "BADCHARSET")
     self.assertRaises(ValueError,
-                      base85_decode, base85_encoded, "BADCHARSET")
+                      codec.base85_decode, BASE85_ENCODED, "BADCHARSET")
 
 
 class Test_base58_codec(unittest2.TestCase):
   def test_codec_identity(self):
-    self.assertEqual(base58_decode(base58_encode(RANDOM_BYTES_1024)),
+    self.assertEqual(codec.base58_decode(codec.base58_encode(RANDOM_BYTES_1024)),
                      RANDOM_BYTES_1024)
-    self.assertEqual(base58_decode(base58_encode(RANDOM_BYTES_4093)),
+    self.assertEqual(codec.base58_decode(codec.base58_encode(RANDOM_BYTES_4093)),
                      RANDOM_BYTES_4093)
 
   def test_raises_TypeError_when_invalid_argument(self):
-    self.assertRaises(TypeError, base58_encode, UNICODE_STRING)
-    self.assertRaises(TypeError, base58_encode, None)
-    self.assertRaises(TypeError, base58_decode, UNICODE_STRING)
-    self.assertRaises(TypeError, base58_decode, None)
+    self.assertRaises(TypeError, codec.base58_encode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.base58_encode, None)
+    self.assertRaises(TypeError, codec.base58_decode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.base58_decode, None)
 
 
 class Test_base64_codec(unittest2.TestCase):
   def test_encodes_without_trailing_newline(self):
-    self.assertFalse(base64_encode(ZERO_BYTES).endswith(b("\n")))
-    self.assertFalse(base64_encode(RANDOM_BYTES_1024).endswith(b("\n")))
-    self.assertFalse(base64_encode(RANDOM_BYTES_2048).endswith(b("\n")))
-    self.assertFalse(base64_encode(RANDOM_BYTES_4093).endswith(
+    self.assertFalse(codec.base64_encode(ZERO_BYTES).endswith(b("\n")))
+    self.assertFalse(codec.base64_encode(RANDOM_BYTES_1024).endswith(b("\n")))
+    self.assertFalse(codec.base64_encode(RANDOM_BYTES_2048).endswith(b("\n")))
+    self.assertFalse(codec.base64_encode(RANDOM_BYTES_4093).endswith(
       b("\n")))
 
   def test_codec_identity(self):
     # Not zero-destructive.
-    self.assertEqual(base64_decode(base64_encode(ZERO_BYTES)), ZERO_BYTES)
-    self.assertEqual(base64_decode(base64_encode(RANDOM_BYTES_1024)),
+    self.assertEqual(codec.base64_decode(codec.base64_encode(ZERO_BYTES)), ZERO_BYTES)
+    self.assertEqual(codec.base64_decode(codec.base64_encode(RANDOM_BYTES_1024)),
                      RANDOM_BYTES_1024)
-    self.assertEqual(base64_decode(base64_encode(RANDOM_BYTES_2048)),
+    self.assertEqual(codec.base64_decode(codec.base64_encode(RANDOM_BYTES_2048)),
                      RANDOM_BYTES_2048)
-    self.assertEqual(base64_decode(base64_encode(RANDOM_BYTES_4093)),
+    self.assertEqual(codec.base64_decode(codec.base64_encode(RANDOM_BYTES_4093)),
                      RANDOM_BYTES_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, base64_encode, UNICODE_STRING)
-    self.assertRaises(TypeError, base64_encode, None)
+    self.assertRaises(TypeError, codec.base64_encode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.base64_encode, None)
 
-    self.assertRaises(TypeError, base64_decode, UNICODE_STRING)
-    self.assertRaises(TypeError, base64_decode, None)
+    self.assertRaises(TypeError, codec.base64_decode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.base64_decode, None)
 
 
 class Test_base64_urlsafe_codec(unittest2.TestCase):
   def test_encodes_without_trailing_newline(self):
-    self.assertFalse(base64_urlsafe_encode(ZERO_BYTES).endswith(b("\n")))
+    self.assertFalse(codec.base64_urlsafe_encode(ZERO_BYTES).endswith(b("\n")))
     self.assertFalse(
-      base64_urlsafe_encode(RANDOM_BYTES_1024).endswith(b("\n")))
+      codec.base64_urlsafe_encode(RANDOM_BYTES_1024).endswith(b("\n")))
 
   def test_codec_identity(self):
     # Not zero-destructive.
     self.assertEqual(
-      base64_urlsafe_decode(base64_urlsafe_encode(ZERO_BYTES)),
+      codec.base64_urlsafe_decode(codec.base64_urlsafe_encode(ZERO_BYTES)),
       ZERO_BYTES
     )
     self.assertEqual(
-      base64_urlsafe_decode(base64_urlsafe_encode(RANDOM_BYTES_1024)),
+      codec.base64_urlsafe_decode(codec.base64_urlsafe_encode(RANDOM_BYTES_1024)),
       RANDOM_BYTES_1024
     )
 
   def test_correctness(self):
-    self.assertEqual(base64_urlsafe_encode(URL_SAFETY_TEST_BYTES),
+    self.assertEqual(codec.base64_urlsafe_encode(URL_SAFETY_TEST_BYTES),
                      URL_SAFETY_TEST_SAFE_ENCODED)
-    self.assertEqual(base64_encode(URL_SAFETY_TEST_BYTES),
+    self.assertEqual(codec.base64_encode(URL_SAFETY_TEST_BYTES),
                      URL_SAFETY_TEST_STANDARD_ENCODED)
-    self.assertEqual(base64_urlsafe_decode(URL_SAFETY_TEST_SAFE_ENCODED),
+    self.assertEqual(codec.base64_urlsafe_decode(URL_SAFETY_TEST_SAFE_ENCODED),
                      URL_SAFETY_TEST_BYTES)
-    self.assertEqual(base64_decode(URL_SAFETY_TEST_STANDARD_ENCODED),
+    self.assertEqual(codec.base64_decode(URL_SAFETY_TEST_STANDARD_ENCODED),
                      URL_SAFETY_TEST_BYTES)
 
     # Tests whether this decoder can decode standard encoded base64
     # representation too.
     self.assertEqual(
-      base64_urlsafe_decode(URL_SAFETY_TEST_STANDARD_ENCODED),
+      codec.base64_urlsafe_decode(URL_SAFETY_TEST_STANDARD_ENCODED),
       URL_SAFETY_TEST_BYTES
     )
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, base64_urlsafe_encode, UNICODE_STRING)
-    self.assertRaises(TypeError, base64_urlsafe_encode, None)
+    self.assertRaises(TypeError, codec.base64_urlsafe_encode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.base64_urlsafe_encode, None)
 
-    self.assertRaises(TypeError, base64_urlsafe_decode, UNICODE_STRING)
-    self.assertRaises(TypeError, base64_urlsafe_decode, None)
+    self.assertRaises(TypeError, codec.base64_urlsafe_decode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.base64_urlsafe_decode, None)
 
 
 class Test_hex_codec(unittest2.TestCase):
   def test_codec_identity(self):
     # Not zero-destructive
-    self.assertEqual(hex_decode(hex_encode(ZERO_BYTES)), ZERO_BYTES)
-    self.assertEqual(hex_decode(hex_encode(RANDOM_BYTES_1024)),
+    self.assertEqual(codec.hex_decode(codec.hex_encode(ZERO_BYTES)), ZERO_BYTES)
+    self.assertEqual(codec.hex_decode(codec.hex_encode(RANDOM_BYTES_1024)),
                      RANDOM_BYTES_1024)
-    self.assertEqual(hex_decode(hex_encode(RANDOM_BYTES_2048)),
+    self.assertEqual(codec.hex_decode(codec.hex_encode(RANDOM_BYTES_2048)),
                      RANDOM_BYTES_2048)
     self.assertEqual(
-      hex_decode(hex_encode(RANDOM_BYTES_4093)),
+      codec.hex_decode(codec.hex_encode(RANDOM_BYTES_4093)),
       RANDOM_BYTES_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, hex_encode, UNICODE_STRING)
-    self.assertRaises(TypeError, hex_encode, None)
+    self.assertRaises(TypeError, codec.hex_encode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.hex_encode, None)
 
-    self.assertRaises(TypeError, hex_decode, UNICODE_STRING)
-    self.assertRaises(TypeError, hex_decode, None)
+    self.assertRaises(TypeError, codec.hex_decode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.hex_decode, None)
 
 
 class Test_decimal_codec(unittest2.TestCase):
   def test_codec_identity(self):
     self.assertEqual(
-      decimal_decode(decimal_encode(ZERO_BYTES)),
+      codec.decimal_decode(codec.decimal_encode(ZERO_BYTES)),
       ZERO_BYTES)
     self.assertEqual(
-      decimal_decode(decimal_encode(RANDOM_BYTES_1024)),
+      codec.decimal_decode(codec.decimal_encode(RANDOM_BYTES_1024)),
       RANDOM_BYTES_1024)
     self.assertEqual(
-      decimal_decode(decimal_encode(RANDOM_BYTES_2048)),
+      codec.decimal_decode(codec.decimal_encode(RANDOM_BYTES_2048)),
       RANDOM_BYTES_2048)
     self.assertEqual(
-      decimal_decode(decimal_encode(RANDOM_BYTES_4093)),
+      codec.decimal_decode(codec.decimal_encode(RANDOM_BYTES_4093)),
       RANDOM_BYTES_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, decimal_encode, UNICODE_STRING)
-    self.assertRaises(TypeError, decimal_encode, None)
+    self.assertRaises(TypeError, codec.decimal_encode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.decimal_encode, None)
 
-    self.assertRaises(TypeError, decimal_decode, UNICODE_STRING)
-    self.assertRaises(TypeError, decimal_decode, None)
+    self.assertRaises(TypeError, codec.decimal_decode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.decimal_decode, None)
 
 
 class Test_bin_codec(unittest2.TestCase):
   def test_codec_identity(self):
-    self.assertEqual(bin_decode(bin_encode(ZERO_BYTES)), ZERO_BYTES)
+    self.assertEqual(codec.bin_decode(codec.bin_encode(ZERO_BYTES)), ZERO_BYTES)
     self.assertEqual(
-      bin_decode(bin_encode(RANDOM_BYTES_1024)), RANDOM_BYTES_1024)
+      codec.bin_decode(codec.bin_encode(RANDOM_BYTES_1024)), RANDOM_BYTES_1024)
     self.assertEqual(
-      bin_decode(bin_encode(RANDOM_BYTES_2048)), RANDOM_BYTES_2048)
+      codec.bin_decode(codec.bin_encode(RANDOM_BYTES_2048)), RANDOM_BYTES_2048)
     self.assertEqual(
-      bin_decode(bin_encode(RANDOM_BYTES_4093)),
+      codec.bin_decode(codec.bin_encode(RANDOM_BYTES_4093)),
       RANDOM_BYTES_4093)
 
   def test_TypeError_non_bytes_argument(self):
-    self.assertRaises(TypeError, bin_encode, UNICODE_STRING)
-    self.assertRaises(TypeError, bin_encode, None)
+    self.assertRaises(TypeError, codec.bin_encode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.bin_encode, None)
 
-    self.assertRaises(TypeError, bin_decode, UNICODE_STRING)
-    self.assertRaises(TypeError, bin_decode, None)
+    self.assertRaises(TypeError, codec.bin_decode, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, codec.bin_decode, None)

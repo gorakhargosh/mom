@@ -40,6 +40,7 @@ ASN.1 Syntax::
 # Private keys can be generated with "openssl genrsa|gendsa" commands.
 
 from __future__ import absolute_import
+
 from pyasn1.type import univ, namedtype, namedval, constraint
 
 

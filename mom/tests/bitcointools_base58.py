@@ -30,15 +30,21 @@ However, the implementation is still a broken one. DO NOT USE.
 
 from __future__ import absolute_import
 
-from mom._compat import ZERO_BYTE, EMPTY_BYTE, HAVE_PYTHON3
-from mom.builtins import byte_ord, byte, b
+from mom import _compat
+from mom import builtins
+
+
+b = builtins.b
+ZERO_BYTE = _compat.ZERO_BYTE
+EMPTY_BYTE = _compat.EMPTY_BYTE
+
 
 ALPHABET = b('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
 BASE = len(ALPHABET)
 
-if HAVE_PYTHON3:
+if _compat.HAVE_PYTHON3:
   def _chr(c):
-    return byte(c)
+    return builtins.byte(c)
 else:
   def _chr(c):
     return c
@@ -50,7 +56,7 @@ def b58encode_bitcoin(v):
 
   long_value = 0
   for i, c in enumerate(v[::-1]):
-    long_value += (256 ** i) * byte_ord(c)
+    long_value += (256 ** i) * builtins.byte_ord(c)
 
   result = EMPTY_BYTE
   while long_value >= BASE:
@@ -79,16 +85,16 @@ def b58decode_bitcoin(encoded, length=None):
   result = EMPTY_BYTE
   while long_value >= 256:
     div, mod = divmod(long_value, 256)
-    result = byte(mod) + result
+    result = builtins.byte(mod) + result
     long_value = div
-  result = byte(long_value) + result
+  result = builtins.byte(long_value) + result
 
   nPad = 0
   for c in encoded:
     if c == ALPHABET[0]: nPad += 1
     else: break
 
-  result = byte(0) * nPad + result
+  result = builtins.byte(0) * nPad + result
   if length is not None and len(result) != length:
     return None
 

@@ -22,13 +22,19 @@
 """
 
 from __future__ import absolute_import
-from mom._compat import ZERO_BYTE
-from mom.builtins import b
-from mom.codec.integer import uint_to_bytes, bytes_to_uint
+
+
+from mom import _compat
+from mom import builtins
+from mom.codec import integer
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
+
+b = builtins.b
+
+ZERO_BYTE = _compat.ZERO_BYTE
 
 SHA1_DIGESTINFO =\
 b("\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14")
@@ -52,7 +58,7 @@ def pkcs1_v1_5_encode(key_size, data):
       A blob of data as large as the key's N, using PKCS1's
       "emsa-pkcs1-v1_5" encoding.
   """
-  size = len(uint_to_bytes(key_size))
+  size = len(integer.uint_to_bytes(key_size))
   filler = FF_BYTE * (size - SHA1_DIGESTINFO_LEN - len(data) - 3)
   return ZERO_ONE_BYTES + filler + ZERO_BYTE + SHA1_DIGESTINFO + data
 
@@ -111,7 +117,7 @@ class Key(object):
     :returns:
         Signature byte string.
     """
-    return uint_to_bytes(self._sign(digest))
+    return integer.uint_to_bytes(self._sign(digest))
 
   def verify(self, digest, signature_bytes):
     """
@@ -125,7 +131,7 @@ class Key(object):
     :returns:
         ``True`` if the signature matches; ``False`` otherwise.
     """
-    return self._verify(digest, bytes_to_uint(signature_bytes))
+    return self._verify(digest, integer.bytes_to_uint(signature_bytes))
 
   def pkcs1_v1_5_sign(self, digest):
     """

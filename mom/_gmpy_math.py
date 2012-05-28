@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 # Public domain.
 
-"""
-GMPY-based functions.
-"""
+
+"""GMPY-based functions."""
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -23,10 +22,11 @@ except ImportError:
     gmpy = None
     HAVE_GMPY = False
 
+
 if HAVE_GMPY:
+
   def pow_mod(base, power, modulus):
-    """
-    Calculates:
+    """Calculates:
 
         base**pow mod modulus
 
@@ -46,7 +46,5 @@ if HAVE_GMPY:
     return int(result)
 
   def is_prime(num, *args, **kwargs):
-    """
-    Determines whether an integer is prime.
-    """
+    """Determines whether an integer is prime."""
     return gmpy.is_prime(num)

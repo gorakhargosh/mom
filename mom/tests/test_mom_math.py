@@ -20,9 +20,9 @@ from __future__ import absolute_import
 
 import unittest2
 
-from mom.math import gcd, lcm, is_prime, _pure_is_prime,\
-  generate_random_prime, generate_random_safe_prime, exact_log2
-from mom._prime_sieve import make_prime_sieve
+
+from mom import _prime_sieve
+from mom import math
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -31,57 +31,57 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 class Test__pure_is_prime(unittest2.TestCase):
   def test_pure_is_prime_for_sieves(self):
     for i in [10, 100, 1000, 10000]:
-      sieve = make_prime_sieve(i)
+      sieve = _prime_sieve.make_prime_sieve(i)
       odds = []
       for x in sieve:
-        if not _pure_is_prime(x, _sieve=[2, 3]):
+        if not math._pure_is_prime(x, _sieve=[2, 3]):
           odds.append(x)
       self.assertEqual(odds, [])
 
   def test_non_prime_by_sieve(self):
-    self.assertFalse(_pure_is_prime(100))
+    self.assertFalse(math._pure_is_prime(100))
 
 
 class Test_generate_random_prime(unittest2.TestCase):
   def test_generate_random_prime(self):
     for _ in range(100):
-      self.assertTrue(is_prime(generate_random_prime(64)))
+      self.assertTrue(math.is_prime(math.generate_random_prime(64)))
 
 
 class Test_generate_random_safe_prime(unittest2.TestCase):
   def test_generate_random_safe_prime(self):
     for _ in range(20):
-      self.assertTrue(is_prime(generate_random_safe_prime(32)))
+      self.assertTrue(math.is_prime(math.generate_random_safe_prime(32)))
 
 
 class Test_gcd(unittest2.TestCase):
   def test_gcd(self):
-    self.assertEqual(gcd(54, 24), 6)
+    self.assertEqual(math.gcd(54, 24), 6)
 
   def test_gcd_swap(self):
-    self.assertEqual(gcd(24, 54), 6)
+    self.assertEqual(math.gcd(24, 54), 6)
 
 
 class Test_lcm(unittest2.TestCase):
   def test_lcm(self):
-    self.assertEqual(lcm(4, 6), 12)
-    self.assertEqual(lcm(6, 4), 12)
-    self.assertEqual(lcm(21, 6), 42)
+    self.assertEqual(math.lcm(4, 6), 12)
+    self.assertEqual(math.lcm(6, 4), 12)
+    self.assertEqual(math.lcm(21, 6), 42)
 
 
 class Test_exact_log2(unittest2.TestCase):
   def test_ValueError_when_not_found(self):
-    self.assertRaises(ValueError, exact_log2, 7)
-    self.assertRaises(ValueError, exact_log2, 58)
-    self.assertRaises(ValueError, exact_log2, 62)
-    self.assertRaises(ValueError, exact_log2, 85)
+    self.assertRaises(ValueError, math.exact_log2, 7)
+    self.assertRaises(ValueError, math.exact_log2, 58)
+    self.assertRaises(ValueError, math.exact_log2, 62)
+    self.assertRaises(ValueError, math.exact_log2, 85)
 
   def test_ValueError_when_not_negative_or_0(self):
-    self.assertRaises(ValueError, exact_log2, 0)
-    self.assertRaises(ValueError, exact_log2, -1)
-    self.assertRaises(ValueError, exact_log2, -1024)
+    self.assertRaises(ValueError, math.exact_log2, 0)
+    self.assertRaises(ValueError, math.exact_log2, -1)
+    self.assertRaises(ValueError, math.exact_log2, -1024)
 
   def test_correctness(self):
     powers = range(20)
     for power in powers:
-      self.assertEqual(exact_log2(1 << power), power)
+      self.assertEqual(math.exact_log2(1 << power), power)

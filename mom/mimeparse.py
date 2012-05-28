@@ -43,9 +43,9 @@ Contents:
  - best_match():        Choose the mime-type with the highest quality ('q')
                           from a list of candidates.
 """
-from mom._compat import EMPTY_BYTE, EQUAL_BYTE, FORWARD_SLASH_BYTE
 
-from mom.builtins import b
+from mom import _compat
+from mom import builtins
 
 
 __version__ = '0.1.3'
@@ -54,6 +54,12 @@ __email__ = 'joe@bitworking.org'
 __license__ = 'MIT License'
 __credits__ = ''
 
+
+b = builtins.b
+
+EMPTY_BYTE = _compat.EMPTY_BYTE
+EQUAL_BYTE = _compat.EQUAL_BYTE
+FORWARD_SLASH_BYTE = _compat.FORWARD_SLASH_BYTE
 
 SEMICOLON_BYTE = b(';')
 ASTERISK_BYTE = b('*')
@@ -64,10 +70,9 @@ FULL_TYPE = b('*/*')
 def parse_mime_type(mime_type):
   """Parses a mime-type into its component parts.
 
-Carves up a mime-type and returns a tuple of the (type, subtype, params)
-where 'params' is a dictionary of all the parameters for the media range.
-For example, the media range b'application/xhtml;q=0.5' would get parsed
-into:
+  Carves up a mime-type and returns a tuple of the (type, subtype, params) where
+  'params' is a dictionary of all the parameters for the media range. For example,
+  the media range b'application/xhtml;q=0.5' would get parsed into:
 
   (b'application', b'xhtml', {'q': b'0.5'})
   """

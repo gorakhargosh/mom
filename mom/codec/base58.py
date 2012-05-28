@@ -78,9 +78,9 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
-from mom._compat import HAVE_PYTHON3, range
-from mom.builtins import byte
-from mom.codec._base import base_encode, base_decode
+from mom import _compat
+from mom import builtins
+from mom.codec import _base
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -105,16 +105,16 @@ ALT58_BYTES = ("123456789"
 # Therefore, b'1' represents b'\0'.
 ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_BYTES))
 
-if HAVE_PYTHON3:
-  ASCII58_BYTES = tuple(byte(x) for x in ASCII58_BYTES)
-  ALT58_BYTES = tuple(byte(x) for x in ALT58_BYTES)
+if _compat.HAVE_PYTHON3:
+  ASCII58_BYTES = tuple(builtins.byte(x) for x in ASCII58_BYTES)
+  ALT58_BYTES = tuple(builtins.byte(x) for x in ALT58_BYTES)
 
 # If you're going to make people type stuff longer than this length
 # I don't know what to tell you. Beyond this length powers
 # are computed, so be careful if you care about computation speed.
 # I think this is a VERY generous range. Decoding bytes fewer than 512
 # will use this pre-computed lookup table, and hence, be faster.
-POW_58 = tuple(58 ** power for power in range(512))
+POW_58 = tuple(58 ** power for power in builtins.range(512))
 
 
 def b58encode(raw_bytes,
@@ -134,7 +134,7 @@ def b58encode(raw_bytes,
   :returns:
       Base-58 encoded bytes.
   """
-  return base_encode(raw_bytes, 58, base_bytes, base_bytes[0], _padding)
+  return _base.base_encode(raw_bytes, 58, base_bytes, base_bytes[0], _padding)
 
 
 def b58decode(encoded,
@@ -156,4 +156,4 @@ def b58decode(encoded,
   """
   # Zero byte is represented using the first character in the character set.
   # Adds zero byte prefix padding if required.
-  return base_decode(encoded, 58, base_ords, base_bytes[0], POW_58)
+  return _base.base_decode(encoded, 58, base_ords, base_bytes[0], POW_58)

@@ -36,22 +36,23 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
-
+from mom import _compat
+from mom import builtins
 from mom import string
-from mom._compat import HAVE_PYTHON3, EMPTY_BYTE
-from mom.builtins import byte
-from mom.codec._base import base_encode, uint_to_base256
+from mom.codec import _base
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
+EMPTY_BYTE = _compat.EMPTY_BYTE
+
 # Follows ASCII order.
 ASCII36_BYTES = (string.DIGITS +
                  string.ASCII_UPPERCASE).encode("ascii")
 # Therefore, b'1' represents b'\0'.
-if HAVE_PYTHON3:
-  ASCII36_BYTES = tuple(byte(x) for x in ASCII36_BYTES)
+if _compat.HAVE_PYTHON3:
+  ASCII36_BYTES = tuple(builtins.byte(x) for x in ASCII36_BYTES)
 
 
 def b36encode(raw_bytes, base_bytes=ASCII36_BYTES, _padding=True):
@@ -70,7 +71,7 @@ def b36encode(raw_bytes, base_bytes=ASCII36_BYTES, _padding=True):
   :returns:
       Uppercase (default) base-36 encoded bytes.
   """
-  return base_encode(raw_bytes, 36, base_bytes, base_bytes[0], _padding)
+  return _base.base_encode(raw_bytes, 36, base_bytes, base_bytes[0], _padding)
 
 
 def b36decode(encoded, base_bytes=ASCII36_BYTES):
@@ -91,4 +92,4 @@ def b36decode(encoded, base_bytes=ASCII36_BYTES):
   """
   # Ignore whitespace.
   encoded = EMPTY_BYTE.join(encoded.split())
-  return uint_to_base256(int(encoded, 36), encoded, base_bytes[0])
+  return _base.uint_to_base256(int(encoded, 36), encoded, base_bytes[0])

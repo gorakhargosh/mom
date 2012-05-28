@@ -35,9 +35,12 @@ try:  # pragma: no cover
   from itertools import imap as map
 except ImportError: # pragma: no cover
   pass
-from functools import partial
-from fnmatch import fnmatch, fnmatchcase
-from mom.functional import some, identity
+
+
+import fnmatch
+import functools
+
+from mom import functional
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -76,12 +79,12 @@ def match_path_against(pathname, patterns, case_sensitive=True):
       ``True`` if the pattern matches; ``False`` otherwise.
   """
   if case_sensitive:
-    match_func = partial(fnmatchcase, pathname)
-    transform = identity
+    match_func = functools.partial(fnmatch.fnmatchcase, pathname)
+    transform = functional.identity
   else:
-    match_func = partial(fnmatch, pathname.lower())
+    match_func = functools.partial(fnmatch.fnmatch, pathname.lower())
     transform = _string_lower
-  return some(match_func, map(transform, set(patterns)))
+  return functional.some(match_func, map(transform, set(patterns)))
 
 
 def _match_path(pathname,

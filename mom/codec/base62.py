@@ -166,10 +166,10 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
-from mom._compat import HAVE_PYTHON3
+from mom import _compat
+from mom import builtins
 from mom import string
-from mom.builtins import byte
-from mom.codec._base import base_encode, base_decode
+from mom.codec import _base
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -194,9 +194,9 @@ ALT62_BYTES = (string.DIGITS +
 # Therefore, b'0' represents b'\0'.
 ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_BYTES))
 
-if HAVE_PYTHON3:
-  ASCII62_BYTES = tuple(byte(x) for x in ASCII62_BYTES)
-  ALT62_BYTES = tuple(byte(x) for x in ALT62_BYTES)
+if _compat.HAVE_PYTHON3:
+  ASCII62_BYTES = tuple(builtins.byte(x) for x in ASCII62_BYTES)
+  ALT62_BYTES = tuple(builtins.byte(x) for x in ALT62_BYTES)
 
 # If you're going to make people type stuff longer than this length
 # I don't know what to tell you. Beyond this length powers
@@ -224,7 +224,7 @@ def b62encode(raw_bytes,
   :returns:
       Base-62 encoded bytes.
   """
-  return base_encode(raw_bytes, 62, base_bytes, base_bytes[0], _padding)
+  return _base.base_encode(raw_bytes, 62, base_bytes, base_bytes[0], _padding)
 
 
 def b62decode(encoded,
@@ -246,4 +246,4 @@ def b62decode(encoded,
   """
   # Zero byte is represented using the first character in the character set.
   # Adds zero byte prefix padding if required.
-  return base_decode(encoded, 62, base_ords, base_bytes[0], POW_62)
+  return _base.base_decode(encoded, 62, base_ords, base_bytes[0], POW_62)

@@ -79,12 +79,11 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
-from array import array
-from struct import unpack, pack
+import array
+import struct
 from mom import string
-from mom.builtins import is_bytes, b, byte
-from mom._compat import range, ZERO_BYTE, UINT128_MAX, UINT32_MAX,\
-  HAVE_PYTHON3, EMPTY_BYTE
+from mom import builtins
+from mom import _compat
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -101,6 +100,13 @@ __all__ = [
   "ipv6_b85decode",
   ]
 
+
+b = builtins.b
+ZERO_BYTE = _compat.ZERO_BYTE
+UINT128_MAX = _compat.UINT128_MAX
+UINT32_MAX = _compat.UINT32_MAX
+EMPTY_BYTE = _compat.EMPTY_BYTE
+
 EXCLAMATION_CHUNK = b('!!!!!')
 ZERO_GROUP_CHAR = b('z')
 
@@ -110,19 +116,19 @@ ASCII85_PREFIX = b('<~')
 ASCII85_SUFFIX = b('~>')
 
 # ASCII85 characters.
-ASCII85_BYTES = array('B', [(num + 33) for num in range(85)])
+ASCII85_BYTES = array.array('B', [(num + 33) for num in builtins.range(85)])
 
 # I've left this approach in here to warn you to NOT use it.
 # This results in a massive amount of calls to byte_ord inside
 # tight loops. Don't use the array. Use the dictionary. It
 # removes the need to convert to ords at runtime.
-#ASCII85_ORDS = array('B', [255] * 128)
+#ASCII85_ORDS = array.array('B', [255] * 128)
 #for ordinal, _byte in enumerate(ASCII85_BYTES):
 #    ASCII85_ORDS[_byte] = ordinal
 
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_BYTES = array('B', (string.DIGITS +
+RFC1924_BYTES = array.array('B', (string.DIGITS +
                             string.ASCII_UPPERCASE +
                             string.ASCII_LOWERCASE +
                             "!#$%&()*+-;<=>?@^_`{|}~").encode("ascii"))
@@ -131,26 +137,26 @@ RFC1924_BYTES = array('B', (string.DIGITS +
 # This results in a massive amount of calls to byte_ord inside
 # tight loops. Don't use the array. Use the dictionary. It
 # removes the need to convert to ords at runtime.
-#RFC1924_ORDS = array('B', [255] * 128)
+#RFC1924_ORDS = array.array('B', [255] * 128)
 #for ordinal, _byte in enumerate(RFC1924_BYTES):
 #    RFC1924_ORDS[_byte] = ordinal
 
-if HAVE_PYTHON3: # pragma: no cover
+if _compat.HAVE_PYTHON3: # pragma: no cover
   # Python 3 bytes when indexed yield integers, not single-character
   # byte strings.
   ASCII85_ORDS = dict((x, x - 33) for x in ASCII85_BYTES)
   RFC1924_ORDS = dict((x, i) for i, x in enumerate(RFC1924_BYTES))
 else:
   # Indexing into Python 2 bytes yields single-character byte strings.
-  ASCII85_ORDS = dict((byte(x), x - 33) for x in ASCII85_BYTES)
-  RFC1924_ORDS = dict((byte(x), i) for i, x in enumerate(RFC1924_BYTES))
+  ASCII85_ORDS = dict((builtins.byte(x), x - 33) for x in ASCII85_BYTES)
+  RFC1924_ORDS = dict((builtins.byte(x), i) for i, x in enumerate(RFC1924_BYTES))
 
 
 # Pre-computed powers (array index) of 85 used to unroll encoding loops
 # Therefore, 85**i is equivalent to POW_85[i] for index 0 through 19
 # (inclusive).
 #
-#POW_85 = tuple(85**power for power in range(20))
+#POW_85 = tuple(85**power for power in builtins.range(20))
 POW_85 = (
   1,
   85,
@@ -241,12 +247,12 @@ def _b85encode_chunks(raw_bytes,
   else:
     padding_size = 0
 
-  encoded = array('B', [0] * num_uint32 * 5)
+  encoded = array.array('B', [0] * num_uint32 * 5)
   # ASCII85 uses a big-endian convention.
   # See: http://en.wikipedia.org/wiki/Ascii85
   i = 0
-  for uint32 in unpack('>' + 'L' * num_uint32, raw_bytes):
-  #        chars = list(range(5))
+  for uint32 in struct.unpack('>' + 'L' * num_uint32, raw_bytes):
+  #        chars = list(builtins.range(5))
   #        for i in reversed(chars):
   #            x, mod = divmod(x, 85)
   #            chars[i] = _base85_chars[mod]
@@ -288,7 +294,7 @@ def _b85decode_chunks(encoded, base85_bytes, base85_ords):
   length = len(encoded)
   num_uint32s, remainder = divmod(length, 5)
   if remainder:
-    padding_byte = byte(base85_bytes[84]) # 'u' (ASCII85); '~' (RFC1924)
+    padding_byte = builtins.byte(base85_bytes[84]) # 'u' (ASCII85); '~' (RFC1924)
     padding_size = 5 - remainder
     encoded += padding_byte * padding_size
     num_uint32s += 1
@@ -297,11 +303,11 @@ def _b85decode_chunks(encoded, base85_bytes, base85_ords):
     padding_size = 0
 
   #uint32s = [0] * num_uint32s
-  uint32s = array('I', [0] * num_uint32s)
+  uint32s = array.array('I', [0] * num_uint32s)
   j = 0
   chunk = EMPTY_BYTE
   try:
-    for i in range(0, length, 5):
+    for i in builtins.range(0, length, 5):
       chunk = encoded[i:i + 5]
       #        uint32_value = 0
       #        for char in chunk:
@@ -330,7 +336,7 @@ def _b85decode_chunks(encoded, base85_bytes, base85_ords):
   except KeyError:
     raise OverflowError("Cannot decode chunk `%r`" % chunk)
 
-  raw_bytes = pack(">" + "L" * num_uint32s, *uint32s)
+  raw_bytes = struct.pack(">" + "L" * num_uint32s, *uint32s)
   if padding_size:
     # Only as much padding added before decoding is removed after decoding.
     raw_bytes = raw_bytes[:-padding_size]
@@ -381,15 +387,15 @@ def b85encode(raw_bytes,
   """
   prefix = prefix or EMPTY_BYTE
   suffix = suffix or EMPTY_BYTE
-  if not (is_bytes(prefix) and is_bytes(suffix)):
+  if not (builtins.is_bytes(prefix) and builtins.is_bytes(suffix)):
     raise TypeError(
       "Prefix/suffix must be bytes: got prefix %r, %r" %
       (type(prefix).__name__, type(suffix).__name__)
     )
-  if not is_bytes(_compact_char):
+  if not builtins.is_bytes(_compact_char):
     raise TypeError("compat character must be raw byte: got %r" %
                     type(_compact_char).__name__)
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("data must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
 
@@ -432,15 +438,15 @@ def b85decode(encoded,
   prefix = prefix or EMPTY_BYTE
   suffix = suffix or EMPTY_BYTE
 
-  if not (is_bytes(prefix) and is_bytes(suffix)):
+  if not (builtins.is_bytes(prefix) and builtins.is_bytes(suffix)):
     raise TypeError(
       "Prefix/suffix must be bytes: got prefix %r, %r" %
       (type(prefix).__name__, type(suffix).__name__)
     )
-  if not is_bytes(_compact_char):
+  if not builtins.is_bytes(_compact_char):
     raise TypeError("compat character must be raw byte: got %r" %
                     type(_compact_char).__name__)
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError(
       "Encoded sequence must be bytes: got %r" % type(encoded).__name__
     )
@@ -488,7 +494,7 @@ def rfc1924_b85encode(raw_bytes,
   :returns:
       RFC1924 base85 encoded string.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("data must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
   return _b85encode_chunks(raw_bytes, RFC1924_BYTES, _padding)
@@ -508,7 +514,7 @@ def rfc1924_b85decode(encoded):
   :returns:
       Decoded bytes.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError(
       "Encoded sequence must be bytes: got %r" % type(encoded).__name__
     )
@@ -536,13 +542,13 @@ def ipv6_b85encode(uint128,
   if uint128 > UINT128_MAX:
     raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                         uint128)
-  #    encoded = list(range(20))
+  #    encoded = list(builtins.range(20))
   #    for i in reversed(encoded):
   #        uint128, remainder = divmod(uint128, 85)
   #        encoded[i] = _base85_chars[remainder]
   # Above loop unrolled:
-  # pack('B' * 20, ...)
-  return pack('BBBBBBBBBBBBBBBBBBBB',
+  # struct.pack('B' * 20, ...)
+  return struct.pack('BBBBBBBBBBBBBBBBBBBB',
               _base85_bytes[(uint128 // POW_85[19])],
               # Don't need %85. Already < 85
               _base85_bytes[(uint128 // POW_85[18]) % 85],
@@ -583,7 +589,7 @@ def ipv6_b85decode(encoded,
   :returns:
       A 128-bit unsigned integer.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError(
       "Encoded sequence must be bytes: got %r" % type(encoded).__name__
     )

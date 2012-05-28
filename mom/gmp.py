@@ -39,16 +39,13 @@
 .. autoclass:: Random
 """
 
+
 from __future__ import absolute_import
 
-from ctypes import CDLL, Structure, POINTER, byref,\
-  c_int, c_ulonglong, c_voidp, c_long, c_char_p
-#    c_byte, \
-#    cast,\
-#    c_ulong
+import ctypes
 
-from ctypes.util import find_library
-from mom._compat import HAVE_PYTHON3
+from ctypes import util
+from mom import _compat
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -57,7 +54,7 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 # pylint: disable-msg=W0212
 # pylint: disable-msg=C0103
 
-if HAVE_PYTHON3:
+if _compat.HAVE_PYTHON3:
   def number_to_pybytes(num):
     """
     Converts number to bytes.
@@ -87,11 +84,11 @@ else:
 
 
 # Find the GMP library
-_libgmp_path = find_library("gmp")
+_libgmp_path = util.find_library("gmp")
 if not _libgmp_path:
   raise ImportError("Unable to find libgmp")
   # raise EnvironmentError('Unable to find libgmp')
-_libgmp = CDLL(_libgmp_path)
+_libgmp = ctypes.CDLL(_libgmp_path)
 
 
 # GNU MP structures
@@ -100,36 +97,36 @@ _libgmp = CDLL(_libgmp_path)
 #  checking library/arch. For example, different library configuration options
 #  and 32-bit/64-bit systems.
 #
-class c_mpz_struct(Structure):
+class c_mpz_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
-    ('_mp_alloc', c_int),
-    ('_mp_size', c_int),
-    ('_mp_d', POINTER(c_ulonglong))]
+    ('_mp_alloc', ctypes.c_int),
+    ('_mp_size', ctypes.c_int),
+    ('_mp_d', ctypes.POINTER(ctypes.c_ulonglong))]
 
 
-class c_gmp_randstate_struct(Structure):
+class c_gmp_randstate_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
     ('_mp_seed', c_mpz_struct),
-    ('_mp_alg', c_int),
-    ('_mp_algdata', c_voidp)]
+    ('_mp_alg', ctypes.c_int),
+    ('_mp_algdata', ctypes.c_voidp)]
 
 
-class c_mpq_struct(Structure):
+class c_mpq_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
     ('_mp_num', c_mpz_struct),
     ('_mp_den', c_mpz_struct)]
 
 
-class c_mpf_struct(Structure):
+class c_mpf_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
-    ('_mp_prec', c_int),
-    ('_mp_size', c_int),
-    ('_mp_exp', c_long),
-    ('_mp_d', POINTER(c_long))]
+    ('_mp_prec', ctypes.c_int),
+    ('_mp_size', ctypes.c_int),
+    ('_mp_exp', ctypes.c_long),
+    ('_mp_d', ctypes.POINTER(ctypes.c_long))]
 
 #------------------------------------------------------------------------------
 # Function references into MP library
@@ -208,7 +205,7 @@ class Integer(object):
 
   def __init__(self, init_value=0):
     self._mpz = c_mpz_struct()
-    self._mpzp = byref(self._mpz)
+    self._mpzp = ctypes.byref(self._mpz)
     _MPZ_init(self)
     self.set(init_value)
 
@@ -413,7 +410,7 @@ class Integer(object):
 #class Rational(object):
 #    def __init__(self):
 #        self._mpq = c_mpq_struct()
-#        self._mpqp = byref(self._mpq)
+#        self._mpqp = ctypes.byref(self._mpq)
 #        _MPQ_init(self)
 #
 #    def __del__(self):
@@ -512,7 +509,7 @@ class Integer(object):
 #class Float(object):
 #    def __init__(self, init_value=0.0, precision=None):
 #        self._mpf = c_mpf_struct()
-#        self._mpfp = byref(self._mpf)
+#        self._mpfp = ctypes.byref(self._mpf)
 #        _MPF_init(self)
 #        self.set(init_value)
 #
@@ -566,8 +563,8 @@ class Integer(object):
 #        return arg
 #
 #    def __str__(self):
-#        exp = (c_byte * 4)()
-#        exp = cast(exp, POINTER(c_int))
+#        exp = (ctypes.c_byte * 4)()
+#        exp = ctypes.cast(exp, ctypes.POINTER(ctypes.c_int))
 #        return _MPF_get_str(None, exp, 10, 10, self)
 #
 #    def __repr__(self):
@@ -580,7 +577,7 @@ class Integer(object):
 #        return self.__lt__(other) or self.__eq__(other)
 #
 #    def __eq__(self, other):
-#        return self.__apply_ret_3_1(_MPF_eq, self, other, c_int(32)) != 0
+#        return self.__apply_ret_3_1(_MPF_eq, self, other, ctypes.c_int(32)) != 0
 #
 #    def __ne__(self, other):
 #        return not self.__eq__(other)
@@ -637,7 +634,7 @@ class Integer(object):
 #class Random(object):
 #    def __init__(self, algo=RAND_ALGO_DEFAULT):
 #        self._gmp = c_gmp_randstate_struct()
-#        self._gmpp = byref(self._gmp)
+#        self._gmpp = ctypes.byref(self._gmp)
 #
 #        if algo in [RAND_ALGO_DEFAULT, RAND_ALGO_MT]:
 #            algo(self)
@@ -697,10 +694,10 @@ _MPZ_xor.argtypes = (Integer, Integer, Integer)
 _MPZ_abs.argtypes = (Integer, Integer)
 _MPZ_neg.argtypes = (Integer, Integer)
 _MPZ_cmp.argtypes = (Integer, Integer)
-_MPZ_set_str.argtypes = (Integer, c_char_p, c_int)
-_MPZ_get_str.argtypes = (c_char_p, c_int, Integer,)
+_MPZ_set_str.argtypes = (Integer, ctypes.c_char_p, ctypes.c_int)
+_MPZ_get_str.argtypes = (ctypes.c_char_p, ctypes.c_int, Integer,)
 # non-default (int) return types
-_MPZ_get_str.restype = c_char_p
+_MPZ_get_str.restype = ctypes.c_char_p
 
 # Gnu MP rational number routines
 #_MPQ_init.argtypes = (Rational,)
@@ -711,13 +708,13 @@ _MPZ_get_str.restype = c_char_p
 #_MPQ_abs.argtypes = (Rational, Rational)
 #_MPQ_neg.argtypes = (Rational, Rational)
 #_MPQ_cmp.argtypes = (Rational, Rational)
-#_MPQ_set_str.argtypes = (Rational, c_char_p, c_int)
-#_MPQ_get_str.argtypes = (c_char_p, c_int, Rational,)
+#_MPQ_set_str.argtypes = (Rational, ctypes.c_char_p, ctypes.c_int)
+#_MPQ_get_str.argtypes = (ctypes.c_char_p, ctypes.c_int, Rational,)
 ## non-default (int) return types
-#_MPQ_get_str.restype = c_char_p
+#_MPQ_get_str.restype = ctypes.c_char_p
 
 # Gnu MP floating point routines
-#_MPF_set_default_prec.argtypes = (c_ulong,)
+#_MPF_set_default_prec.argtypes = (ctypes.c_ulong,)
 #_MPF_init.argtypes = (Float,)
 #_MPF_clear.argtypes = (Float,)
 #_MPF_add.argtypes = (Float, Float, Float)
@@ -726,8 +723,8 @@ _MPZ_get_str.restype = c_char_p
 #_MPF_abs.argtypes = (Float, Float)
 #_MPF_neg.argtypes = (Float, Float)
 #_MPF_cmp.argtypes = (Float, Float)
-#_MPF_eq.argtypes = (Float, Float, c_int)
-#_MPF_set_str.argtypes = (Float, c_char_p, c_int)
-#_MPF_get_str.argtypes = (c_char_p, POINTER(c_int), c_int, c_int, Float)
+#_MPF_eq.argtypes = (Float, Float, ctypes.c_int)
+#_MPF_set_str.argtypes = (Float, ctypes.c_char_p, ctypes.c_int)
+#_MPF_get_str.argtypes = (ctypes.c_char_p, ctypes.POINTER(ctypes.c_int), ctypes.c_int, ctypes.c_int, Float)
 ## non-default (int) return types
-#_MPF_get_str.restype = c_char_p
+#_MPF_get_str.restype = ctypes.c_char_p

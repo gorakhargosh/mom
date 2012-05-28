@@ -37,7 +37,8 @@ where ``g`` is the decoder and ``f`` is a encoder.
 # to be the fastest. See _alt_integer.py for alternative but slower
 # implementations.
 
-from __future__ import absolute_import, division
+from __future__ import absolute_import
+from __future__ import division
 
 # pylint: disable-msg=R0801
 try: #pragma: no cover
@@ -49,10 +50,10 @@ except ImportError: #pragma: no cover
 # pylint: enable-msg=R0801
 
 import binascii
-from struct import pack
+import struct
 
-from mom._compat import get_word_alignment, ZERO_BYTE, EMPTY_BYTE
-from mom.builtins import is_bytes, bytes_leading
+from mom import _compat
+from mom import builtins
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -64,6 +65,10 @@ __all__ = [
   ]
 
 
+ZERO_BYTE = _compat.ZERO_BYTE
+EMPTY_BYTE = _compat.EMPTY_BYTE
+
+
 def bytes_to_uint(raw_bytes):
   """
   Converts a series of bytes into an unsigned integer.
@@ -73,7 +78,7 @@ def bytes_to_uint(raw_bytes):
   :returns:
       Unsigned integer.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("argument must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
     # binascii.b2a_hex is written in C as is int.
@@ -135,13 +140,13 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
 
   # Pack the integer one machine word at a time into bytes.
   num = number
-  word_bits, _, max_uint, pack_type = get_word_alignment(num)
+  word_bits, _, max_uint, pack_type = _compat.get_word_alignment(num)
   pack_format = ">%s" % pack_type
   while num > 0:
-    raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
+    raw_bytes = struct.pack(pack_format, num & max_uint) + raw_bytes
     num >>= word_bits
     # Obtain the index of the first non-zero byte.
-  zero_leading = bytes_leading(raw_bytes)
+  zero_leading = builtins.bytes_leading(raw_bytes)
   if number == 0:
     raw_bytes = ZERO_BYTE
     # De-padding.

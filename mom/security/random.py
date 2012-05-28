@@ -52,11 +52,12 @@ Utility
 
 from __future__ import absolute_import, division
 
+from mom import _compat
+from mom import builtins
+from mom import codec
 from mom import string
-from mom._compat import range, generate_random_bytes as _generate_random_bytes
-from mom.builtins import is_integer, byte, integer_bit_size
-from mom.codec import hex_encode
-from mom.codec.integer import bytes_to_uint
+from mom.codec import integer
+
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
@@ -88,7 +89,7 @@ __all__ = [
   "PUNCTUATION",
   ]
 
-generate_random_bytes = _generate_random_bytes
+generate_random_bytes = _compat.generate_random_bytes
 
 
 def generate_random_bits(n_bits, rand_func=generate_random_bytes):
@@ -114,7 +115,7 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
   :returns:
       Bytes.
   """
-  if not is_integer(n_bits):
+  if not builtins.is_integer(n_bits):
     raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
   if n_bits <= 0:
     raise ValueError("number of bits must be greater than 0.")
@@ -123,7 +124,7 @@ def generate_random_bits(n_bits, rand_func=generate_random_bytes):
   random_bytes = rand_func(quotient)
   if remainder:
     offset = ord(rand_func(1)) >> (8 - remainder)
-    random_bytes = byte(offset) + random_bytes
+    random_bytes = builtins.byte(offset) + random_bytes
   return random_bytes
 
 
@@ -140,7 +141,7 @@ def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
       The generated unsigned long integer will be between 0 and
       (2**n_bits)-1 both inclusive.
   """
-  if not is_integer(n_bits):
+  if not builtins.is_integer(n_bits):
     raise TypeError("unsupported operand type: %r" % type(n_bits).__name__)
   if n_bits <= 0:
     raise ValueError("number of bits must be greater than 0.")
@@ -150,7 +151,7 @@ def generate_random_uint_atmost(n_bits, rand_func=generate_random_bytes):
     quotient += 1
   random_bytes = rand_func(quotient)
   mask = (1 << n_bits) - 1
-  return mask & bytes_to_uint(random_bytes)
+  return mask & integer.bytes_to_uint(random_bytes)
 
 
 def generate_random_uint_exactly(n_bits, rand_func=generate_random_bytes):
@@ -167,7 +168,7 @@ def generate_random_uint_exactly(n_bits, rand_func=generate_random_bytes):
       (2**n_bits)-1 both inclusive.
   """
   # Doesn't perform any floating-point operations.
-  value = bytes_to_uint(generate_random_bits(n_bits, rand_func=rand_func))
+  value = integer.bytes_to_uint(generate_random_bits(n_bits, rand_func=rand_func))
   #assert(value >= 0 and value < (2L ** n_bits))
   # Set the high bit to ensure bit length.
   #value |= 2 ** (n_bits - 1)
@@ -190,13 +191,13 @@ def generate_random_uint_between(low, high, rand_func=generate_random_bytes):
   :returns:
       Random unsigned long integer value.
   """
-  if not (is_integer(low) and is_integer(high)):
+  if not (builtins.is_integer(low) and builtins.is_integer(high)):
     raise TypeError("unsupported argument types(s): %r and %r"\
     % (type(low).__name__, type(high).__name__))
   if low >= high:
     raise ValueError("high value must be greater than low value.")
   substrate = high - low - 1
-  bits = integer_bit_size(substrate)
+  bits = builtins.integer_bit_size(substrate)
   value = generate_random_uint_atmost(bits, rand_func=rand_func)
   while value > substrate:
     value = generate_random_uint_atmost(bits, rand_func=rand_func)
@@ -220,7 +221,7 @@ def generate_random_hex_string(length=8, rand_func=generate_random_bytes):
     raise ValueError(
       "This function expects a positive even number "\
       "length: got length `%r`." % length)
-  return hex_encode(rand_func(length >> 1))
+  return codec.hex_encode(rand_func(length >> 1))
 
 
 def random_choice(sequence, rand_func=generate_random_bytes):
@@ -247,7 +248,7 @@ def random_shuffle(sequence, rand_func=generate_random_bytes):
   copy = list(sequence)
   # Choose a random item (without replacement) until all the items have been
   # chosen.
-  for i in range(len(sequence)):
+  for i in builtins.range(len(sequence)):
     random_uint = generate_random_uint_between(0, len(copy), rand_func)
     sequence[i] = copy[random_uint]
     del copy[random_uint]
@@ -267,12 +268,12 @@ def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
   :returns:
       A list of elements randomly chosen from the pool.
   """
-  if not is_integer(length):
+  if not builtins.is_integer(length):
     raise TypeError("Length must be a positive integer: got `%r`" %\
                     type(length).__name__)
   if length <= 0:
     raise ValueError("length must be a positive integer: got %d" % length)
-  return [random_choice(pool, rand_func) for _ in range(length)]
+  return [random_choice(pool, rand_func) for _ in builtins.range(length)]
 
 
 HEXADECIMAL_DIGITS = string.DIGITS + "abcdef"

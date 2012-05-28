@@ -23,7 +23,9 @@
 """
 
 from __future__ import absolute_import
-from mom.codec.text import utf8_decode
+
+from mom.codec import text
+
 
 try:
   # Built-in JSON library.
@@ -45,7 +47,7 @@ except Exception:
 
     def json_loads(value):
       """Wrapper to decode JSON."""
-      return json.loads(utf8_decode(value))
+      return json.loads(text.utf8_decode(value))
 
     def json_dumps(value):
       """Wrapper to encode JSON."""
@@ -57,7 +59,7 @@ except Exception:
 
       def json_loads(value):
         """Wrapper to decode JSON."""
-        return json.loads(utf8_decode(value))
+        return json.loads(text.utf8_decode(value))
 
       def json_dumps(value):
         """Wrapper to encode JSON."""

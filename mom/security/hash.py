@@ -42,8 +42,9 @@ HMAC-SHA-1 digests
 from __future__ import absolute_import
 
 import hashlib
-from mom.builtins import is_bytes
-from mom.codec import base64_encode, hex_encode
+
+from mom import builtins
+from mom import codec
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -72,7 +73,7 @@ def sha1_digest(*inputs):
   """
   hash_func = hashlib.sha1()
   for i in inputs:
-    if not is_bytes(i):
+    if not builtins.is_bytes(i):
       raise TypeError(
         "input type must be bytes: got %r" % type(i).__name__)
     hash_func.update(i)
@@ -89,7 +90,7 @@ def sha1_hex_digest(*inputs):
   :returns:
       Hexadecimal representation of the SHA-1 digest.
   """
-  return hex_encode(sha1_digest(*inputs))
+  return codec.hex_encode(sha1_digest(*inputs))
 
 
 def sha1_base64_digest(*inputs):
@@ -102,7 +103,7 @@ def sha1_base64_digest(*inputs):
   :returns:
       Base-64-encoded SHA-1 digest.
   """
-  return base64_encode(sha1_digest(*inputs))
+  return codec.base64_encode(sha1_digest(*inputs))
 
 
 def md5_digest(*inputs):
@@ -116,7 +117,7 @@ def md5_digest(*inputs):
   """
   hash_func = hashlib.md5()
   for i in inputs:
-    if not is_bytes(i):
+    if not builtins.is_bytes(i):
       raise TypeError(
         "input type must be bytes: got %r" % type(i).__name__)
     hash_func.update(i)
@@ -133,7 +134,7 @@ def md5_hex_digest(*inputs):
   :returns:
       Hexadecimal representation of the MD5 digest.
   """
-  return hex_encode(md5_digest(*inputs))
+  return codec.hex_encode(md5_digest(*inputs))
 
 
 def md5_base64_digest(*inputs):
@@ -146,7 +147,7 @@ def md5_base64_digest(*inputs):
   :returns:
       Base-64-encoded MD5 digest.
   """
-  return base64_encode(md5_digest(*inputs))
+  return codec.base64_encode(md5_digest(*inputs))
 
 
 def hmac_sha1_digest(key, data):
@@ -162,7 +163,7 @@ def hmac_sha1_digest(key, data):
   """
   import hmac
 
-  if not is_bytes(data):
+  if not builtins.is_bytes(data):
     raise TypeError(
       "data type must be bytes: got %r" % type(data).__name__)
 
@@ -180,4 +181,4 @@ def hmac_sha1_base64_digest(key, data):
   :returns:
       Base64-encoded HMAC SHA-1 signature.
   """
-  return base64_encode(hmac_sha1_digest(key, data))
+  return codec.base64_encode(hmac_sha1_digest(key, data))

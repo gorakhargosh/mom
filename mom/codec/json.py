@@ -26,19 +26,20 @@
 """
 
 from __future__ import absolute_import
-from mom._compat import HAVE_PYTHON3
-from mom.builtins import is_bytes
-from mom.codec.text import utf8_decode_recursive
-from mom.codec._json_compat import json_dumps as _json_dumps, json_loads
+
+from mom import _compat
+from mom import builtins
+from mom.codec import text
+from mom.codec import _json_compat
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-if HAVE_PYTHON3:
-  json_dumps = _json_dumps
+if _compat.HAVE_PYTHON3:
+  json_dumps = _json_compat.json_dumps
 else:
-  json_dumps = lambda o: _json_dumps(o).decode('utf-8')
+  json_dumps = lambda o: _json_compat.json_dumps(o).decode('utf-8')
 
 
 def json_encode(obj):
@@ -57,9 +58,9 @@ def json_encode(obj):
   :returns:
       JSON string.
   """
-  if is_bytes(obj):
+  if builtins.is_bytes(obj):
     raise TypeError("Cannot work with bytes.")
-  return json_dumps(utf8_decode_recursive(obj)).replace("</", "<\\/")
+  return json_dumps(text.utf8_decode_recursive(obj)).replace("</", "<\\/")
 
 
 def json_decode(encoded):
@@ -71,6 +72,6 @@ def json_decode(encoded):
   :returns:
       Decoded Python value.
   """
-  if is_bytes(encoded):
+  if builtins.is_bytes(encoded):
     raise TypeError("Cannot work with bytes.")
-  return json_loads(encoded)
+  return _json_compat.json_loads(encoded)

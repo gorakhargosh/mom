@@ -27,19 +27,20 @@
 """
 
 from __future__ import absolute_import
-from mom._compat import EMPTY_BYTE
 
 try:
   # Python 3.
-  from urllib.parse import quote_from_bytes as quote,\
-    unquote_to_bytes as unquote
+  from urllib.parse import quote_from_bytes as quote
+  from urllib.parse import unquote_to_bytes as unquote
 except ImportError:
   # Python 2.5+
-  from urllib import quote, unquote
+  from urllib import quote
+  from urllib import unquote
 
-from mom.builtins import is_bytes, b
-from mom.mimeparse import parse_mime_type
-from mom.codec import base64_encode, base64_decode
+from mom import _compat
+from mom import builtins
+from mom import codec
+from mom import mimeparse
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -49,6 +50,10 @@ __all__ = [
   "data_urlencode",
   "data_urlparse",
   ]
+
+b = builtins.b
+
+EMPTY_BYTE = _compat.EMPTY_BYTE
 
 
 def data_urlencode(raw_bytes,
@@ -73,22 +78,22 @@ def data_urlencode(raw_bytes,
   :returns:
       Data URL.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError(
       "only raw bytes can be encoded: got %r" % type(raw_bytes).__name__
     )
   if encoder == "base64":
-    encode = base64_encode
-    codec = b(";base64,")
+    encode = codec.base64_encode
+    encoding = b(";base64,")
   else:
     # We want ASCII bytes.
     encode = lambda data: quote(data).encode('ascii')
-    codec = b(",")
+    encoding = b(",")
   mime_type = mime_type or EMPTY_BYTE
 
   charset = b(";charset=") + charset if charset else EMPTY_BYTE
   encoded = encode(raw_bytes)
-  return EMPTY_BYTE.join((b("data:"), mime_type, charset, codec, encoded))
+  return EMPTY_BYTE.join((b("data:"), mime_type, charset, encoding, encoded))
 
 
 def data_urlparse(data_url):
@@ -103,10 +108,10 @@ def data_urlparse(data_url):
       A 2-tuple::
           (bytes, mime_type)
 
-      See :func:`mom.http.mimeparse.parse_mime_type` for what ``mime_type``
+      See :func:`mom.http.mimeparse.mimeparse.parse_mime_type` for what ``mime_type``
       looks like.
   """
-  if not is_bytes(data_url):
+  if not builtins.is_bytes(data_url):
     raise TypeError(
       "data URLs must be ASCII-encoded bytes: got %r" %
       type(data_url).__name__
@@ -115,12 +120,12 @@ def data_urlparse(data_url):
   _, metadata = metadata.split(b("data:"), 1)
   parts = metadata.rsplit(b(";"), 1)
   if parts[-1] == b("base64"):
-    decode = base64_decode
+    decode = codec.base64_decode
     parts = parts[:-1]
   else:
     decode = unquote
   if not parts or not parts[0]:
     parts = [b("text/plain;charset=US-ASCII")]
-  mime_type = parse_mime_type(parts[0])
+  mime_type = mimeparse.parse_mime_type(parts[0])
   raw_bytes = decode(encoded)
   return raw_bytes, mime_type

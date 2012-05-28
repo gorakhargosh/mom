@@ -105,7 +105,7 @@ Read these before you begin to use these functions
 
 from __future__ import absolute_import
 
-from mom.builtins import is_bytes, is_unicode
+from mom import builtins
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -139,9 +139,9 @@ def utf8_encode(unicode_text):
   :returns:
       UTF-8 encoded bytes.
   """
-  if unicode_text is None or is_bytes(unicode_text):
+  if unicode_text is None or builtins.is_bytes(unicode_text):
     return unicode_text
-  if not is_unicode(unicode_text):
+  if not builtins.is_unicode(unicode_text):
     raise TypeError(
       "unsupported argument type: %r" % type(unicode_text).__name__)
   return unicode_text.encode("utf-8")
@@ -172,7 +172,7 @@ def utf8_encode_if_unicode(obj):
       UTF-8 encoded bytes if the argument is a Unicode string; otherwise
       the value is returned unchanged.
   """
-  return utf8_encode(obj) if is_unicode(obj) else obj
+  return utf8_encode(obj) if builtins.is_unicode(obj) else obj
 
 
 def utf8_decode_if_bytes(obj):
@@ -201,7 +201,7 @@ def to_unicode_if_bytes(obj, encoding="utf-8"):
       Unicode string if the argument is a byte string. Otherwise the value
       is returned unchanged.
   """
-  return bytes_to_unicode(obj, encoding) if is_bytes(obj) else obj
+  return bytes_to_unicode(obj, encoding) if builtins.is_bytes(obj) else obj
 
 
 def bytes_to_unicode(raw_bytes, encoding="utf-8"):
@@ -215,9 +215,9 @@ def bytes_to_unicode(raw_bytes, encoding="utf-8"):
   :param encoding:
       The encoding used to decode bytes. Defaults to UTF-8
   """
-  if raw_bytes is None or is_unicode(raw_bytes):
+  if raw_bytes is None or builtins.is_unicode(raw_bytes):
     return raw_bytes
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError(
       "unsupported argument type: %r" % type(raw_bytes).__name__)
   return raw_bytes.decode(encoding)
@@ -243,7 +243,7 @@ def utf8_encode_recursive(obj):
     return list(utf8_encode_recursive(i) for i in obj)
   elif isinstance(obj, tuple):
     return tuple(utf8_encode_recursive(i) for i in obj)
-  elif is_unicode(obj):
+  elif builtins.is_unicode(obj):
     return utf8_encode(obj)
   else:
     return obj
@@ -271,7 +271,7 @@ def bytes_to_unicode_recursive(obj, encoding="utf-8"):
     return list(bytes_to_unicode_recursive(i) for i in obj)
   elif isinstance(obj, tuple):
     return tuple(bytes_to_unicode_recursive(i) for i in obj)
-  elif is_bytes(obj):
+  elif builtins.is_bytes(obj):
     return bytes_to_unicode(obj, encoding=encoding)
   else:
     return obj

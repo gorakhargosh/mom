@@ -42,7 +42,7 @@ OpenSSL MPI Bignum conversion
 from __future__ import absolute_import
 
 from array import array
-from mom.builtins import integer_byte_length, integer_bit_length
+from mom import builtins
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -140,7 +140,7 @@ def long_to_bytearray(num):
   :returns:
       Long.
   """
-  bytes_count = integer_byte_length(num)
+  bytes_count = builtins.integer_byte_length(num)
   byte_array = bytearray_create_zeros(bytes_count)
   for count in range(bytes_count - 1, -1, -1):
     byte_array[count] = int(num % 256)
@@ -184,9 +184,9 @@ def long_to_mpi(num):
   ext = 0
   #If the high-order bit is going to be set,
   #add an extra byte of zeros
-  if not (integer_bit_length(num) & 0x7):
+  if not (builtins.integer_bit_length(num) & 0x7):
     ext = 1
-  length = integer_byte_length(num) + ext
+  length = builtins.integer_byte_length(num) + ext
   byte_array = bytearray_concat(bytearray_create_zeros(4 + ext), byte_array)
   byte_array[0] = (length >> 24) & 0xFF
   byte_array[1] = (length >> 16) & 0xFF

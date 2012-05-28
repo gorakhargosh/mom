@@ -29,26 +29,32 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
+import array
 import re
-from array import array
-from mom._compat import ZERO_BYTE, UINT128_MAX, EMPTY_BYTE
-from mom.builtins import is_bytes, b
-from mom.codec import uint_to_bytes
-from mom.codec.base58 import ASCII58_BYTES, ASCII58_ORDS
-from mom.codec.base62 import ASCII62_BYTES, ASCII62_ORDS
-from mom.codec.base85 import RFC1924_ORDS, RFC1924_BYTES
-from mom.codec.integer import bytes_to_uint
-from mom.functional import leading
+
+from mom import _compat
+from mom import builtins
+from mom import functional
+from mom.codec import base58
+from mom.codec import base62
+from mom.codec import base85
+from mom.codec import integer
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
+b = builtins.b
+
+ZERO_BYTE = _compat.ZERO_BYTE
+UINT128_MAX = _compat.UINT128_MAX
+EMPTY_BYTE = _compat.EMPTY_BYTE
+
 WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
 
 
 def b58encode_naive(raw_bytes,
-                    base_bytes=ASCII58_BYTES,
+                    base_bytes=base58.ASCII58_BYTES,
                     _padding=True,
                     _zero_byte=ZERO_BYTE):
   """
@@ -58,7 +64,7 @@ def b58encode_naive(raw_bytes,
   :param raw_bytes:
       Raw bytes to encode.
   :param base_bytes:
-      The character set to use. Defaults to ``ASCII58_BYTES``
+      The character set to use. Defaults to ``base58.ASCII58_BYTES``
       that uses natural ASCII order.
   :param _padding:
       (Internal) ``True`` (default) to include prefixed zero-byte sequence
@@ -66,10 +72,10 @@ def b58encode_naive(raw_bytes,
   :returns:
       Base-58 encoded bytes.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("data must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
-  number = bytes_to_uint(raw_bytes)
+  number = integer.bytes_to_uint(raw_bytes)
   encoded = EMPTY_BYTE
   while number > 0:
     encoded = base_bytes[number % 58] + encoded
@@ -79,13 +85,13 @@ def b58encode_naive(raw_bytes,
   #        number, remainder = divmod(number, 58)
   #        encoded = _charset[remainder] + encoded
   if _padding:
-    zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
+    zero_leading = functional.leading(lambda w: w == _zero_byte[0], raw_bytes)
     encoded = (base_bytes[0] * zero_leading) + encoded
   return encoded
 
 
 def b62encode_naive(raw_bytes,
-                    base_bytes=ASCII62_BYTES,
+                    base_bytes=base62.ASCII62_BYTES,
                     _padding=True,
                     _zero_byte=ZERO_BYTE):
   """
@@ -103,10 +109,10 @@ def b62encode_naive(raw_bytes,
   :returns:
       Base-62 encoded bytes.
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("data must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
-  number = bytes_to_uint(raw_bytes)
+  number = integer.bytes_to_uint(raw_bytes)
   encoded = EMPTY_BYTE
   while number > 0:
     encoded = base_bytes[number % 62] + encoded
@@ -115,14 +121,14 @@ def b62encode_naive(raw_bytes,
   #        number, remainder = divmod(number, 62)
   #        encoded = _charset[remainder] + encoded
   if _padding:
-    zero_leading = leading(lambda w: w == _zero_byte[0], raw_bytes)
+    zero_leading = functional.leading(lambda w: w == _zero_byte[0], raw_bytes)
     encoded = (base_bytes[0] * zero_leading) + encoded
   return encoded
 
 
 def b62decode_naive(encoded,
-                    _charset=ASCII62_BYTES,
-                    _lookup=ASCII62_ORDS):
+                    _charset=base62.ASCII62_BYTES,
+                    _lookup=base62.ASCII62_ORDS):
   """
   Base-62 decodes a sequence of bytes into raw bytes. Whitespace is ignored.
 
@@ -137,7 +143,7 @@ def b62decode_naive(encoded,
   :returns:
       Raw bytes.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError("encoded data must be bytes: got %r" %
                     type(encoded).__name__)
 
@@ -151,7 +157,7 @@ def b62decode_naive(encoded,
 
   # Obtain raw bytes.
   if number:
-    raw_bytes = uint_to_bytes(number)
+    raw_bytes = integer.uint_to_bytes(number)
   else:
     # We don't want to convert to b'\x00' when we get number == 0.
     # That would add an off-by-one extra zero byte in the result.
@@ -163,7 +169,7 @@ def b62decode_naive(encoded,
   # The extra [0] index in zero_byte_char[0] is for Python2.x-Python3.x
   # compatibility. Indexing into Python 3 bytes yields an integer, whereas
   # in Python 2.x it yields a single-byte string.
-  zero_leading = leading(lambda w: w == zero_char[0], encoded)
+  zero_leading = functional.leading(lambda w: w == zero_char[0], encoded)
   if zero_leading:
     padding = ZERO_BYTE * zero_leading
     raw_bytes = padding + raw_bytes
@@ -171,8 +177,8 @@ def b62decode_naive(encoded,
 
 
 def b58decode_naive(encoded,
-                    _charset=ASCII58_BYTES,
-                    _lookup=ASCII58_ORDS):
+                    _charset=base58.ASCII58_BYTES,
+                    _lookup=base58.ASCII58_ORDS):
   """
   Simple implementation for benchmarking.
 
@@ -181,7 +187,7 @@ def b58decode_naive(encoded,
   :param encoded:
       Base-58 encoded bytes.
   :param _charset:
-      (Internal) The character set to use. Defaults to ``ASCII58_BYTES``
+      (Internal) The character set to use. Defaults to ``base58.ASCII58_BYTES``
       that uses natural ASCII order.
   :param _lookup:
       (Internal) Ordinal-to-character lookup table for the specified
@@ -189,7 +195,7 @@ def b58decode_naive(encoded,
   :returns:
       Raw bytes.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError("encoded data must be bytes: got %r" %
                     type(encoded).__name__)
 
@@ -203,7 +209,7 @@ def b58decode_naive(encoded,
 
   # Obtain raw bytes.
   if number:
-    raw_bytes = uint_to_bytes(number)
+    raw_bytes = integer.uint_to_bytes(number)
   else:
     # We don't want to convert to b'\x00' when we get number == 0.
     # That would add an off-by-one extra zero byte in the result.
@@ -215,7 +221,7 @@ def b58decode_naive(encoded,
   # The extra [0] index in zero_byte_char[0] is for Python2.x-Python3.x
   # compatibility. Indexing into Python 3 bytes yields an integer, whereas
   # in Python 2.x it yields a single-byte string.
-  zero_leading = leading(lambda w: w == zero_char[0], encoded)
+  zero_leading = functional.leading(lambda w: w == zero_char[0], encoded)
   if zero_leading:
     padding = ZERO_BYTE * zero_leading
     raw_bytes = padding + raw_bytes
@@ -223,7 +229,7 @@ def b58decode_naive(encoded,
 
 
 def ipv6_b85decode_naive(encoded,
-                         _base85_ords=RFC1924_ORDS):
+                         _base85_ords=base85.RFC1924_ORDS):
   """
   Decodes an RFC1924 Base-85 encoded string to its 128-bit unsigned integral
   representation. Used to base85-decode IPv6 addresses or 128-bit chunks.
@@ -238,7 +244,7 @@ def ipv6_b85decode_naive(encoded,
   :returns:
       A 128-bit unsigned integer.
   """
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError(
       "Encoded sequence must be bytes: got %r" % type(encoded).__name__
     )
@@ -260,7 +266,7 @@ def ipv6_b85decode_naive(encoded,
 
 
 def ipv6_b85encode_naive(uint128,
-                         _base85_bytes=RFC1924_BYTES):
+                         _base85_bytes=base85.RFC1924_BYTES):
   """
   Encodes a 128-bit unsigned integer using the RFC 1924 base-85 encoding.
   Used to encode IPv6 addresses or 128-bit chunks.
@@ -279,7 +285,7 @@ def ipv6_b85encode_naive(uint128,
     raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                         uint128)
     #encoded = list(range(20))
-  encoded = array('B', list(range(20)))
+  encoded = array.array('B', list(range(20)))
   for i in reversed(encoded):
     uint128, remainder = divmod(uint128, 85)
     encoded[i] = _base85_bytes[remainder]

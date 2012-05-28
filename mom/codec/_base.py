@@ -37,12 +37,16 @@ except ImportError: #pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
-from mom._compat import ZERO_BYTE, EMPTY_BYTE
-from mom.codec.integer import uint_to_bytes, bytes_to_uint
-from mom.builtins import bytes_leading, is_bytes
+from mom import _compat
+from mom import builtins
+from mom.codec import integer
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
+
+
+ZERO_BYTE = _compat.ZERO_BYTE
+EMPTY_BYTE = _compat.EMPTY_BYTE
 
 
 def base_encode(raw_bytes, base, base_bytes, base_zero, padding=True):
@@ -58,23 +62,23 @@ def base_encode(raw_bytes, base, base_bytes, base_zero, padding=True):
   :param base_zero:
 
   """
-  if not is_bytes(raw_bytes):
+  if not builtins.is_bytes(raw_bytes):
     raise TypeError("data must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
-  number = bytes_to_uint(raw_bytes)
+  number = integer.bytes_to_uint(raw_bytes)
   encoded = EMPTY_BYTE
   while number > 0:
     number, remainder = divmod(number, base)
     encoded = base_bytes[remainder] + encoded
   if padding:
-    zero_leading = bytes_leading(raw_bytes)
+    zero_leading = builtins.bytes_leading(raw_bytes)
     encoded = encoded.rjust(len(encoded) + zero_leading, base_zero)
   return encoded
 
 
 def base_decode(encoded, base, base_ords, base_zero, powers):
   """Decode from base to base 256."""
-  if not is_bytes(encoded):
+  if not builtins.is_bytes(encoded):
     raise TypeError("encoded data must be bytes: got %r" %
                     type(encoded).__name__)
     # Ignore whitespace.
@@ -121,8 +125,8 @@ def uint_to_base256(number, encoded, base_zero):
   if number == 0:
     raw_bytes = EMPTY_BYTE
   else:
-    raw_bytes = uint_to_bytes(number)
-  zero_leading = bytes_leading(encoded, base_zero)
+    raw_bytes = integer.uint_to_bytes(number)
+  zero_leading = builtins.bytes_leading(encoded, base_zero)
   if zero_leading:
     raw_bytes = raw_bytes.rjust(len(raw_bytes) + zero_leading, ZERO_BYTE)
   return raw_bytes

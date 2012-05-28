@@ -17,21 +17,24 @@
 # limitations under the License.
 
 from __future__ import absolute_import
-from mom._compat import HAVE_PYTHON3
+
+
+from mom import _compat
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-if not HAVE_PYTHON3:
+if not _compat.HAVE_PYTHON3:
   import unittest2
+
+  from mom.security import codec
+  from mom.tests import test_mom_security_codec_pem
   from pyasn1.error import SubstrateUnderrunError
-  from mom.security.codec import public_key_pem_decode, private_key_pem_decode
 
-  from mom.tests.test_mom_security_codec_pem import PRIVATE_KEY,\
-    PUBLIC_KEY, CERTIFICATE
-
-
+  PRIVATE_KEY = test_mom_security_codec_pem.PRIVATE_KEY
+  PUBLIC_KEY = test_mom_security_codec_pem.PUBLIC_KEY
+  CERTIFICATE = test_mom_security_codec_pem.CERTIFICATE
 
 
   PRIVATE_KEY_DECODED = {
@@ -100,32 +103,32 @@ bZI="""
 
   class Test_public_key_pem_decode(unittest2.TestCase):
     def test_decode(self):
-      self.assertDictEqual(public_key_pem_decode(PUBLIC_KEY),
+      self.assertDictEqual(codec.public_key_pem_decode(PUBLIC_KEY),
                            PUBLIC_KEY_DECODED)
-      self.assertDictEqual(public_key_pem_decode(CERTIFICATE),
+      self.assertDictEqual(codec.public_key_pem_decode(CERTIFICATE),
                            PUBLIC_KEY_DECODED)
 
     def test_NotImplementedError_when_not_public_key(self):
       self.assertRaises(NotImplementedError,
-                        public_key_pem_decode, PRIVATE_KEY)
+                        codec.public_key_pem_decode, PRIVATE_KEY)
 
     def test_fails_on_junk(self):
       self.assertRaises(SubstrateUnderrunError,
-                        public_key_pem_decode, JUNK_PUBLIC_KEY)
+                        codec.public_key_pem_decode, JUNK_PUBLIC_KEY)
       self.assertRaises(SubstrateUnderrunError,
-                        public_key_pem_decode, JUNK_CERTIFICATE)
+                        codec.public_key_pem_decode, JUNK_CERTIFICATE)
 
   class Test_private_key_pem_decode(unittest2.TestCase):
     def test_decode(self):
-      self.assertDictEqual(private_key_pem_decode(PRIVATE_KEY),
+      self.assertDictEqual(codec.private_key_pem_decode(PRIVATE_KEY),
                            PRIVATE_KEY_DECODED)
 
     def test_NotImplementedError_when_not_private_key(self):
       self.assertRaises(NotImplementedError,
-                        private_key_pem_decode, PUBLIC_KEY)
+                        codec.private_key_pem_decode, PUBLIC_KEY)
       self.assertRaises(NotImplementedError,
-                        private_key_pem_decode, CERTIFICATE)
+                        codec.private_key_pem_decode, CERTIFICATE)
 
     def test_fails_on_junk(self):
       self.assertRaises(SubstrateUnderrunError,
-                        private_key_pem_decode, JUNK_PRIVATE_KEY)
+                        codec.private_key_pem_decode, JUNK_PRIVATE_KEY)

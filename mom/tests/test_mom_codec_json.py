@@ -19,9 +19,10 @@
 from __future__ import absolute_import
 
 import unittest2
-from mom.codec.json import json_encode, json_decode
-from mom.codec.text import utf8_encode
-from mom.tests.constants import *
+
+from mom.codec import json
+from mom.codec import text
+from mom.tests import constants
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -30,20 +31,20 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 class Test_decode(unittest2.TestCase):
   def test_decode(self):
     # decode accepts unicode only.
-    self.assertEqual(json_decode(JSON_UFOO), UFOO)
+    self.assertEqual(json.json_decode(constants.JSON_UFOO), constants.UFOO)
 
   def test_raises_error_when_invalid_type(self):
-    self.assertRaises(TypeError, json_decode, JSON_FOO)
+    self.assertRaises(TypeError, json.json_decode, constants.JSON_FOO)
 
 
 class Test_encode(unittest2.TestCase):
   def test_encode(self):
     # json deals with strings, not bytes.
-    self.assertEqual(json_decode(json_encode(UNICODE_VALUE)), UNICODE_VALUE)
+    self.assertEqual(json.json_decode(json.json_encode(constants.UNICODE_VALUE)), constants.UNICODE_VALUE)
 
   def test_raises_error_when_invalid_type(self):
-    self.assertRaises(TypeError, json_encode, utf8_encode(UNICODE_VALUE))
-    self.assertRaises(TypeError, json_encode, X_BYTE)
+    self.assertRaises(TypeError, json.json_encode, text.utf8_encode(constants.UNICODE_VALUE))
+    self.assertRaises(TypeError, json.json_encode, constants.X_BYTE)
 
 if __name__ == "__main__":
   unittest2.main()

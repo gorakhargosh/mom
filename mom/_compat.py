@@ -13,7 +13,7 @@ from __future__ import absolute_import
 
 import os
 import sys
-from struct import pack
+import struct
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -54,7 +54,7 @@ except NameError:
   LONG_TYPE = int
 
 
-# They fucking removed long too! Should I call them bastards? No? Bastards!
+# They fucking removed long too!
 try:
   INT_TYPE = long
   INTEGER_TYPES = (int, long)
@@ -76,8 +76,7 @@ try:
   HAVE_PYTHON3 = False
 
   def byte_ord(byte_):
-    """
-    Returns the ordinal value of the given byte.
+    """Returns the ordinal value of the given byte.
 
     :param byte_:
         The byte.
@@ -88,8 +87,7 @@ try:
 except NameError:
   # Python3.
   def byte_ord(byte_):
-    """
-    Returns the ordinal value of the given byte.
+    """Returns the ordinal value of the given byte.
 
     :param byte_:
         The byte.
@@ -112,26 +110,26 @@ except NameError:
 
 # Fake byte literals for python2.5
 if str is UNICODE_TYPE:
+
   def byte_literal(literal):
-    """
-    This innocent-looking byte literal faker can be detrimental to
-    performance so define these as constants in your code instead.
-    Don't call it repeatedly inside tight loops.
+    """This innocent-looking byte literal faker can be detrimental to
+    performance so define these as constants in your code instead. Don't call it
+    repeatedly inside tight loops.
     """
     return literal.encode('latin1')
 else:
+
   def byte_literal(literal):
-    """
-    This innocent-looking byte literal faker can be detrimental to
-    performance so define these as constants in your code instead.
-    Don't call it repeatedly inside tight loops.
+    """This innocent-looking byte literal faker can be detrimental to
+    performance so define these as constants in your code instead. Don't call it
+    repeatedly inside tight loops.
     """
     return literal
 
-# These are used in a large number of places. Do not remove.
-# This may not make sense, but remember that our code may be used within
-# tight loops, and we do not want user code to slow down because of
-# thousands of calls to byte_literal or b. Do it once here.
+# These are used in a large number of places. Do not remove. This may not make
+# sense, but remember that our code may be used within tight loops, and we do
+# not want user code to slow down because of thousands of calls to byte_literal
+# or b. Do it once here.
 ZERO_BYTE = byte_literal('\x00')
 EMPTY_BYTE = byte_literal('')
 EQUAL_BYTE = byte_literal('=')
@@ -141,8 +139,10 @@ FORWARD_SLASH_BYTE = byte_literal('/')
 UNDERSCORE_BYTE = byte_literal('_')
 DIGIT_ZERO_BYTE = byte_literal('0')
 
-HAVE_LITTLE_ENDIAN = bool(pack('h', 1) == '\x01\x00')
-#HAVE_LITTLE_ENDIAN = bool(byte_ord(array("i", [1]).tostring()[0]))
+HAVE_LITTLE_ENDIAN = bool(struct.pack('h', 1) == '\x01\x00')
+# HAVE_LITTLE_ENDIAN = bool(
+#     builtins.byte_ord(array("i", [1]).tostring()[0])
+#     )
 
 
 try:
@@ -160,10 +160,11 @@ except ImportError:
   # Python 3.x
   map = map
 
+
 if getattr(dict, "iteritems", None):
+
   def dict_each(func, iterable):
-    """
-    Portably iterate through a dictionary's items.
+    """Portably iterate through a dictionary's items.
 
     :param func:
         The function that will receive two arguments: key, value.
@@ -173,9 +174,9 @@ if getattr(dict, "iteritems", None):
     for key, value in iterable.iteritems():
       func(key, value)
 else:
+
   def dict_each(func, iterable):
-    """
-    Portably iterate through a dictionary's items.
+    """Portably iterate through a dictionary's items.
 
     :param func:
         The function that will receive two arguments: key, value.
@@ -188,12 +189,11 @@ else:
 try:
   next = next
 except NameError:
+
   # Taken from
   # http://goo.gl/ZNDXN
   class Throw(object):
-    """
-    Bleh.
-    """
+    """Bleh."""
     pass
 
   throw = Throw() # easy sentinel hack
@@ -224,8 +224,7 @@ try:
   os.urandom(1)
 
   def generate_random_bytes(count):
-    """
-    Generates a random byte string with ``count`` bytes.
+    """Generates a random byte string with ``count`` bytes.
 
     :param count:
         Number of bytes.
@@ -238,8 +237,7 @@ except AttributeError:
     __urandom_device__ = open("/dev/urandom", "rb")
 
     def generate_random_bytes(count):
-      """
-      Generates a random byte string with ``count`` bytes.
+      """Generates a random byte string with ``count`` bytes.
 
       :param count:
           Number of bytes.
@@ -253,8 +251,7 @@ except AttributeError:
       import win32prng
 
       def generate_random_bytes(count):
-        """
-        Generates a random byte string with ``count`` bytes.
+        """Generates a random byte string with ``count`` bytes.
 
         :param count:
             Number of bytes.
@@ -268,8 +265,7 @@ except AttributeError:
       win32prng = None
       # What the fuck?!
       def generate_random_bytes(_):
-        """
-        WTF.
+        """WTF.
 
         :returns:
             WTF.
@@ -279,8 +275,7 @@ except AttributeError:
 
 def get_word_alignment(num, force_arch=64,
                        _machine_word_size=MACHINE_WORD_SIZE):
-  """
-  Returns alignment details for the given number based on the platform
+  """Returns alignment details for the given number based on the platform
   Python is running on.
 
   :param num:

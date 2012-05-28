@@ -21,16 +21,16 @@ from __future__ import absolute_import
 
 import unittest2
 
-from mom.builtins import b
-from mom.codec import base64_encode, hex_encode
-from mom.security.hash import sha1_hex_digest, md5_digest,\
-  sha1_digest, sha1_base64_digest, md5_hex_digest, md5_base64_digest,\
-  hmac_sha1_digest, hmac_sha1_base64_digest
-from mom.tests.constants import UNICODE_STRING, UNICODE_STRING2
+from mom import builtins
+from mom import codec
+from mom.security import hash
+from mom.tests import constants
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
+
+b = builtins.b
 
 INPUT_MD5_DIGEST = b('\xe8\x0bP\x17\t\x89P\xfcX\xaa\xd8<\x8c\x14\x97\x8e')
 
@@ -39,7 +39,7 @@ INPUT_SHA1_DIGEST = b(
 
 INPUTS = [b("ab"), b("cd"), b("ef")]
 
-UNICODE_INPUTS = [UNICODE_STRING, UNICODE_STRING2]
+UNICODE_INPUTS = [constants.UNICODE_STRING, constants.UNICODE_STRING2]
 
 # HMAC-SHA1 data.
 KEY = b("kd94hf93k423kf44&pfkkdhi9sl3r4s00")
@@ -61,64 +61,64 @@ EXPECTED_HMAC_SHA1_BASE64_DIGEST = b("MdpQcU8iPSUjWoN/UDMsK2sui9I=")
 
 class Test_sha1_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(sha1_digest(*INPUTS), INPUT_SHA1_DIGEST)
+    self.assertEqual(hash.sha1_digest(*INPUTS), INPUT_SHA1_DIGEST)
 
   def test_raises_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, sha1_digest, *UNICODE_INPUTS)
+    self.assertRaises(TypeError, hash.sha1_digest, *UNICODE_INPUTS)
 
 
 class Test_sha1_hex_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(sha1_hex_digest(*INPUTS), hex_encode(INPUT_SHA1_DIGEST))
+    self.assertEqual(hash.sha1_hex_digest(*INPUTS), codec.hex_encode(INPUT_SHA1_DIGEST))
 
   def test_raises_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, sha1_hex_digest, *UNICODE_INPUTS)
+    self.assertRaises(TypeError, hash.sha1_hex_digest, *UNICODE_INPUTS)
 
 
 class Test_sha1_base64_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(sha1_base64_digest(*INPUTS),
-                     base64_encode(INPUT_SHA1_DIGEST))
+    self.assertEqual(hash.sha1_base64_digest(*INPUTS),
+                     codec.base64_encode(INPUT_SHA1_DIGEST))
 
   def test_raises_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, sha1_base64_digest, *UNICODE_INPUTS)
+    self.assertRaises(TypeError, hash.sha1_base64_digest, *UNICODE_INPUTS)
 
 
 class Test_md5_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(md5_digest(*INPUTS), INPUT_MD5_DIGEST)
+    self.assertEqual(hash.md5_digest(*INPUTS), INPUT_MD5_DIGEST)
 
   def test_raises_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, md5_digest, *UNICODE_INPUTS)
+    self.assertRaises(TypeError, hash.md5_digest, *UNICODE_INPUTS)
 
 
 class Test_md5_hex_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(md5_hex_digest(*INPUTS), hex_encode(INPUT_MD5_DIGEST))
+    self.assertEqual(hash.md5_hex_digest(*INPUTS), codec.hex_encode(INPUT_MD5_DIGEST))
 
 
 class Test_md5_base64_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(md5_base64_digest(*INPUTS),
-                     base64_encode(INPUT_MD5_DIGEST))
+    self.assertEqual(hash.md5_base64_digest(*INPUTS),
+                     codec.base64_encode(INPUT_MD5_DIGEST))
 
   def test_raises_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, md5_base64_digest, *UNICODE_INPUTS)
+    self.assertRaises(TypeError, hash.md5_base64_digest, *UNICODE_INPUTS)
 
 
 class Test_hmac_sha1_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(hmac_sha1_digest(KEY, BASE_STRING),
+    self.assertEqual(hash.hmac_sha1_digest(KEY, BASE_STRING),
                      EXPECTED_HMAC_SHA1_DIGEST)
 
   def test_raises_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, hmac_sha1_digest, *UNICODE_INPUTS)
+    self.assertRaises(TypeError, hash.hmac_sha1_digest, *UNICODE_INPUTS)
 
 
 class Test_hmac_sha1_base64_digest(unittest2.TestCase):
   def test_value(self):
-    self.assertEqual(hmac_sha1_base64_digest(KEY, BASE_STRING),
+    self.assertEqual(hash.hmac_sha1_base64_digest(KEY, BASE_STRING),
                      EXPECTED_HMAC_SHA1_BASE64_DIGEST)
 
   def test_raises_TypeError_when_not_bytes(self):
-    self.assertRaises(TypeError, hmac_sha1_base64_digest, *UNICODE_INPUTS)
+    self.assertRaises(TypeError, hash.hmac_sha1_base64_digest, *UNICODE_INPUTS)

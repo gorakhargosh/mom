@@ -19,18 +19,23 @@
 from __future__ import absolute_import
 
 import unittest2
-from mom._compat import ZERO_BYTE
-from mom.builtins import b
-from mom.codec import base36_decode, base36_encode
-from mom.codec.base36 import b36encode, b36decode, ASCII36_BYTES
-from mom.codec.integer import uint_to_bytes
-from mom.security.random import generate_random_bytes
+
+from mom import _compat
+from mom import builtins
+from mom import codec
+from mom.codec import base36
+from mom.codec import integer
+from mom.security import random
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-RANDOM_BYTES = generate_random_bytes(384)
+b = builtins.b
+ZERO_BYTE = _compat.ZERO_BYTE
+
+
+RANDOM_BYTES = random.generate_random_bytes(384)
 ZERO_BYTES_4 = ZERO_BYTE * 4
 RAW_DATA = b("""\
 \x00\x00\xa4\x97\xf2\x10\xfc\x9c]\x02\xfc}\xc7\xbd!\x1c\xb0\xc7M\xa0\xae\x16\
@@ -39,36 +44,36 @@ RAW_DATA = b("""\
 
 class Test_base36_codec(unittest2.TestCase):
   def test_ensure_charset_length(self):
-    self.assertEqual(len(ASCII36_BYTES), 36)
+    self.assertEqual(len(base36.ASCII36_BYTES), 36)
 
   def test_codec_identity(self):
-    self.assertEqual(b36decode(b36encode(RANDOM_BYTES)), RANDOM_BYTES)
-    self.assertEqual(base36_decode(base36_encode(RANDOM_BYTES)),
+    self.assertEqual(base36.b36decode(base36.b36encode(RANDOM_BYTES)), RANDOM_BYTES)
+    self.assertEqual(codec.base36_decode(codec.base36_encode(RANDOM_BYTES)),
                      RANDOM_BYTES)
 
   def test_encodes_zero_prefixed_padding(self):
-    self.assertEqual(b36decode(b36encode(RAW_DATA)), RAW_DATA)
-    self.assertEqual(base36_decode(base36_encode(RAW_DATA)), RAW_DATA)
+    self.assertEqual(base36.b36decode(base36.b36encode(RAW_DATA)), RAW_DATA)
+    self.assertEqual(codec.base36_decode(codec.base36_encode(RAW_DATA)), RAW_DATA)
 
   def test_zero_bytes(self):
-    self.assertEqual(b36encode(ZERO_BYTES_4), b('0000'))
-    self.assertEqual(b36decode(b('0000')), ZERO_BYTES_4)
-    self.assertEqual(b36encode(ZERO_BYTE), b('0'))
-    self.assertEqual(b36decode(b('0')), ZERO_BYTE)
+    self.assertEqual(base36.b36encode(ZERO_BYTES_4), b('0000'))
+    self.assertEqual(base36.b36decode(b('0000')), ZERO_BYTES_4)
+    self.assertEqual(base36.b36encode(ZERO_BYTE), b('0'))
+    self.assertEqual(base36.b36decode(b('0')), ZERO_BYTE)
 
-    self.assertEqual(base36_encode(ZERO_BYTES_4), b('0000'))
-    self.assertEqual(base36_decode(b('0000')), ZERO_BYTES_4)
-    self.assertEqual(base36_encode(ZERO_BYTE), b('0'))
-    self.assertEqual(base36_decode(b('0')), ZERO_BYTE)
+    self.assertEqual(codec.base36_encode(ZERO_BYTES_4), b('0000'))
+    self.assertEqual(codec.base36_decode(b('0000')), ZERO_BYTES_4)
+    self.assertEqual(codec.base36_encode(ZERO_BYTE), b('0'))
+    self.assertEqual(codec.base36_decode(b('0')), ZERO_BYTE)
 
   def test_hello_world(self):
     hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
-    encoded_hello_world = b36encode(hello_world)
-    self.assertEqual(b36decode(encoded_hello_world), hello_world)
+    encoded_hello_world = base36.b36encode(hello_world)
+    self.assertEqual(base36.b36decode(encoded_hello_world), hello_world)
 
   def test_decoder_ignores_whitespace(self):
     hello_world_encoded = b(' \nFUV      RSIVVNF\nRBJW\tAJO\x0b')
-    self.assertEqual(b36decode(hello_world_encoded), b('hello world'))
+    self.assertEqual(base36.b36decode(hello_world_encoded), b('hello world'))
 
   def test_wikipedia_encoding(self):
     encoding_table = [
@@ -83,9 +88,9 @@ class Test_base36_codec(unittest2.TestCase):
       (1000000000000, b("CRE66I9S")),
     ]
     for number, encoded in encoding_table:
-      raw_bytes = uint_to_bytes(number)
-      self.assertEqual(b36encode(raw_bytes), encoded)
-      self.assertEqual(b36decode(encoded), raw_bytes)
+      raw_bytes = integer.uint_to_bytes(number)
+      self.assertEqual(base36.b36encode(raw_bytes), encoded)
+      self.assertEqual(base36.b36decode(encoded), raw_bytes)
 
   def test_wikipedia_decoding(self):
     decoding_table = [
@@ -100,6 +105,6 @@ class Test_base36_codec(unittest2.TestCase):
       (b("100000000"), 2821109907456),
     ]
     for encoded, number in decoding_table:
-      raw_bytes = uint_to_bytes(number)
-      self.assertEqual(b36encode(raw_bytes), encoded)
-      self.assertEqual(b36decode(encoded), raw_bytes)
+      raw_bytes = integer.uint_to_bytes(number)
+      self.assertEqual(base36.b36encode(raw_bytes), encoded)
+      self.assertEqual(base36.b36decode(encoded), raw_bytes)

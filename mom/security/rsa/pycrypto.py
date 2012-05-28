@@ -26,16 +26,14 @@
 
 from __future__ import absolute_import
 
-from Crypto.PublicKey import RSA
-from mom.security.rsa.keys import\
-  PublicKey as _PublicKey,\
-  PrivateKey as _PrivateKey
+from Crypto import PublicKey
+from mom.security.rsa import keys
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-class PrivateKey(_PrivateKey):
+class PrivateKey(keys.PrivateKey):
   """
   Represents a RSA private key.
 
@@ -57,7 +55,7 @@ class PrivateKey(_PrivateKey):
       #self.key_info["exponent2"],
       #self.key_info["coefficient"],
       )
-    self._key = RSA.construct(key_info_args)
+    self._key = PublicKey.RSA.construct(key_info_args)
 
   def _sign(self, digest):
     """
@@ -82,7 +80,7 @@ class PrivateKey(_PrivateKey):
     return self.key.n
 
 
-class PublicKey(_PublicKey):
+class PublicKey(keys.PublicKey):
   """
   Represents a RSA public key.
 
@@ -98,7 +96,7 @@ class PublicKey(_PublicKey):
       self.key_info["modulus"],
       self.key_info["exponent"],
       )
-    self._key = RSA.construct(key_info_args)
+    self._key = PublicKey.RSA.construct(key_info_args)
 
   def _sign(self, digest):
     """

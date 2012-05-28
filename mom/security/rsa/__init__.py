@@ -27,7 +27,8 @@ Encoded key parsing
 """
 
 from __future__ import absolute_import
-from mom.security.codec import private_key_pem_decode, public_key_pem_decode
+
+from mom.security import codec
 
 try:
   from mom.security.rsa.pycrypto import PrivateKey, PublicKey
@@ -57,7 +58,7 @@ def parse_private_key(encoded_key, encoding="PEM"):
   """
   encoding = encoding.upper()
   if encoding == "PEM":
-    key_info = private_key_pem_decode(encoded_key)
+    key_info = codec.private_key_pem_decode(encoded_key)
   else:
     raise NotImplementedError("Key encoding not supported.")
   key = PrivateKey(key_info, encoded_key, encoding)
@@ -75,7 +76,7 @@ def parse_public_key(encoded_key, encoding="PEM"):
   """
   encoding = encoding.upper()
   if encoding == "PEM":
-    key_info = public_key_pem_decode(encoded_key)
+    key_info = codec.public_key_pem_decode(encoded_key)
   else:
     raise NotImplementedError("Key encoding not supported.")
   key = PublicKey(key_info, encoded_key, encoding)

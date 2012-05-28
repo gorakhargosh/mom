@@ -32,9 +32,9 @@ Python module and run it::
     from mom.functional import reject, partition, difference, pluck, reduce
 
     people = [
-        {"name" : "Harry",    "age" : 100},
-        {"name" : "Hermione", "age" : 16},
-        {"name" : "Rob",      "age" : 200},
+        {"name": "Harry",    "age": 100},
+        {"name": "Hermione", "age": 16},
+        {"name": "Rob",      "age": 200},
     ]
     def youngest(person1, person2):
         '''Comparator that returns the youngest of two people.'''
@@ -202,8 +202,9 @@ Predicates, transforms, and walkers
 
 from __future__ import absolute_import
 
-from collections import defaultdict, deque
-from functools import partial
+import collections
+import functools
+import itertools
 
 try:
   # Python 2.x
@@ -223,16 +224,9 @@ except ImportError:  # pragma: no cover
       return not predicate(item)
 
     return filter(_complement, iterable)
-from itertools import islice
-from itertools import takewhile
-from itertools import dropwhile
-from itertools import cycle
-from itertools import repeat
-from itertools import groupby
 
+from mom import builtins
 from mom.itertools import chain, starmap
-from mom.builtins import is_bytes_or_unicode
-from mom._compat import range, dict_each, reduce as _reduce, next
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -303,8 +297,7 @@ __all__ = [
 
 
 def compose(function, *functions):
-  """
-  Composes a sequence of functions such that::
+  """Composes a sequence of functions such that::
 
       compose(g, f, s) -> g(f(s()))
 
@@ -323,12 +316,11 @@ def compose(function, *functions):
 
     return _wrap
 
-  return _reduce(_composition, functions, function)
+  return builtins.reduce(_composition, functions, function)
 
 
 def _compose(function, *functions):
-  """
-  Alternative implementation.
+  """Alternative implementation.
 
   Composes a sequence of functions such that::
 
@@ -352,8 +344,7 @@ def _compose(function, *functions):
 
 
 def complement(predicate):
-  """
-  Generates a complementary predicate function for the given predicate
+  """Generates a complementary predicate function for the given predicate
   function.
 
   :param predicate:
@@ -373,8 +364,7 @@ def complement(predicate):
 
 
 def reduce(transform, iterable, *args):
-  """
-  Aggregate a sequence of items into a single item. Python equivalent of
+  """Aggregate a sequence of items into a single item. Python equivalent of
   Haskell's left fold.
 
   Please see Python documentation for reduce. There is no change in behavior.
@@ -395,12 +385,11 @@ def reduce(transform, iterable, *args):
   :returns:
       Aggregated item.
   """
-  return _reduce(transform, iterable, *args)
+  return builtins.reduce(transform, iterable, *args)
 
 
 def each(walker, iterable):
-  """
-  Iterates over iterable yielding each item in turn to the walker function.
+  """Iterates over iterable yielding each item in turn to the walker function.
 
   :param walker:
       The method signature is as follows:
@@ -413,15 +402,14 @@ def each(walker, iterable):
       Iterable sequence or dictionary.
   """
   if isinstance(iterable, dict):
-    dict_each(walker, iterable)
+    builtins.dict_each(walker, iterable)
   else:
     for index, item in enumerate(iterable):
       walker(index, item)
 
 
 def some(predicate, iterable):
-  """
-  Determines whether the predicate applied to any element of the iterable
+  """Determines whether the predicate applied to any element of the iterable
   is true.
 
   :param predicate:
@@ -448,14 +436,13 @@ def _some1(predicate, iterable):
 def _some2(predicate, iterable):
   """Alternative implementation of :func:`some`."""
   result = False
-  for _ in dropwhile(complement(predicate), iterable):
+  for _ in itertools.dropwhile(complement(predicate), iterable):
     result = True
   return result
 
 
 def every(predicate, iterable):
-  """
-  Determines whether the predicate is true for all elements in the iterable.
+  """Determines whether the predicate is true for all elements in the iterable.
 
   :param predicate:
       Predicate function of the form::
@@ -476,8 +463,7 @@ def every(predicate, iterable):
 
 
 def none(predicate, iterable):
-  """
-  Determines whether the predicate is false for all elements in in iterable.
+  """Determines whether the predicate is false for all elements in in iterable.
 
   :param predicate:
       Predicate function of the form::
@@ -492,8 +478,7 @@ def none(predicate, iterable):
 
 
 def find(predicate, iterable, start=0):
-  """
-  Determines the first index where the predicate is true for an element in
+  """Determines the first index where the predicate is true for an element in
   the iterable.
 
   :param predicate:
@@ -507,15 +492,14 @@ def find(predicate, iterable, start=0):
   :returns:
       -1 if not found; index (>= start) if found.
   """
-  for i in range(start, len(iterable)):
+  for i in builtins.range(start, len(iterable)):
     if predicate(iterable[i]):
       return i
   return -1
 
 
 def leading(predicate, iterable, start=0):
-  """
-  Returns the number of leading elements in the iterable for which
+  """Returns the number of leading elements in the iterable for which
   the predicate is true.
 
   :param predicate:
@@ -528,7 +512,7 @@ def leading(predicate, iterable, start=0):
       Start index. (Number of items to skip before starting counting.)
   """
   i = 0
-  for _ in takewhile(predicate, islice(iterable, start, None, 1)):
+  for _ in itertools.takewhile(predicate, itertools.islice(iterable, start, None, 1)):
     i += 1
   return i
 
@@ -536,12 +520,11 @@ def leading(predicate, iterable, start=0):
 def _leading(predicate, iterable, start=0):
   """Alternative implementation of :func:`leading`."""
   return len(tuple(map(identity,
-                       takewhile(predicate, islice(iterable, start, None, 1)))))
+                       itertools.takewhile(predicate, itertools.islice(iterable, start, None, 1)))))
 
 
 def trailing(predicate, iterable, start=-1):
-  """
-  Returns the number of trailing elements in the iterable for which
+  """Returns the number of trailing elements in the iterable for which
   the predicate is true.
 
   :param predicate:
@@ -561,8 +544,7 @@ def trailing(predicate, iterable, start=-1):
 
 
 def tally(predicate, iterable):
-  """
-  Count how many times the predicate is true.
+  """Count how many times the predicate is true.
 
   Taken from the Python documentation. Under the PSF license.
 
@@ -577,8 +559,7 @@ def tally(predicate, iterable):
 
 
 def select(predicate, iterable):
-  """
-  Select all items from the sequence for which the predicate is true.
+  """Select all items from the sequence for which the predicate is true.
 
       select(function or None, sequence) -> list
 
@@ -593,8 +574,7 @@ def select(predicate, iterable):
 
 
 def iselect(predicate, iterable):
-  """
-  Select all items from the sequence for which the predicate is true.
+  """Select all items from the sequence for which the predicate is true.
 
       iselect(function or None, sequence) --> iterator
 
@@ -609,8 +589,7 @@ def iselect(predicate, iterable):
 
 
 def reject(predicate, iterable):
-  """
-  Reject all items from the sequence for which the predicate is true.
+  """Reject all items from the sequence for which the predicate is true.
 
       reject(function or None, sequence) -> list
 
@@ -625,8 +604,7 @@ def reject(predicate, iterable):
 
 
 def ireject(predicate, iterable):
-  """
-  Reject all items from the sequence for which the predicate is true.
+  """Reject all items from the sequence for which the predicate is true.
 
       ireject(function or None, sequence) --> iterator
 
@@ -641,8 +619,7 @@ def ireject(predicate, iterable):
 
 
 def partition(predicate, iterable):
-  """
-  Partitions an iterable into two iterables where for the elements of
+  """Partitions an iterable into two iterables where for the elements of
   one iterable the predicate is true and for those of the other it is false.
 
   :param predicate:
@@ -661,13 +638,12 @@ def partition(predicate, iterable):
     part.append(item)
     return memo
 
-  return tuple(_reduce(_partitioner, iterable, [[], []]))
+  return tuple(builtins.reduce(_partitioner, iterable, [[], []]))
 
 
 # Dictionaries
 def partition_dict(predicate, dictionary):
-  """
-  Partitions a dictionary into two dictionaries where for the elements of
+  """Partitions a dictionary into two dictionaries where for the elements of
   one dictionary the predicate is true and for those of the other it is false.
 
   :param predicate:
@@ -690,8 +666,7 @@ def partition_dict(predicate, dictionary):
 
 
 def map_dict(transform, dictionary):
-  """
-  Maps over a dictionary of key, value pairs.
+  """Maps over a dictionary of key, value pairs.
 
   :param transform:
       Function that accepts two arguments ``key, value``
@@ -704,8 +679,7 @@ def map_dict(transform, dictionary):
 
 
 def select_dict(predicate, dictionary):
-  """
-  Select a dictionary.
+  """Select from a dictionary.
 
   :param predicate:
       Predicate function that accepts two arguments ``key, value``
@@ -723,8 +697,7 @@ def select_dict(predicate, dictionary):
 
 
 def reject_dict(predicate, dictionary):
-  """
-  Select a dictionary.
+  """Reject from a dictionary.
 
   :param predicate:
       Predicate function that accepts two arguments ``key, value``
@@ -742,8 +715,7 @@ def reject_dict(predicate, dictionary):
 
 
 def invert_dict(dictionary):
-  """
-  Inverts a dictionary.
+  """Inverts a dictionary.
 
   :param dictionary:
       Dictionary to invert.
@@ -755,8 +727,7 @@ def invert_dict(dictionary):
 
 # Sequences of dictionaries
 def pluck(dicts, key, *args, **kwargs):
-  """
-  Plucks values for a given key from a series of dictionaries.
+  """Plucks values for a given key from a series of dictionaries.
 
   :param dicts:
       Iterable sequence of dictionaries.
@@ -772,8 +743,7 @@ def pluck(dicts, key, *args, **kwargs):
 
 
 def ipluck(dicts, key, *args, **kwargs):
-  """
-  Plucks values for a given key from a series of dictionaries as an iterator.
+  """Plucks values for a given key from a series of dictionaries as an iterator.
 
   :param dicts:
       Iterable sequence of dictionaries.
@@ -799,8 +769,7 @@ def ipluck(dicts, key, *args, **kwargs):
 # Sequences
 
 def contains(iterable, item):
-  """
-  Determines whether the iterable contains the value specified.
+  """Determines whether the iterable contains the value specified.
 
   :param iterable:
       Iterable sequence.
@@ -823,8 +792,7 @@ def contains(iterable, item):
 
 
 def _contains_fallback(iterable, item):
-  """
-  Fallback to determine whether the iterable contains the value specified.
+  """Fallback to determine whether the iterable contains the value specified.
 
   Uses a loop instead of built-in methods.
 
@@ -843,8 +811,7 @@ def _contains_fallback(iterable, item):
 
 
 def omits(iterable, item):
-  """
-  Determines whether the iterable omits the value specified.
+  """Determines whether the iterable omits the value specified.
 
   :param iterable:
       Iterable sequence.
@@ -858,8 +825,7 @@ def omits(iterable, item):
 
 
 def difference(iterable1, iterable2):
-  """
-  Difference between one iterable and another.
+  """Difference between one iterable and another.
   Items from the first iterable are included in the difference.
 
       iterable1 - iterable2 = difference
@@ -881,12 +847,11 @@ def difference(iterable1, iterable2):
       Iterable sequence containing the difference between the two given
       iterables.
   """
-  return select(partial(omits, iterable2), iterable1)
+  return select(functools.partial(omits, iterable2), iterable1)
 
 
 def idifference(iterable1, iterable2):
-  """
-  Difference between one iterable and another.
+  """Difference between one iterable and another.
   Items from the first iterable are included in the difference.
 
       iterable1 - iterable2 = difference
@@ -898,12 +863,11 @@ def idifference(iterable1, iterable2):
   :yields:
       Generator for the difference between the two given iterables.
   """
-  return _ifilter(partial(omits, iterable2), iterable1)
+  return _ifilter(functools.partial(omits, iterable2), iterable1)
 
 
 def without(iterable, *values):
-  """
-  Returns the iterable without the values specified.
+  """Returns the iterable without the values specified.
 
   :param iterable:
       Iterable sequence.
@@ -916,8 +880,7 @@ def without(iterable, *values):
 
 
 def head(iterable):
-  """
-  Returns the first element out of an iterable.
+  """Returns the first element out of an iterable.
 
   :param iterable:
       Iterable sequence.
@@ -928,8 +891,7 @@ def head(iterable):
 
 
 def tail(iterable):
-  """
-  Returns all elements excluding the first out of an iterable.
+  """Returns all elements excluding the first out of an iterable.
 
   :param iterable:
       Iterable sequence.
@@ -940,20 +902,18 @@ def tail(iterable):
 
 
 def itail(iterable):
-  """
-  Returns an iterator for all elements excluding the first out of an iterable.
+  """Returns an iterator for all elements excluding the first out of an iterable.
 
   :param iterable:
       Iterable sequence.
   :yields:
       Iterator for all elements of the iterable sequence excluding the first.
   """
-  return islice(iterable, 1, None, 1)
+  return itertools.islice(iterable, 1, None, 1)
 
 
 def nth(iterable, index, default=None):
-  """
-  Returns the nth element out of an iterable.
+  """Returns the nth element out of an iterable.
 
   :param iterable:
       Iterable sequence.
@@ -964,12 +924,11 @@ def nth(iterable, index, default=None):
   :returns:
       nth element of the iterable sequence.
   """
-  return next(islice(iterable, index, None), default)
+  return builtins.next(itertools.islice(iterable, index, None), default)
 
 
 def last(iterable):
-  """
-  Returns the last element out of an iterable.
+  """Returns the last element out of an iterable.
 
   :param iterable:
       Iterable sequence.
@@ -980,8 +939,7 @@ def last(iterable):
 
 
 def occurrences(iterable):
-  """
-  Returns a dictionary of counts (multiset) of each element in the iterable.
+  """Returns a dictionary of counts (multiset) of each element in the iterable.
 
   Taken from the Python documentation under PSF license.
 
@@ -990,15 +948,14 @@ def occurrences(iterable):
   :returns:
       A dictionary of counts of each element in the iterable.
   """
-  multiset = defaultdict(int)
+  multiset = collections.defaultdict(int)
   for k in iterable:
     multiset[k] += 1
   return multiset
 
 
 def peel(iterable, count=1):
-  """
-  Returns the meat of an iterable by peeling off the specified number of
+  """Returns the meat of an iterable by peeling off the specified number of
   elements from both ends.
 
   :param iterable:
@@ -1016,8 +973,7 @@ def peel(iterable, count=1):
 
 
 def ipeel(iterable, count=1):
-  """
-  Returns an iterator for the meat of an iterable by peeling off the specified
+  """Returns an iterator for the meat of an iterable by peeling off the specified
   number of elements from both ends.
 
   :param iterable:
@@ -1032,14 +988,13 @@ def ipeel(iterable, count=1):
   if not iterable:
     return iter([])
   try:
-    return islice(iterable, count, len(iterable) - count, 1)
+    return itertools.islice(iterable, count, len(iterable) - count, 1)
   except ValueError:
     return iter([])
 
 
 def ichunks(iterable, size, *args, **kwargs):
-  """
-  Splits an iterable into iterators for chunks each of specified size.
+  """Splits an iterable into iterators for chunks each of specified size.
 
   :param iterable:
       The iterable to split. Must be an ordered sequence to guarantee order.
@@ -1065,18 +1020,17 @@ def ichunks(iterable, size, *args, **kwargs):
   length = len(iterable)
   if args or kwargs:
     padding = kwargs["padding"] if kwargs else args[0]
-    for i in range(0, length, size):
-      yield islice(chain(iterable,
-                         repeat(padding, (size - (length % size)))),
+    for i in builtins.range(0, length, size):
+      yield itertools.islice(chain(iterable,
+                         itertools.repeat(padding, (size - (length % size)))),
                    i, i + size)
   else:
-    for i in range(0, length, size):
-      yield islice(iterable, i, i + size)
+    for i in builtins.range(0, length, size):
+      yield itertools.islice(iterable, i, i + size)
 
 
 def chunks(iterable, size, *args, **kwargs):
-  """
-  Splits an iterable into materialized chunks each of specified size.
+  """Splits an iterable into materialized chunks each of specified size.
 
   :param iterable:
       The iterable to split. Must be an ordered sequence to guarantee order.
@@ -1107,7 +1061,7 @@ def chunks(iterable, size, *args, **kwargs):
   if args or kwargs:
     padding = kwargs["padding"] if kwargs else args[0]
     if padding is None:
-      if is_bytes_or_unicode(iterable):
+      if builtins.is_bytes_or_unicode(iterable):
         padding = ""
       elif isinstance(iterable, tuple):
         padding = (padding,)
@@ -1115,16 +1069,15 @@ def chunks(iterable, size, *args, **kwargs):
         iterable = list(iterable)
         padding = [padding]
     sequence = iterable + (padding * (size - (length % size)))
-    for i in range(0, length, size):
+    for i in builtins.range(0, length, size):
       yield sequence[i:i + size]
   else:
-    for i in range(0, length, size):
+    for i in builtins.range(0, length, size):
       yield iterable[i:i + size]
 
 
 def truthy(iterable):
-  """
-  Returns a iterable with only the truthy values.
+  """Returns a iterable with only the truthy values.
 
   Example::
 
@@ -1139,8 +1092,7 @@ def truthy(iterable):
 
 
 def itruthy(iterable):
-  """
-  Returns an iterator to for an iterable with only the truthy values.
+  """Returns an iterator to for an iterable with only the truthy values.
 
   Example::
 
@@ -1155,8 +1107,7 @@ def itruthy(iterable):
 
 
 def falsy(iterable):
-  """
-  Returns a iterable with only the falsy values.
+  """Returns a iterable with only the falsy values.
 
   Example::
 
@@ -1171,8 +1122,7 @@ def falsy(iterable):
 
 
 def ifalsy(iterable):
-  """
-  Returns a iterator for an iterable with only the falsy values.
+  """Returns a iterator for an iterable with only the falsy values.
 
   Example::
 
@@ -1187,8 +1137,7 @@ def ifalsy(iterable):
 
 
 def flatten(iterable):
-  """
-  Flattens nested iterables into a single iterable.
+  """Flattens nested iterables into a single iterable.
 
   Example::
 
@@ -1203,17 +1152,16 @@ def flatten(iterable):
   def _flatten(memo, item):
     """Flattener."""
     if isinstance(item, (list, tuple)):
-      return memo + _reduce(_flatten, item, [])
+      return memo + builtins.reduce(_flatten, item, [])
     else:
       memo.append(item)
       return memo
 
-  return _reduce(_flatten, iterable, [])
+  return builtins.reduce(_flatten, iterable, [])
 
 
 def flatten1(iterable):
-  """
-  Flattens nested iterables into a single iterable only one level
+  """Flattens nested iterables into a single iterable only one level
   deep.
 
   Example::
@@ -1234,12 +1182,11 @@ def flatten1(iterable):
       memo.append(item)
       return memo
 
-  return _reduce(_flatten, iterable, [])
+  return builtins.reduce(_flatten, iterable, [])
 
 
 def group_consecutive(predicate, iterable):
-  """
-  Groups consecutive elements into subsequences::
+  """Groups consecutive elements into subsequences::
 
       things = [("phone", "android"),
                 ("phone", "iphone"),
@@ -1269,12 +1216,11 @@ def group_consecutive(predicate, iterable):
   :returns:
       An iterator of lists.
   """
-  return (tuple(group) for key, group in groupby(iterable, predicate))
+  return (tuple(group) for key, group in itertools.groupby(iterable, predicate))
 
 
 def flock(predicate, iterable):
-  """
-  Groups elements into subsequences after sorting::
+  """Groups elements into subsequences after sorting::
 
       things = [("phone", "android"),
                 ("phone", "iphone"),
@@ -1299,12 +1245,11 @@ def flock(predicate, iterable):
   :returns:
       An iterator of lists.
   """
-  return (tuple(group) for key, group in groupby(sorted(iterable), predicate))
+  return (tuple(group) for key, group in itertools.groupby(sorted(iterable), predicate))
 
 
 def unique(iterable, is_sorted=False):
-  """
-  Returns an iterable sequence of unique values from the given iterable.
+  """Returns an iterable sequence of unique values from the given iterable.
 
   :param iterable:
       Iterable sequence.
@@ -1324,14 +1269,13 @@ def unique(iterable, is_sorted=False):
         memo.append(item)
       return memo
 
-    return _reduce(_unique, itail(iterable), [head(iterable)])
+    return builtins.reduce(_unique, itail(iterable), [head(iterable)])
   else:
     return iterable
 
 
 def union(iterable, *iterables):
-  """
-  Returns the union of given iterable sequences.
+  """Returns the union of given iterable sequences.
 
   :param iterables:
       Variable number of input iterable sequences.
@@ -1346,8 +1290,7 @@ def union(iterable, *iterables):
 
 
 def intersection(iterable, *iterables):
-  """
-  Returns the intersection of given iterable sequences.
+  """Returns the intersection of given iterable sequences.
 
   :param iterables:
       Variable number of input iterable sequences.
@@ -1361,14 +1304,13 @@ def intersection(iterable, *iterables):
 
   def _does_other_contain(item):
     """Determines whether the other list contains an item."""
-    return every(partial(contains, item=item), iterables)
+    return every(functools.partial(contains, item=item), iterables)
 
   return select(_does_other_contain, unique(iterable))
 
 
 def take(iterable, amount):
-  """
-  Return first n items of the iterable as a tuple.
+  """Return first n items of the iterable as a tuple.
 
   Taken from the Python documentation. Under the PSF license.
 
@@ -1379,12 +1321,11 @@ def take(iterable, amount):
   :returns:
       First n items of the iterable as a tuple.
   """
-  return tuple(islice(iterable, amount))
+  return tuple(itertools.islice(iterable, amount))
 
 
 def eat(iterator, amount):
-  """
-  Advance an iterator n-steps ahead. If n is None, eat entirely.
+  """Advance an iterator n-steps ahead. If n is None, eat entirely.
 
   Taken from the Python documentation. Under the PSF license.
 
@@ -1398,10 +1339,10 @@ def eat(iterator, amount):
   # Use functions that consume iterators at C speed.
   if amount is None:
     # Feed the entire iterator into a zero-length deque.
-    deque(iterator)
+    collections.deque(iterator)
   else:
     # Advance to the empty slice starting at position n.
-    next(islice(iterator, amount, amount), None)
+    builtins.next(itertools.islice(iterator, amount, amount), None)
 
 
 def _get_iter_next(iterator):
@@ -1413,8 +1354,7 @@ def _get_iter_next(iterator):
 
 
 def round_robin(*iterables):
-  """
-  Returns items from the iterables in a round-robin fashion.
+  """Returns items from the iterables in a round-robin fashion.
 
   Taken from the Python documentation. Under the PSF license.
   Recipe credited to George Sakkis
@@ -1429,19 +1369,18 @@ def round_robin(*iterables):
       Items from the iterable sequences in a round-robin fashion.
   """
   pending = len(iterables)
-  nexts = cycle(_get_iter_next(iter(it)) for it in iterables)
+  nexts = itertools.cycle(_get_iter_next(iter(it)) for it in iterables)
   while pending:
     try:
       for next_ in nexts:
         yield next_()
     except StopIteration:
       pending -= 1
-      nexts = cycle(islice(nexts, pending))
+      nexts = itertools.cycle(itertools.islice(nexts, pending))
 
 
 def ncycles(iterable, times):
-  """
-  Yields the sequence elements n times.
+  """Yields the sequence elements n times.
 
   Taken from the Python documentation. Under the PSF license.
 
@@ -1452,13 +1391,12 @@ def ncycles(iterable, times):
   :yields:
       Iterator.
   """
-  return chain.from_iterable(repeat(tuple(iterable), times))
+  return chain.from_iterable(itertools.repeat(tuple(iterable), times))
 
 
 # Predicates, transforms, and walkers
 def identity(arg):
-  """
-  Identity function. Produces what it consumes.
+  """Identity function. Produces what it consumes.
 
   :param arg:
       Argument
@@ -1469,8 +1407,7 @@ def identity(arg):
 
 
 def loob(arg):
-  """
-  Complement of bool.
+  """Complement of bool.
 
   :param arg:
       Python value.
@@ -1481,8 +1418,7 @@ def loob(arg):
 
 
 def always(_):
-  """
-  Predicate function that returns ``True`` always.
+  """Predicate function that returns ``True`` always.
 
   :param _:
       Argument
@@ -1493,8 +1429,7 @@ def always(_):
 
 
 def never(_):
-  """
-  Predicate function that returns ``False`` always.
+  """Predicate function that returns ``False`` always.
 
   :param _:
       Argument
