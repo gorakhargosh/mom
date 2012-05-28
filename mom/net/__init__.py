@@ -21,9 +21,8 @@
 .. automodule:: mom.net.scheme
 """
 
-from mom.net import scheme, mimeparse
+from mom.net import scheme
 
 __all__ = [
   "scheme",
-  "mimeparse",
   ]
