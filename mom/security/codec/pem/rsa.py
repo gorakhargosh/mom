@@ -25,18 +25,14 @@
 """
 
 from __future__ import absolute_import
-from pyasn1.type import univ
-from pyasn1.codec.der import decoder, encoder
-from mom.builtins import bytes
-from mom.security.codec.asn1 import rsadsa
+
+from mom import builtins
+from mom.security.codec import asn1
+from mom.security.codec import pem
 from mom.security.codec.asn1.x509 import SubjectPublicKeyInfo
 from mom.security.codec.pem.x509 import X509Certificate
-from mom.security.codec.pem import\
-  pem_to_der_public_key,\
-  der_to_pem_public_key,\
-  der_to_pem_private_rsa_key,\
-  pem_to_der_private_rsa_key,\
-  pem_to_der_private_key
+from pyasn1 import type
+from pyasn1.codec import der
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -60,7 +56,7 @@ class RSAPrivateKey(object):
       Version ::= INTEGER
   """
   # http://tools.ietf.org/html/rfc3279 - Section 2.3.1
-  _RSA_OID = univ.ObjectIdentifier("1.2.840.113549.1.1.1")
+  _RSA_OID = type.univ.ObjectIdentifier("1.2.840.113549.1.1.1")
 
   def __init__(self, key):
     self._key = key
@@ -89,11 +85,11 @@ class RSAPrivateKey(object):
   def decode_from_pem_key(cls, key):
     keyType = rsadsa.RSAPrivateKey()
     try:
-      der = pem_to_der_private_rsa_key(key)
+      der = pem.pem_to_der_private_rsa_key(key)
     except Exception:
-      der = pem_to_der_private_key(key)
+      der = pem.pem_to_der_private_key(key)
 
-    cover_asn1 = decoder.decode(der)[0]
+    cover_asn1 = der.decoder.decode(der)[0]
     if len(cover_asn1) < 1:
       raise ValueError("No RSA private key found after ASN.1 decoding.")
 
@@ -102,13 +98,13 @@ class RSAPrivateKey(object):
       raise ValueError(
         "Only RSA encryption is supported: got algorithm `%r`"\
         % algorithm)
-    key_der = bytes(cover_asn1[2])
-    key_asn1 = decoder.decode(key_der, asn1Spec=keyType)[0]
+    key_der = builtins.bytes(cover_asn1[2])
+    key_asn1 = der.decoder.decode(key_der, asn1Spec=keyType)[0]
     return cover_asn1, key_asn1
 
   @classmethod
   def encode_to_pem_private_key(cls, key_asn1):
-    return der_to_pem_private_rsa_key(encoder.encode(key_asn1))
+    return pem.der_to_pem_private_rsa_key(der.encoder.encode(key_asn1))
 
 TEST_RSA_PRIVATE_KEYS = (
   """
@@ -129,9 +125,7 @@ AO/0isr/3aa6O6NLQxISLKcPDk2NOccAfS/xOtfOz4sJYM3+Bs4Io9+dZGSDCA54
 Lw03eHTNQghS0A==
 -----END PRIVATE KEY-----""",
   )
-TEST_PRIVATE_KEYS = (0
-                     ,
-  )
+TEST_PRIVATE_KEYS = (0,)
 
 class RSAPublicKey(object):
   """
@@ -142,7 +136,7 @@ class RSAPublicKey(object):
           subjectPublicKey     BIT STRING  }
   """
   # http://tools.ietf.org/html/rfc3279 - Section 2.3.1
-  _RSA_OID = univ.ObjectIdentifier("1.2.840.113549.1.1.1")
+  _RSA_OID = type.univ.ObjectIdentifier("1.2.840.113549.1.1.1")
 
   def __init__(self, key):
     self._key = key
@@ -180,15 +174,15 @@ class RSAPublicKey(object):
   @classmethod
   def decode_from_pem_key(cls, key):
     keyType = SubjectPublicKeyInfo()
-    der = pem_to_der_public_key(key)
-    key_asn1 = decoder.decode(der, asn1Spec=keyType)[0]
+    der = pem.pem_to_der_public_key(key)
+    key_asn1 = der.decoder.decode(der, asn1Spec=keyType)[0]
     if len(key_asn1) < 1:
       raise ValueError("No RSA public key found after ASN.1 decoding.")
     return key_asn1
 
   @classmethod
   def encode_to_pem_key(cls, key_asn1):
-    return der_to_pem_public_key(encoder.encode(key_asn1))
+    return pem.der_to_pem_public_key(der.encoder.encode(key_asn1))
 
 
 TEST_PUBLIC_PEM_KEYS = ("""
