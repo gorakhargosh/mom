@@ -38,7 +38,7 @@ except ImportError:
   from urllib import quote, unquote
 
 from mom.builtins import is_bytes, b
-from mom.net.mimeparse import parse_mime_type
+from mom.mimeparse import parse_mime_type
 from mom.codec import base64_encode, base64_decode
 
 
