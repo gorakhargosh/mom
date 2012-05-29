@@ -72,6 +72,7 @@ def get_dir_walker(recursive, topdown=True, followlinks=False):
                                topdown=topdown,
                                followlinks=followlinks)
   else:
+
     def walker(path, topdown=topdown, followlinks=followlinks):
       """Alternative walker."""
       yield builtins.next(os.walk(path,
@@ -144,8 +145,7 @@ def list_directories(dir_pathname,
   :param followlinks:
       Please see the documentation for :func:`os.walk`
   """
-  for root, dir_names, _ in walk(
-    dir_pathname, recursive, topdown, followlinks):
+  for root, dir_names, _ in walk(dir_pathname, recursive, topdown, followlinks):
     for dir_name in dir_names:
       yield absolute_path(path.join(root, dir_name))
 
@@ -168,7 +168,8 @@ def list_files(dir_pathname,
   :param followlinks:
       Please see the documentation for :func:`os.walk`
   """
-  for root, _, file_names in walk(dir_pathname, recursive, topdown, followlinks):
+  for root, _, file_names in walk(dir_pathname,
+                                  recursive, topdown, followlinks):
     for file_name in file_names:
       yield absolute_path(path.join(root, file_name))
 
