@@ -59,7 +59,7 @@ if sys.version_info < (2, 6, 0):
 
 setup(
   name="mom",
-  version="0.1",
+  version="0.1.0b",
   license="Apache Software License 2.0",
   url="http://github.com/gorakhargosh/mom",
   description="Python utility library.",
@@ -76,7 +76,7 @@ setup(
     "utilities",
     ]),
   classifiers=[
-    "Development Status :: 2 - Pre-Alpha Development Status",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
