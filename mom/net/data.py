@@ -17,7 +17,7 @@
 # limitations under the License.
 
 """:synopsis: Makes working with Data URI-schemes easier.
-:module: mom.net.scheme.data
+:module: mom.net.data
 :see: http://en.wikipedia.org/wiki/Data_URI_scheme
 :see: https://tools.ietf.org/html/rfc2397
 
