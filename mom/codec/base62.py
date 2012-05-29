@@ -179,7 +179,7 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 ASCII62_BYTES = (string.DIGITS +
                  string.ASCII_UPPERCASE +
                  string.ASCII_LOWERCASE).encode("ascii")
-# Therefore, b'0' represents b'\0'.
+# Therefore, b"0" represents b"\0".
 ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_BYTES))
 
 
@@ -191,7 +191,7 @@ ASCII62_ORDS = dict((x, i) for i, x in enumerate(ASCII62_BYTES))
 ALT62_BYTES = (string.DIGITS +
                string.ASCII_LOWERCASE +
                string.ASCII_UPPERCASE).encode("ascii")
-# Therefore, b'0' represents b'\0'.
+# Therefore, b"0" represents b"\0".
 ALT62_ORDS = dict((x, i) for i, x in enumerate(ALT62_BYTES))
 
 if _compat.HAVE_PYTHON3:

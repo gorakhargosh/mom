@@ -48,7 +48,7 @@ Python 3.x
 * ``basestring`` has been removed.
 * ``unicode`` has been removed
 
-This module introduces the 'bytes' type for Python 2.5 and adds a
+This module introduces the "bytes" type for Python 2.5 and adds a
 few utility functions that will continue to keep working as they should
 even when Python versions change.
 
@@ -247,7 +247,7 @@ def bin(number, prefix="0b"):
   if number < 0:
     number = -number
     prefix = "-" + prefix
-  bit_string = ''
+  bit_string = ""
   while number > 1:
     bit_string = str(number & 1) + bit_string
     number >>= 1
@@ -402,10 +402,10 @@ def integer_bit_length(number):
   _ = number & 1
   hex_num = "%x" % number
   return ((len(hex_num) - 1) * 4) + {
-    '0': 0, '1': 1, '2': 2, '3': 2,
-    '4': 3, '5': 3, '6': 3, '7': 3,
-    '8': 4, '9': 4, 'a': 4, 'b': 4,
-    'c': 4, 'd': 4, 'e': 4, 'f': 4,
+    "0": 0, "1": 1, "2": 2, "3": 2,
+    "4": 3, "5": 3, "6": 3, "7": 3,
+    "8": 4, "9": 4, "a": 4, "b": 4,
+    "c": 4, "d": 4, "e": 4, "f": 4,
     }[hex_num[0]]
   #return int(math.floor(math.log(n, 2))+1)
 

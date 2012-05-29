@@ -87,7 +87,7 @@ else:
 _libgmp_path = util.find_library("gmp")
 if not _libgmp_path:
   raise ImportError("Unable to find libgmp")
-  # raise EnvironmentError('Unable to find libgmp')
+  # raise EnvironmentError("Unable to find libgmp")
 _libgmp = ctypes.CDLL(_libgmp_path)
 
 
@@ -100,33 +100,33 @@ _libgmp = ctypes.CDLL(_libgmp_path)
 class c_mpz_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
-    ('_mp_alloc', ctypes.c_int),
-    ('_mp_size', ctypes.c_int),
-    ('_mp_d', ctypes.POINTER(ctypes.c_ulonglong))]
+    ("_mp_alloc", ctypes.c_int),
+    ("_mp_size", ctypes.c_int),
+    ("_mp_d", ctypes.POINTER(ctypes.c_ulonglong))]
 
 
 class c_gmp_randstate_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
-    ('_mp_seed', c_mpz_struct),
-    ('_mp_alg', ctypes.c_int),
-    ('_mp_algdata', ctypes.c_voidp)]
+    ("_mp_seed", c_mpz_struct),
+    ("_mp_alg", ctypes.c_int),
+    ("_mp_algdata", ctypes.c_voidp)]
 
 
 class c_mpq_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
-    ('_mp_num', c_mpz_struct),
-    ('_mp_den', c_mpz_struct)]
+    ("_mp_num", c_mpz_struct),
+    ("_mp_den", c_mpz_struct)]
 
 
 class c_mpf_struct(ctypes.Structure):
   """Internal structure."""
   _fields_ = [
-    ('_mp_prec', ctypes.c_int),
-    ('_mp_size', ctypes.c_int),
-    ('_mp_exp', ctypes.c_long),
-    ('_mp_d', ctypes.POINTER(ctypes.c_long))]
+    ("_mp_prec", ctypes.c_int),
+    ("_mp_size", ctypes.c_int),
+    ("_mp_exp", ctypes.c_long),
+    ("_mp_d", ctypes.POINTER(ctypes.c_long))]
 
 #------------------------------------------------------------------------------
 # Function references into MP library

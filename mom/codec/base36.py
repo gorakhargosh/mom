@@ -50,7 +50,7 @@ EMPTY_BYTE = _compat.EMPTY_BYTE
 # Follows ASCII order.
 ASCII36_BYTES = (string.DIGITS +
                  string.ASCII_UPPERCASE).encode("ascii")
-# Therefore, b'1' represents b'\0'.
+# Therefore, b"1" represents b"\0".
 if _compat.HAVE_PYTHON3:
   ASCII36_BYTES = tuple(builtins.byte(x) for x in ASCII36_BYTES)
 

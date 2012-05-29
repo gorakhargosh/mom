@@ -165,9 +165,9 @@ def integer_bit_length_word_aligned(num):
 #        Bit string.
 #    """
 #    prefix = prefix or ""
-#    bit_string = ''
-#    lookup = {'0':'000', '1':'001', '2':'010', '3':'011',
-#              '4':'100', '5':'101', '6':'110', '7':'111'}
+#    bit_string = ""
+#    lookup = {"0":"000", "1":"001", "2":"010", "3":"011",
+#              "4":"100", "5":"101", "6":"110", "7":"111"}
 #    for c in oct(num)[1:]:
 #        bit_string += lookup[c]
 #    return prefix + bit_string

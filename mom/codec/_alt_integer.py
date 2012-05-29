@@ -59,12 +59,12 @@ def uint_to_bytes_naive_array_based(uint, chunk_size=0):
       Bytes.
   """
   if uint < 0:
-    raise ValueError('Negative numbers cannot be used: %i' % uint)
+    raise ValueError("Negative numbers cannot be used: %i" % uint)
   if uint == 0:
     bytes_count = 1
   else:
     bytes_count = builtins.integer_byte_length(uint)
-  byte_array = array.array('B', [0] * bytes_count)
+  byte_array = array.array("B", [0] * bytes_count)
   for count in builtins.range(bytes_count - 1, -1, -1):
     byte_array[count] = uint & 0xff
     uint >>= 8
@@ -103,14 +103,14 @@ def uint_to_bytes_naive(number, block_size=0):
       bytes than fit into the block.
   """
   if number < 0:
-    raise ValueError('Negative numbers cannot be used: %d' % number)
+    raise ValueError("Negative numbers cannot be used: %d" % number)
 
   # Do some bounds checking
   needed_bytes = builtins.integer_byte_length(number)
   if block_size > 0:
     if needed_bytes > block_size:
-      raise OverflowError('Needed %i bytes for number, but block size '
-                          'is %i' % (needed_bytes, block_size))
+      raise OverflowError("Needed %i bytes for number, but block size "
+                          "is %i" % (needed_bytes, block_size))
 
   # Convert the number to bytes.
   if number == 0:
@@ -146,7 +146,7 @@ def uint_to_bytes_pycrypto(uint, blocksize=0):
   raw_bytes = EMPTY_BYTE
   uint = int(uint)
   while uint > 0:
-    raw_bytes = struct.pack('>I', uint & 0xffffffff) + raw_bytes
+    raw_bytes = struct.pack(">I", uint & 0xffffffff) + raw_bytes
     uint >>= 32
     # strip off leading zeros
   i = 0
@@ -190,7 +190,7 @@ def uint_to_bytes_array_based(number, chunk_size=0):
   """
   # Machine word aligned byte array based implementation.
   if number < 0:
-    raise ValueError('Number must be unsigned integer: %d' % number)
+    raise ValueError("Number must be unsigned integer: %d" % number)
 
   raw_bytes = EMPTY_BYTE
   if not number:
@@ -266,7 +266,7 @@ def bytes_to_uint_naive(raw_bytes, _zero_byte=ZERO_BYTE):
   int_value = 0
   for i in builtins.range(0, length, 4):
     chunk = raw_bytes[i:i + 4]
-    int_value = (int_value << 32) + struct.unpack('>I', chunk)[0]
+    int_value = (int_value << 32) + struct.unpack(">I", chunk)[0]
   return int_value
 
 

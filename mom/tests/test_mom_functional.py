@@ -103,8 +103,8 @@ class Test__leading(unittest2.TestCase):
   def test_count(self):
     self.assertEqual(functional._leading(lambda w: w > 0, [0, 0, 1]), 0)
     self.assertEqual(functional._leading(lambda w: w > 1, [2, 2, 3, 0, 5]), 3)
-    self.assertEqual(functional._leading(lambda w: ord(w) >= ord('c'), "abalskjd"), 0)
-    self.assertEqual(functional._leading(lambda w: ord(w) >= ord('c'), "cuddleya"), 7)
+    self.assertEqual(functional._leading(lambda w: ord(w) >= ord("c"), "abalskjd"), 0)
+    self.assertEqual(functional._leading(lambda w: ord(w) >= ord("c"), "cuddleya"), 7)
 
   def test_start(self):
     self.assertEqual(functional._leading(lambda w: w == "0", "0001"), 3)
@@ -124,8 +124,8 @@ class Test_leading(unittest2.TestCase):
   def test_count(self):
     self.assertEqual(functional.leading(lambda w: w > 0, [0, 0, 1]), 0)
     self.assertEqual(functional.leading(lambda w: w > 1, [2, 2, 3, 0, 5]), 3)
-    self.assertEqual(functional.leading(lambda w: ord(w) >= ord('c'), "abalskjd"), 0)
-    self.assertEqual(functional.leading(lambda w: ord(w) >= ord('c'), "cuddleya"), 7)
+    self.assertEqual(functional.leading(lambda w: ord(w) >= ord("c"), "abalskjd"), 0)
+    self.assertEqual(functional.leading(lambda w: ord(w) >= ord("c"), "cuddleya"), 7)
 
   def test_start(self):
     self.assertEqual(functional.leading(lambda w: w == "0", "0001"), 3)
@@ -145,8 +145,8 @@ class Test_trailing(unittest2.TestCase):
   def test_count(self):
     self.assertEqual(functional.trailing(lambda w: w > 0, [0, 0, 1]), 1)
     self.assertEqual(functional.trailing(lambda w: w > 1, [2, 0, 2, 3, 5]), 3)
-    self.assertEqual(functional.trailing(lambda w: ord(w) >= ord('c'), "abalskjd"), 5)
-    self.assertEqual(functional.trailing(lambda w: ord(w) >= ord('c'), "cuddleya"), 0)
+    self.assertEqual(functional.trailing(lambda w: ord(w) >= ord("c"), "abalskjd"), 5)
+    self.assertEqual(functional.trailing(lambda w: ord(w) >= ord("c"), "cuddleya"), 0)
 
   def test_end(self):
     self.assertEqual(functional.trailing(lambda w: w == "0", "0001"), 0)
@@ -280,9 +280,9 @@ class Test_invert_dict(unittest2.TestCase):
 class Test_pluck(unittest2.TestCase):
   def test_property(self):
     fruits = [
-        {"name": 'mango', "taste": "sweet"},
-        {"name": 'orange', "taste": "tangy"},
-        {"name": 'banana', "taste": "sweet"},
+        {"name": "mango", "taste": "sweet"},
+        {"name": "orange", "taste": "tangy"},
+        {"name": "banana", "taste": "sweet"},
     ]
     self.assertEqual(functional.pluck(fruits, "name"), ("mango", "orange", "banana"))
     self.assertEqual(tuple(functional.ipluck(fruits, "name")),
@@ -612,9 +612,9 @@ class Test_without(unittest2.TestCase):
 
 class Test_unique(unittest2.TestCase):
   def test_uniques(self):
-    self.assertEqual(functional.unique('aabbccyyyyyyyyyyyyyyyyy', True),
+    self.assertEqual(functional.unique("aabbccyyyyyyyyyyyyyyyyy", True),
       ["a", "b", "c", "y"])
-    self.assertEqual(functional.unique('google'),
+    self.assertEqual(functional.unique("google"),
       ["g", "o", "l", "e"])
     self.assertEqual(functional.unique(""), "")
 
@@ -652,16 +652,16 @@ class Test_identity(unittest2.TestCase):
 class Test_flatten(unittest2.TestCase):
   def test_flattened(self):
     self.assertEqual(
-      functional.flatten([[0, 1, 2], (0, 6, (5, 4), ('a', 'b')), (7, 8)]),
-      [0, 1, 2, 0, 6, 5, 4, 'a', 'b', 7, 8]
+      functional.flatten([[0, 1, 2], (0, 6, (5, 4), ("a", "b")), (7, 8)]),
+      [0, 1, 2, 0, 6, 5, 4, "a", "b", 7, 8]
     )
 
 
 class Test_flatten1(unittest2.TestCase):
   def test_flattened_one_level(self):
     self.assertEqual(
-      functional.flatten1((1, (0, 5, ('a', 'b')), (3, 4))),
-      [1, 0, 5, ('a', 'b'), 3, 4]
+      functional.flatten1((1, (0, 5, ("a", "b")), (3, 4))),
+      [1, 0, 5, ("a", "b"), 3, 4]
     )
 
 
@@ -720,11 +720,11 @@ class Test_peel(unittest2.TestCase):
     self.assertRaises(ValueError, functional.peel, "abbbc", -1)
 
   def test_peel(self):
-    self.assertEqual(functional.peel("abbbc"), 'bbb')
+    self.assertEqual(functional.peel("abbbc"), "bbb")
     self.assertEqual(functional.peel(0), 0)
     self.assertEqual(functional.peel(""), "")
-    self.assertEqual(functional.peel("a"), '')
-    self.assertEqual(functional.peel("a", 34), '')
+    self.assertEqual(functional.peel("a"), "")
+    self.assertEqual(functional.peel("a", 34), "")
 
 
 class Test_loob(unittest2.TestCase):
@@ -775,18 +775,18 @@ class Test_partition_dict(unittest2.TestCase):
       boobooo="booobooo",
       )
     a, b = functional.partition_dict(lambda k, v: k.startswith("oauth_"), args)
-    self.assertDictEqual(a, {'oauth_token': 'token', 'oauth_blah': 'blah'})
-    self.assertDictEqual(b, {'boobooo': 'booobooo', 'something': 'another'})
+    self.assertDictEqual(a, {"oauth_token": "token", "oauth_blah": "blah"})
+    self.assertDictEqual(b, {"boobooo": "booobooo", "something": "another"})
 
 
 class Test_occurrences(unittest2.TestCase):
   def test_missing_element_count_is_0(self):
-    d = functional.occurrences('aaaaa')
-    self.assertEqual(d['c'], 0)
+    d = functional.occurrences("aaaaa")
+    self.assertEqual(d["c"], 0)
 
   def test_returns_multiset(self):
-    self.assertDictEqual(dict(functional.occurrences('aaaaabbbccc')),
-        {'a': 5, 'b': 3, 'c': 3})
+    self.assertDictEqual(dict(functional.occurrences("aaaaabbbccc")),
+        {"a": 5, "b": 3, "c": 3})
 
   def test_returns_blank_for_empty(self):
     self.assertDictEqual(dict(functional.occurrences("")), {})
@@ -805,19 +805,19 @@ class Test_group_consecutive(unittest2.TestCase):
       ("laptop", "macbook pro")]
 
     self.assertEqual(list(functional.group_consecutive(lambda w: w[0], things)),
-      [(('phone', 'android'), ('phone', 'iphone')),
-        (('tablet', 'ipad'),),
-        (('laptop', 'dell studio'),),
-        (('phone', 'nokia'),),
-        (('laptop', 'macbook pro'),)]
+      [(("phone", "android"), ("phone", "iphone")),
+        (("tablet", "ipad"),),
+        (("laptop", "dell studio"),),
+        (("phone", "nokia"),),
+        (("laptop", "macbook pro"),)]
     )
 
     self.assertEqual(list(functional.group_consecutive(lambda w: w[0],
                                             "mississippi")),
-      [('m',), ('i',),
-        ('s', 's'), ('i',),
-        ('s', 's'), ('i',),
-        ('p', 'p'), ('i',)]
+      [("m",), ("i",),
+        ("s", "s"), ("i",),
+        ("s", "s"), ("i",),
+        ("p", "p"), ("i",)]
     )
 
 
@@ -831,16 +831,16 @@ class Test_flock(unittest2.TestCase):
       ("laptop", "macbook pro")]
 
     self.assertEqual(list(functional.flock(lambda w: w[0], things)),
-      [(('laptop', 'dell studio'), ('laptop', 'macbook pro')),
-        (('phone', 'android'), ('phone', 'iphone'), ('phone', 'nokia')),
-        (('tablet', 'ipad'),)]
+      [(("laptop", "dell studio"), ("laptop", "macbook pro")),
+        (("phone", "android"), ("phone", "iphone"), ("phone", "nokia")),
+        (("tablet", "ipad"),)]
     )
 
     self.assertEqual(
       list(functional.flock(lambda w: w[0], "mississippi")),
-      [('i', 'i', 'i', 'i'), ('m',), ('p', 'p'), ('s', 's', 's', 's')]
+      [("i", "i", "i", "i"), ("m",), ("p", "p"), ("s", "s", "s", "s")]
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
   unittest2.main()

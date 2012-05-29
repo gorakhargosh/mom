@@ -84,8 +84,8 @@ def method_name(method):
 def format_arg_value(arg_val):
   """Return a string representing a (name, value) pair.
 
-  >>> format_arg_value(('x', (1, 2, 3)))
-  'x=(1, 2, 3)'
+  >>> format_arg_value(("x", (1, 2, 3)))
+  "x=(1, 2, 3)"
   """
   arg, val = arg_val
   return "%s=%r" % (arg, val)
@@ -159,5 +159,5 @@ if __name__ == "__main__":
   import doctest
 
   option_flags = doctest.ELLIPSIS
-  doctest.testfile('traceexample.txt', optionflags=option_flags)
+  doctest.testfile("traceexample.txt", optionflags=option_flags)
   doctest.testmod(optionflags=option_flags)

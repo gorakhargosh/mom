@@ -159,5 +159,5 @@ WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
 
   class Test_cert_time_in_seconds(unittest2.TestCase):
     def test_format(self):
-      self.assertEqual(pem.cert_time_to_seconds('Jul 17 18:24:41 2011 GMT'),
+      self.assertEqual(pem.cert_time_to_seconds("Jul 17 18:24:41 2011 GMT"),
                        1310907281.0)

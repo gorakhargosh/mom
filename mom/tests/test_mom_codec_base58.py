@@ -40,9 +40,9 @@ ZERO_BYTE = _compat.ZERO_BYTE
 RANDOM_BYTES = random.generate_random_bytes(384)
 
 ZERO_BYTES_4 = ZERO_BYTE * 4
-#raw_data = hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
-RAW_DATA = b('\x00\\\xc8\x7fJ?\xdf\xe3\xa24kiS&|\xa8g(&0\xd3\xf9\xb7\x8ed')
-ENCODED = b('19TbMSWwHvnxAKy12iNm3KdbGfzfaMFViT')
+#raw_data = hex_decode(b("005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64"))
+RAW_DATA = b("\x00\\\xc8\x7fJ?\xdf\xe3\xa24kiS&|\xa8g(&0\xd3\xf9\xb7\x8ed")
+ENCODED = b("19TbMSWwHvnxAKy12iNm3KdbGfzfaMFViT")
 ENCODED_WITH_WHITESPACE = b("""
 19TbMSWwHvnxAKy12iN
 m3KdbGfzfaMFViT
@@ -69,24 +69,24 @@ class Test_base58_codec(unittest2.TestCase):
     self.assertEqual(codec.base58_decode(codec.base58_encode(PADDING_RAW)), PADDING_RAW)
 
   def test_zero_bytes(self):
-    self.assertEqual(base58.b58encode(ZERO_BYTES_4), b('1111'))
-    self.assertEqual(base58.b58decode(b('1111')), ZERO_BYTES_4)
-    self.assertEqual(base58.b58encode(ZERO_BYTE), b('1'))
-    self.assertEqual(base58.b58decode(b('1')), ZERO_BYTE)
+    self.assertEqual(base58.b58encode(ZERO_BYTES_4), b("1111"))
+    self.assertEqual(base58.b58decode(b("1111")), ZERO_BYTES_4)
+    self.assertEqual(base58.b58encode(ZERO_BYTE), b("1"))
+    self.assertEqual(base58.b58decode(b("1")), ZERO_BYTE)
 
-    self.assertEqual(_alt_base.b58encode_naive(ZERO_BYTES_4), b('1111'))
-    self.assertEqual(_alt_base.b58decode_naive(b('1111')), ZERO_BYTES_4)
-    self.assertEqual(_alt_base.b58encode_naive(ZERO_BYTE), b('1'))
-    self.assertEqual(_alt_base.b58decode_naive(b('1')), ZERO_BYTE)
+    self.assertEqual(_alt_base.b58encode_naive(ZERO_BYTES_4), b("1111"))
+    self.assertEqual(_alt_base.b58decode_naive(b("1111")), ZERO_BYTES_4)
+    self.assertEqual(_alt_base.b58encode_naive(ZERO_BYTE), b("1"))
+    self.assertEqual(_alt_base.b58decode_naive(b("1")), ZERO_BYTE)
 
-    self.assertEqual(codec.base58_encode(ZERO_BYTES_4), b('1111'))
-    self.assertEqual(codec.base58_decode(b('1111')), ZERO_BYTES_4)
-    self.assertEqual(codec.base58_encode(ZERO_BYTE), b('1'))
-    self.assertEqual(codec.base58_decode(b('1')), ZERO_BYTE)
+    self.assertEqual(codec.base58_encode(ZERO_BYTES_4), b("1111"))
+    self.assertEqual(codec.base58_decode(b("1111")), ZERO_BYTES_4)
+    self.assertEqual(codec.base58_encode(ZERO_BYTE), b("1"))
+    self.assertEqual(codec.base58_decode(b("1")), ZERO_BYTE)
 
   # The bitcoin implementation is a broken one. Do not use.
   #    def test_bitcoin_implementation(self):
-  #        hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
+  #        hello_world = b("\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64")
   #        encoded_hello_world = base58.b58encode(hello_world)
   #
   #        self.assertEqual(bitcointools_base58.b58encode_bitcoin(raw_data), encoded)
@@ -95,15 +95,15 @@ class Test_base58_codec(unittest2.TestCase):
   #        self.assertEqual(bitcointools_base58.b58decode_bitcoin(encoded_hello_world), hello_world)
   #
   #    def test_bitcoin_zero_encode(self):
-  #        self.assertEqual(bitcointools_base58.b58encode_bitcoin(zero_bytes_4), b('1111'))
-  #        self.assertEqual(bitcointools_base58.b58encode_bitcoin(ZERO_BYTE), b('1'))
+  #        self.assertEqual(bitcointools_base58.b58encode_bitcoin(zero_bytes_4), b("1111"))
+  #        self.assertEqual(bitcointools_base58.b58encode_bitcoin(ZERO_BYTE), b("1"))
   #
   #    def test_bitcoin_zero_decode(self):
-  #        self.assertEqual(bitcointools_base58.b58decode_bitcoin(b('1111')), zero_bytes_4)
-  #        self.assertEqual(bitcointools_base58.b58decode_bitcoin(b('1')), ZERO_BYTE)
+  #        self.assertEqual(bitcointools_base58.b58decode_bitcoin(b("1111")), zero_bytes_4)
+  #        self.assertEqual(bitcointools_base58.b58decode_bitcoin(b("1")), ZERO_BYTE)
 
   def test_encoding_and_decoding(self):
-    hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
+    hello_world = b("\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64")
     encoded_hello_world = base58.b58encode(hello_world)
 
     self.assertEqual(encoded_hello_world, _alt_base.b58encode_naive(hello_world))

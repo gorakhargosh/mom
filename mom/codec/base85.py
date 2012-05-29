@@ -107,28 +107,28 @@ UINT128_MAX = _compat.UINT128_MAX
 UINT32_MAX = _compat.UINT32_MAX
 EMPTY_BYTE = _compat.EMPTY_BYTE
 
-EXCLAMATION_CHUNK = b('!!!!!')
-ZERO_GROUP_CHAR = b('z')
+EXCLAMATION_CHUNK = b("!!!!!")
+ZERO_GROUP_CHAR = b("z")
 
 # Use this if you want the base85 codec to encode/decode including
 # ASCII85 prefixes/suffixes.
-ASCII85_PREFIX = b('<~')
-ASCII85_SUFFIX = b('~>')
+ASCII85_PREFIX = b("<~")
+ASCII85_SUFFIX = b("~>")
 
 # ASCII85 characters.
-ASCII85_BYTES = array.array('B', [(num + 33) for num in builtins.range(85)])
+ASCII85_BYTES = array.array("B", [(num + 33) for num in builtins.range(85)])
 
 # I've left this approach in here to warn you to NOT use it.
 # This results in a massive amount of calls to byte_ord inside
 # tight loops. Don't use the array. Use the dictionary. It
 # removes the need to convert to ords at runtime.
-#ASCII85_ORDS = array.array('B', [255] * 128)
+#ASCII85_ORDS = array.array("B", [255] * 128)
 #for ordinal, _byte in enumerate(ASCII85_BYTES):
 #    ASCII85_ORDS[_byte] = ordinal
 
 
 # http://tools.ietf.org/html/rfc1924
-RFC1924_BYTES = array.array('B', (string.DIGITS +
+RFC1924_BYTES = array.array("B", (string.DIGITS +
                             string.ASCII_UPPERCASE +
                             string.ASCII_LOWERCASE +
                             "!#$%&()*+-;<=>?@^_`{|}~").encode("ascii"))
@@ -137,7 +137,7 @@ RFC1924_BYTES = array.array('B', (string.DIGITS +
 # This results in a massive amount of calls to byte_ord inside
 # tight loops. Don't use the array. Use the dictionary. It
 # removes the need to convert to ords at runtime.
-#RFC1924_ORDS = array.array('B', [255] * 128)
+#RFC1924_ORDS = array.array("B", [255] * 128)
 #for ordinal, _byte in enumerate(RFC1924_BYTES):
 #    RFC1924_ORDS[_byte] = ordinal
 
@@ -183,14 +183,14 @@ POW_85 = (
 
 def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
   """
-  Ensures 'z' characters do not occur in the middle of 5-tuple chunks
+  Ensures "z" characters do not occur in the middle of 5-tuple chunks
   when decoding. It will raise a ``ValueError`` if such an occurrence is
   found.
 
   :param encoded:
       The encoded sequence. (ASCII encoded string).
   :param zero_char:
-      The 'z' character (default 'z').
+      The "z" character (default "z").
   :param chunk_size:
       5 (default).
   """
@@ -199,8 +199,8 @@ def _check_compact_char_occurrence(encoded, zero_char, chunk_size=5):
     if char == zero_char[0]:
       if counter % chunk_size:
         raise ValueError(
-          'zero char `%r` occurs in the middle of a chunk '\
-          'at index %d' % (zero_char, i)
+          "zero char `%r` occurs in the middle of a chunk "\
+          "at index %d" % (zero_char, i)
         )
       else:
         counter = 0
@@ -247,11 +247,11 @@ def _b85encode_chunks(raw_bytes,
   else:
     padding_size = 0
 
-  encoded = array.array('B', [0] * num_uint32 * 5)
+  encoded = array.array("B", [0] * num_uint32 * 5)
   # ASCII85 uses a big-endian convention.
   # See: http://en.wikipedia.org/wiki/Ascii85
   i = 0
-  for uint32 in struct.unpack('>' + 'L' * num_uint32, raw_bytes):
+  for uint32 in struct.unpack(">" + "L" * num_uint32, raw_bytes):
   #        chars = list(builtins.range(5))
   #        for i in reversed(chars):
   #            x, mod = divmod(x, 85)
@@ -294,7 +294,7 @@ def _b85decode_chunks(encoded, base85_bytes, base85_ords):
   length = len(encoded)
   num_uint32s, remainder = divmod(length, 5)
   if remainder:
-    padding_byte = builtins.byte(base85_bytes[84]) # 'u' (ASCII85); '~' (RFC1924)
+    padding_byte = builtins.byte(base85_bytes[84]) # "u" (ASCII85); "~" (RFC1924)
     padding_size = 5 - remainder
     encoded += padding_byte * padding_size
     num_uint32s += 1
@@ -303,7 +303,7 @@ def _b85decode_chunks(encoded, base85_bytes, base85_ords):
     padding_size = 0
 
   #uint32s = [0] * num_uint32s
-  uint32s = array.array('I', [0] * num_uint32s)
+  uint32s = array.array("I", [0] * num_uint32s)
   j = 0
   chunk = EMPTY_BYTE
   try:
@@ -362,7 +362,7 @@ def b85encode(raw_bytes,
   as many bytes as were added as padding are removed from the end of the
   encoded sequence if ``padding`` is ``False`` (default).
 
-  Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of '!!!!!'.
+  Encodes a zero-group (\x00\x00\x00\x00) as "z" instead of "!!!!!".
 
   The resulting encoded ASCII string is *not URL-safe* nor is it
   safe to include within SGML/XML/HTML documents. You will need to escape
@@ -378,10 +378,10 @@ def b85encode(raw_bytes,
   :param _base85_bytes:
       (Internal) Character set to use.
   :param _compact_zero:
-      (Internal) Encodes a zero-group (\x00\x00\x00\x00) as 'z' instead of
-      '!!!!!' if this is ``True`` (default).
+      (Internal) Encodes a zero-group (\x00\x00\x00\x00) as "z" instead of
+      "!!!!!" if this is ``True`` (default).
   :param _compact_char:
-      (Internal) Character used to represent compact groups ('z' default)
+      (Internal) Character used to represent compact groups ("z" default)
   :returns:
       ASCII-85 encoded bytes.
   """
@@ -428,10 +428,10 @@ def b85decode(encoded,
       (Internal) A function to convert a base85 character to its ordinal
       value. You should not need to use this.
   :param _uncompact_zero:
-      (Internal) Treats 'z' (a zero-group (\x00\x00\x00\x00)) as a '!!!!!'
+      (Internal) Treats "z" (a zero-group (\x00\x00\x00\x00)) as a "!!!!!"
       if ``True`` (default).
   :param _compact_char:
-      (Internal) Character used to represent compact groups ('z' default)
+      (Internal) Character used to represent compact groups ("z" default)
   :returns:
       ASCII85-decoded raw bytes.
   """
@@ -460,7 +460,7 @@ def b85decode(encoded,
   if suffix and encoded.endswith(suffix):
     encoded = encoded[:-len(suffix)]
 
-  # Replace all the 'z' occurrences with '!!!!!'
+  # Replace all the "z" occurrences with "!!!!!"
   if _uncompact_zero:
     _check_compact_char_occurrence(encoded, _compact_char)
     encoded = encoded.replace(_compact_char, EXCLAMATION_CHUNK)
@@ -547,8 +547,8 @@ def ipv6_b85encode(uint128,
   #        uint128, remainder = divmod(uint128, 85)
   #        encoded[i] = _base85_chars[remainder]
   # Above loop unrolled:
-  # struct.pack('B' * 20, ...)
-  return struct.pack('BBBBBBBBBBBBBBBBBBBB',
+  # struct.pack("B" * 20, ...)
+  return struct.pack("BBBBBBBBBBBBBBBBBBBB",
               _base85_bytes[(uint128 // POW_85[19])],
               # Don't need %85. Already < 85
               _base85_bytes[(uint128 // POW_85[18]) % 85],

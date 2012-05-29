@@ -57,7 +57,7 @@ def bytearray_create(sequence):
   :returns:
       A byte array.
   """
-  return array('B', sequence)
+  return array("B", sequence)
 
 
 def bytearray_create_zeros(count):
@@ -69,7 +69,7 @@ def bytearray_create_zeros(count):
   :returns:
       Zero-filled byte array.
   """
-  return array('B', [0] * count)
+  return array("B", [0] * count)
 
 
 def bytearray_concat(byte_array1, byte_array2):

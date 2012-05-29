@@ -116,7 +116,7 @@ if str is UNICODE_TYPE:
     performance so define these as constants in your code instead. Don't call it
     repeatedly inside tight loops.
     """
-    return literal.encode('latin1')
+    return literal.encode("latin1")
 else:
 
   def byte_literal(literal):

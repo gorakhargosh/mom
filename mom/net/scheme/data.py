@@ -57,8 +57,8 @@ EMPTY_BYTE = _compat.EMPTY_BYTE
 
 
 def data_urlencode(raw_bytes,
-                   mime_type=b('text/plain'),
-                   charset=b('US-ASCII'),
+                   mime_type=b("text/plain"),
+                   charset=b("US-ASCII"),
                    encoder="base64"):
   """
   Encodes raw bytes into a data URL scheme string.
@@ -69,7 +69,7 @@ def data_urlencode(raw_bytes,
       The mime type, e.g. b"text/css" or b"image/png". Default b"text/plain".
   :param charset:
       b"utf-8" if you want the data URL to contain a b"charset=utf-8"
-      component. Default b'US-ASCII'. This does not mean however, that your
+      component. Default b"US-ASCII". This does not mean however, that your
       raw_bytes will be encoded by this function. You must ensure that
       if you specify, b"utf-8" (or anything else) as the encoding, you
       have encoded your raw data appropriately.
@@ -87,7 +87,7 @@ def data_urlencode(raw_bytes,
     encoding = b(";base64,")
   else:
     # We want ASCII bytes.
-    encode = lambda data: quote(data).encode('ascii')
+    encode = lambda data: quote(data).encode("ascii")
     encoding = b(",")
   mime_type = mime_type or EMPTY_BYTE
 

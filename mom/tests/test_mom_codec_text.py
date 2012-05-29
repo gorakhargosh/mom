@@ -216,7 +216,7 @@ class Test_unicode_to_utf8_recursive(unittest2.TestCase):
     e = {
       b("l"): [constants.UTF8_BYTES2, constants.UTF8_BYTES],
       b("t"): (constants.UTF8_BYTES2, constants.UTF8_BYTES),
-      b("d"): {b('another'): [constants.UTF8_BYTES, constants.UTF8_BYTES2]},
+      b("d"): {b("another"): [constants.UTF8_BYTES, constants.UTF8_BYTES2]},
       b("b"): constants.UTF8_BYTES,
       b("n"): None,
       }

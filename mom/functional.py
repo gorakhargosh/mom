@@ -55,20 +55,20 @@ Python module and run it::
     # More examples.
     # Now let's list all the names of the people.
     print(pluck(people, "name"))
-    # -> ('Harry', 'Hermione', 'Rob')
+    # -> ("Harry", "Hermione", "Rob")
 
     # Let's weed out all people who don't have an "H" in their names.
     print(reject(lambda name: "H" not in name, pluck(people, "name")))
-    # -> ('Harry', 'Hermione')
+    # -> ("Harry", "Hermione")
 
     # Or let's partition them into two groups
     print(partition(lambda name: "H" in name, pluck(people, "name")))
-    # -> (['Harry', 'Hermione'], ['Rob'])
+    # -> (["Harry", "Hermione"], ["Rob"])
 
     # Let's find all the members of a module that are not exported to wildcard
     # imports by its ``__all__`` member.
     print(difference(dir(mom.functional), mom.functional.__all__))
-    # -> ['__all__', '__builtins__', ... 'repeat', 'takewhile']
+    # -> ["__all__", "__builtins__", ... "repeat", "takewhile"]
 
 
 Higher-order functions are extremely useful where you want to express yourself

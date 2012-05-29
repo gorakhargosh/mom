@@ -54,23 +54,23 @@ class Test_byte(unittest2.TestCase):
 
 class Test_bytes_leading_and_trailing(unittest2.TestCase):
   def test_leading(self):
-    self.assertEqual(builtins.bytes_leading(b('\x00\x00\x00\x00')), 4)
-    self.assertEqual(builtins.bytes_leading(b('\x00\x00\x00')), 3)
-    self.assertEqual(builtins.bytes_leading(b('\x00\x00\xff')), 2)
-    self.assertEqual(builtins.bytes_leading(b('\xff')), 0)
-    self.assertEqual(builtins.bytes_leading(b('\x00\xff')), 1)
-    self.assertEqual(builtins.bytes_leading(b('\x00')), 1)
-    self.assertEqual(builtins.bytes_leading(b('\x00\x00\x00\xff')), 3)
-    self.assertEqual(builtins.bytes_leading(b('')), 0)
+    self.assertEqual(builtins.bytes_leading(b("\x00\x00\x00\x00")), 4)
+    self.assertEqual(builtins.bytes_leading(b("\x00\x00\x00")), 3)
+    self.assertEqual(builtins.bytes_leading(b("\x00\x00\xff")), 2)
+    self.assertEqual(builtins.bytes_leading(b("\xff")), 0)
+    self.assertEqual(builtins.bytes_leading(b("\x00\xff")), 1)
+    self.assertEqual(builtins.bytes_leading(b("\x00")), 1)
+    self.assertEqual(builtins.bytes_leading(b("\x00\x00\x00\xff")), 3)
+    self.assertEqual(builtins.bytes_leading(b("")), 0)
 
   def test_trailing(self):
-    self.assertEqual(builtins.bytes_trailing(b('\x00\x00\x00\x00')), 4)
-    self.assertEqual(builtins.bytes_trailing(b('\x00\x00\x00')), 3)
-    self.assertEqual(builtins.bytes_trailing(b('\xff\x00\x00')), 2)
-    self.assertEqual(builtins.bytes_trailing(b('\xff')), 0)
-    self.assertEqual(builtins.bytes_trailing(b('\x00')), 1)
-    self.assertEqual(builtins.bytes_trailing(b('\xff\x00\x00\x00')), 3)
-    self.assertEqual(builtins.bytes_trailing(b('')), 0)
+    self.assertEqual(builtins.bytes_trailing(b("\x00\x00\x00\x00")), 4)
+    self.assertEqual(builtins.bytes_trailing(b("\x00\x00\x00")), 3)
+    self.assertEqual(builtins.bytes_trailing(b("\xff\x00\x00")), 2)
+    self.assertEqual(builtins.bytes_trailing(b("\xff")), 0)
+    self.assertEqual(builtins.bytes_trailing(b("\x00")), 1)
+    self.assertEqual(builtins.bytes_trailing(b("\xff\x00\x00\x00")), 3)
+    self.assertEqual(builtins.bytes_trailing(b("")), 0)
 
   def test_TypeError_when_bad_type(self):
     self.assertRaises(TypeError, builtins.bytes_trailing, constants.UNICODE_STRING)
@@ -83,37 +83,37 @@ class Test_bytes_leading_and_trailing(unittest2.TestCase):
 
 class Test_bin(unittest2.TestCase):
   def test_binary_0_1_and_minus_1(self):
-    self.assertEqual(bin(0), '0b0')
-    self.assertEqual(bin(1), '0b1')
-    self.assertEqual(bin(-1), '-0b1')
+    self.assertEqual(bin(0), "0b0")
+    self.assertEqual(bin(1), "0b1")
+    self.assertEqual(bin(-1), "-0b1")
 
   def test_binary_value(self):
-    self.assertEqual(bin(12), '0b1100')
-    self.assertEqual(bin(2 ** 32), '0b100000000000000000000000000000000')
+    self.assertEqual(bin(12), "0b1100")
+    self.assertEqual(bin(2 ** 32), "0b100000000000000000000000000000000")
 
   def test_binary_negative_value(self):
-    self.assertEqual(bin(-1200), '-0b10010110000')
+    self.assertEqual(bin(-1200), "-0b10010110000")
 
   def test_binary_default_prefix(self):
-    self.assertEqual(bin(0), '0b0')
-    self.assertEqual(bin(1), '0b1')
-    self.assertEqual(bin(12), '0b1100')
-    self.assertEqual(bin(2 ** 32), '0b100000000000000000000000000000000')
-    self.assertEqual(bin(-1200), '-0b10010110000')
+    self.assertEqual(bin(0), "0b0")
+    self.assertEqual(bin(1), "0b1")
+    self.assertEqual(bin(12), "0b1100")
+    self.assertEqual(bin(2 ** 32), "0b100000000000000000000000000000000")
+    self.assertEqual(bin(-1200), "-0b10010110000")
 
   def test_binary_custom_prefix(self):
-    self.assertEqual(bin(0, 'B'), 'B0')
-    self.assertEqual(bin(1, 'B'), 'B1')
-    self.assertEqual(bin(12, 'B'), 'B1100')
-    self.assertEqual(bin(2 ** 32, 'B'), 'B100000000000000000000000000000000')
-    self.assertEqual(bin(-1200, 'B'), '-B10010110000')
+    self.assertEqual(bin(0, "B"), "B0")
+    self.assertEqual(bin(1, "B"), "B1")
+    self.assertEqual(bin(12, "B"), "B1100")
+    self.assertEqual(bin(2 ** 32, "B"), "B100000000000000000000000000000000")
+    self.assertEqual(bin(-1200, "B"), "-B10010110000")
 
   def test_binary_no_prefix(self):
-    self.assertEqual(bin(0, None), '0')
-    self.assertEqual(bin(1, ''), '1')
-    self.assertEqual(bin(12, None), '1100')
-    self.assertEqual(bin(2 ** 32, None), '100000000000000000000000000000000')
-    self.assertEqual(bin(-1200, None), '-10010110000')
+    self.assertEqual(bin(0, None), "0")
+    self.assertEqual(bin(1, ""), "1")
+    self.assertEqual(bin(12, None), "1100")
+    self.assertEqual(bin(2 ** 32, None), "100000000000000000000000000000000")
+    self.assertEqual(bin(-1200, None), "-10010110000")
 
   def test_raises_TypeError_when_invalid_argument(self):
     self.assertRaises(TypeError, bin, None, None)
@@ -124,37 +124,37 @@ class Test_bin(unittest2.TestCase):
 
 class Test_hex(unittest2.TestCase):
   def test_hex_0_1_and_minus_1(self):
-    self.assertEqual(hex(0), '0x0')
-    self.assertEqual(hex(1), '0x1')
-    self.assertEqual(hex(-1), '-0x1')
+    self.assertEqual(hex(0), "0x0")
+    self.assertEqual(hex(1), "0x1")
+    self.assertEqual(hex(-1), "-0x1")
 
   def test_hex_value(self):
-    self.assertEqual(hex(12), '0xc')
-    self.assertEqual(hex(2 ** 32), '0x100000000')
+    self.assertEqual(hex(12), "0xc")
+    self.assertEqual(hex(2 ** 32), "0x100000000")
 
   def test_hex_negative_value(self):
-    self.assertEqual(hex(-1200), '-0x4b0')
+    self.assertEqual(hex(-1200), "-0x4b0")
 
   def test_hex_default_prefix(self):
-    self.assertEqual(hex(0), '0x0')
-    self.assertEqual(hex(1), '0x1')
-    self.assertEqual(hex(12), '0xc')
-    self.assertEqual(hex(2 ** 32), '0x100000000')
+    self.assertEqual(hex(0), "0x0")
+    self.assertEqual(hex(1), "0x1")
+    self.assertEqual(hex(12), "0xc")
+    self.assertEqual(hex(2 ** 32), "0x100000000")
 
   def test_hex_custom_prefix(self):
-    self.assertEqual(hex(0, 'X'), 'X0')
-    self.assertEqual(hex(1, 'X'), 'X1')
-    self.assertEqual(hex(12, 'X'), 'Xc')
-    self.assertEqual(hex(2 ** 32, 'X'), 'X100000000')
+    self.assertEqual(hex(0, "X"), "X0")
+    self.assertEqual(hex(1, "X"), "X1")
+    self.assertEqual(hex(12, "X"), "Xc")
+    self.assertEqual(hex(2 ** 32, "X"), "X100000000")
 
   def test_hex_lower_case(self):
-    self.assertEqual(hex(12), '0xc')
+    self.assertEqual(hex(12), "0xc")
 
   def test_hex_no_prefix(self):
-    self.assertEqual(hex(0, None), '0')
-    self.assertEqual(hex(1, ''), '1')
-    self.assertEqual(hex(12, None), 'c')
-    self.assertEqual(hex(2 ** 32, None), '100000000')
+    self.assertEqual(hex(0, None), "0")
+    self.assertEqual(hex(1, ""), "1")
+    self.assertEqual(hex(12, None), "c")
+    self.assertEqual(hex(2 ** 32, None), "100000000")
 
   def test_raises_TypeError_when_invalid_argument(self):
     self.assertRaises(TypeError, hex, None, None)
@@ -517,20 +517,20 @@ class Test_is_negative(unittest2.TestCase):
 class Test_get_machine_alignment(unittest2.TestCase):
   def test_values(self):
     if _compat.MACHINE_WORD_SIZE == 32:
-      self.assertEqual(_compat.get_word_alignment(1 << 64), (32, 4, _compat.UINT32_MAX, 'L'))
-      self.assertEqual(_compat.get_word_alignment(1 << 32), (32, 4, _compat.UINT32_MAX, 'L'))
+      self.assertEqual(_compat.get_word_alignment(1 << 64), (32, 4, _compat.UINT32_MAX, "L"))
+      self.assertEqual(_compat.get_word_alignment(1 << 32), (32, 4, _compat.UINT32_MAX, "L"))
     elif _compat.MACHINE_WORD_SIZE == 64:
-      self.assertEqual(_compat.get_word_alignment(1 << 64), (64, 8, _compat.UINT64_MAX, 'Q'))
-      self.assertEqual(_compat.get_word_alignment(1 << 32), (64, 8, _compat.UINT64_MAX, 'Q'))
+      self.assertEqual(_compat.get_word_alignment(1 << 64), (64, 8, _compat.UINT64_MAX, "Q"))
+      self.assertEqual(_compat.get_word_alignment(1 << 32), (64, 8, _compat.UINT64_MAX, "Q"))
     else:
       raise NotImplementedError("Do we support other than 32/64-bit?")
       # Anything 32-bit or below:
     values = [
-      (1 << 31, (32, 4, _compat.UINT32_MAX, 'L')),
-      (1 << 16, (32, 4, _compat.UINT32_MAX, 'L')),
-      (1 << 15, (16, 2, _compat.UINT16_MAX, 'H')),
-      (1 << 8, (16, 2, _compat.UINT16_MAX, 'H')),
-      (1 << 7, (8, 1, _compat.UINT8_MAX, 'B'))
+      (1 << 31, (32, 4, _compat.UINT32_MAX, "L")),
+      (1 << 16, (32, 4, _compat.UINT32_MAX, "L")),
+      (1 << 15, (16, 2, _compat.UINT16_MAX, "H")),
+      (1 << 8, (16, 2, _compat.UINT16_MAX, "H")),
+      (1 << 7, (8, 1, _compat.UINT8_MAX, "B"))
     ]
     for num, tup in values:
       self.assertEqual(_compat.get_word_alignment(num), tup, "%d, %r" % (num, tup))

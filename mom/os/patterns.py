@@ -46,10 +46,10 @@ from mom import functional
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-__all__ = ['match_path',
-           'match_path_against',
-           'match_any_paths',
-           'filter_paths']
+__all__ = ["match_path",
+           "match_path_against",
+           "match_any_paths",
+           "filter_paths"]
 
 
 def _string_lower(string):
@@ -102,7 +102,7 @@ def _match_path(pathname,
     excluded_patterns = set(excluded_patterns)
   common_patterns = included_patterns & excluded_patterns
   if common_patterns:
-    raise ValueError('conflicting patterns `%s` included and excluded'\
+    raise ValueError("conflicting patterns `%s` included and excluded"\
     % common_patterns)
   return (match_path_against(pathname, included_patterns, case_sensitive) and
           not match_path_against(pathname, excluded_patterns,

@@ -39,7 +39,7 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 if _compat.HAVE_PYTHON3:
   json_dumps = _json_compat.json_dumps
 else:
-  json_dumps = lambda o: _json_compat.json_dumps(o).decode('utf-8')
+  json_dumps = lambda o: _json_compat.json_dumps(o).decode("utf-8")
 
 
 def json_encode(obj):

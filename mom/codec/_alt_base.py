@@ -50,7 +50,7 @@ ZERO_BYTE = _compat.ZERO_BYTE
 UINT128_MAX = _compat.UINT128_MAX
 EMPTY_BYTE = _compat.EMPTY_BYTE
 
-WHITESPACE_PATTERN = re.compile(b(r'(\s)*'), re.MULTILINE)
+WHITESPACE_PATTERN = re.compile(b(r"(\s)*"), re.MULTILINE)
 
 
 def b58encode_naive(raw_bytes,
@@ -159,7 +159,7 @@ def b62decode_naive(encoded,
   if number:
     raw_bytes = integer.uint_to_bytes(number)
   else:
-    # We don't want to convert to b'\x00' when we get number == 0.
+    # We don't want to convert to b"\x00" when we get number == 0.
     # That would add an off-by-one extra zero byte in the result.
     raw_bytes = EMPTY_BYTE
 
@@ -211,7 +211,7 @@ def b58decode_naive(encoded,
   if number:
     raw_bytes = integer.uint_to_bytes(number)
   else:
-    # We don't want to convert to b'\x00' when we get number == 0.
+    # We don't want to convert to b"\x00" when we get number == 0.
     # That would add an off-by-one extra zero byte in the result.
     raw_bytes = EMPTY_BYTE
 
@@ -285,7 +285,7 @@ def ipv6_b85encode_naive(uint128,
     raise OverflowError("Number is not a 128-bit unsigned integer: %d" %
                         uint128)
     #encoded = list(range(20))
-  encoded = array.array('B', list(range(20)))
+  encoded = array.array("B", list(range(20)))
   for i in reversed(encoded):
     uint128, remainder = divmod(uint128, 85)
     encoded[i] = _base85_bytes[remainder]

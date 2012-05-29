@@ -46,7 +46,7 @@ Terminology
 
         Unicode string   -> Encoded bytes
         ---------------------------------
-        '深入 Python'     -> b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python'
+        "深入 Python"     -> b"\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python"
 
   The **encoding** (method) used to *encode* in this example is UTF-8.
 
@@ -55,7 +55,7 @@ Terminology
 
         Encoded bytes                      -> Unicode string
         ----------------------------------------------------
-        b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python' -> '深入 Python'
+        b"\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python" -> "深入 Python"
 
   The **encoding** (method) used to *decode* in this example is UTF-8.
 
@@ -63,16 +63,16 @@ A very crude explanation of when to use what
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Essentially, inside your own system, work with::
 
-    '深入 Python'
+    "深入 Python"
 
 and not::
 
-    b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python'
+    b"\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python"
 
-but when sending things out to other systems that may not see `'深入 Python'`
+but when sending things out to other systems that may not see `"深入 Python"`
 the way Python does, you encode it into UTF-8 bytes::
 
-    b'\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python'
+    b"\\xe6\\xb7\\xb1\\xe5\\x85\\xa5 Python"
 
 **and tell** those systems that you're using UTF-8 to encode your Unicode
 strings so that those systems can decode the bytes you sent appropriately.

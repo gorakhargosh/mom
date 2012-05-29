@@ -448,13 +448,13 @@ def primes_upto2_gen3(limit):
       yield n
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
   import itertools
   import sys
 
   def test(f1, f2, num):
     """Test generator."""
-    print('Testing {f1} and {f2} return same results'.format(
+    print("Testing {f1} and {f2} return same results".format(
       f1=f1.func_name,
       f2=f2.func_name))
     if not all(

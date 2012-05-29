@@ -35,10 +35,10 @@ b = builtins.b
 
 RANDOM_BYTES_LEN_512 = random.generate_random_bytes(512)
 
-ZERO_BYTES = b('\x00\x00\x00\x00')
-ONE_ZERO_BYTE = b('\x00')
-RAW_DATA = codec.hex_decode(b('005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64'))
-ENCODED = b('01041W9weGIezvwKmSO0laL8BGx4qp64Q8')
+ZERO_BYTES = b("\x00\x00\x00\x00")
+ONE_ZERO_BYTE = b("\x00")
+RAW_DATA = codec.hex_decode(b("005cc87f4a3fdfe3a2346b6953267ca867282630d3f9b78e64"))
+ENCODED = b("01041W9weGIezvwKmSO0laL8BGx4qp64Q8")
 ENCODED_WITH_WHITESPACE = b("""
 01041W9weGIezvwKmS
 O0laL8BGx4qp64Q8
@@ -85,19 +85,19 @@ class Test_base62_codec(unittest2.TestCase):
     self.assertEqual(codec.base62_decode(codec.base62_encode(PADDING_RAW)), PADDING_RAW)
 
   def test_zero_bytes(self):
-    self.assertEqual(base62.b62encode(ZERO_BYTES), b('0000'))
-    self.assertEqual(_alt_base.b62encode_naive(ZERO_BYTES), b('0000'))
-    self.assertEqual(base62.b62decode(b('0000')), ZERO_BYTES)
-    self.assertEqual(_alt_base.b62decode_naive(b('0000')), ZERO_BYTES)
-    self.assertEqual(base62.b62encode(ONE_ZERO_BYTE), b('0'))
-    self.assertEqual(_alt_base.b62encode_naive(ONE_ZERO_BYTE), b('0'))
-    self.assertEqual(base62.b62decode(b('0')), ONE_ZERO_BYTE)
-    self.assertEqual(_alt_base.b62decode_naive(b('0')), ONE_ZERO_BYTE)
+    self.assertEqual(base62.b62encode(ZERO_BYTES), b("0000"))
+    self.assertEqual(_alt_base.b62encode_naive(ZERO_BYTES), b("0000"))
+    self.assertEqual(base62.b62decode(b("0000")), ZERO_BYTES)
+    self.assertEqual(_alt_base.b62decode_naive(b("0000")), ZERO_BYTES)
+    self.assertEqual(base62.b62encode(ONE_ZERO_BYTE), b("0"))
+    self.assertEqual(_alt_base.b62encode_naive(ONE_ZERO_BYTE), b("0"))
+    self.assertEqual(base62.b62decode(b("0")), ONE_ZERO_BYTE)
+    self.assertEqual(_alt_base.b62decode_naive(b("0")), ONE_ZERO_BYTE)
 
-    self.assertEqual(codec.base62_encode(ZERO_BYTES), b('0000'))
-    self.assertEqual(codec.base62_decode(b('0000')), ZERO_BYTES)
-    self.assertEqual(codec.base62_encode(ONE_ZERO_BYTE), b('0'))
-    self.assertEqual(codec.base62_decode(b('0')), ONE_ZERO_BYTE)
+    self.assertEqual(codec.base62_encode(ZERO_BYTES), b("0000"))
+    self.assertEqual(codec.base62_decode(b("0000")), ZERO_BYTES)
+    self.assertEqual(codec.base62_encode(ONE_ZERO_BYTE), b("0"))
+    self.assertEqual(codec.base62_decode(b("0")), ONE_ZERO_BYTE)
 
   def test_encoding_and_decoding(self):
     self.assertEqual(base62.b62encode(RAW_DATA), ENCODED)

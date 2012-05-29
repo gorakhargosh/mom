@@ -90,7 +90,7 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 ASCII58_BYTES = ("123456789"
                  "ABCDEFGHJKLMNPQRSTUVWXYZ"
                  "abcdefghijkmnopqrstuvwxyz").encode("ascii")
-# Therefore, b'1' represents b'\0'.
+# Therefore, b"1" represents b"\0".
 ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_BYTES))
 
 
@@ -102,7 +102,7 @@ ASCII58_ORDS = dict((x, i) for i, x in enumerate(ASCII58_BYTES))
 ALT58_BYTES = ("123456789"
                "abcdefghijkmnopqrstuvwxyz"
                "ABCDEFGHJKLMNPQRSTUVWXYZ").encode("ascii")
-# Therefore, b'1' represents b'\0'.
+# Therefore, b"1" represents b"\0".
 ALT58_ORDS = dict((x, i) for i, x in enumerate(ALT58_BYTES))
 
 if _compat.HAVE_PYTHON3:

@@ -32,10 +32,10 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 b = builtins.b
 
-INPUT_MD5_DIGEST = b('\xe8\x0bP\x17\t\x89P\xfcX\xaa\xd8<\x8c\x14\x97\x8e')
+INPUT_MD5_DIGEST = b("\xe8\x0bP\x17\t\x89P\xfcX\xaa\xd8<\x8c\x14\x97\x8e")
 
 INPUT_SHA1_DIGEST = b(
-  '\x1f\x8a\xc1\x0f#\xc5\xb5\xbc\x11g\xbd\xa8K\x83>\\\x05zw\xd2')
+  "\x1f\x8a\xc1\x0f#\xc5\xb5\xbc\x11g\xbd\xa8K\x83>\\\x05zw\xd2")
 
 INPUTS = [b("ab"), b("cd"), b("ef")]
 
@@ -54,7 +54,7 @@ oauth_timestamp%3D137131202%26\
 oauth_token%3Dnnch734d00sl2jdk%26\
 size%3Doriginal""")
 
-EXPECTED_HMAC_SHA1_DIGEST = b('1\xdaPqO"=%#Z\x83\x7fP3,+k.\x8b\xd2')
+EXPECTED_HMAC_SHA1_DIGEST = b("""1\xdaPqO"=%#Z\x83\x7fP3,+k.\x8b\xd2""")
 
 EXPECTED_HMAC_SHA1_BASE64_DIGEST = b("MdpQcU8iPSUjWoN/UDMsK2sui9I=")
 

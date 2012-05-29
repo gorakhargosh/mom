@@ -37,7 +37,7 @@ RAW = b("""Man is distinguished, not only by his reason, but by this
 singular passion from other animals, which is a lust of the
 mind, that by a perseverance of delight in the continued and
 indefatigable generation of knowledge, exceeds the short
-vehemence of any carnal pleasure.""").replace(b('\n'), b(' '))
+vehemence of any carnal pleasure.""").replace(b("\n"), b(" "))
 
 ENCODED = b("""\
 9jqo^BlbD-BleB1DJ+*+F(f,q/0JhKF<GL>Cj@.4Gp$d7F!,L7@<6@)/0JDEF<G%<+EV:2F!,\
@@ -68,25 +68,25 @@ l(DId<j@<?3r@:F%a+D58'ATD4$Bl@l3De:,-DJs`8ARoFb/0JMK@qB4^F!,R<AKZ&-DfTqBG%G
 >uD.RTpAKYo'+CT/5+Cei#DII?(E,9)oF*2M7/c~>""")
 
 
-#ipv6_address = '1080:0:0:0:8:800:200C:417A'
+#ipv6_address = "1080:0:0:0:8:800:200C:417A"
 IPV6_NUMBER = 21932261930451111902915077091070067066
-IPV6_RAW_BYTES = b('\x10\x80\x00\x00\x00\x00\x00\x00\x00\x08\x08\x00 \x0cAz')
-IPV6_ENCODED = b('4)+k&C#VzJ4br>0wv%Yp')
+IPV6_RAW_BYTES = b("\x10\x80\x00\x00\x00\x00\x00\x00\x00\x08\x08\x00 \x0cAz")
+IPV6_ENCODED = b("4)+k&C#VzJ4br>0wv%Yp")
 
 # Wikipedia example.
 #ipv6_number_2 = 2**128 - 1  # 340282366920938463463374607431768211455L
 IPV6_NUMBER_2 = (1 << 128) - 1
-IPV6_ENCODED_2 = b('=r54lj&NUUO~Hi%c2ym0')
+IPV6_ENCODED_2 = b("=r54lj&NUUO~Hi%c2ym0")
 
-#ipv6_address_3 = '2607:f8f0:610:4000:214:38ff:feee:b65a'
+#ipv6_address_3 = "2607:f8f0:610:4000:214:38ff:feee:b65a"
 IPV6_NUMBER_3 = 50552058972053811105097158630017250906
-IPV6_ENCODED_3 = b('B7RDhRib#Y+VwlwuPBOG')
+IPV6_ENCODED_3 = b("B7RDhRib#Y+VwlwuPBOG")
 
 
 # Mercurial uses RFC1924 character set, but does not encode it like
 # IPv6.
-MERCURIAL_BYTES = b('\t\x91{W\xa80\xb1')
-MERCURIAL_ENCODED = b('36XnOs4%e')
+MERCURIAL_BYTES = b("\t\x91{W\xa80\xb1")
+MERCURIAL_ENCODED = b("36XnOs4%e")
 
 RANDOM_256_BYTES = b("""U\x94<Q\x1d\xad\xe4\xe3\xd1\xd1\xddR\xfb d\
 \x01R6\xadj\xa2\x03\xa4\xc1\xc7\x92\xa1U\x18\x19\xaep\r\xfe\xaa\
@@ -112,27 +112,27 @@ RANDOM_ODD_BYTES = os.urandom(3333)
 
 # 31 bytes each.
 RANDOM_BYTES_LIST = [
-  b('a)X\xfb$$\xd1Q\xbe\xad\xb7\n\xf9\x99_\xc9\x90\xaf\rT\
-\xcf\x8d\xaaF\x0cz\xa8\xf2\x11\xd0\x1e'),
-  b('Ep\xf7a&\xbd\xce.\x16BV~N;\xbe|\x80\xadZ\xc9\xbc\xf1\
-\xf7\xec\x15>\x1c\xb0\xd9\xcd&')
+  b("a)X\xfb$$\xd1Q\xbe\xad\xb7\n\xf9\x99_\xc9\x90\xaf\rT\
+\xcf\x8d\xaaF\x0cz\xa8\xf2\x11\xd0\x1e"),
+  b("Ep\xf7a&\xbd\xce.\x16BV~N;\xbe|\x80\xadZ\xc9\xbc\xf1\
+\xf7\xec\x15>\x1c\xb0\xd9\xcd&")
 ]
 RFC_ENCODED_BYTES_LIST = [
-  b('VJTSqBqY&MzOA<k`I%qIkgp9?&yA`^40@>Y5zrn'),
-  b('MR50FCcVxs7D85jPCLGQfUR1|yz%$!6+RrW+07;'),
+  b("VJTSqBqY&MzOA<k`I%qIkgp9?&yA`^40@>Y5zrn"),
+  b("MR50FCcVxs7D85jPCLGQfUR1|yz%$!6+RrW+07;"),
   ]
 
 
 class Test_check_compact_char_occurrence(unittest2.TestCase):
   def test_valid(self):
     self.assertEqual(
-      base85._check_compact_char_occurrence(b('z12345z12345zz123!'),
-                                     b('z')), None
+      base85._check_compact_char_occurrence(b("z12345z12345zz123!"),
+                                     b("z")), None
     )
 
   def test_ValueError_when_invalid_index(self):
     self.assertRaises(ValueError, base85._check_compact_char_occurrence,
-                      b('z12345z12345zz123z!'), b('z'), 5)
+                      b("z12345z12345zz123z!"), b("z"), 5)
 
 
 class Test_base85_encode(unittest2.TestCase):
@@ -177,21 +177,21 @@ class Test_base85_decode(unittest2.TestCase):
     self.assertEqual(base85.b85decode(b("s8W-!")), b("\xff\xff\xff\xff"))
 
   def test_OverflowError_when_invalid_base85_byte_found(self):
-    self.assertRaises(OverflowError, base85.b85decode, b('xy!!!'))
+    self.assertRaises(OverflowError, base85.b85decode, b("xy!!!"))
 
   def test_decodes_z_into_zero_bytes(self):
-    self.assertEqual(base85.b85decode(b('zzz')), b('\x00') * 4 * 3)
+    self.assertEqual(base85.b85decode(b("zzz")), b("\x00") * 4 * 3)
 
   def test_decode_zero_groups(self):
-    self.assertEqual(base85.b85decode(b('!!!!!')), b('\x00') * 4)
+    self.assertEqual(base85.b85decode(b("!!!!!")), b("\x00") * 4)
 
   def test_ValueError_when_zero_char_in_middle_of_chunk(self):
-    self.assertRaises(ValueError, base85.b85decode, b('zaz'))
+    self.assertRaises(ValueError, base85.b85decode, b("zaz"))
 
 
 class Test_codec(unittest2.TestCase):
   def test_identity(self):
-    zero_bytes = b('\x00\x00\x00\x00\x00')
+    zero_bytes = b("\x00\x00\x00\x00\x00")
     self.assertEqual(base85.b85decode(base85.b85encode(zero_bytes)), zero_bytes)
     self.assertEqual(base85.b85decode(base85.b85encode(RANDOM_256_BYTES)),
                      RANDOM_256_BYTES)
@@ -206,15 +206,15 @@ class Test_codec(unittest2.TestCase):
 
   def test_raises_TypeError_when_bad_arg_types(self):
     # Prefix/suffix.
-    self.assertRaises(TypeError, base85.b85encode, b('foo'), constants.UNICODE_STRING, None)
-    self.assertRaises(TypeError, base85.b85encode, b('foo'), None, constants.UNICODE_STRING)
-    self.assertRaises(TypeError, base85.b85decode, b('foo'), constants.UNICODE_STRING, None)
-    self.assertRaises(TypeError, base85.b85decode, b('foo'), None, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, base85.b85encode, b("foo"), constants.UNICODE_STRING, None)
+    self.assertRaises(TypeError, base85.b85encode, b("foo"), None, constants.UNICODE_STRING)
+    self.assertRaises(TypeError, base85.b85decode, b("foo"), constants.UNICODE_STRING, None)
+    self.assertRaises(TypeError, base85.b85decode, b("foo"), None, constants.UNICODE_STRING)
 
     # Compact char.
-    self.assertRaises(TypeError, base85.b85encode, b('foo'),
+    self.assertRaises(TypeError, base85.b85encode, b("foo"),
                       _compact_char=constants.UNICODE_STRING)
-    self.assertRaises(TypeError, base85.b85decode, b('foo'),
+    self.assertRaises(TypeError, base85.b85decode, b("foo"),
                       _compact_char=constants.UNICODE_STRING)
 
 
@@ -230,16 +230,16 @@ class Test_rfc1924_base85_encoding(unittest2.TestCase):
     self.assertEqual(base85.rfc1924_b85decode(MERCURIAL_ENCODED), MERCURIAL_BYTES)
     self.assertEqual(base85.rfc1924_b85decode(RANDOM_256_MERCURIAL),
                      RANDOM_256_BYTES)
-    self.assertEqual(base85.rfc1924_b85decode(b('|NsC0')), b('\xff\xff\xff\xff'))
+    self.assertEqual(base85.rfc1924_b85decode(b("|NsC0")), b("\xff\xff\xff\xff"))
     for a, e in zip(RANDOM_BYTES_LIST, RFC_ENCODED_BYTES_LIST):
       self.assertEqual(base85.rfc1924_b85decode(e), a)
 
   def test_OverflowError_when_invalid_base85_byte_found(self):
-    self.assertRaises(OverflowError, base85.rfc1924_b85decode, b(']]]]]'))
+    self.assertRaises(OverflowError, base85.rfc1924_b85decode, b("]]]]]"))
 
   def test_OverflowError_when_not_decodable_chunk_found(self):
     self.assertRaises(OverflowError, base85.rfc1924_b85decode,
-                      b('|NsC')) # 0x03030303
+                      b("|NsC")) # 0x03030303
 
   def test_TypeError_when_not_bytes(self):
     self.assertRaises(TypeError, base85.rfc1924_b85decode, constants.UNICODE_STRING)
@@ -316,28 +316,28 @@ class Test_base85_ipv6_encoding(unittest2.TestCase):
 
   def test_ValueError_when_encoded_length_not_20(self):
     self.assertRaises(ValueError, base85.ipv6_b85decode,
-                      b('=r54lj&NUUO~Hi%c2ym0='))
+                      b("=r54lj&NUUO~Hi%c2ym0="))
     self.assertRaises(ValueError, base85.ipv6_b85decode,
-                      b('=r54lj&NUUO='))
+                      b("=r54lj&NUUO="))
 
     self.assertRaises(ValueError, _alt_base.ipv6_b85decode_naive,
-                      b('=r54lj&NUUO~Hi%c2ym0='))
+                      b("=r54lj&NUUO~Hi%c2ym0="))
     self.assertRaises(ValueError, _alt_base.ipv6_b85decode_naive,
-                      b('=r54lj&NUUO='))
+                      b("=r54lj&NUUO="))
 
   def test_TypeError_when_not_number(self):
     self.assertRaises(TypeError, base85.ipv6_b85encode, None)
     self.assertRaises(TypeError, _alt_base.ipv6_b85encode_naive, None)
 
   def test_ignores_whitespace(self):
-    self.assertEqual(base85.ipv6_b85decode(b('=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0')),
+    self.assertEqual(base85.ipv6_b85decode(b("=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0")),
                      IPV6_NUMBER_2)
     self.assertEqual(
-      _alt_base.ipv6_b85decode_naive(b('=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0')),
+      _alt_base.ipv6_b85decode_naive(b("=r5\t4lj&\nNUUO~   Hi%c2ym \x0b 0")),
       IPV6_NUMBER_2)
 
   def test_OverflowError_when_stray_characters_found(self):
     self.assertRaises(OverflowError, base85.ipv6_b85decode,
-                      b('=r54lj&NUUO~Hi,./:[]'))
+                      b("=r54lj&NUUO~Hi,./:[]"))
     self.assertRaises(OverflowError, _alt_base.ipv6_b85decode_naive,
-                      b('=r54lj&NUUO~Hi,./:[]'))
+                      b("=r54lj&NUUO~Hi,./:[]"))

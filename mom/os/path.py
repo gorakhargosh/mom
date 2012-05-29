@@ -44,15 +44,15 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  'get_dir_walker',
-  'walk',
-  'listdir',
-  'list_directories',
-  'list_files',
-  'absolute_path',
-  'real_absolute_path',
-  'parent_dir_path',
-  ]
+    "get_dir_walker",
+    "walk",
+    "listdir",
+    "list_directories",
+    "list_files",
+    "absolute_path",
+    "real_absolute_path",
+    "parent_dir_path",
+    ]
 
 
 def get_dir_walker(recursive, topdown=True, followlinks=False):
@@ -66,11 +66,15 @@ def get_dir_walker(recursive, topdown=True, followlinks=False):
       A walker function.
   """
   if recursive:
-    walker = functools.partial(os.walk, topdown=topdown, followlinks=followlinks)
+    walker = functools.partial(os.walk,
+                               topdown=topdown,
+                               followlinks=followlinks)
   else:
     def walker(path, topdown=topdown, followlinks=followlinks):
       """Alternative walker."""
-      yield builtins.next(os.walk(path, topdown=topdown, followlinks=followlinks))
+      yield builtins.next(os.walk(path,
+                                  topdown=topdown,
+                                  followlinks=followlinks))
   return walker
 
 
@@ -125,14 +129,14 @@ def list_directories(dir_pathname,
                      topdown=True,
                      followlinks=False):
   """
-  Enlists all the directories using their absolute paths within the specified
-  directory, optionally non-recursively.
+  Enlists all the directories using their absolute paths within the
+  specified directory, optionally non-recursively.
 
   :param dir_pathname:
       The directory to traverse.
   :param recursive:
-      ``True`` (default) for walking recursively through the directory tree;
-      ``False`` otherwise.
+      ``True`` (default) for walking recursively through the directory
+      tree; ``False`` otherwise.
   :param topdown:
       Please see the documentation for :func:`os.walk`
   :param followlinks:
@@ -149,8 +153,8 @@ def list_files(dir_pathname,
                topdown=True,
                followlinks=False):
   """
-  Enlists all the files using their absolute paths within the specified
-  directory, optionally recursively.
+  Enlists all the files using their absolute paths within the
+  specified directory, optionally recursively.
 
   :param dir_pathname:
       The directory to traverse.
@@ -170,7 +174,8 @@ def list_files(dir_pathname,
 
 def absolute_path(path):
   """
-  Returns the absolute path for the given path and normalizes the path.
+  Returns the absolute path for the given path and normalizes the
+  path.
 
   :param path:
       Path for which the absolute normalized path will be found.

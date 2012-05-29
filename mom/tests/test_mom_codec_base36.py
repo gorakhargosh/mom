@@ -56,24 +56,24 @@ class Test_base36_codec(unittest2.TestCase):
     self.assertEqual(codec.base36_decode(codec.base36_encode(RAW_DATA)), RAW_DATA)
 
   def test_zero_bytes(self):
-    self.assertEqual(base36.b36encode(ZERO_BYTES_4), b('0000'))
-    self.assertEqual(base36.b36decode(b('0000')), ZERO_BYTES_4)
-    self.assertEqual(base36.b36encode(ZERO_BYTE), b('0'))
-    self.assertEqual(base36.b36decode(b('0')), ZERO_BYTE)
+    self.assertEqual(base36.b36encode(ZERO_BYTES_4), b("0000"))
+    self.assertEqual(base36.b36decode(b("0000")), ZERO_BYTES_4)
+    self.assertEqual(base36.b36encode(ZERO_BYTE), b("0"))
+    self.assertEqual(base36.b36decode(b("0")), ZERO_BYTE)
 
-    self.assertEqual(codec.base36_encode(ZERO_BYTES_4), b('0000'))
-    self.assertEqual(codec.base36_decode(b('0000')), ZERO_BYTES_4)
-    self.assertEqual(codec.base36_encode(ZERO_BYTE), b('0'))
-    self.assertEqual(codec.base36_decode(b('0')), ZERO_BYTE)
+    self.assertEqual(codec.base36_encode(ZERO_BYTES_4), b("0000"))
+    self.assertEqual(codec.base36_decode(b("0000")), ZERO_BYTES_4)
+    self.assertEqual(codec.base36_encode(ZERO_BYTE), b("0"))
+    self.assertEqual(codec.base36_decode(b("0")), ZERO_BYTE)
 
   def test_hello_world(self):
-    hello_world = b('\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64')
+    hello_world = b("\x48\x65\x6c\x6c\x6f\x20\x77\x6f\x72\x6c\x64")
     encoded_hello_world = base36.b36encode(hello_world)
     self.assertEqual(base36.b36decode(encoded_hello_world), hello_world)
 
   def test_decoder_ignores_whitespace(self):
-    hello_world_encoded = b(' \nFUV      RSIVVNF\nRBJW\tAJO\x0b')
-    self.assertEqual(base36.b36decode(hello_world_encoded), b('hello world'))
+    hello_world_encoded = b(" \nFUV      RSIVVNF\nRBJW\tAJO\x0b")
+    self.assertEqual(base36.b36decode(hello_world_encoded), b("hello world"))
 
   def test_wikipedia_encoding(self):
     encoding_table = [

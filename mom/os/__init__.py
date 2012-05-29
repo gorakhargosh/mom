@@ -24,13 +24,14 @@
 .. automodule:: mom.os.patterns
 """
 
-from mom.os import path, patterns
+from mom.os import path
+from mom.os import patterns
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "path",
-  "patterns",
-  ]
+    "path",
+    "patterns",
+    ]

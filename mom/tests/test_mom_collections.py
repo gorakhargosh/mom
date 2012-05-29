@@ -151,8 +151,8 @@ class TestSetQueue(unittest2.TestCase):
       def __hash__(self):
         return hash(self._key)
 
-    foo = QueuedEvent('foo')
-    bar = QueuedEvent('bar')
+    foo = QueuedEvent("foo")
+    bar = QueuedEvent("bar")
     event_list = [
       foo,
       foo,
