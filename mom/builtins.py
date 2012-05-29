@@ -94,11 +94,11 @@ People screw these up too. Useful in functional programming.
 from __future__ import absolute_import
 
 # pylint: disable-msg=R0801
-try: #pragma: no cover
+try:  # pragma: no cover
   import psyco
 
   psyco.full()
-except ImportError: #pragma: no cover
+except ImportError:  # pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
@@ -291,7 +291,7 @@ def is_sequence(obj):
   try:
     list(obj)
     return True
-  except TypeError: #, exception:
+  except TypeError:  #, exception:
     #assert "is not iterable" in bytes(exception)
     return False
 

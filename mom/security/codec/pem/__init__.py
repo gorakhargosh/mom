@@ -41,6 +41,7 @@ Miscellaneous
 from __future__ import absolute_import
 
 import functools
+import time
 
 from mom import codec
 
@@ -86,8 +87,6 @@ def cert_time_to_seconds(cert_time):
   :returns:
       Python time value.
   """
-  import time
-
   return time.mktime(time.strptime(cert_time, "%b %d %H:%M:%S %Y GMT"))
 
 
@@ -109,10 +108,10 @@ def pem_to_der(pem_cert_string, pem_header, pem_footer):
   pem_cert_string = pem_cert_string.strip()
   if not pem_cert_string.startswith(pem_header):
     raise ValueError("Invalid PEM encoding; must start with %s"
-    % pem_header)
+                     % pem_header)
   if not pem_cert_string.endswith(pem_footer):
     raise ValueError("Invalid PEM encoding; must end with %s"
-    % pem_footer)
+                     % pem_footer)
   encoded = pem_cert_string[len(pem_header):-len(pem_footer)]
   return codec.base64_decode(encoded)
 

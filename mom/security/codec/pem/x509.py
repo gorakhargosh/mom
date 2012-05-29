@@ -24,11 +24,13 @@
 
 from __future__ import absolute_import
 
+from pyasn1.codec.der import decoder
+from pyasn1.codec.der import encoder
+from pyasn1.type import univ
+
 from mom import builtins
 from mom.security.codec import pem
 from mom.security.codec.asn1.x509 import Certificate
-from pyasn1.codec.der import encoder, decoder
-from pyasn1.type import univ
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -54,15 +56,14 @@ class X509Certificate(object):
     spki = self.subject_public_key_info
     algorithm = spki.getComponentByName("algorithm")[0]
     if algorithm != self._RSA_OID:
-      raise NotImplementedError(
-        "Only RSA encryption is supported: got algorithm `%r`"\
-        % algorithm)
+      raise NotImplementedError("Only RSA encryption is supported: "
+                                "got algorithm `%r`" % algorithm)
     modulus, exponent = self.parse_public_rsa_key_bits(
-      spki.getComponentByName("subjectPublicKey"))
+        spki.getComponentByName("subjectPublicKey"))
     return dict(
-      modulus=modulus,
-      exponent=exponent,
-      )
+        modulus=modulus,
+        exponent=exponent,
+        )
 
   @property
   def tbs_certificate(self):
@@ -90,8 +91,8 @@ class X509Certificate(object):
       raise ValueError("Problem ASN.1 decoding public key bytes")
 
     if len(public_key_asn1[0]) < 2:
-      raise ValueError(
-        "Couldn't obtain RSA modulus and exponent from public key.")
+      raise ValueError("Couldn't obtain RSA modulus and "
+                       "exponent from public key.")
 
     return int(public_key_asn1[0][0]), int(public_key_asn1[0][1])
 
@@ -109,7 +110,8 @@ class X509Certificate(object):
     return pem.der_to_pem_certificate(encoder.encode(certificate_asn1))
 
 
-TEST_CERTIFICATES = ("""
+TEST_CERTIFICATES = (
+    """
 -----BEGIN CERTIFICATE-----
 MIIDHzCCAoigAwIBAgIQZMuxK+KKS5wF/rjXp3z/KTANBgkqhkiG9w0BAQUFADCB
 hzELMAkGA1UEBhMCWkExIjAgBgNVBAgTGUZPUiBURVNUSU5HIFBVUlBPU0VTIE9O
@@ -129,8 +131,8 @@ gYEABdPtdX56mPwSfPMzgSLH7RueLZi5HXqW2krojWsOv3VFnayQKuzXdy5DZrMY
 /tI2AUPXicvBW3GjTfSKmUNvsOXUIC8az3K3iTs1KKekUaidLRlaRZIO0FVEJH5u
 gO9HqAcXxrx99/3agvAVTKAFBFJtiWD1i1LkYeqKrPQOPo8=
 -----END CERTIFICATE-----""",
-                     # OAuth 1.0 test case.
-                     """
+    # OAuth 1.0 test case.
+    """
 -----BEGIN CERTIFICATE-----
 MIIBpjCCAQ+gAwIBAgIBATANBgkqhkiG9w0BAQUFADAZMRcwFQYDVQQDDA5UZXN0
 IFByaW5jaXBhbDAeFw03MDAxMDEwODAwMDBaFw0zODEyMzEwODAwMDBaMBkxFzAV
@@ -142,17 +144,13 @@ DQEBBQUAA4GBAGZLPEuJ5SiJ2ryq+CmEGOXfvlTtEL2nuGtr9PewxkgnOjZpUy+d
 4TvuXJbNQc8f4AMWL/tO9w0Fk80rWKp9ea8/df4qMq5qlFWlx6yOLQxumNOmECKb
 WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
 -----END CERTIFICATE-----"""
-  )
+    )
 
 # pylint: disable-msg=C0301
 TEST_PUBLIC_KEYS = (
-  (
-  126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731
-  ,
-  65537),
-  (
-  107796453724127466436509607023300853823148671381186269695418299876688451275586863210602390910751033980089586659623213376886118860658943925516474941572267483546063696504972995209865305723609365133051508378295496906014585319487318439832859683449024036092870160203868280352941275868168286901714810544167406768319
-  ,
-  65537),
-  )
+    (126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731,
+     65537),
+    (107796453724127466436509607023300853823148671381186269695418299876688451275586863210602390910751033980089586659623213376886118860658943925516474941572267483546063696504972995209865305723609365133051508378295496906014585319487318439832859683449024036092870160203868280352941275868168286901714810544167406768319,
+     65537),
+    )
 # pylint: enable-msg=C0301

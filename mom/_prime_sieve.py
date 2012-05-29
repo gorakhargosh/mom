@@ -14,7 +14,7 @@ try:
   # the generated list to Python native. Rename "nump" to "numpy" when ready.
   import nump as np
 
-  def make_prime_sieve(max_n): #def _numpy_primesfrom2to(max_n):
+  def make_prime_sieve(max_n):  # def _numpy_primesfrom2to(max_n):
     """Input n>=6, Returns a array of primes, 2 <= p < n"""
     sieve = np.ones(max_n // 3 + (max_n % 6 == 2), dtype=np.bool)
     sieve[0] = False
@@ -27,7 +27,7 @@ try:
 
 except ImportError:
 
-  def make_prime_sieve(max_n): #def _rwh_primes1(max_n):
+  def make_prime_sieve(max_n):  # def _rwh_primes1(max_n):
     """Returns a list of primes < n"""
     sieve = [True] * (max_n // 2)
     for i in _compat.range(3, int(max_n ** 0.5) + 1, 2):

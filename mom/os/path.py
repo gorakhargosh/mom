@@ -35,6 +35,7 @@ Functions
 from __future__ import absolute_import
 
 import os
+import functools
 
 from mom import builtins
 from os import path
@@ -166,8 +167,7 @@ def list_files(dir_pathname,
   :param followlinks:
       Please see the documentation for :func:`os.walk`
   """
-  for root, _, file_names in walk(
-    dir_pathname, recursive, topdown, followlinks):
+  for root, _, file_names in walk(dir_pathname, recursive, topdown, followlinks):
     for file_name in file_names:
       yield absolute_path(path.join(root, file_name))
 

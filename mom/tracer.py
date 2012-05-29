@@ -127,7 +127,7 @@ def trace_instancemethod(klass, method, write=sys.stdout.write):
   See: http://www.python.org/doc/current/ref/types.html
   """
   mname = method_name(method)
-  never_trace = "__str__", "__repr__", # Avoid recursion printing method calls
+  never_trace = "__str__", "__repr__",  # Avoid recursion printing method calls
   if mname in never_trace:
     pass
   elif is_classmethod(method):

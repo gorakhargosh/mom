@@ -21,11 +21,11 @@
 from __future__ import absolute_import
 
 # pylint: disable-msg=R0801
-try: #pragma: no cover
+try:  # pragma: no cover
   import psyco
 
   psyco.full()
-except ImportError: #pragma: no cover
+except ImportError:  # pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
@@ -245,9 +245,8 @@ def ipv6_b85decode_naive(encoded,
       A 128-bit unsigned integer.
   """
   if not builtins.is_bytes(encoded):
-    raise TypeError(
-      "Encoded sequence must be bytes: got %r" % type(encoded).__name__
-    )
+    raise TypeError("Encoded sequence must be bytes: got %r" %
+                    type(encoded).__name__)
     # Ignore whitespace.
   encoded = EMPTY_BYTE.join(encoded.split())
   if len(encoded) != 20:
@@ -257,10 +256,10 @@ def ipv6_b85decode_naive(encoded,
     for char in encoded:
       uint128 = uint128 * 85 + _base85_ords[char]
   except KeyError:
-    raise OverflowError("Cannot decode `%r -- may contain stray "\
+    raise OverflowError("Cannot decode `%r -- may contain stray "
                         "ASCII bytes" % encoded)
   if uint128 > UINT128_MAX:
-    raise OverflowError("Cannot decode `%r` -- may contain stray "\
+    raise OverflowError("Cannot decode `%r` -- may contain stray "
                         "ASCII bytes" % encoded)
   return uint128
 

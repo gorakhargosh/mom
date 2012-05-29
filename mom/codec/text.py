@@ -141,8 +141,8 @@ def utf8_encode(unicode_text):
   if unicode_text is None or builtins.is_bytes(unicode_text):
     return unicode_text
   if not builtins.is_unicode(unicode_text):
-    raise TypeError(
-      "unsupported argument type: %r" % type(unicode_text).__name__)
+    raise TypeError("unsupported argument type: %r" %
+                    type(unicode_text).__name__)
   return unicode_text.encode("utf-8")
 
 
@@ -217,8 +217,7 @@ def bytes_to_unicode(raw_bytes, encoding="utf-8"):
   if raw_bytes is None or builtins.is_unicode(raw_bytes):
     return raw_bytes
   if not builtins.is_bytes(raw_bytes):
-    raise TypeError(
-      "unsupported argument type: %r" % type(raw_bytes).__name__)
+    raise TypeError("unsupported argument type: %r" % type(raw_bytes).__name__)
   return raw_bytes.decode(encoding)
 
 

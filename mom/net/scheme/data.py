@@ -78,9 +78,8 @@ def data_uri_encode(raw_bytes,
       Data URI.
   """
   if not builtins.is_bytes(raw_bytes):
-    raise TypeError(
-      "only raw bytes can be encoded: got %r" % type(raw_bytes).__name__
-    )
+    raise TypeError("only raw bytes can be encoded: got %r" %
+                    type(raw_bytes).__name__)
   if encoder == "base64":
     encode = codec.base64_encode
     encoding = b(";base64,")
@@ -111,10 +110,8 @@ def data_uri_parse(data_uri):
       looks like.
   """
   if not builtins.is_bytes(data_uri):
-    raise TypeError(
-      "data URIs must be ASCII-encoded bytes: got %r" %
-      type(data_uri).__name__
-    )
+    raise TypeError("data URIs must be ASCII-encoded bytes: got %r" %
+                    type(data_uri).__name__)
   metadata, encoded = data_uri.rsplit(b(","), 1)
   _, metadata = metadata.split(b("data:"), 1)
   parts = metadata.rsplit(b(";"), 1)

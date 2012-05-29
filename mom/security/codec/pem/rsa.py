@@ -26,13 +26,16 @@
 
 from __future__ import absolute_import
 
+from pyasn1 import type
+from pyasn1.codec.der import decoder
+from pyasn1.codec.der import encoder
+
 from mom import builtins
 from mom.security.codec import pem
 from mom.security.codec.asn1 import rsadsa
 from mom.security.codec.asn1.x509 import SubjectPublicKeyInfo
 from mom.security.codec.pem.x509 import X509Certificate
-from pyasn1 import type
-from pyasn1.codec.der import decoder, encoder
+
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -69,16 +72,16 @@ class RSAPrivateKey(object):
   def private_key(self):
     asn = self._private_key_asn1
     return dict(
-      version=int(asn.getComponentByName("version")),
-      modulus=int(asn.getComponentByName("modulus")),
-      publicExponent=int(asn.getComponentByName("publicExponent")),
-      privateExponent=int(asn.getComponentByName("privateExponent")),
-      prime1=int(asn.getComponentByName("prime1")),
-      prime2=int(asn.getComponentByName("prime2")),
-      exponent1=int(asn.getComponentByName("exponent1")),
-      exponent2=int(asn.getComponentByName("exponent2")),
-      coefficient=int(asn.getComponentByName("coefficient")),
-      )
+        version=int(asn.getComponentByName("version")),
+        modulus=int(asn.getComponentByName("modulus")),
+        publicExponent=int(asn.getComponentByName("publicExponent")),
+        privateExponent=int(asn.getComponentByName("privateExponent")),
+        prime1=int(asn.getComponentByName("prime1")),
+        prime2=int(asn.getComponentByName("prime2")),
+        exponent1=int(asn.getComponentByName("exponent1")),
+        exponent2=int(asn.getComponentByName("exponent2")),
+        coefficient=int(asn.getComponentByName("coefficient")),
+        )
 
 
   @classmethod
@@ -95,9 +98,8 @@ class RSAPrivateKey(object):
 
     algorithm = cover_asn1[1][0]
     if algorithm != cls._RSA_OID:
-      raise ValueError(
-        "Only RSA encryption is supported: got algorithm `%r`"\
-        % algorithm)
+      raise ValueError("Only RSA encryption is supported: got algorithm `%r`" %
+                       algorithm)
     key_der = builtins.bytes(cover_asn1[2])
     key_asn1 = decoder.decode(key_der, asn1Spec=keyType)[0]
     return cover_asn1, key_asn1
@@ -107,7 +109,7 @@ class RSAPrivateKey(object):
     return pem.der_to_pem_private_rsa_key(encoder.encode(key_asn1))
 
 TEST_RSA_PRIVATE_KEYS = (
-  """
+    """
 -----BEGIN PRIVATE KEY-----
 MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALRiMLAh9iimur8V
 A7qVvdqxevEuUkW4K+2KdMXmnQbG9Aa7k7eBjK1S+0LYmVjPKlJGNXHDGuy5Fw/d
@@ -124,7 +126,7 @@ cn1xOJAyZODBo47E+67R4jV1/gzbAkEAklJaspRPXP877NssM5nAZMU0/O/NGCZ+
 AO/0isr/3aa6O6NLQxISLKcPDk2NOccAfS/xOtfOz4sJYM3+Bs4Io9+dZGSDCA54
 Lw03eHTNQghS0A==
 -----END PRIVATE KEY-----""",
-  )
+    )
 TEST_PRIVATE_KEYS = (0,)
 
 class RSAPublicKey(object):
@@ -149,15 +151,14 @@ class RSAPublicKey(object):
   def public_key(self):
     algorithm = self._key_asn1.getComponentByName("algorithm")[0]
     if algorithm != self._RSA_OID:
-      raise NotImplementedError(
-        "Only RSA encryption is supported: got algorithm `%r`"\
-        % algorithm)
+      raise NotImplementedError("Only RSA encryption is supported: "
+                                "got algorithm `%r`" % algorithm)
     modulus, exponent = self.parse_public_rsa_key_bits(
-      self._key_asn1.getComponentByName("subjectPublicKey"))
+        self._key_asn1.getComponentByName("subjectPublicKey"))
     return dict(
-      modulus=modulus,
-      exponent=exponent,
-      )
+        modulus=modulus,
+        exponent=exponent,
+        )
 
   @classmethod
   def parse_public_rsa_key_bits(cls, public_key_bitstring):
@@ -185,7 +186,8 @@ class RSAPublicKey(object):
     return pem.der_to_pem_public_key(encoder.encode(key_asn1))
 
 
-TEST_PUBLIC_PEM_KEYS = ("""
+TEST_PUBLIC_PEM_KEYS = (
+    """
 -----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC0YjCwIfYoprq/FQO6lb3asXrx
 LlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlYzypSRjVxwxrsuRcP3e641SdASwfr
@@ -193,13 +195,12 @@ mzyvIgP08N4S0IFzEURkV1wp/IpH7kH41EtbmUmrXSwfNZsnQRE5SYSOhh+LcK2w
 yQkdgcMv11l4KoBkcwIDAQAB
 -----END PUBLIC KEY-----
 """,
-  )
+    )
 
 # pylint: disable-msg=C0301
 TEST_PUBLIC_KEYS = (
-  (
-  126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731
-  ,
-  65537),
-  )
+    (
+        126669640320683290646795148731116725859129871317489646670977486626744987251277308188134951784112892388851824395559423655294483477900467304936849324412630428474313221323982004833431306952809970692055204065814102382627007630050419900189287007179961309761697749877767089292033899335453619375029318017462636143731,
+        65537),
+    )
 # pylint: enable-msg=C0301

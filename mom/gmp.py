@@ -54,6 +54,7 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 # pylint: disable-msg=C0103
 
 if _compat.HAVE_PYTHON3:
+
   def number_to_pybytes(num):
     """
     Converts number to bytes.
@@ -68,6 +69,7 @@ if _compat.HAVE_PYTHON3:
     #return raw_bytes_num.decode("latin1")
     return str(raw_bytes_num, "latin1")
 else:
+
   def number_to_pybytes(num):
     """
     Converts number to bytes.

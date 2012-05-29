@@ -141,7 +141,7 @@ def fitness_and_quality_parsed(mime_type, parsed_ranges):
                      subtype == ASTERISK_BYTE or
                      target_subtype == ASTERISK_BYTE)
     if type_match and subtype_match:
-      param_matches = reduce(lambda x, y: x + y, [
+      param_matches = builtins.reduce(lambda x, y: x + y, [
           1 for (key, value) in target_params.iteritems() if
           key != "q" and params.has_key(key) and value == params[key]
           ], 0)

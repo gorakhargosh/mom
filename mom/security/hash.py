@@ -42,6 +42,7 @@ HMAC-SHA-1 digests
 from __future__ import absolute_import
 
 import hashlib
+import hmac
 
 from mom import builtins
 from mom import codec
@@ -159,8 +160,6 @@ def hmac_sha1_digest(key, data):
   :returns:
       HMAC SHA-1 Digest.
   """
-  import hmac
-
   if not builtins.is_bytes(data):
     raise TypeError("data type must be bytes: got %r" % type(data).__name__)
 

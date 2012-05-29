@@ -31,7 +31,8 @@ from __future__ import absolute_import
 from mom.security import codec
 
 try:
-  from mom.security.rsa.pycrypto import PrivateKey, PublicKey
+  from mom.security.rsa.pycrypto import PrivateKey
+  from mom.security.rsa.pycrypto import PublicKey
 except ImportError:
   PrivateKey = None
   PublicKey = None

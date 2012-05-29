@@ -104,8 +104,8 @@ def _match_path(pathname,
     excluded_patterns = set(excluded_patterns)
   common_patterns = included_patterns & excluded_patterns
   if common_patterns:
-    raise ValueError("conflicting patterns `%s` included and excluded"\
-    % common_patterns)
+    raise ValueError("conflicting patterns `%s` included and excluded"
+                     % common_patterns)
   return (match_path_against(pathname, included_patterns, case_sensitive) and
           not match_path_against(pathname, excluded_patterns,
                                  case_sensitive))

@@ -161,7 +161,7 @@ def _pure_pow_mod(base, power, modulus):
   """
   n_bit_scan = 5
 
-  #TREV - Added support for negative exponents
+  # NOTE(TREV): Added support for negative exponents
   negative_result = False
   if power < 0:
     power *= -1
@@ -195,10 +195,10 @@ def _pure_pow_mod(base, power, modulus):
       prod = (prod * prod) % modulus
     if nib: prod = (prod * low_powers[nib]) % modulus
 
-  #TREV - Added support for negative exponents
+  # NOTE(TREV): Added support for negative exponents
   if negative_result:
     prod_inv = inverse_mod(prod, modulus)
-    #Check to make sure the inverse is correct
+    # Check to make sure the inverse is correct
     assert (prod * prod_inv) % modulus == 1
     return prod_inv
   return prod
@@ -228,7 +228,7 @@ def _pure_is_prime(num, iterations=5, _sieve=prime_sieve.SIEVE):
   while not num_s % 2:
     num_s, num_t = num_s // 2, num_t + 1
     # Repeat Rabin-Miller x times
-  base = 2 # Use 2 as a base for first iteration speedup, per HAC
+  base = 2  # Use 2 as a base for first iteration speedup, per HAC
   for _ in builtins.range(iterations):
     num_v = _pure_pow_mod(base, num_s, num)
     if num_v == 1:
@@ -244,7 +244,8 @@ def _pure_is_prime(num, iterations=5, _sieve=prime_sieve.SIEVE):
 
 
 try:
-  from mom._gmpy_math import is_prime as _is_prime, pow_mod as _pow_mod
+  from mom._gmpy_math import is_prime as _is_prime
+  from mom._gmpy_math import pow_mod as _pow_mod
 except ImportError:
   _pow_mod = _pure_pow_mod
   _is_prime = _pure_is_prime
@@ -263,13 +264,13 @@ def generate_random_prime(bits):
   """
   assert not bits < 10
 
-  #The 1.5 ensures the 2 MSBs are set
-  #Thus, when used for p,q in RSA, n will have its MSB set
+  # The 1.5 ensures the 2 MSBs are set
+  # Thus, when used for p,q in RSA, n will have its MSB set
   #
-  #Since 30 is lcm(2,3,5), we'll set our test numbers to
-  #29 % 30 and keep them there
-  #low = (2 ** (bits-1)) * 3 // 2
-  #high = 2 ** bits - 30
+  # Since 30 is lcm(2,3,5), we'll set our test numbers to
+  # 29 % 30 and keep them there
+  # low = (2 ** (bits-1)) * 3 // 2
+  # high = 2 ** bits - 30
   low = (1 << (bits - 1)) * 3 // 2
   high = (1 << bits) - 30
   random_uint = random.generate_random_uint_between(low, high)
@@ -295,13 +296,13 @@ def generate_random_safe_prime(bits):
   """
   assert not bits < 10
 
-  #The 1.5 ensures the 2 MSBs are set
-  #Thus, when used for p,q in RSA, n will have its MSB set
+  # The 1.5 ensures the 2 MSBs are set
+  # Thus, when used for p,q in RSA, n will have its MSB set
   #
-  #Since 30 is lcm(2,3,5), we'll set our test numbers to
-  #29 % 30 and keep them there
-  #low = (2 ** (bits-2)) * 3 // 2
-  #high = (2 ** (bits-1)) - 30
+  # Since 30 is lcm(2,3,5), we'll set our test numbers to
+  # 29 % 30 and keep them there
+  # low = (2 ** (bits-2)) * 3 // 2
+  # high = (2 ** (bits-1)) - 30
   low = (1 << (bits - 2)) * 3 // 2
   high = (1 << (bits - 1)) - 30
   random_uint = random.generate_random_uint_between(low, high)
@@ -311,8 +312,8 @@ def generate_random_safe_prime(bits):
     if random_uint >= high:
       random_uint = random.generate_random_uint_between(low, high)
       random_uint += 29 - (random_uint % 30)
-      #Ideas from Tom Wu's SRP code
-    #Do trial division on p and q before Rabin-Miller
+      # Ideas from Tom Wu's SRP code
+    # Do trial division on p and q before Rabin-Miller
     if is_prime(random_uint, 0):
       possible_prime = (2 * random_uint) + 1
       if is_prime(possible_prime):

@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 """:synopsis: Many different types of common encode/decode function.
 :module: mom.codec
 
@@ -284,11 +285,11 @@ Use them. They will help prevent unexpected bugs.
 from __future__ import absolute_import
 
 # pylint: disable-msg=R0801
-try: #pragma: no cover
+try:  # pragma: no cover
   import psyco
 
   psyco.full()
-except ImportError: #pragma: no cover
+except ImportError:  # pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 
@@ -412,9 +413,10 @@ def base64_urlsafe_encode(raw_bytes):
   # this module itself is a wrapper. binascii is implemented in C, so
   # we avoid module overhead however small.
   encoded = binascii.b2a_base64(raw_bytes)[:-1]
-  return encoded.rstrip(EQUAL_BYTE).\
-  replace(PLUS_BYTE, HYPHEN_BYTE).\
-  replace(FORWARD_SLASH_BYTE, UNDERSCORE_BYTE)
+  return (encoded
+          .rstrip(EQUAL_BYTE)
+          .replace(PLUS_BYTE, HYPHEN_BYTE)
+          .replace(FORWARD_SLASH_BYTE, UNDERSCORE_BYTE))
 
 
 def base64_urlsafe_decode(encoded):
@@ -436,8 +438,9 @@ def base64_urlsafe_decode(encoded):
   # We're not using the base64.py wrapper around binascii because
   # this module itself is a wrapper. binascii is implemented in C, so
   # we avoid module overhead however small.
-  encoded = encoded.replace(HYPHEN_BYTE, PLUS_BYTE).\
-  replace(UNDERSCORE_BYTE, FORWARD_SLASH_BYTE)
+  encoded = (encoded
+             .replace(HYPHEN_BYTE, PLUS_BYTE)
+             .replace(UNDERSCORE_BYTE, FORWARD_SLASH_BYTE))
   return binascii.a2b_base64(encoded)
 
 
@@ -639,46 +642,47 @@ def decimal_decode(encoded):
   return decoded
 
 
-_HEX_TO_BIN_LOOKUP = {
-  b("0"): b("0000"),
-  b("1"): b("0001"),
-  b("2"): b("0010"),
-  b("3"): b("0011"),
-  b("4"): b("0100"),
-  b("5"): b("0101"),
-  b("6"): b("0110"),
-  b("7"): b("0111"),
-  b("8"): b("1000"),
-  b("9"): b("1001"),
-  b("a"): b("1010"), b("A"): b("1010"),
-  b("b"): b("1011"), b("B"): b("1011"),
-  b("c"): b("1100"), b("C"): b("1100"),
-  b("d"): b("1101"), b("D"): b("1101"),
-  b("e"): b("1110"), b("E"): b("1110"),
-  b("f"): b("1111"), b("F"): b("1111"),
-  }
-if _compat.HAVE_PYTHON3: # pragma: no cover
-  # Indexing into Python 3 bytes yields ords, not single-byte strings.
-  _HEX_TO_BIN_LOOKUP =\
-  dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())
 _BIN_TO_HEX_LOOKUP = {
-  b("0000"): b("0"),
-  b("0001"): b("1"),
-  b("0010"): b("2"),
-  b("0011"): b("3"),
-  b("0100"): b("4"),
-  b("0101"): b("5"),
-  b("0110"): b("6"),
-  b("0111"): b("7"),
-  b("1000"): b("8"),
-  b("1001"): b("9"),
-  b("1010"): b("a"),
-  b("1011"): b("b"),
-  b("1100"): b("c"),
-  b("1101"): b("d"),
-  b("1110"): b("e"),
-  b("1111"): b("f"),
-  }
+    b("0000"): b("0"),
+    b("0001"): b("1"),
+    b("0010"): b("2"),
+    b("0011"): b("3"),
+    b("0100"): b("4"),
+    b("0101"): b("5"),
+    b("0110"): b("6"),
+    b("0111"): b("7"),
+    b("1000"): b("8"),
+    b("1001"): b("9"),
+    b("1010"): b("a"),
+    b("1011"): b("b"),
+    b("1100"): b("c"),
+    b("1101"): b("d"),
+    b("1110"): b("e"),
+    b("1111"): b("f"),
+    }
+
+_HEX_TO_BIN_LOOKUP = {
+    b("0"): b("0000"),
+    b("1"): b("0001"),
+    b("2"): b("0010"),
+    b("3"): b("0011"),
+    b("4"): b("0100"),
+    b("5"): b("0101"),
+    b("6"): b("0110"),
+    b("7"): b("0111"),
+    b("8"): b("1000"),
+    b("9"): b("1001"),
+    b("a"): b("1010"), b("A"): b("1010"),
+    b("b"): b("1011"), b("B"): b("1011"),
+    b("c"): b("1100"), b("C"): b("1100"),
+    b("d"): b("1101"), b("D"): b("1101"),
+    b("e"): b("1110"), b("E"): b("1110"),
+    b("f"): b("1111"), b("F"): b("1111"),
+    }
+if _compat.HAVE_PYTHON3:  # pragma: no cover
+  # Indexing into Python 3 bytes yields ords, not single-byte strings.
+  _HEX_TO_BIN_LOOKUP = dict((k[0], v) for k, v in _HEX_TO_BIN_LOOKUP.items())
+
 
 def bin_encode(raw_bytes):
   """
@@ -695,7 +699,7 @@ def bin_encode(raw_bytes):
     raise TypeError("argument must be raw bytes: got %r" %
                     type(raw_bytes).__name__)
   return EMPTY_BYTE.join(_HEX_TO_BIN_LOOKUP[hex_char]
-  for hex_char in binascii.b2a_hex(raw_bytes))
+                         for hex_char in binascii.b2a_hex(raw_bytes))
 
 
 def bin_decode(encoded):
@@ -711,4 +715,5 @@ def bin_decode(encoded):
     raise TypeError("argument must be bytes: got %r" %
                     type(encoded).__name__)
   return binascii.a2b_hex(EMPTY_BYTE.join(_BIN_TO_HEX_LOOKUP[nibble]
-  for nibble in functional.chunks(encoded, 4)))
+                                          for nibble
+                                          in functional.chunks(encoded, 4)))

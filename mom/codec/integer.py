@@ -59,9 +59,9 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "bytes_to_uint",
-  "uint_to_bytes",
-  ]
+    "bytes_to_uint",
+    "uint_to_bytes",
+    ]
 
 
 ZERO_BYTE = _compat.ZERO_BYTE
@@ -154,10 +154,8 @@ def uint_to_bytes(number, fill_size=0, chunk_size=0, overflow=False):
   length = len(raw_bytes)
   if fill_size > 0:
     if not overflow and length > fill_size:
-      raise OverflowError(
-        "Need %d bytes for number, but fill size is %d" %
-        (length, fill_size)
-      )
+      raise OverflowError("Need %d bytes for number, but fill size is %d" %
+                          (length, fill_size))
     raw_bytes = raw_bytes.rjust(fill_size, ZERO_BYTE)
   elif chunk_size > 0:
     remainder = length % chunk_size

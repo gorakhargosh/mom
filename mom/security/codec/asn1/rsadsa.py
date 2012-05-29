@@ -41,7 +41,10 @@ ASN.1 Syntax::
 
 from __future__ import absolute_import
 
-from pyasn1.type import univ, namedtype, namedval, constraint
+from pyasn1.type import constraint
+from pyasn1.type import namedtype
+from pyasn1.type import namedval
+from pyasn1.type import univ
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -62,6 +65,7 @@ class DSAPrivateKey(univ.Sequence):
 MAX = 16
 
 class OtherPrimeInfo(univ.Sequence):
+  """Other prime information."""
   componentType = namedtype.NamedTypes(
       namedtype.NamedType("prime", univ.Integer()),
       namedtype.NamedType("exponent", univ.Integer()),
@@ -70,9 +74,10 @@ class OtherPrimeInfo(univ.Sequence):
 
 
 class OtherPrimeInfos(univ.SequenceOf):
+  """Other prime information."""
   componentType = OtherPrimeInfo()
-  subtypeSpec = univ.SequenceOf.subtypeSpec +\
-                constraint.ValueSizeConstraint(1, MAX)
+  subtypeSpec = (univ.SequenceOf.subtypeSpec +
+                 constraint.ValueSizeConstraint(1, MAX))
 
 
 class RSAPrivateKey(univ.Sequence):

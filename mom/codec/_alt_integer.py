@@ -77,10 +77,8 @@ def uint_to_bytes_naive_array_based(uint, chunk_size=0):
     length = len(raw_bytes)
     bytes_needed = bytes_count
     if bytes_needed > chunk_size:
-      raise OverflowError(
-        "Need %d bytes for number, but chunk size is %d" %
-        (bytes_needed, chunk_size)
-      )
+      raise OverflowError("Need %d bytes for number, but chunk size is %d" %
+                          (bytes_needed, chunk_size))
     remainder = length % chunk_size
     if remainder:
       raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
@@ -161,8 +159,7 @@ def uint_to_bytes_pycrypto(uint, blocksize=0):
   # add back some pad bytes. this could be done more efficiently w.r.t. the
   # de-padding being done above, but sigh...
   if blocksize > 0 and len(raw_bytes) % blocksize:
-    raw_bytes = (blocksize - len(raw_bytes) % blocksize) * ZERO_BYTE +\
-                raw_bytes
+    raw_bytes = (blocksize - len(raw_bytes) % blocksize) * ZERO_BYTE + raw_bytes
   return raw_bytes
 
 
@@ -222,10 +219,8 @@ def uint_to_bytes_array_based(number, chunk_size=0):
     # case, the number will already have been converted to bytes above.
     length = len(raw_bytes)
     if length > chunk_size:
-      raise OverflowError(
-        "Need %d bytes for number, but chunk size is %d" %
-        (length, chunk_size)
-      )
+      raise OverflowError("Need %d bytes for number, but chunk size is %d" %
+                          (length, chunk_size))
     remainder = length % chunk_size
     if remainder:
       raw_bytes = (chunk_size - remainder) * ZERO_BYTE + raw_bytes
@@ -284,4 +279,5 @@ def uint_to_bytes_simple(num):
 
 def bytes_to_uint_simple(raw_bytes):
   """Simple bytes to uint converter."""
-  return builtins.reduce(lambda a, b: a << 8 | b, builtins.map(builtins.byte_ord, raw_bytes), 0)
+  return builtins.reduce(lambda a, b: a << 8 | b,
+                         builtins.map(builtins.byte_ord, raw_bytes), 0)

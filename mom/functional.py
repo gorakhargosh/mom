@@ -27,8 +27,9 @@ specific types of data structures. Here's an example of how to find the
 youngest person and the oldest person from among people. Place it into a
 Python module and run it::
 
-    import mom.functional
-    from mom.functional import reject, partition, difference, pluck, reduce
+    import pprint
+
+    from mom import functional
 
     people = [
         {"name": "Harry",    "age": 100},
@@ -43,32 +44,55 @@ Python module and run it::
         '''Comparator that returns the oldest of two people.'''
         return person1 if person1["age"] >= person2["age"] else person2
 
-    who_youngest = reduce(youngest, people)
-    who_oldest = reduce(oldest, people)
+    who_youngest = functional.reduce(youngest, people)
+    who_oldest = functional.reduce(oldest, people)
 
-    print(who_youngest)
+    pprint.print(who_youngest)
     # -> {"age" : 16, "name" : "Hermione"}
-    print(who_oldest)
+    pprint.print(who_oldest)
     # -> {"age" : 200, "name" : "Rob"}
 
     # More examples.
     # Now let's list all the names of the people.
-    print(pluck(people, "name"))
+    pprint.print(functional.pluck(people, "name"))
     # -> ("Harry", "Hermione", "Rob")
 
     # Let's weed out all people who don't have an "H" in their names.
-    print(reject(lambda name: "H" not in name, pluck(people, "name")))
+    pprint.print(functional.reject(lambda name: "H" not in name,
+                                   functional.pluck(people, "name")))
     # -> ("Harry", "Hermione")
 
     # Or let's partition them into two groups
-    print(partition(lambda name: "H" in name, pluck(people, "name")))
+    pprint.print(functional.partition(lambda name: "H" in name,
+                                      functional.pluck(people, "name")))
     # -> (["Harry", "Hermione"], ["Rob"])
 
     # Let's find all the members of a module that are not exported to wildcard
     # imports by its ``__all__`` member.
-    print(difference(dir(mom.functional), mom.functional.__all__))
-    # -> ["__all__", "__builtins__", ... "repeat", "takewhile"]
-
+    pprint.print(functional.difference(dir(functional), functional.__all__))
+    # -> ["__all__",
+          "__author__",
+          "__builtins__",
+          "__doc__",
+          "__file__",
+          "__name__",
+          "__package__",
+          "_compose",
+          "_contains_fallback",
+          "_get_iter_next",
+          "_ifilter",
+          "_ifilterfalse",
+          "_leading",
+          "_some1",
+          "_some2",
+          "absolute_import",
+          "builtins",
+          "chain",
+          "collections",
+          "functools",
+          "itertools",
+          "map",
+          "starmap"]
 
 Higher-order functions are extremely useful where you want to express yourself
 succinctly instead of writing a ton of for and while loops.
@@ -225,7 +249,8 @@ except ImportError:  # pragma: no cover
     return filter(_complement, iterable)
 
 from mom import builtins
-from mom.itertools import chain, starmap
+from mom.itertools import chain
+from mom.itertools import starmap
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

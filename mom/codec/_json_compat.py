@@ -64,11 +64,12 @@ except Exception:
         """Wrapper to encode JSON."""
         return json.dumps(value)
     except ImportError:
+
       def json_loads(value):
         """Wrapper to decode JSON."""
-        raise NotImplementedError(
-          "A JSON parser is required, e.g., simplejson at "
-          "http://pypi.python.org/pypi/simplejson/")
+        raise NotImplementedError("A JSON parser is required, e.g., "
+                                  "simplejson at "
+                                  "http://pypi.python.org/pypi/simplejson/")
 
       json_dumps = json_loads
 
