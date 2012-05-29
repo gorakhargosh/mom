@@ -67,7 +67,12 @@ class Key(object):
   Abstract class representing an encryption key.
   """
 
-  def __init__(self, key_info, encoded_key, encoding, *args, **kwargs):
+  def __init__(self,
+               key_info,
+               encoded_key,
+               encoding,
+               *unused_args,
+               **unused_kwargs):
     self._key_info = key_info
     self._encoded_key = encoded_key
     self._encoding = encoding

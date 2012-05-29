@@ -99,6 +99,7 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 MAX = 64  # TODO(yesudeep): check upstream.
 
+
 class DirectoryString(univ.Choice):
   componentType = namedtype.NamedTypes(
       namedtype.NamedType("teletexString",
@@ -124,7 +125,7 @@ class DirectoryString(univ.Choice):
       namedtype.NamedType("ia5String",
                           char.IA5String().subtype(
                               subtypeSpec=constraint.ValueSizeConstraint(
-                                  1, MAX))) # hm, this should not be here!?
+                                  1, MAX)))  # hm, this should not be here!?
       )
 
 
@@ -162,7 +163,7 @@ class AlgorithmIdentifier(univ.Sequence):
       namedtype.NamedType("algorithm", univ.ObjectIdentifier()),
       namedtype.OptionalNamedType("parameters", univ.Null())
       # TODO(yesudeep): syntax screwed?
-      #        namedtype.OptionalNamedType("parameters", univ.ObjectIdentifier())
+      # namedtype.OptionalNamedType("parameters", univ.ObjectIdentifier())
       )
 
 

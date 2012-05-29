@@ -24,11 +24,11 @@
 
 from __future__ import absolute_import
 
+from mom import builtins
 from pyasn1.codec.der import decoder
 from pyasn1.codec.der import encoder
 from pyasn1.type import univ
 
-from mom import builtins
 from mom.security.codec import pem
 from mom.security.codec.asn1.x509 import Certificate
 

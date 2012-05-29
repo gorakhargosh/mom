@@ -28,11 +28,11 @@
 from __future__ import absolute_import
 
 # pylint: disable-msg=R0801
-try: #pragma: no cover
+try:  # pragma: no cover
   import psyco
 
   psyco.full()
-except ImportError: #pragma: no cover
+except ImportError:  # pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 

@@ -39,7 +39,7 @@ try:
   def json_dumps(value):
     """Wrapper to encode JSON."""
     return json.dumps(value)
-except Exception:
+except (AssertionError, ImportError):
   try:
     # Try to use the simplejson library.
     import simplejson as json

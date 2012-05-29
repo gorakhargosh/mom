@@ -34,11 +34,12 @@ Functions
 
 from __future__ import absolute_import
 
-import os
 import functools
+import os
+
+from os import path
 
 from mom import builtins
-from os import path
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -117,8 +118,8 @@ def listdir(dir_pathname,
   :param followlinks:
       Please see the documentation for :func:`os.walk`
   """
-  for root, dir_names, file_names in walk(
-    dir_pathname, recursive, topdown, followlinks):
+  for root, dir_names, file_names in walk(dir_pathname,
+                                          recursive, topdown, followlinks):
     for dir_name in dir_names:
       yield absolute_path(path.join(root, dir_name))
     for file_name in file_names:

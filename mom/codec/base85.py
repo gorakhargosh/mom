@@ -150,7 +150,8 @@ if _compat.HAVE_PYTHON3:  # pragma: no cover
 else:
   # Indexing into Python 2 bytes yields single-character byte strings.
   ASCII85_ORDS = dict((builtins.byte(x), x - 33) for x in ASCII85_BYTES)
-  RFC1924_ORDS = dict((builtins.byte(x), i) for i, x in enumerate(RFC1924_BYTES))
+  RFC1924_ORDS = dict((builtins.byte(x), i)
+                      for i, x in enumerate(RFC1924_BYTES))
 
 
 # Pre-computed powers (array index) of 85 used to unroll encoding loops

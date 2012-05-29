@@ -45,6 +45,6 @@ if HAVE_GMPY:
     result = pow(base, power, modulus)
     return int(result)
 
-  def is_prime(num, *args, **kwargs):
+  def is_prime(num, *unused_args, **unused_kwargs):
     """Determines whether an integer is prime."""
     return gmpy.is_prime(num)

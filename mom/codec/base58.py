@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""":synopsis: Base-58 representation for unambiguous display & compact human-input.
+""":synopsis: Base-58 repr for unambiguous display & compact human-input.
 :module: mom.codec.base58
 
 
@@ -70,11 +70,11 @@ from __future__ import absolute_import
 from __future__ import division
 
 # pylint: disable-msg=R0801
-try: #pragma: no cover
+try:  # pragma: no cover
   import psyco
 
   psyco.full()
-except ImportError: #pragma: no cover
+except ImportError:  # pragma: no cover
   psyco = None
 # pylint: enable-msg=R0801
 

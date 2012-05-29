@@ -50,6 +50,9 @@ from pyasn1.type import univ
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
+MAX = 16
+
+
 class DSAPrivateKey(univ.Sequence):
   """PKIX compliant DSA private key structure"""
   componentType = namedtype.NamedTypes(
@@ -62,7 +65,6 @@ class DSAPrivateKey(univ.Sequence):
       namedtype.NamedType("private", univ.Integer())
       )
 
-MAX = 16
 
 class OtherPrimeInfo(univ.Sequence):
   """Other prime information."""

@@ -26,16 +26,15 @@
 
 from __future__ import absolute_import
 
+from mom import builtins
 from pyasn1 import type
 from pyasn1.codec.der import decoder
 from pyasn1.codec.der import encoder
 
-from mom import builtins
 from mom.security.codec import pem
 from mom.security.codec.asn1 import rsadsa
 from mom.security.codec.asn1.x509 import SubjectPublicKeyInfo
 from mom.security.codec.pem.x509 import X509Certificate
-
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -83,7 +82,6 @@ class RSAPrivateKey(object):
         coefficient=int(asn.getComponentByName("coefficient")),
         )
 
-
   @classmethod
   def decode_from_pem_key(cls, key):
     keyType = rsadsa.RSAPrivateKey()
@@ -108,6 +106,7 @@ class RSAPrivateKey(object):
   def encode_to_pem_private_key(cls, key_asn1):
     return pem.der_to_pem_private_rsa_key(encoder.encode(key_asn1))
 
+
 TEST_RSA_PRIVATE_KEYS = (
     """
 -----BEGIN PRIVATE KEY-----
@@ -127,7 +126,10 @@ AO/0isr/3aa6O6NLQxISLKcPDk2NOccAfS/xOtfOz4sJYM3+Bs4Io9+dZGSDCA54
 Lw03eHTNQghS0A==
 -----END PRIVATE KEY-----""",
     )
+
+
 TEST_PRIVATE_KEYS = (0,)
+
 
 class RSAPublicKey(object):
   """

@@ -358,6 +358,7 @@ B85_ENCODE_MAP = {
     B85_RFC1924: base85.rfc1924_b85encode,
     }
 
+
 def base85_encode(raw_bytes, charset=B85_ASCII):
   """
   Encodes raw bytes into ASCII85 representation.
