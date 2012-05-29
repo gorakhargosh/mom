@@ -725,6 +725,7 @@ _MPZ_get_str.restype = ctypes.c_char_p
 #_MPF_cmp.argtypes = (Float, Float)
 #_MPF_eq.argtypes = (Float, Float, ctypes.c_int)
 #_MPF_set_str.argtypes = (Float, ctypes.c_char_p, ctypes.c_int)
-#_MPF_get_str.argtypes = (ctypes.c_char_p, ctypes.POINTER(ctypes.c_int), ctypes.c_int, ctypes.c_int, Float)
+#_MPF_get_str.argtypes = (ctypes.c_char_p, ctypes.POINTER(ctypes.c_int),
+#                         ctypes.c_int, ctypes.c_int, Float)
 ## non-default (int) return types
 #_MPF_get_str.restype = ctypes.c_char_p
