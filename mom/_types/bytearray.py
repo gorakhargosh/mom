@@ -160,7 +160,7 @@ def mpi_to_long(mpi_byte_string):
   #    from mom._types.bytearray import \
   #        bytes_to_bytearray, bytearray_to_long
 
-  #Make sure this is a positive number
+  # Make sure this is a positive number
   assert (ord(mpi_byte_string[4]) & 0x80) == 0
 
   byte_array = bytes_to_bytearray(mpi_byte_string[4:])
@@ -182,8 +182,8 @@ def long_to_mpi(num):
 
   byte_array = long_to_bytearray(num)
   ext = 0
-  #If the high-order bit is going to be set,
-  #add an extra byte of zeros
+  # If the high-order bit is going to be set,
+  # add an extra byte of zeros
   if not (builtins.integer_bit_length(num) & 0x7):
     ext = 1
   length = builtins.integer_byte_length(num) + ext
