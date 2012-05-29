@@ -33,7 +33,7 @@ load-plugins=
 # can either give multiple identifier separated by comma (,) or put this option
 # multiple time (only on the command line, not in the configuration file where
 # it should appear only once).
-disable=
+disable=C6112,C6304,C6104,C6108,C6109,C6113,C6112,C6115,C6110
 
 
 [REPORTS]
