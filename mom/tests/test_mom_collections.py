@@ -21,7 +21,7 @@ from __future__ import absolute_import
 import unittest2
 
 try:
-  import queue as queue
+  import queue as Queue
 except ImportError:
   import Queue
 
