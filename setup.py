@@ -29,8 +29,8 @@ def pycrypto_complain(version):
   import logging
 
   logging.warning(
-    "PyCrypto >=2.3 is required for cryptographic functions to work. "\
-    "If you are using any of these routines, please also add it to your "\
+    "PyCrypto >=2.0.1 is required for cryptographic functions to work. "\
+    "If you are using any of these routines, please also add PyCrypto to your "\
     "list of dependencies. Found %r." % repr(version)
   )
 
@@ -38,7 +38,7 @@ try:
   import Crypto
 
   if getattr(Crypto, "version_info", None) and Crypto.version_info[0:3] < (
-  2, 3, 0):
+  2, 0, 1):
     pycrypto_complain(Crypto.__version__)
 except ImportError:
   Crypto = None
