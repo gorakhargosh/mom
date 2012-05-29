@@ -512,7 +512,8 @@ def leading(predicate, iterable, start=0):
       Start index. (Number of items to skip before starting counting.)
   """
   i = 0
-  for _ in itertools.takewhile(predicate, itertools.islice(iterable, start, None, 1)):
+  for _ in itertools.takewhile(predicate,
+                               itertools.islice(iterable, start, None, 1)):
     i += 1
   return i
 
@@ -520,7 +521,9 @@ def leading(predicate, iterable, start=0):
 def _leading(predicate, iterable, start=0):
   """Alternative implementation of :func:`leading`."""
   return len(tuple(map(identity,
-                       itertools.takewhile(predicate, itertools.islice(iterable, start, None, 1)))))
+                       itertools.takewhile(predicate,
+                                           itertools.islice(iterable,
+                                                            start, None, 1)))))
 
 
 def trailing(predicate, iterable, start=-1):
@@ -768,6 +771,7 @@ def ipluck(dicts, key, *args, **kwargs):
 
 # Sequences
 
+
 def contains(iterable, item):
   """Determines whether the iterable contains the value specified.
 
@@ -902,12 +906,14 @@ def tail(iterable):
 
 
 def itail(iterable):
-  """Returns an iterator for all elements excluding the first out of an iterable.
+  """Returns an iterator for all elements excluding the first out of
+  an iterable.
 
   :param iterable:
       Iterable sequence.
   :yields:
-      Iterator for all elements of the iterable sequence excluding the first.
+      Iterator for all elements of the iterable sequence excluding
+      the first.
   """
   return itertools.islice(iterable, 1, None, 1)
 
@@ -939,7 +945,8 @@ def last(iterable):
 
 
 def occurrences(iterable):
-  """Returns a dictionary of counts (multiset) of each element in the iterable.
+  """Returns a dictionary of counts (multiset) of each element in the
+  iterable.
 
   Taken from the Python documentation under PSF license.
 
@@ -955,8 +962,8 @@ def occurrences(iterable):
 
 
 def peel(iterable, count=1):
-  """Returns the meat of an iterable by peeling off the specified number of
-  elements from both ends.
+  """Returns the meat of an iterable by peeling off the specified
+  number of elements from both ends.
 
   :param iterable:
       Iterable sequence.
@@ -973,8 +980,8 @@ def peel(iterable, count=1):
 
 
 def ipeel(iterable, count=1):
-  """Returns an iterator for the meat of an iterable by peeling off the specified
-  number of elements from both ends.
+  """Returns an iterator for the meat of an iterable by peeling off
+  the specified number of elements from both ends.
 
   :param iterable:
       Iterable sequence.
@@ -1011,19 +1018,19 @@ def ichunks(iterable, size, *args, **kwargs):
           map(tuple, ichunks("aaabccd", 3, None))
           -> [("a", "a", "a"), ("b", "c", "c"), ("d", None, None)]
 
-      If no padding is specified, nothing will be appended if the chunk
-      size is not an integral multiple of the length of the iterable. That is,
-      the last chunk will have chunk size less than the specified chunk size.
-  :yields:
-      Generator of chunk iterators.
+      If no padding is specified, nothing will be appended if the
+      chunk size is not an integral multiple of the length of the
+      iterable. That is, the last chunk will have chunk size less than
+      the specified chunk size. :yields: Generator of chunk iterators.
   """
   length = len(iterable)
   if args or kwargs:
     padding = kwargs["padding"] if kwargs else args[0]
     for i in builtins.range(0, length, size):
-      yield itertools.islice(chain(iterable,
-                         itertools.repeat(padding, (size - (length % size)))),
-                   i, i + size)
+      yield itertools.islice(
+          chain(iterable,
+                itertools.repeat(padding, (size - (length % size)))),
+          i, i + size)
   else:
     for i in builtins.range(0, length, size):
       yield itertools.islice(iterable, i, i + size)
@@ -1051,11 +1058,11 @@ def chunks(iterable, size, *args, **kwargs):
           tuple(chunks((1, 1, 1, 2, 2), 3, (None,)))
           -> ((1, 1, 1, ), (2, 2, None))
 
-      If no padding is specified, nothing will be appended if the chunk
-      size is not an integral multiple of the length of the iterable. That is,
-      the last chunk will have chunk size less than the specified chunk size.
-  :yields:
-      Generator of materialized chunks.
+      If no padding is specified, nothing will be appended if the
+      chunk size is not an integral multiple of the length of the
+      iterable. That is, the last chunk will have chunk size less than
+      the specified chunk size. :yields: Generator of materialized
+      chunks.
   """
   length = len(iterable)
   if args or kwargs:
@@ -1245,7 +1252,8 @@ def flock(predicate, iterable):
   :returns:
       An iterator of lists.
   """
-  return (tuple(group) for key, group in itertools.groupby(sorted(iterable), predicate))
+  return (tuple(group) for key, group in
+          itertools.groupby(sorted(iterable), predicate))
 
 
 def unique(iterable, is_sorted=False):
@@ -1262,6 +1270,7 @@ def unique(iterable, is_sorted=False):
   # we'd have to ensure that the elements are hashable. This implementation
   # does not have that problem. We can improve this implementation.
   if iterable:
+
     def _unique(memo, item):
       """Find uniques."""
       cond = last(memo) != item if is_sorted else omits(memo, item)
