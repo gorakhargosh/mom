@@ -65,7 +65,7 @@ except (AssertionError, ImportError):
         return json.dumps(value)
     except ImportError:
 
-      def json_loads(value):
+      def json_loads(unused_value):
         """Wrapper to decode JSON."""
         raise NotImplementedError("A JSON parser is required, e.g., "
                                   "simplejson at "

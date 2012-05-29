@@ -531,7 +531,7 @@ class Test_contains(unittest2.TestCase):
       def __init__(self, value):
         self.value = value
 
-      def index(self, value):
+      def index(self, unused_value):
         raise ValueError("Not found")
 
     self.assertFalse(functional.contains(MockContainer("something"), None))

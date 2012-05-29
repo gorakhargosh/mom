@@ -323,7 +323,7 @@ class Integer(object):
   def __div__(self, other):
     return self.__floordiv__(other)
 
-  def __truediv__(self, other):
+  def __truediv__(self, unused_other):
     raise NotImplementedError("True division is not supported.")
 
   def __floordiv__(self, other):
@@ -360,7 +360,7 @@ class Integer(object):
   def __idiv__(self, other):
     return self.__floordiv__(other)
 
-  def __itruediv__(self, other):
+  def __itruediv__(self, unused_other):
     raise NotImplementedError("True division is not supported.")
 
   def __ifloordiv__(self, other):
@@ -389,7 +389,7 @@ class Integer(object):
   def __rdiv__(self, other):
     return self.__rfloordiv__(other)
 
-  def __rtruediv__(self, other):
+  def __rtruediv__(self, unused_other):
     raise NotImplementedError("True division is not supported.")
 
   def __rfloordiv__(self, other):
