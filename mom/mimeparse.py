@@ -92,7 +92,7 @@ def parse_mime_type(mime_type):
   return type.strip(), subtype.strip(), params
 
 
-def parse_media_range(range):
+def parse_media_range(media_range):
   """Parse a media-range into its component parts.
 
   :param media_range:
@@ -108,7 +108,7 @@ def parse_media_range(range):
       'q' in the params dictionary, filling it in with a proper default if
       necessary.
   """
-  (type, subtype, params) = parse_mime_type(range)
+  (type, subtype, params) = parse_mime_type(media_range)
   if (not params.has_key("q") or not params["q"] or
       not float(params["q"]) or float(params["q"]) > 1 or
       float(params["q"]) < 0):
@@ -228,7 +228,7 @@ def best_match(supported, header):
   return weighted_matches[-1][0][1] and weighted_matches[-1][2] or EMPTY_BYTE
 
 
-def _filter_blank(i):
+def _filter_blank(iterable):
   """Filters blank strings from a list.
 
   :param iterable:
@@ -236,6 +236,6 @@ def _filter_blank(i):
   :yields:
       Non-blank strings from the iterable in order.
   """
-  for _string in i:
+  for _string in iterable:
     if _string.strip():
       yield _string
