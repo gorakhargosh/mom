@@ -19,7 +19,7 @@ THEMES_PATH = os.path.join(DIR_PATH, '_themes', 'webapp2')
 PROJECT_NAME = u'mom'
 AUTHOR_NAME = u"Yesudeep Mangalapilly"
 COPYRIGHT = u"2012, " + "Google Inc. All Rights Reserved."
-VERSION = "0.1.0"
+VERSION = "0.1.2"
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
