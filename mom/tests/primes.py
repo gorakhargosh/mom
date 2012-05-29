@@ -4,22 +4,20 @@
 # http://stackoverflow.com/questions/2068372/
 # fastest-way-to-list-all-primes-below-n-in-python/2073279
 
-"""
-Prime number generation.
-"""
+"""Prime number generation."""
+
 from __future__ import absolute_import
 
-from math import sqrt, ceil
-import numpy as np
 import itertools
+import math
+import numpy as np
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 def make_prime_sieve(size):
-  """
-  Pre-calculate a sieve of the ~100 primes < 1000.
+  """Pre-calculate a sieve of the ~100 primes < 1000.
 
   :param size:
       Count
@@ -27,7 +25,7 @@ def make_prime_sieve(size):
       Prime sieve.
   """
   sieve = range(size)
-  for count in range(2, int(sqrt(size))):
+  for count in range(2, int(math.sqrt(size))):
     if not sieve[count]:
       continue
     x = sieve[count] * 2
@@ -164,7 +162,7 @@ by sending an email to: info [at] zerovolt [dot] com."""
         # another help dictionary: gives tkx calling tmptk[x]
   tmptk = {1: tk1, 7: tk7, 11: tk11, 13: tk13, 17: tk17, 19: tk19, 23: tk23,
            29: tk29}
-  pos, prime, lastadded, stop = 0, 0, 0, int(ceil(sqrt(N)))
+  pos, prime, lastadded, stop = 0, 0, 0, int(math.ceil(math.sqrt(N)))
   # inner functions definition
   def del_mult(tk, start, step):
     for k in xrange(start, len(tk), step):
@@ -311,10 +309,10 @@ using the Sieve of Atkin."""
   lng = ((end - 1) // 2)
   sieve = [False] * (lng + 1)
 
-  x_max, x2, xd = int(sqrt((end - 1) / 4.0)), 0, 4
+  x_max, x2, xd = int(math.sqrt((end - 1) / 4.0)), 0, 4
   for xd in xrange(4, 8 * x_max + 2, 8):
     x2 += xd
-    y_max = int(sqrt(end - x2))
+    y_max = int(math.sqrt(end - x2))
     n, n_diff = x2 + y_max * y_max, (y_max << 1) - 1
     if not (n & 1):
       n -= n_diff
@@ -326,10 +324,10 @@ using the Sieve of Atkin."""
         sieve[m] = not sieve[m]
       n -= d
 
-  x_max, x2, xd = int(sqrt((end - 1) / 3.0)), 0, 3
+  x_max, x2, xd = int(math.sqrt((end - 1) / 3.0)), 0, 3
   for xd in xrange(3, 6 * x_max + 2, 6):
     x2 += xd
-    y_max = int(sqrt(end - x2))
+    y_max = int(math.sqrt(end - x2))
     n, n_diff = x2 + y_max * y_max, (y_max << 1) - 1
     if not(n & 1):
       n -= n_diff
@@ -340,11 +338,11 @@ using the Sieve of Atkin."""
         sieve[m] = not sieve[m]
       n -= d
 
-  x_max, y_min, x2, xd = int((2 + sqrt(4 - 8 * (1 - end))) / 4), -1, 0, 3
+  x_max, y_min, x2, xd = int((2 + math.sqrt(4 - 8 * (1 - end))) / 4), -1, 0, 3
   for x in xrange(1, x_max + 1):
     x2 += xd
     xd += 6
-    if x2 >= end: y_min = (((int(ceil(sqrt(x2 - end))) - 1) << 1) - 2) << 1
+    if x2 >= end: y_min = (((int(math.ceil(math.sqrt(x2 - end))) - 1) << 1) - 2) << 1
     n, n_diff = ((x * x + x) << 1) - 1, (((x - 1) << 1) - 2) << 1
     for d in xrange(n_diff, y_min, -8):
       if n % 12 == 11:
@@ -356,7 +354,7 @@ using the Sieve of Atkin."""
   if end <= 3:
     return primes[:max(0, end - 2)]
 
-  for n in xrange(5 >> 1, (int(sqrt(end)) + 1) >> 1):
+  for n in xrange(5 >> 1, (int(math.sqrt(end)) + 1) >> 1):
     if sieve[n]:
       primes.append((n << 1) + 1)
       aux = (n << 1) + 1
@@ -364,7 +362,7 @@ using the Sieve of Atkin."""
       for k in xrange(aux, end, 2 * aux):
         sieve[k >> 1] = False
 
-  s = int(sqrt(end)) + 1
+  s = int(math.sqrt(end)) + 1
   if s % 2 == 0:
     s += 1
   primes.extend([i for i in xrange(s, end, 2) if sieve[i >> 1]])

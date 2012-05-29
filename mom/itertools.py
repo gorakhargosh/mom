@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
+""":synopsis: Implements :mod:`itertools` for older versions of Python.
 :module: mom.itertools
-:synopsis: Implements :mod:`itertools` functions for earlier version of Python.
 :copyright: 2010-2011 by Daniel Neuhäuser
 :license: BSD, PSF
 

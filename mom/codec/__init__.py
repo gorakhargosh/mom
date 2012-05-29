@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Many different types of common encode/decode function.
 :module: mom.codec
-:synopsis: Many different types of common encode/decode function.
 
 This module contains codecs for converting between hex, base64, base85,
 base58, base62, base36, decimal, and binary representations of bytes.

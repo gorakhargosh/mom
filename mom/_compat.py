@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 # Released into the public domain.
 
-"""
+""":synopsis: Deals with a lot of cross-version issues.
 :module: mom._compat
-:synopsis: Deals with a lot of cross-version issues.
 
 Should not be used in public code. Use the wrappers in mom.
 """

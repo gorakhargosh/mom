@@ -17,10 +17,8 @@
 # limitations under the License.
 
 
-"""
+""":synopsis: Deals with a lot of cross-version issues.
 :module: mom.builtins
-:synopsis: Deals with a lot of cross-version issues.
-
 
 ``bytes``, ``str``, ``unicode``, and ``basestring`` mean different
 things to Python 2.5, 2.6, and 3.x.
@@ -241,8 +239,8 @@ def bin(number, prefix="0b"):
       Bit string.
   """
   if number is None:
-    raise TypeError("'%r' object cannot be interpreted as an index"\
-    % type(number).__name__)
+    raise TypeError("'%r' object cannot be interpreted as an index" %
+                    type(number).__name__)
   prefix = prefix or ""
   if number < 0:
     number = -number
@@ -402,11 +400,11 @@ def integer_bit_length(number):
   _ = number & 1
   hex_num = "%x" % number
   return ((len(hex_num) - 1) * 4) + {
-    "0": 0, "1": 1, "2": 2, "3": 2,
-    "4": 3, "5": 3, "6": 3, "7": 3,
-    "8": 4, "9": 4, "a": 4, "b": 4,
-    "c": 4, "d": 4, "e": 4, "f": 4,
-    }[hex_num[0]]
+      "0": 0, "1": 1, "2": 2, "3": 2,
+      "4": 3, "5": 3, "6": 3, "7": 3,
+      "8": 4, "9": 4, "a": 4, "b": 4,
+      "c": 4, "d": 4, "e": 4, "f": 4,
+      }[hex_num[0]]
   #return int(math.floor(math.log(n, 2))+1)
 
 

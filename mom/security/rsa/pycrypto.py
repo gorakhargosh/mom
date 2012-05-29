@@ -46,15 +46,15 @@ class PrivateKey(keys.PrivateKey):
   def __init__(self, key_info, encoded_key, encoding):
     super(PrivateKey, self).__init__(key_info, encoded_key, encoding)
     key_info_args = (
-      self.key_info["modulus"],
-      self.key_info["publicExponent"],
-      self.key_info["privateExponent"],
-      self.key_info["prime1"],
-      self.key_info["prime2"],
-      #self.key_info["exponent1"],
-      #self.key_info["exponent2"],
-      #self.key_info["coefficient"],
-      )
+        self.key_info["modulus"],
+        self.key_info["publicExponent"],
+        self.key_info["privateExponent"],
+        self.key_info["prime1"],
+        self.key_info["prime2"],
+        #self.key_info["exponent1"],
+        #self.key_info["exponent2"],
+        #self.key_info["coefficient"],
+        )
     self._key = PublicKey.RSA.construct(key_info_args)
 
   def _sign(self, digest):
@@ -68,8 +68,8 @@ class PrivateKey(keys.PrivateKey):
     Verify signature against digest signed by public key.
     """
     #public_key = self.key.publickey()
-    #return public_key.verify(digest, (signature, ))
-    return self.key.verify(digest, (signature, ))
+    #return public_key.verify(digest, (signature,))
+    return self.key.verify(digest, (signature,))
 
   @property
   def key(self):
@@ -93,9 +93,9 @@ class PublicKey(keys.PublicKey):
   def __init__(self, key_info, encoded_key, encoding):
     super(PublicKey, self).__init__(key_info, encoded_key, encoding)
     key_info_args = (
-      self.key_info["modulus"],
-      self.key_info["exponent"],
-      )
+        self.key_info["modulus"],
+        self.key_info["exponent"],
+        )
     self._key = PublicKey.RSA.construct(key_info_args)
 
   def _sign(self, digest):
@@ -108,7 +108,7 @@ class PublicKey(keys.PublicKey):
     """
     Verify signature against digest signed by public key.
     """
-    return self.key.verify(digest, (signature, ))
+    return self.key.verify(digest, (signature,))
 
   @property
   def key(self):

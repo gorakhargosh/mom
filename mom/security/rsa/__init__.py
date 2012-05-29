@@ -42,9 +42,9 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "parse_private_key",
-  "parse_public_key",
-  ]
+    "parse_private_key",
+    "parse_public_key",
+    ]
 
 
 def parse_private_key(encoded_key, encoding="PEM"):

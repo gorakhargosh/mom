@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Math routines.
 :module: mom.math
-:synopsis: Math routines.
 
 Math
 ----

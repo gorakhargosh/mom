@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Routines used by ASCII-based base converters.
 :module: mom.codec._base
-:synopsis: Routines used by ASCII-based base converters.
 
 .. autofunction:: base_encode
 .. autofunction:: base_decode

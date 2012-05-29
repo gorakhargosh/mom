@@ -17,9 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: More portable JSON encoding and decoding routines.
 :module: mom.codec.json
-:synopsis: More portable JSON encoding and decoding routines.
 
 .. autofunction:: json_encode
 .. autofunction:: json_decode

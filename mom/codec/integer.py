@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Routines for converting between integers and bytes.
 :module: mom.codec.integer
-:synopsis: Routines for converting between integers and bytes.
 
 Number-bytes conversion
 -----------------------

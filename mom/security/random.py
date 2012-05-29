@@ -21,7 +21,7 @@
 :synopsis: Random number, bits, bytes, string, sequence, & password generation.
 
 Bits and bytes
----------------------------
+--------------
 .. autofunction:: generate_random_bits
 .. autofunction:: generate_random_bytes
 
@@ -52,6 +52,8 @@ Utility
 
 from __future__ import absolute_import
 from __future__ import division
+
+import math
 
 from mom import _compat
 from mom import builtins
@@ -89,6 +91,20 @@ __all__ = [
     "random_choice",
     "random_shuffle",
     ]
+
+
+HEXADECIMAL_DIGITS = string.DIGITS + "abcdef"
+DIGITS = string.DIGITS
+LOWERCASE_ALPHA = string.ASCII_LOWERCASE
+UPPERCASE_ALPHA = string.ASCII_UPPERCASE
+LOWERCASE_ALPHANUMERIC = LOWERCASE_ALPHA + string.DIGITS
+UPPERCASE_ALPHANUMERIC = UPPERCASE_ALPHA + string.DIGITS
+ALPHA = string.ASCII_LETTERS
+ALPHANUMERIC = ALPHA + string.DIGITS
+ASCII_PRINTABLE = ALPHA + string.DIGITS + string.PUNCTUATION
+ALL_PRINTABLE = string.PRINTABLE
+PUNCTUATION = string.PUNCTUATION
+
 
 generate_random_bytes = _compat.generate_random_bytes
 
@@ -169,7 +185,8 @@ def generate_random_uint_exactly(n_bits, rand_func=generate_random_bytes):
       (2**n_bits)-1 both inclusive.
   """
   # Doesn't perform any floating-point operations.
-  value = integer.bytes_to_uint(generate_random_bits(n_bits, rand_func=rand_func))
+  value = integer.bytes_to_uint(generate_random_bits(n_bits,
+                                                     rand_func=rand_func))
   #assert(value >= 0 and value < (2L ** n_bits))
   # Set the high bit to ensure bit length.
   #value |= 2 ** (n_bits - 1)
@@ -193,8 +210,8 @@ def generate_random_uint_between(low, high, rand_func=generate_random_bytes):
       Random unsigned long integer value.
   """
   if not (builtins.is_integer(low) and builtins.is_integer(high)):
-    raise TypeError("unsupported argument types(s): %r and %r"\
-    % (type(low).__name__, type(high).__name__))
+    raise TypeError("unsupported argument types(s): %r and %r" %
+                    (type(low).__name__, type(high).__name__))
   if low >= high:
     raise ValueError("high value must be greater than low value.")
   substrate = high - low - 1
@@ -219,9 +236,8 @@ def generate_random_hex_string(length=8, rand_func=generate_random_bytes):
   """
   #if length % 2 or length <= 0:
   if length & 1 or length <= 0:
-    raise ValueError(
-      "This function expects a positive even number "\
-      "length: got length `%r`." % length)
+    raise ValueError("This function expects a positive even number "
+                     "length: got length `%r`." % length)
   return codec.hex_encode(rand_func(length >> 1))
 
 
@@ -270,24 +286,12 @@ def generate_random_sequence(length, pool, rand_func=generate_random_bytes):
       A list of elements randomly chosen from the pool.
   """
   if not builtins.is_integer(length):
-    raise TypeError("Length must be a positive integer: got `%r`" %\
+    raise TypeError("Length must be a positive integer: got `%r`" %
                     type(length).__name__)
   if length <= 0:
     raise ValueError("length must be a positive integer: got %d" % length)
   return [random_choice(pool, rand_func) for _ in builtins.range(length)]
 
-
-HEXADECIMAL_DIGITS = string.DIGITS + "abcdef"
-DIGITS = string.DIGITS
-LOWERCASE_ALPHA = string.ASCII_LOWERCASE
-UPPERCASE_ALPHA = string.ASCII_UPPERCASE
-LOWERCASE_ALPHANUMERIC = LOWERCASE_ALPHA + string.DIGITS
-UPPERCASE_ALPHANUMERIC = UPPERCASE_ALPHA + string.DIGITS
-ALPHA = string.ASCII_LETTERS
-ALPHANUMERIC = ALPHA + string.DIGITS
-ASCII_PRINTABLE = ALPHA + string.DIGITS + string.PUNCTUATION
-ALL_PRINTABLE = string.PRINTABLE
-PUNCTUATION = string.PUNCTUATION
 
 def generate_random_string(length, pool=ALPHANUMERIC,
                            rand_func=generate_random_bytes):
@@ -347,11 +351,9 @@ def calculate_entropy(length, pool=ALPHANUMERIC):
   :returns:
       The entropy (in bits) of the random sequence.
   """
-  from math import log
-
   pool = set(pool)
   log_of_2 = 0.6931471805599453
-  entropy = length * (log(len(pool)) / log_of_2)
+  entropy = length * (math.log(len(pool)) / log_of_2)
 
   return entropy
 
@@ -371,11 +373,9 @@ def generate_random_sequence_strong(entropy, pool,
   :returns:
       Randomly generated sequence with specified entropy.
   """
-  from math import log, ceil
-
   pool = list(set(pool))
   log_of_2 = 0.6931471805599453
-  length = int(ceil((log_of_2 / log(len(pool))) * entropy))
+  length = int(math.ceil((log_of_2 / math.log(len(pool))) * entropy))
 
   return generate_random_sequence(length, pool, rand_func)
 

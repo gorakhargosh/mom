@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Decorators used throughout the library.
 :module: mom.decorators
-:synopsis: Decorators used throughout the library.
 
 .. autofunction:: deprecated
 """

@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Byte arrays.
 :module: mom._types.bytearray
-:synopsis: Byte arrays.
 
 Creation and manipulation
 -------------------------

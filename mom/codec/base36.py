@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Base-36 codec.
 :module: mom.codec.base36
-:synopsis: Base-36 codec.
 
 .. autofunction:: b36encode
 .. autofunction:: b36decode

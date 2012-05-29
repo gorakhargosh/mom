@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: string module compatibility.
 :module: mom.string
-:synopsis: string module compatibility.
 """
 
 from __future__ import absolute_import

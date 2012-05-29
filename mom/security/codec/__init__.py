@@ -29,11 +29,9 @@ PEM key decoders
 
 from __future__ import absolute_import
 
-from mom.security.codec.pem import\
-  CERT_PEM_HEADER, PUBLIC_KEY_PEM_HEADER,\
-  PRIVATE_KEY_PEM_HEADER, RSA_PRIVATE_KEY_PEM_HEADER
-from mom.security.codec.pem.x509 import X509Certificate
-from mom.security.codec.pem.rsa import RSAPrivateKey, RSAPublicKey
+from mom.security.codec import pem
+from mom.security.codec.pem import rsa
+from mom.security.codec.pem import x509
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -52,13 +50,13 @@ def public_key_pem_decode(pem_key):
       A dictionary of key information.
   """
   pem_key = pem_key.strip()
-  if pem_key.startswith(CERT_PEM_HEADER):
-    key = X509Certificate(pem_key).public_key
-  elif pem_key.startswith(PUBLIC_KEY_PEM_HEADER):
-    key = RSAPublicKey(pem_key).public_key
+  if pem_key.startswith(pem.CERT_PEM_HEADER):
+    key = x509.X509Certificate(pem_key).public_key
+  elif pem_key.startswith(pem.PUBLIC_KEY_PEM_HEADER):
+    key = rsa.RSAPublicKey(pem_key).public_key
   else:
-    raise NotImplementedError(
-      "Only PEM X.509 certificates & public RSA keys can be read.")
+    raise NotImplementedError("Only PEM X.509 certificates & public "
+                              "RSA keys can be read.")
   return key
 
 
@@ -72,9 +70,9 @@ def private_key_pem_decode(pem_key):
       A dictionary of key information.
   """
   pem_key = pem_key.strip()
-  if pem_key.startswith(PRIVATE_KEY_PEM_HEADER)\
-  or pem_key.startswith(RSA_PRIVATE_KEY_PEM_HEADER):
-    key = RSAPrivateKey(pem_key).private_key
+  if (pem_key.startswith(pem.PRIVATE_KEY_PEM_HEADER) or
+      pem_key.startswith(pem.RSA_PRIVATE_KEY_PEM_HEADER)):
+    key = rsa.RSAPrivateKey(pem_key).private_key
   else:
     raise NotImplementedError("Only PEM private RSA keys can be read.")
   return key

@@ -7,9 +7,8 @@
 #
 # Place into the public domain.
 
-"""
+""":synopsis: Echoes calls made to functions and methods in a module.
 :module: mom.tracer
-:synopsis: Echoes calls made to functions and methods in a module.
 
 "Tracing" a function call means printing out the name of the function
 and the values of its arguments before making the call (which is more
@@ -45,9 +44,9 @@ decorated function will be traced. Example::
 
 from __future__ import absolute_import
 
+import functools
 import inspect
 import sys
-import functools
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

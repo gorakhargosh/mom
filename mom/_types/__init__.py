@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Internal types.
 :module: mom._types
-:synopsis: Internal types.
 """
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

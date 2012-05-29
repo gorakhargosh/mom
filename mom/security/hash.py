@@ -74,8 +74,7 @@ def sha1_digest(*inputs):
   hash_func = hashlib.sha1()
   for i in inputs:
     if not builtins.is_bytes(i):
-      raise TypeError(
-        "input type must be bytes: got %r" % type(i).__name__)
+      raise TypeError("input type must be bytes: got %r" % type(i).__name__)
     hash_func.update(i)
   return hash_func.digest()
 
@@ -118,8 +117,7 @@ def md5_digest(*inputs):
   hash_func = hashlib.md5()
   for i in inputs:
     if not builtins.is_bytes(i):
-      raise TypeError(
-        "input type must be bytes: got %r" % type(i).__name__)
+      raise TypeError("input type must be bytes: got %r" % type(i).__name__)
     hash_func.update(i)
   return hash_func.digest()
 
@@ -164,8 +162,7 @@ def hmac_sha1_digest(key, data):
   import hmac
 
   if not builtins.is_bytes(data):
-    raise TypeError(
-      "data type must be bytes: got %r" % type(data).__name__)
+    raise TypeError("data type must be bytes: got %r" % type(data).__name__)
 
   return hmac.new(key, data, hashlib.sha1).digest()
 

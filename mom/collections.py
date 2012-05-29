@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-:module: mom.collections
-:synopsis: Common collections.
+""":synopsis: Common collections.
+:module: mom.
 
 Queues
 ------

@@ -17,9 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Library compatibility.
 :module: mom.codec._json_compat
-:synopsis: Library compatibility.
 """
 
 from __future__ import absolute_import

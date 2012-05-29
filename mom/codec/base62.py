@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Base-62 representation for compact human-input & 7-bit ASCII safety.
 :module: mom.codec.base62
-:synopsis: Base-62 representation for compact human-input & 7-bit ASCII safety.
 
 Where should you use base-62?
 -----------------------------

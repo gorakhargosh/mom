@@ -17,9 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Common functions for text encodings.
 :module: mom.codec.text
-:synopsis: Common functions for text encodings.
 
 Text encoding
 -------------

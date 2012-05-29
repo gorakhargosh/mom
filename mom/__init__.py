@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Mother of all our Python projects.
 :module: mom
-:synopsis: Mother of all our Python projects.
 
 How many times have you noticed a ``utils`` subpackage or module?
 -----------------------------------------------------------------
@@ -40,6 +39,7 @@ this library and think it should, speak up.
 .. automodule:: mom.functional
 .. automodule:: mom.itertools
 .. automodule:: mom.math
+.. automodule:: mom.mimeparse
 .. automodule:: mom.string
 """
 

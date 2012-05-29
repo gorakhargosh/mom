@@ -23,9 +23,8 @@
 # common tricks to reduce computation time. Ensure that you understand them
 # before working with this code.
 
-"""
+""":synopsis: ASCII-85 and RFC1924 Base85 encoding and decoding functions.
 :module: mom.codec.base85
-:synopsis: ASCII-85 and RFC1924 Base85 encoding and decoding functions.
 :see: http://en.wikipedia.org/wiki/Ascii85
 :see: http://tools.ietf.org/html/rfc1924
 :see: http://www.piclist.com/techref/method/encode.htm

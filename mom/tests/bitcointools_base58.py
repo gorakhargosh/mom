@@ -21,8 +21,7 @@
 #
 # Obtained from https://github.com/gavinandresen/bitcointools/
 
-"""
-Encode/decode base58 in the same way that Bitcoin does
+"""Encode/decode base58 in the same way that Bitcoin does
 
 The original code has been ported to run on Python 2.x and Python 3.x.
 However, the implementation is still a broken one. DO NOT USE.

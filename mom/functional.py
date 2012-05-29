@@ -17,9 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
+""":synopsis: Functional programming primitives.
 :module: mom.functional
-:synopsis: Functional programming primitives.
 
 Higher-order functions
 -----------------------
