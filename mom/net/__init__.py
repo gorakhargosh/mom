@@ -17,12 +17,12 @@
 
 """:module: mom.net
 
-.. automodule:: mom.net.scheme
+.. automodule:: mom.net.data_uri
 """
 
-from mom.net import scheme
+from mom.net import data_uri
 
 
 __all__ = [
-    "scheme",
+    "data_uri",
     ]

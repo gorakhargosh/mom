@@ -19,6 +19,7 @@
 
 from __future__ import absolute_import
 
+from os import path
 from mom import _compat
 from mom import builtins
 from mom import codec
@@ -34,6 +35,10 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 b = builtins.b
 
+
+TEST_DIR_PATH = path.realpath(path.abspath(path.dirname(__file__)))
+
+IMAGES_DIR_PATH = path.join(TEST_DIR_PATH, "images")
 
 UNICODE_STRING = pyxkconstants.UNICODE_STRING
 UNICODE_STRING2 = pyxkconstants.UNICODE_STRING2
@@ -105,6 +110,10 @@ RFC_NOTE_DATA_URI = b("data:,A%20brief%20note")
 RFC_NOTE_DECODED = (b("A brief note"), (b("text"), b("plain"),
                                         {b("charset"): b("US-ASCII")}))
 
+# Images for testing data URIs.
+IMAGES_FILE_GIF_PATH = path.join(IMAGES_DIR_PATH, "file.gif")
+IMAGES_FILE_PNG_PATH = path.join(IMAGES_DIR_PATH, "file.png")
+IMAGES_FILE_JPG_PATH = path.join(IMAGES_DIR_PATH, "file.jpg")
 
 # Binary data for the images/file.gif file.
 IMAGES_FILE_GIF = b("""\
