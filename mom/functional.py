@@ -31,11 +31,12 @@ Python module and run it::
 
     from mom import functional
 
-    people = [
+    PEOPLE = [
         {"name": "Harry",    "age": 100},
         {"name": "Hermione", "age": 16},
         {"name": "Rob",      "age": 200},
     ]
+
     def youngest(person1, person2):
         '''Comparator that returns the youngest of two people.'''
         return person1 if person1["age"] <= person2["age"] else person2
@@ -44,8 +45,8 @@ Python module and run it::
         '''Comparator that returns the oldest of two people.'''
         return person1 if person1["age"] >= person2["age"] else person2
 
-    who_youngest = functional.reduce(youngest, people)
-    who_oldest = functional.reduce(oldest, people)
+    who_youngest = functional.reduce(youngest, PEOPLE)
+    who_oldest = functional.reduce(oldest, PEOPLE)
 
     pprint.print(who_youngest)
     # -> {"age" : 16, "name" : "Hermione"}
@@ -54,45 +55,46 @@ Python module and run it::
 
     # More examples.
     # Now let's list all the names of the people.
-    pprint.print(functional.pluck(people, "name"))
+    names_of_people = functional.pluck(PEOPLE, "name")
+    pprint.print(names_of_people)
     # -> ("Harry", "Hermione", "Rob")
 
     # Let's weed out all people who don't have an "H" in their names.
     pprint.print(functional.reject(lambda name: "H" not in name,
-                                   functional.pluck(people, "name")))
+                                   names_of_people))
     # -> ("Harry", "Hermione")
 
     # Or let's partition them into two groups
     pprint.print(functional.partition(lambda name: "H" in name,
-                                      functional.pluck(people, "name")))
+                                      names_of_people))
     # -> (["Harry", "Hermione"], ["Rob"])
 
     # Let's find all the members of a module that are not exported to wildcard
     # imports by its ``__all__`` member.
     pprint.print(functional.difference(dir(functional), functional.__all__))
     # -> ["__all__",
-          "__author__",
-          "__builtins__",
-          "__doc__",
-          "__file__",
-          "__name__",
-          "__package__",
-          "_compose",
-          "_contains_fallback",
-          "_get_iter_next",
-          "_ifilter",
-          "_ifilterfalse",
-          "_leading",
-          "_some1",
-          "_some2",
-          "absolute_import",
-          "builtins",
-          "chain",
-          "collections",
-          "functools",
-          "itertools",
-          "map",
-          "starmap"]
+    #     "__author__",
+    #     "__builtins__",
+    #     "__doc__",
+    #     "__file__",
+    #     "__name__",
+    #     "__package__",
+    #     "_compose",
+    #     "_contains_fallback",
+    #     "_get_iter_next",
+    #     "_ifilter",
+    #     "_ifilterfalse",
+    #     "_leading",
+    #     "_some1",
+    #     "_some2",
+    #     "absolute_import",
+    #     "builtins",
+    #     "chain",
+    #     "collections",
+    #     "functools",
+    #     "itertools",
+    #     "map",
+    #     "starmap"]
 
 Higher-order functions are extremely useful where you want to express yourself
 succinctly instead of writing a ton of for and while loops.
