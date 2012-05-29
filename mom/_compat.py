@@ -9,11 +9,12 @@
 Should not be used in public code. Use the wrappers in mom.
 """
 
+# DO NOT REMOVE THIS LINE.
 from __future__ import absolute_import
 
 import os
-import sys
 import struct
+import sys
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -28,9 +29,9 @@ INT64_MAX = (1 << 63) - 1
 INT32_MAX = (1 << 31) - 1
 INT16_MAX = (1 << 15) - 1
 UINT128_MAX = (1 << 128) - 1    # 340282366920938463463374607431768211455L
-UINT64_MAX = 0xffffffffffffffff # ((1 << 64) - 1)
-UINT32_MAX = 0xffffffff # ((1 << 32) - 1)
-UINT16_MAX = 0xffff # ((1 << 16) - 1)
+UINT64_MAX = 0xffffffffffffffff  # ((1 << 64) - 1)
+UINT32_MAX = 0xffffffff  # ((1 << 32) - 1)
+UINT16_MAX = 0xffff  # ((1 << 16) - 1)
 UINT8_MAX = 0xff
 
 
@@ -85,6 +86,7 @@ try:
     """
     return ord(byte_)
 except NameError:
+
   # Python3.
   def byte_ord(byte_):
     """Returns the ordinal value of the given byte.
@@ -130,16 +132,16 @@ else:
 # sense, but remember that our code may be used within tight loops, and we do
 # not want user code to slow down because of thousands of calls to byte_literal
 # or b. Do it once here.
-ZERO_BYTE = byte_literal('\x00')
-EMPTY_BYTE = byte_literal('')
-EQUAL_BYTE = byte_literal('=')
-PLUS_BYTE = byte_literal('+')
-HYPHEN_BYTE = byte_literal('-')
-FORWARD_SLASH_BYTE = byte_literal('/')
-UNDERSCORE_BYTE = byte_literal('_')
-DIGIT_ZERO_BYTE = byte_literal('0')
+ZERO_BYTE = byte_literal("\x00")
+EMPTY_BYTE = byte_literal("")
+EQUAL_BYTE = byte_literal("=")
+PLUS_BYTE = byte_literal("+")
+HYPHEN_BYTE = byte_literal("-")
+FORWARD_SLASH_BYTE = byte_literal("/")
+UNDERSCORE_BYTE = byte_literal("_")
+DIGIT_ZERO_BYTE = byte_literal("0")
 
-HAVE_LITTLE_ENDIAN = bool(struct.pack('h', 1) == '\x01\x00')
+HAVE_LITTLE_ENDIAN = bool(struct.pack("h", 1) == "\x01\x00")
 # HAVE_LITTLE_ENDIAN = bool(
 #     builtins.byte_ord(array("i", [1]).tostring()[0])
 #     )
@@ -196,7 +198,7 @@ except NameError:
     """Bleh."""
     pass
 
-  throw = Throw() # easy sentinel hack
+  throw = Throw()  # easy sentinel hack
 
   def next(iterator, default=throw):
     """next(iterator[, default])
@@ -210,8 +212,7 @@ except NameError:
       # this way an AttributeError while executing next() isn't hidden
       # (2.6 does this too)
     except AttributeError:
-      raise TypeError("%s object is not an iterator"\
-      % type(iterator).__name__)
+      raise TypeError("%s object is not an iterator" % type(iterator).__name__)
     try:
       return iternext()
     except StopIteration:
@@ -263,6 +264,7 @@ except AttributeError:
         return random_bytes
     except ImportError:
       win32prng = None
+
       # What the fuck?!
       def generate_random_bytes(_):
         """WTF.

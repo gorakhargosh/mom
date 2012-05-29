@@ -51,15 +51,15 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "hmac_sha1_base64",
-  "hmac_sha1_digest",
-  "md5_base64_digest",
-  "md5_digest",
-  "md5_hex_digest",
-  "sha1_base64_digest",
-  "sha1_digest",
-  "sha1_hex_digest",
-  ]
+    "hmac_sha1_base64",
+    "hmac_sha1_digest",
+    "md5_base64_digest",
+    "md5_digest",
+    "md5_hex_digest",
+    "sha1_base64_digest",
+    "sha1_digest",
+    "sha1_hex_digest",
+    ]
 
 
 def sha1_digest(*inputs):

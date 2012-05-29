@@ -112,18 +112,18 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "utf8_encode",
-  "utf8_decode",
-  "utf8_encode_if_unicode",
-  "utf8_decode_if_bytes",
-  "utf8_decode_recursive",
-  "utf8_encode_recursive",
-  "bytes_to_unicode",
-  "bytes_to_unicode_recursive",
-  "to_unicode_if_bytes",
-  "ascii_encode",
-  "latin1_encode",
-  ]
+    "ascii_encode",
+    "bytes_to_unicode",
+    "bytes_to_unicode_recursive",
+    "latin1_encode",
+    "to_unicode_if_bytes",
+    "utf8_decode",
+    "utf8_decode_if_bytes",
+    "utf8_decode_recursive",
+    "utf8_encode",
+    "utf8_encode_if_unicode",
+    "utf8_encode_recursive",
+    ]
 
 
 def utf8_encode(unicode_text):

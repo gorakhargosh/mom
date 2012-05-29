@@ -31,6 +31,7 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 ZERO_BYTE = _compat.ZERO_BYTE
 EMPTY_BYTE = _compat.EMPTY_BYTE
 
+get_word_alignment = _compat.get_word_alignment
 
 def integer_byte_length_shift_counting(num):
   """
@@ -80,7 +81,7 @@ def integer_bit_length_shift_counting(num):
 
 def _integer_raw_bytes_without_leading(num,
                                        _zero_byte=ZERO_BYTE,
-                                       _get_machine_alignment=_compat.get_word_alignment):
+                                       _get_word_alignment=get_word_alignment):
   # Do not change this to `not num` otherwise a TypeError will not
   # be raised when `None` is passed in as a value.
   if num == 0:
@@ -88,7 +89,7 @@ def _integer_raw_bytes_without_leading(num,
   if num < 0:
     num = -num
   raw_bytes = EMPTY_BYTE
-  word_bits, _, max_uint, pack_type = _get_machine_alignment(num)
+  word_bits, _, max_uint, pack_type = _get_word_alignment(num)
   pack_format = ">" + pack_type
   while num > 0:
     raw_bytes = struct.pack(pack_format, num & max_uint) + raw_bytes
@@ -150,46 +151,46 @@ def integer_bit_length_word_aligned(num):
     return bits
 
 
-#def _bin_lookup(num, prefix="0b"):
-#    """
-#    Converts a long value to its binary representation based on a lookup table.
+# def _bin_lookup(num, prefix="0b"):
+#   """
+#   Converts a long value to its binary representation based on a lookup table.
 #
-#    Alternative implementation of :func:``bin``.
+#   Alternative implementation of :func:``bin``.
 #
-#    :param num:
-#        Long value.
-#    :param prefix:
-#        The prefix to use for the bitstring. Default "0b" to mimic Python
-#        builtin ``bin()``.
-#    :returns:
-#        Bit string.
-#    """
-#    prefix = prefix or ""
-#    bit_string = ""
-#    lookup = {"0":"000", "1":"001", "2":"010", "3":"011",
-#              "4":"100", "5":"101", "6":"110", "7":"111"}
-#    for c in oct(num)[1:]:
-#        bit_string += lookup[c]
-#    return prefix + bit_string
+#   :param num:
+#       Long value.
+#   :param prefix:
+#       The prefix to use for the bitstring. Default "0b" to mimic Python
+#       builtin ``bin()``.
+#   :returns:
+#       Bit string.
+#   """
+#   prefix = prefix or ""
+#   bit_string = ""
+#   lookup = {"0":"000", "1":"001", "2":"010", "3":"011",
+#             "4":"100", "5":"101", "6":"110", "7":"111"}
+#   for c in oct(num)[1:]:
+#     bit_string += lookup[c]
+#   return prefix + bit_string
 #
 #
-#def _bin_recursive(num, prefix="0b"):
-#    """
-#    Converts a long value to its binary representation recursively.
+# def _bin_recursive(num, prefix="0b"):
+#   """
+#   Converts a long value to its binary representation recursively.
 #
-#    Alternative implementation of :func:``bin``.
+#   Alternative implementation of :func:``bin``.
 #
-#    :param num:
-#        Long value.
-#    :param prefix:
-#        The prefix to use for the bitstring. Default "0b" to mimic Python
-#        builtin ``bin()``.
-#    :returns:
-#        Bit string.
-#    """
-#    prefix = prefix or ""
-#    if num <= 1:
-#        bitstring = bytes(num)
-#    else:
-#        bitstring = _bin_recursive(num >> 1) + bytes(num & 1)
-#    return prefix + bitstring
+#   :param num:
+#       Long value.
+#   :param prefix:
+#       The prefix to use for the bitstring. Default "0b" to mimic Python
+#       builtin ``bin()``.
+#   :returns:
+#       Bit string.
+#   """
+#   prefix = prefix or ""
+#   if num <= 1:
+#     bitstring = bytes(num)
+#   else:
+#     bitstring = _bin_recursive(num >> 1) + bytes(num & 1)
+#   return prefix + bitstring

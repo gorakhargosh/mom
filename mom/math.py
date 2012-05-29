@@ -34,7 +34,8 @@ Primes
 .. autofunction:: is_prime(num, iterations=5, sieve=sieve)
 """
 
-from __future__ import absolute_import, division
+from __future__ import absolute_import
+from __future__ import division
 
 from mom import builtins
 from mom import prime_sieve
@@ -45,14 +46,14 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "gcd",
-  "generate_random_prime",
-  "generate_random_safe_prime",
-  "inverse_mod",
-  "is_prime",
-  "lcm",
-  "pow_mod",
-  ]
+    "gcd",
+    "generate_random_prime",
+    "generate_random_safe_prime",
+    "inverse_mod",
+    "is_prime",
+    "lcm",
+    "pow_mod",
+    ]
 
 
 def gcd(num_a, num_b):

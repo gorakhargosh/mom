@@ -29,8 +29,8 @@ from __future__ import absolute_import
 
 from mom import _compat
 from mom import builtins
-from mom.codec import text
 from mom.codec import _json_compat
+from mom.codec import text
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"

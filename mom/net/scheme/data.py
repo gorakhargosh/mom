@@ -47,9 +47,9 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "data_urlencode",
-  "data_urlparse",
-  ]
+    "data_urlencode",
+    "data_urlparse",
+    ]
 
 b = builtins.b
 

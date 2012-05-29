@@ -46,10 +46,12 @@ from mom import functional
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
-__all__ = ["match_path",
-           "match_path_against",
-           "match_any_paths",
-           "filter_paths"]
+__all__ = [
+    "filter_paths",
+    "match_any_paths",
+    "match_path",
+    "match_path_against",
+    ]
 
 
 def _string_lower(string):

@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2010, 2011, 2012 Google Inc. All Rights Reserved.
-# Copyright 2011 Yesudeep Mangalapilly <yesudeep@gmail.com>
+# Copyright 2012 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,19 +24,18 @@
 
 from __future__ import absolute_import
 
-from pyasn1.type import univ
-from pyasn1.codec.der import encoder, decoder
-from mom.builtins import reduce
-from mom.security.codec.pem import\
-  der_to_pem_certificate, pem_to_der_certificate
+from mom import builtins
+from mom.security.codec import pem
 from mom.security.codec.asn1.x509 import Certificate
+from pyasn1.codec.der import encoder, decoder
+from pyasn1.type import univ
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 def bitarray_to_integer(bitarray):
-  return int(reduce((lambda a, b: (int(a) << 1) + int(b)), bitarray))
+  return int(builtins.reduce((lambda a, b: (int(a) << 1) + int(b)), bitarray))
 
 
 class X509Certificate(object):
@@ -100,7 +98,7 @@ class X509Certificate(object):
   @classmethod
   def decode_from_pem_certificate(cls, certificate):
     certType = Certificate()
-    der = pem_to_der_certificate(certificate)
+    der = pem.pem_to_der_certificate(certificate)
     cert_asn1 = decoder.decode(der, asn1Spec=certType)[0]
     if len(cert_asn1) < 1:
       raise ValueError("No X.509 certificate found after ASN.1 decoding.")
@@ -108,7 +106,7 @@ class X509Certificate(object):
 
   @classmethod
   def encode_to_pem_certificate(cls, certificate_asn1):
-    return der_to_pem_certificate(encoder.encode(certificate_asn1))
+    return pem.der_to_pem_certificate(encoder.encode(certificate_asn1))
 
 
 TEST_CERTIFICATES = ("""
@@ -133,17 +131,17 @@ gO9HqAcXxrx99/3agvAVTKAFBFJtiWD1i1LkYeqKrPQOPo8=
 -----END CERTIFICATE-----""",
                      # OAuth 1.0 test case.
                      """
-                    -----BEGIN CERTIFICATE-----
-                    MIIBpjCCAQ+gAwIBAgIBATANBgkqhkiG9w0BAQUFADAZMRcwFQYDVQQDDA5UZXN0
-                    IFByaW5jaXBhbDAeFw03MDAxMDEwODAwMDBaFw0zODEyMzEwODAwMDBaMBkxFzAV
-                    BgNVBAMMDlRlc3QgUHJpbmNpcGFsMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
-                    gQC0YjCwIfYoprq/FQO6lb3asXrxLlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlY
-                    zypSRjVxwxrsuRcP3e641SdASwfrmzyvIgP08N4S0IFzEURkV1wp/IpH7kH41Etb
-                    mUmrXSwfNZsnQRE5SYSOhh+LcK2wyQkdgcMv11l4KoBkcwIDAQABMA0GCSqGSIb3
-                    DQEBBQUAA4GBAGZLPEuJ5SiJ2ryq+CmEGOXfvlTtEL2nuGtr9PewxkgnOjZpUy+d
-                    4TvuXJbNQc8f4AMWL/tO9w0Fk80rWKp9ea8/df4qMq5qlFWlx6yOLQxumNOmECKb
-                    WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
-                    -----END CERTIFICATE-----"""
+-----BEGIN CERTIFICATE-----
+MIIBpjCCAQ+gAwIBAgIBATANBgkqhkiG9w0BAQUFADAZMRcwFQYDVQQDDA5UZXN0
+IFByaW5jaXBhbDAeFw03MDAxMDEwODAwMDBaFw0zODEyMzEwODAwMDBaMBkxFzAV
+BgNVBAMMDlRlc3QgUHJpbmNpcGFsMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
+gQC0YjCwIfYoprq/FQO6lb3asXrxLlJFuCvtinTF5p0GxvQGu5O3gYytUvtC2JlY
+zypSRjVxwxrsuRcP3e641SdASwfrmzyvIgP08N4S0IFzEURkV1wp/IpH7kH41Etb
+mUmrXSwfNZsnQRE5SYSOhh+LcK2wyQkdgcMv11l4KoBkcwIDAQABMA0GCSqGSIb3
+DQEBBQUAA4GBAGZLPEuJ5SiJ2ryq+CmEGOXfvlTtEL2nuGtr9PewxkgnOjZpUy+d
+4TvuXJbNQc8f4AMWL/tO9w0Fk80rWKp9ea8/df4qMq5qlFWlx6yOLQxumNOmECKb
+WpkUQDIDJEoFUzKMVuJf4KO/FJ345+BNLGgbJ6WujreoM1X/gYfdnJ/J
+-----END CERTIFICATE-----"""
   )
 
 # pylint: disable-msg=C0301

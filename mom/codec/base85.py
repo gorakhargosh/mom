@@ -68,7 +68,8 @@ Functions
 .. autofunction:: ipv6_b85decode
 """
 
-from __future__ import absolute_import, division
+from __future__ import absolute_import
+from __future__ import division
 
 # pylint: disable-msg=R0801
 try: #pragma: no cover
@@ -81,24 +82,25 @@ except ImportError: #pragma: no cover
 
 import array
 import struct
-from mom import string
-from mom import builtins
+
 from mom import _compat
+from mom import builtins
+from mom import string
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "b85encode",
-  "b85decode",
-  "rfc1924_b85encode",
-  "rfc1924_b85decode",
-  "ASCII85_PREFIX",
-  "ASCII85_SUFFIX",
-  "ipv6_b85encode",
-  "ipv6_b85decode",
-  ]
+    "b85encode",
+    "b85decode",
+    "rfc1924_b85encode",
+    "rfc1924_b85decode",
+    "ASCII85_PREFIX",
+    "ASCII85_SUFFIX",
+    "ipv6_b85encode",
+    "ipv6_b85decode",
+    ]
 
 
 b = builtins.b

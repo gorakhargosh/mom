@@ -44,14 +44,14 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
+    "absolute_path",
     "get_dir_walker",
-    "walk",
-    "listdir",
     "list_directories",
     "list_files",
-    "absolute_path",
-    "real_absolute_path",
+    "listdir",
     "parent_dir_path",
+    "real_absolute_path",
+    "walk",
     ]
 
 

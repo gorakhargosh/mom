@@ -50,7 +50,8 @@ Utility
 
 """
 
-from __future__ import absolute_import, division
+from __future__ import absolute_import
+from __future__ import division
 
 from mom import _compat
 from mom import builtins
@@ -63,31 +64,31 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "generate_random_bits",
-  "generate_random_bytes",
-  "generate_random_hex_string",
-  "generate_random_uint_atmost",
-  "generate_random_uint_exactly",
-  "generate_random_uint_between",
-  "generate_random_string",
-  "generate_random_password",
-  "generate_random_sequence",
-  "generate_random_sequence_strong",
-  "random_choice",
-  "random_shuffle",
-  "calculate_entropy",
-  "HEXADECIMAL_DIGITS",
-  "DIGITS",
-  "LOWERCASE_ALPHA",
-  "UPPERCASE_ALPHA",
-  "LOWERCASE_ALPHANUMERIC",
-  "UPPERCASE_ALPHANUMERIC",
-  "ALPHA",
-  "ALPHANUMERIC",
-  "ASCII_PRINTABLE",
-  "ALL_PRINTABLE",
-  "PUNCTUATION",
-  ]
+    "ALL_PRINTABLE",
+    "ALPHA",
+    "ALPHANUMERIC",
+    "ASCII_PRINTABLE",
+    "DIGITS",
+    "HEXADECIMAL_DIGITS",
+    "LOWERCASE_ALPHA",
+    "LOWERCASE_ALPHANUMERIC",
+    "PUNCTUATION",
+    "UPPERCASE_ALPHA",
+    "UPPERCASE_ALPHANUMERIC",
+    "calculate_entropy",
+    "generate_random_bits",
+    "generate_random_bytes",
+    "generate_random_hex_string",
+    "generate_random_password",
+    "generate_random_sequence",
+    "generate_random_sequence_strong",
+    "generate_random_string",
+    "generate_random_uint_atmost",
+    "generate_random_uint_between",
+    "generate_random_uint_exactly",
+    "random_choice",
+    "random_shuffle",
+    ]
 
 generate_random_bytes = _compat.generate_random_bytes
 

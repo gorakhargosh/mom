@@ -67,7 +67,8 @@ Functions
 .. autofunction:: b58decode
 """
 
-from __future__ import absolute_import, division
+from __future__ import absolute_import
+from __future__ import division
 
 # pylint: disable-msg=R0801
 try: #pragma: no cover

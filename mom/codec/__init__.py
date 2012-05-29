@@ -299,10 +299,10 @@ from mom import _compat
 from mom import builtins
 from mom import functional
 from mom.codec import base36
-from mom.codec import integer
-from mom.codec import base62
 from mom.codec import base58
+from mom.codec import base62
 from mom.codec import base85
+from mom.codec import integer
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
@@ -311,24 +311,24 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 __all__ = [
     "B85_ASCII",
     "B85_RFC1924",
-    "base85_encode",
-    "base85_decode",
-    "base64_encode",
-    "base64_decode",
-    "base64_urlsafe_encode",
-    "base64_urlsafe_decode",
-    "base62_encode",
-    "base62_decode",
-    "base58_encode",
-    "base58_decode",
-    "base36_encode",
     "base36_decode",
-    "hex_encode",
-    "hex_decode",
-    "decimal_encode",
-    "decimal_decode",
-    "bin_encode",
+    "base36_encode",
+    "base58_decode",
+    "base58_encode",
+    "base62_decode",
+    "base62_encode",
+    "base64_decode",
+    "base64_encode",
+    "base64_urlsafe_decode",
+    "base64_urlsafe_encode",
+    "base85_decode",
+    "base85_encode",
     "bin_decode",
+    "bin_encode",
+    "decimal_decode",
+    "decimal_encode",
+    "hex_decode",
+    "hex_encode",
     ]
 
 

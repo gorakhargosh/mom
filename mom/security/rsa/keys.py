@@ -23,7 +23,6 @@
 
 from __future__ import absolute_import
 
-
 from mom import _compat
 from mom import builtins
 from mom.codec import integer

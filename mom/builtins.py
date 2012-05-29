@@ -112,26 +112,26 @@ __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
 
 __all__ = [
-  "byte",
-  "byte_ord",
-  "bytes",
-  "bytes_leading",
-  "bytes_trailing",
-  "bin",
-  "hex",
-  "integer_byte_length",
-  "integer_byte_size",
-  "integer_bit_length",
-  "is_sequence",
-  "is_unicode",
-  "is_bytes",
-  "is_bytes_or_unicode",
-  "is_integer",
-  "is_even",
-  "is_negative",
-  "is_odd",
-  "is_positive",
-  ]
+    "byte",
+    "byte_ord",
+    "bytes",
+    "bytes_leading",
+    "bytes_trailing",
+    "bin",
+    "hex",
+    "integer_byte_length",
+    "integer_byte_size",
+    "integer_bit_length",
+    "is_sequence",
+    "is_unicode",
+    "is_bytes",
+    "is_bytes_or_unicode",
+    "is_integer",
+    "is_even",
+    "is_negative",
+    "is_odd",
+    "is_positive",
+    ]
 
 
 # Integral range

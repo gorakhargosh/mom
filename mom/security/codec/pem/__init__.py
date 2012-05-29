@@ -22,16 +22,16 @@
 
 PEM/DER codec
 -------------
-.. autofunction:: pem_to_der
 .. autofunction:: der_to_pem
 .. autofunction:: der_to_pem_certificate
 .. autofunction:: der_to_pem_private_key
-.. autofunction:: der_to_pem_public_key
 .. autofunction:: der_to_pem_private_rsa_key
+.. autofunction:: der_to_pem_public_key
+.. autofunction:: pem_to_der
 .. autofunction:: pem_to_der_certificate
 .. autofunction:: pem_to_der_private_key
-.. autofunction:: pem_to_der_public_key
 .. autofunction:: pem_to_der_private_rsa_key
+.. autofunction:: pem_to_der_public_key
 
 Miscellaneous
 -------------
@@ -39,26 +39,28 @@ Miscellaneous
 """
 
 from __future__ import absolute_import
-from functools import partial
-from mom.codec import base64_decode, base64_encode
+
+import functools
+
+from mom import codec
 
 
 __author__ = "yesudeep@google.com (Yesudeep Mangalapilly)"
 
-
 __all__ = [
-  "der_to_pem",
-  "der_to_pem_certificate",
-  "der_to_pem_private_key",
-  "der_to_pem_public_key",
-  "der_to_pem_private_rsa_key",
-  "pem_to_der",
-  "pem_to_der_certificate",
-  "pem_to_der_private_key",
-  "pem_to_der_public_key",
-  "pem_to_der_private_rsa_key",
-  "cert_time_to_seconds",
-  ]
+    "cert_time_to_seconds",
+    "der_to_pem",
+    "der_to_pem_certificate",
+    "der_to_pem_private_key",
+    "der_to_pem_private_rsa_key",
+    "der_to_pem_public_key",
+    "pem_to_der",
+    "pem_to_der_certificate",
+    "pem_to_der_private_key",
+    "pem_to_der_private_rsa_key",
+    "pem_to_der_public_key",
+    ]
+
 
 CERT_PEM_HEADER = "-----BEGIN CERTIFICATE-----"
 CERT_PEM_FOOTER = "-----END CERTIFICATE-----"
@@ -112,7 +114,7 @@ def pem_to_der(pem_cert_string, pem_header, pem_footer):
     raise ValueError("Invalid PEM encoding; must end with %s"
     % pem_footer)
   encoded = pem_cert_string[len(pem_header):-len(pem_footer)]
-  return base64_decode(encoded)
+  return codec.base64_decode(encoded)
 
 
 def der_to_pem(der_cert_bytes, pem_header, pem_footer):
@@ -132,35 +134,35 @@ def der_to_pem(der_cert_bytes, pem_header, pem_footer):
   # Does what base64.b64encode without the `altchars` argument does.
   import textwrap
 
-  encoded = base64_encode(der_cert_bytes)
+  encoded = codec.base64_encode(der_cert_bytes)
   return (pem_header + "\n" +
           textwrap.fill(encoded, 64) + "\n" +
           pem_footer + "\n")
 
 
 # Helper functions. Use these instead of using der_to_per and per_to_der.
-pem_to_der_private_key = partial(pem_to_der,
-                                 pem_header=PRIVATE_KEY_PEM_HEADER,
-                                 pem_footer=PRIVATE_KEY_PEM_FOOTER)
-pem_to_der_private_rsa_key = partial(pem_to_der,
-                                     pem_header=RSA_PRIVATE_KEY_PEM_HEADER,
-                                     pem_footer=RSA_PRIVATE_KEY_PEM_FOOTER)
-pem_to_der_public_key = partial(pem_to_der,
-                                pem_header=PUBLIC_KEY_PEM_HEADER,
-                                pem_footer=PUBLIC_KEY_PEM_FOOTER)
-pem_to_der_certificate = partial(pem_to_der,
-                                 pem_header=CERT_PEM_HEADER,
-                                 pem_footer=CERT_PEM_FOOTER)
+pem_to_der_private_key = functools.partial(pem_to_der,
+                                           pem_header=PRIVATE_KEY_PEM_HEADER,
+                                           pem_footer=PRIVATE_KEY_PEM_FOOTER)
+pem_to_der_private_rsa_key = functools.partial(pem_to_der,
+                                               pem_header=RSA_PRIVATE_KEY_PEM_HEADER,
+                                               pem_footer=RSA_PRIVATE_KEY_PEM_FOOTER)
+pem_to_der_public_key = functools.partial(pem_to_der,
+                                          pem_header=PUBLIC_KEY_PEM_HEADER,
+                                          pem_footer=PUBLIC_KEY_PEM_FOOTER)
+pem_to_der_certificate = functools.partial(pem_to_der,
+                                           pem_header=CERT_PEM_HEADER,
+                                           pem_footer=CERT_PEM_FOOTER)
 
-der_to_pem_private_key = partial(der_to_pem,
-                                 pem_header=PRIVATE_KEY_PEM_HEADER,
-                                 pem_footer=PRIVATE_KEY_PEM_FOOTER)
-der_to_pem_private_rsa_key = partial(der_to_pem,
-                                     pem_header=RSA_PRIVATE_KEY_PEM_HEADER,
-                                     pem_footer=RSA_PRIVATE_KEY_PEM_FOOTER)
-der_to_pem_public_key = partial(der_to_pem,
-                                pem_header=PUBLIC_KEY_PEM_HEADER,
-                                pem_footer=PUBLIC_KEY_PEM_FOOTER)
-der_to_pem_certificate = partial(der_to_pem,
-                                 pem_header=CERT_PEM_HEADER,
-                                 pem_footer=CERT_PEM_FOOTER)
+der_to_pem_private_key = functools.partial(der_to_pem,
+                                           pem_header=PRIVATE_KEY_PEM_HEADER,
+                                           pem_footer=PRIVATE_KEY_PEM_FOOTER)
+der_to_pem_private_rsa_key = functools.partial(der_to_pem,
+                                               pem_header=RSA_PRIVATE_KEY_PEM_HEADER,
+                                               pem_footer=RSA_PRIVATE_KEY_PEM_FOOTER)
+der_to_pem_public_key = functools.partial(der_to_pem,
+                                          pem_header=PUBLIC_KEY_PEM_HEADER,
+                                          pem_footer=PUBLIC_KEY_PEM_FOOTER)
+der_to_pem_certificate = functools.partial(der_to_pem,
+                                           pem_header=CERT_PEM_HEADER,
+                                           pem_footer=CERT_PEM_FOOTER)
