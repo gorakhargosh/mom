@@ -97,7 +97,7 @@ class Test_encoding(unittest2.TestCase):
                      IMAGES_FILE_PNG_DATA_URI)
     self.assertEqual(data_uri.data_uri_encode(
         read_binary_content(IMAGES_FILE_JPG_PATH),
-        b("image/jpg"),
+        b("image/jpeg"),
         charset=None),
                      IMAGES_FILE_JPG_DATA_URI)
     self.assertEqual(data_uri.data_uri_encode(
