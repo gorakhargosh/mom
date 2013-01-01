@@ -217,10 +217,12 @@ Dictionaries and dictionary sequences
 
 Predicates, transforms, and walkers
 -----------------------------------
+.. autofunction:: always
+.. autofunction:: constant
 .. autofunction:: identity
 .. autofunction:: loob
-.. autofunction:: always
 .. autofunction:: never
+.. autofunction:: nothing
 """
 
 # pylint: disable-msg=C0302
@@ -1472,3 +1474,29 @@ def never(_):
       ``False``.
   """
   return False
+
+
+def constant(c):
+  """Returns a predicate function that returns the given constant.
+
+  :param c:
+     The constant that the generated predicate function will return.
+  :returns:
+     A predicate function that returns the specified constant.
+  """
+
+  def _func(*args, **kwargs):
+    return c
+
+  return _func
+
+
+def nothing(*args, **kwargs):
+  """A function that does nothing.
+
+  :param args:
+    Any number of positional arguments.
+  :param kwargs:
+    Any number of keyword arguments.
+  """
+  pass

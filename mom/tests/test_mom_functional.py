@@ -766,6 +766,23 @@ class Test_never(unittest2.TestCase):
     self.assertFalse(functional.never(True))
 
 
+class Test_constant(unittest2.TestCase):
+  def test_returns_a_function(self):
+    func = functional.constant(4)
+    self.assertTrue(callable(func))
+    self.assertEqual('_func', func.func_name)
+
+  def test_generate_returns_constant(self):
+    func = functional.constant(4)
+    self.assertEqual(4, func(45))
+
+
+class Test_nothing(unittest2.TestCase):
+  def test_does_nothing(self):
+    self.assertEqual(None, funtional.nothing())
+    self.assertEqual(None, funtional.nothing(34, 21, a="something"))
+
+
 class Test_partition_dict(unittest2.TestCase):
   def test_properly_partitions(self):
     args = dict(
